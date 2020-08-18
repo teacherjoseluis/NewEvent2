@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Body1" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:fontFamily">@font/robotolight</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+</resources>

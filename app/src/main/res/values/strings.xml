@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">NewEvent2</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="newevent_eventnameinput_en">Enter Event name</string>
+    <string name="newevent_eventdateinput_en">Select Event date</string>
+    <string name="newevent_eventtimeinput_en">Select Event time</string>
+    <string name="newevent_eventlocationinput_en">Select Event location</string>
+    <string name="newevent_eventaboutinput_en">About my event</string>
+    <string name="title_activity_maps">Map</string>
+    <!--
+    <string name="google_api_key">AIzaSyC6nCSLYrxoARX3OAEqNdpSFsf73OOHdbo</string>
+    -->
+</resources>

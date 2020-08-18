@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "319634884697",
+    "firebase_url": "https://brides-n-grooms.firebaseio.com",
+    "project_id": "brides-n-grooms",
+    "storage_bucket": "brides-n-grooms.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319634884697:android:273ecb491abb42a9dc0948",
+        "android_client_info": {
+          "package_name": "com.example.newevent2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "319634884697-8u57m9q58jsi5cev2cjcuhs85pmcilgs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.newevent2",
+            "certificate_hash": "2077a48b91520a2def04a755715048b215ba6a86"
+          }
+        },
+        {
+          "client_id": "319634884697-ihokd8d4om17tsanagl74ife42c5n68f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6nCSLYrxoARX3OAEqNdpSFsf73OOHdbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "319634884697-ihokd8d4om17tsanagl74ife42c5n68f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
