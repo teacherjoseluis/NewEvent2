@@ -9,6 +9,10 @@
     <string name="newevent_eventlocationinput_en">Select Event location</string>
     <string name="newevent_eventaboutinput_en">About my event</string>
     <string name="title_activity_maps">Map</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="eventdetail_summary">Event Detail Summary</string>
+    <string name="eventdetail_event">Event Detail Event</string>
     <!--
     <string name="google_api_key">AIzaSyC6nCSLYrxoARX3OAEqNdpSFsf73OOHdbo</string>
     -->

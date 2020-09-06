@@ -3,6 +3,7 @@ package com.example.newevent2
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,23 +12,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
 import com.firebase.ui.storage.images.FirebaseImageLoader
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
 import java.io.InputStream
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.logging.Level.parse
 
 
 @GlideModule
@@ -50,11 +46,14 @@ class RvAdapter(val eventList: MutableList<Event>) : RecyclerView.Adapter<RvAdap
     // ViewGroup - Views container
 
     lateinit var storage: FirebaseStorage
+    lateinit var context : Context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
         val v = LayoutInflater.from(p0?.context).inflate(R.layout.adapter_item_layout, p0, false)
-        return ViewHolder(v);
+        context=p0.context
+        //return ViewHolder(v, context);
+        return ViewHolder(v)
     }
 
     override fun getItemCount(): Int {
@@ -99,10 +98,17 @@ class RvAdapter(val eventList: MutableList<Event>) : RecyclerView.Adapter<RvAdap
                 .into(p0.imageView)
         }
 
+        p0.itemView.setOnClickListener {
+            //Toast.makeText(p0.itemView.context, p0.eventname?.text, Toast.LENGTH_SHORT).show()
+            val eventdetail = Intent(context, EventDetail::class.java)
+            context.startActivity(eventdetail)
+        }
     }
 
+
     // A ViewHolder describes an item view and metadata about its place within the RecyclerView.
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    //class ViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
+      class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView = itemView.findViewById<ImageView>(R.id.imageView)!!
         val eventname: TextView? = itemView.findViewById<TextView>(R.id.eventname)
         val eventdate: TextView? = itemView.findViewById<TextView>(R.id.eventdate)

@@ -2,9 +2,11 @@ package com.example.newevent2
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -26,6 +28,14 @@ class MyEvents : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.my_events)
+
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_menu)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text="Events"
+
 
 //        initialize the recyclerView from the XML
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
