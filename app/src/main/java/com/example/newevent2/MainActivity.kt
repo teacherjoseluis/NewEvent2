@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newevent2.ui.dialog.DatePickerFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
@@ -26,6 +27,10 @@ class MainActivity() : AppCompatActivity() {
 
     private val autocomplete_place_code = 1
     private lateinit var uri: Uri
+    private lateinit var placeid: String
+    var latitude = 0.0
+    var longitude = 0.0
+    private lateinit var address: String
 
     lateinit var storage: FirebaseStorage
 
@@ -143,6 +148,10 @@ class MainActivity() : AppCompatActivity() {
             "date" to etPlannedDate.text.toString(),
             "time" to etPlannedTime.text.toString(),
             "location" to etlocation.text.toString(),
+            "placeid" to placeid,
+            "latitude" to latitude,
+            "longitude" to longitude,
+            "address" to address,
             "about" to etabout.text.toString(),
             "imageurl" to uri.lastPathSegment
             //"images/${uri.lastPathSegment}"
@@ -193,6 +202,10 @@ class MainActivity() : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == autocomplete_place_code) {
             val placenameString = data?.getStringExtra("place_name")
+            placeid = data?.getStringExtra("place_id").toString()
+            latitude= data!!.getDoubleExtra("place_latitude",0.0)
+            longitude= data!!.getDoubleExtra("place_longitude", 0.0)
+            address=data?.getStringExtra("place_address").toString()
             etlocation.setText(placenameString)
         } else {
             Toast.makeText(this, "Error in autocomplete location", Toast.LENGTH_SHORT).show()

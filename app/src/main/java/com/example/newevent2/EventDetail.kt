@@ -9,15 +9,21 @@ import com.google.android.material.tabs.TabLayout
 
 class EventDetail : AppCompatActivity() {
 
+    lateinit var eventkey:String
+    lateinit var imageurl:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.event_detail)
+        val intent = intent
+        eventkey = intent.getStringExtra("eventkey").toString()
+        imageurl=intent.getStringExtra("imageurl").toString()
 
         val tablayout = findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = findViewById<View>(R.id.pager) as ViewPager
 
         if (viewPager != null) {
-            val adapter = Event_PagerAdapter(this, supportFragmentManager, tablayout.tabCount)
+            val adapter = Event_PagerAdapter(this, supportFragmentManager, tablayout.tabCount, eventkey, imageurl)
             viewPager.adapter = adapter
             viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tablayout))
 
@@ -31,7 +37,7 @@ class EventDetail : AppCompatActivity() {
                 }
 
                 override fun onTabReselected(p0: TabLayout.Tab?) {
-                    
+
                 }
             })
         }

@@ -27,7 +27,7 @@ class MapsActivity() : AppCompatActivity(), PlaceSelectionListener {
         val autocompleteFragment = supportFragmentManager.findFragmentById(R.id.autocomplete_fragment)
                 as AutocompleteSupportFragment
 
-        autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME));
+        autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS));
         autocompleteFragment.setOnPlaceSelectedListener(this)
     }
 
@@ -37,6 +37,9 @@ class MapsActivity() : AppCompatActivity(), PlaceSelectionListener {
         val resultIntent = Intent()
         resultIntent.putExtra("place_name", place.name)
         resultIntent.putExtra("place_id", place.id)
+        resultIntent.putExtra("place_latitude", place.latLng!!.latitude)
+        resultIntent.putExtra("place_longitude", place.latLng!!.longitude)
+        resultIntent.putExtra("place_address", place.address)
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
 

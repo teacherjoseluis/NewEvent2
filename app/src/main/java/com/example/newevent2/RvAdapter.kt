@@ -46,12 +46,12 @@ class RvAdapter(val eventList: MutableList<Event>) : RecyclerView.Adapter<RvAdap
     // ViewGroup - Views container
 
     lateinit var storage: FirebaseStorage
-    lateinit var context : Context
+    lateinit var context: Context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
         val v = LayoutInflater.from(p0?.context).inflate(R.layout.adapter_item_layout, p0, false)
-        context=p0.context
+        context = p0.context
         //return ViewHolder(v, context);
         return ViewHolder(v)
     }
@@ -101,6 +101,8 @@ class RvAdapter(val eventList: MutableList<Event>) : RecyclerView.Adapter<RvAdap
         p0.itemView.setOnClickListener {
             //Toast.makeText(p0.itemView.context, p0.eventname?.text, Toast.LENGTH_SHORT).show()
             val eventdetail = Intent(context, EventDetail::class.java)
+            eventdetail.putExtra("eventkey", eventList[p1].key)
+            eventdetail.putExtra("imageurl", eventList[p1].imageurl)
             context.startActivity(eventdetail)
         }
     }
@@ -108,7 +110,7 @@ class RvAdapter(val eventList: MutableList<Event>) : RecyclerView.Adapter<RvAdap
 
     // A ViewHolder describes an item view and metadata about its place within the RecyclerView.
     //class ViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
-      class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView = itemView.findViewById<ImageView>(R.id.imageView)!!
         val eventname: TextView? = itemView.findViewById<TextView>(R.id.eventname)
         val eventdate: TextView? = itemView.findViewById<TextView>(R.id.eventdate)
