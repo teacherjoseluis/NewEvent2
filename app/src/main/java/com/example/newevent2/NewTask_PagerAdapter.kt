@@ -6,12 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class Event_PagerAdapter(
+class NewTask_PagerAdapter(
     private val myContext: Context,
     fm: FragmentManager,
     internal var totalTabs: Int,
-    val eventkey: String,
-    val imageurl: String
+    val eventkey: String
 
 ) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
@@ -20,22 +19,21 @@ class Event_PagerAdapter(
             0 -> {
                 val bundle = Bundle()
                 bundle.putString("eventkey", eventkey)
-                val fragInfo = EventDetail_Summary()
+                val fragInfo = NewTask_TaskDetail()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             1 -> {
                 val bundle = Bundle()
                 bundle.putString("eventkey", eventkey)
-                bundle.putString("imageurl", imageurl)
-                val fragInfo = EventDetail_Event()
+                val fragInfo = NewTask_PaymentDetail()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             else -> {
                 val bundle = Bundle()
                 bundle.putString("eventkey", eventkey)
-                val fragInfo = EventDetail_Summary()
+                val fragInfo = NewTask_TaskDetail()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
@@ -47,3 +45,4 @@ class Event_PagerAdapter(
     }
 
 }
+

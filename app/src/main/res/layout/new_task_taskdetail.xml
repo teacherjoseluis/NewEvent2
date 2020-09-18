@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout3"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewTask_TaskDetail"
+    android:paddingBottom="160dp">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="53dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tkname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Task Name"
+                    android:textAppearance="@style/Body1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout11">
+
+                <com.blackcat.currencyedittext.CurrencyEditText
+                    android:id="@+id/tkbudget"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Task Budget"
+                    android:textAppearance="@style/Body1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout12"
+                tools:layout_editor_absoluteX="-26dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tkdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Task Due Date"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:textAppearance="@style/Body1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="24dp"
+                android:layout_height="26dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="-40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="10dp"
+                android:tint="#757575"
+                app:layout_constraintBottom_toBottomOf="@+id/textInputLayout13"
+                app:layout_constraintEnd_toEndOf="@+id/textInputLayout13"
+                app:layout_constraintTop_toTopOf="@+id/textInputLayout13"
+                app:srcCompat="@drawable/ic_icons8_calendar" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout13">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="Category"
+                    android:textAppearance="@style/Body1" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Flowers &amp; Deco"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Venue"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Photo &amp; Video"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Entertainment"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Transportation"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ceremony"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Attire &amp; Accessories"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Health &amp; Beauty"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Food &amp; Drink"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Guests"
+                        android:checkable="true"
+                        android:theme="@style/Theme.MaterialComponents.Light" />
+                </com.google.android.material.chip.ChipGroup>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="Vendor"
+                    android:textAppearance="@style/Body1" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:shadowDy="2"
+                    android:shadowRadius="4"
+                    android:text="add"
+                    app:backgroundTint="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:shadowDy="2"
+        android:shadowRadius="4"
+        android:text="save changes"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <!--
+    <EditText
+        android:id="@+id/etname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:hint="field 1"
+        android:inputType="text"
+        android:autofillHints="field 1"
+        android:textAppearance="@style/Body1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etPlannedDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:hint="field 3"
+        android:inputType="date"
+        android:autofillHints="field 3"
+        android:textAppearance="@style/Body1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etname" />
+
+    <EditText
+        android:id="@+id/etPlannedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:hint="field 2"
+        android:inputType="time"
+        android:autofillHints="field 2"
+        android:textAppearance="@style/Body1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPlannedDate" />
+    -->
+</androidx.constraintlayout.widget.ConstraintLayout>

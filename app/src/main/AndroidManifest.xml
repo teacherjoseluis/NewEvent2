@@ -57,6 +57,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EventDetail" />
+        <activity android:name=".NewTask" />
     </application>
 
 </manifest>
