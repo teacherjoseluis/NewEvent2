@@ -42,6 +42,38 @@ class EventDetail_Summary : Fragment() {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.eventdetail_summary, container, false)
 
+        inf.cardView_venue.setOnClickListener()
+        {
+            val tasklist = Intent(activity, TaskList::class.java)
+            tasklist.putExtra("eventkey",eventkey)
+            tasklist.putExtra("category","venue")
+            startActivity(tasklist)
+        }
+
+        inf.cardView_photo.setOnClickListener()
+        {
+            val tasklist = Intent(activity, TaskList::class.java)
+            tasklist.putExtra("eventkey",eventkey)
+            tasklist.putExtra("category","photo")
+            startActivity(tasklist)
+        }
+
+        inf.cardView_entertainment.setOnClickListener()
+        {
+            val tasklist = Intent(activity, TaskList::class.java)
+            tasklist.putExtra("eventkey",eventkey)
+            tasklist.putExtra("category","entertainment")
+            startActivity(tasklist)
+        }
+
+        inf.cardView_flowers.setOnClickListener()
+        {
+            val tasklist = Intent(activity, TaskList::class.java)
+            tasklist.putExtra("eventkey",eventkey)
+            tasklist.putExtra("category","flowers")
+            startActivity(tasklist)
+        }
+
         inf.floatingActionButton.setOnClickListener()
         {
             val newtask = Intent(activity, NewTask::class.java)

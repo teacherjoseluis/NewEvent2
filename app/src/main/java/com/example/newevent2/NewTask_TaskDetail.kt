@@ -32,6 +32,7 @@ class NewTask_TaskDetail : Fragment() {
     lateinit var eventkey: String
     lateinit var storage: FirebaseStorage
     private var chiptextvalue: String? = null
+    private var category: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +85,20 @@ class NewTask_TaskDetail : Fragment() {
             val id = inf.group.checkedChipId
             val chipselected = inf.group.findViewById<Chip>(id)
             chiptextvalue = chipselected.text.toString()
+            category = when(chiptextvalue) {
+                "Flowers & Deco" -> "flowers"
+                "Venue" -> "venue"
+                "Photo & Video" -> "photo"
+                "Entertainment" -> "entertainment"
+                "Transportation" -> "transport"
+                "Ceremony" -> "ceremony"
+                "Attire & Accessories" -> "accesories"
+                "Health & Beauty" -> "beauty"
+                "Food & Drink" -> "food"
+                "Guests" -> "guests"
+                else -> "none"
+            }
+
         }
 
         //val myRef = database.getReference("User/Event").push()
@@ -93,7 +108,7 @@ class NewTask_TaskDetail : Fragment() {
             "name" to tkname.text.toString(),
             "budget" to tkbudget.text.toString(),
             "date" to tkdate.text.toString(),
-            "category" to chiptextvalue,
+            "category" to category,
             //"vendor" to
             "eventid" to eventkey
         )

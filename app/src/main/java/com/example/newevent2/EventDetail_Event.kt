@@ -189,8 +189,8 @@ class EventDetail_Event : Fragment() {
                         googleMap = p0!!
                         //googleMap!!.moveCamera(CameraUpdateFactory.newLatLngBounds(latLng,0))
                         googleMap!!.addMarker(MarkerOptions().position(event_location).title("My Event"))
-                        googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng!!.center, 17f))
-
+                        googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng!!.center, 16f))
+                        googleMap!!.uiSettings.setAllGesturesEnabled(false)
                     }
                 })
 

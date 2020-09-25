@@ -25,7 +25,7 @@
             <ImageView
                 android:id="@+id/imageView5"
                 android:layout_width="match_parent"
-                android:layout_height="217dp"
+                android:layout_height="178dp"
                 android:src="@drawable/frame_205" />
 
             <View
@@ -112,8 +112,8 @@
                 android:layout_marginTop="17dp"
                 android:layout_marginEnd="27dp"
                 android:layout_marginRight="27dp"
-                android:layout_weight="1"
-                android:background="#626C7D"
+                android:layout_weight=".5"
+                android:background="#9E9E9E"
                 android:orientation="vertical"
                 android:padding="1dp">
 

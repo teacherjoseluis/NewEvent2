@@ -19,12 +19,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
+        android:id="@+id/cardView_venue"
         android:layout_width="wrap_content"
         android:layout_height="220dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
+        android:clickable="true"
         app:cardCornerRadius="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView1">
@@ -59,7 +60,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView4"
+        android:id="@+id/cardView_photo"
         android:layout_width="wrap_content"
         android:layout_height="220dp"
         android:layout_marginStart="8dp"
@@ -68,8 +69,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:cardCornerRadius="5dp"
+        android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardView2"
+        app:layout_constraintStart_toEndOf="@+id/cardView_venue"
         app:layout_constraintTop_toBottomOf="@+id/textView1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -118,15 +120,16 @@
         app:srcCompat="@drawable/ic_icons8_plus" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView3"
+        android:id="@+id/cardView_entertainment"
         android:layout_width="wrap_content"
         android:layout_height="220dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         app:cardCornerRadius="5dp"
+        android:clickable="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2">
+        app:layout_constraintTop_toBottomOf="@+id/cardView_venue">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -158,6 +161,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_flowers"
         android:layout_width="wrap_content"
         android:layout_height="220dp"
         android:layout_marginStart="8dp"
@@ -166,9 +170,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:cardCornerRadius="5dp"
+        android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardView3"
-        app:layout_constraintTop_toBottomOf="@+id/cardView4">
+        app:layout_constraintStart_toEndOf="@+id/cardView_entertainment"
+        app:layout_constraintTop_toBottomOf="@+id/cardView_photo">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

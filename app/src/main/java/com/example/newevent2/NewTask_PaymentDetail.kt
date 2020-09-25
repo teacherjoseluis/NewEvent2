@@ -31,6 +31,9 @@ class NewTask_PaymentDetail : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var eventkey: String
+    private var chiptextvalue: String? = null
+    private var category: String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,7 @@ class NewTask_PaymentDetail : Fragment() {
         // Inflate the layout for this fragment
 
         val inf = inflater.inflate(R.layout.new_task_paymentdetail, container, false)
+        inf.group2.isSingleSelection = true
 
         inf.pydate.setOnClickListener {
             showDatePickerDialog()
@@ -77,9 +81,30 @@ class NewTask_PaymentDetail : Fragment() {
         val myRef = database.reference
         val postRef = myRef.child("User").child("Event").child(eventkey).child("Payment").push()
 
+        if (inf.group2.checkedChipId != null) {
+            val id = inf.group2.checkedChipId
+            val chipselected = inf.group2.findViewById<Chip>(id)
+            chiptextvalue = chipselected.text.toString()
+            category = when(chiptextvalue) {
+                "Flowers & Deco" -> "flowers"
+                "Venue" -> "venue"
+                "Photo & Video" -> "photo"
+                "Entertainment" -> "entertainment"
+                "Transportation" -> "transport"
+                "Ceremony" -> "ceremony"
+                "Attire & Accessories" -> "accesories"
+                "Health & Beauty" -> "beauty"
+                "Food & Drink" -> "food"
+                "Guests" -> "guests"
+                else -> "none"
+            }
+        }
+
         val tasks = hashMapOf(
+            "name" to inf.paymentname.text.toString(),
             "amount" to pyamount.text.toString(),
             "date" to pydate.text.toString(),
+            "category" to category,
             "eventid" to eventkey
         )
 
