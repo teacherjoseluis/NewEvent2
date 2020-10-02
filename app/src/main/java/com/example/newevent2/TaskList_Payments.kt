@@ -1,21 +1,19 @@
 package com.example.newevent2
 
-import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.eventdetail_summary.*
-import kotlinx.android.synthetic.main.eventdetail_summary.view.*
 import kotlinx.android.synthetic.main.tasklist_payments.view.*
-import kotlinx.android.synthetic.main.tasklist_tasks.view.*
 import kotlinx.android.synthetic.main.tasklist_tasks.view.recyclerView
 import java.text.DecimalFormat
 
@@ -71,6 +69,7 @@ class TaskList_Payments : Fragment() {
         var paymentlist = ArrayList<Payment>()
 
         val paymentListener = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
 
@@ -87,6 +86,10 @@ class TaskList_Payments : Fragment() {
                 val rvAdapter = Rv_PaymentAdapter(paymentlist)
 //        set the recyclerView to the adapter
                 recyclerView.adapter = rvAdapter
+
+                val swipeController = SwipeController_Payment(inf.context, rvAdapter, recyclerView)
+                val itemTouchHelper = ItemTouchHelper(swipeController)
+                itemTouchHelper.attachToRecyclerView(recyclerView)
 
                 var sumpayment: Float = 0.0F
                 var countpayment: Int = 0

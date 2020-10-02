@@ -109,7 +109,7 @@ class NewTask_TaskDetail : Fragment() {
             "budget" to tkbudget.text.toString(),
             "date" to tkdate.text.toString(),
             "category" to category,
-            //"vendor" to
+            "status" to "A",
             "eventid" to eventkey
         )
 

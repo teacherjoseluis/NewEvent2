@@ -1,21 +1,23 @@
 package com.example.newevent2
 
-import android.graphics.Canvas
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SimpleAdapter
-import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.tasklist_payments.view.*
+import kotlinx.android.synthetic.main.tasklist_tasks.view.*
 import kotlinx.android.synthetic.main.tasklist_tasks.view.recyclerView
+import java.text.DecimalFormat
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,6 +36,11 @@ class TaskList_Tasks : Fragment() {
     private var param2: String? = null
     lateinit var eventkey: String
     lateinit var category: String
+
+    var countactive: Int = 0
+    var countcompleted: Int = 0
+
+    var sumbudget: Float = 0.0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +62,15 @@ class TaskList_Tasks : Fragment() {
         //inf.textView9.text = category
 
         val recyclerView = inf.recyclerView
+        val recyclerView2 = inf.recyclerView2
 
         recyclerView.apply {
+            layoutManager = LinearLayoutManager(inf.context).apply {
+                stackFromEnd = true
+                reverseLayout = true
+            }
+        }
+        recyclerView2.apply {
             layoutManager = LinearLayoutManager(inf.context).apply {
                 stackFromEnd = true
                 reverseLayout = true
@@ -70,14 +84,23 @@ class TaskList_Tasks : Fragment() {
         var tasklist = ArrayList<Task>()
 
         val taskListener = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
+                tasklist.clear()
+                countactive = 0
+                sumbudget = 0.0f
                 if (p0.exists()) {
-
                     for (snapshot in p0.children) {
                         val taskitem = snapshot.getValue(Task::class.java)
-                        if (taskitem!!.category == category) {
+
+                        if (taskitem!!.category == category && taskitem!!.status == "A") {
                             taskitem!!.key = snapshot.key.toString()
                             tasklist.add(taskitem!!)
+
+                            val re = Regex("[^A-Za-z0-9 ]")
+                            val budgetamount = re.replace(taskitem.budget, "").dropLast(2)
+                            sumbudget += budgetamount.toFloat()
+                            countactive += 1
                         }
                     }
                 }
@@ -87,9 +110,18 @@ class TaskList_Tasks : Fragment() {
 //        set the recyclerView to the adapter
                 recyclerView.adapter = rvAdapter
 
-                val swipeController = SwipeController(inf.context)
+                val swipeController = SwipeController(inf.context, rvAdapter, recyclerView)
                 val itemTouchHelper = ItemTouchHelper(swipeController)
                 itemTouchHelper.attachToRecyclerView(recyclerView)
+
+//                if (rvAdapter.itemCount > 0) {
+//                    recyclerView.addItemDecoration(
+//                        DividerItemDecoration(
+//                            context,
+//                            LinearLayoutManager.VERTICAL
+//                        )
+//                    )
+//                }
 
                 /*
                 val obs = recyclerView.viewTreeObserver
@@ -105,10 +137,73 @@ class TaskList_Tasks : Fragment() {
             override fun onCancelled(databaseError: DatabaseError) {
                 println("loadPost:onCancelled ${databaseError.toException()}")
             }
-
         }
         postRef.addValueEventListener(taskListener)
 
+        //---------------------------------------------------------------------------------------
+
+        var tasklist2 = ArrayList<Task>()
+
+        val taskListener2 = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                tasklist2.clear()
+                countcompleted = 0
+                if (p0.exists()) {
+                    for (snapshot in p0.children) {
+                        val taskitem = snapshot.getValue(Task::class.java)
+
+                        if (taskitem!!.category == category && taskitem!!.status == "C") {
+                            taskitem!!.key = snapshot.key.toString()
+                            tasklist2.add(taskitem!!)
+                            countcompleted += 1
+
+                            val re = Regex("[^A-Za-z0-9 ]")
+                            val budgetamount = re.replace(taskitem.budget, "").dropLast(2)
+                            sumbudget += budgetamount.toFloat()
+                        }
+                    }
+                }
+
+                //        pass the values to RvAdapter
+                val rvAdapter = Rv_TaskAdapter(tasklist2)
+//        set the recyclerView to the adapter
+                recyclerView2.adapter = rvAdapter
+
+                val swipeController = SwipeController2(inf.context, rvAdapter, recyclerView2)
+                val itemTouchHelper = ItemTouchHelper(swipeController)
+                itemTouchHelper.attachToRecyclerView(recyclerView2)
+
+//                if (rvAdapter.itemCount > 0) {
+//                    recyclerView.addItemDecoration(
+//                        DividerItemDecoration(
+//                            context,
+//                            LinearLayoutManager.VERTICAL
+//                        )
+//                    )
+//                }
+
+                /*
+                val obs = recyclerView.viewTreeObserver
+                obs.addOnGlobalLayoutListener {
+                    recyclerView.requestLayout()
+                    recyclerView.invalidate()
+                }
+                */
+                //recyclerView.scrollToPosition(recyclerView.adapter!!.itemCount - 1)
+
+                inf.tasktextView16.text = countactive.toString()
+                inf.tasktextView17.text = countcompleted.toString()
+
+                val formatter = DecimalFormat("$#,###.00")
+                inf.tasktextView18.text = formatter.format(sumbudget)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(taskListener2)
         return inf
     }
 

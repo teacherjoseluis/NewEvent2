@@ -17,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class SwipeController(val context: Context, adapter: ItemTouchHelperAdapter, recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
+class SwipeController2(val context: Context, adapter: ItemTouchHelperAdapter2, recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
 
     var swipeBack: Boolean = false
 
@@ -29,26 +29,20 @@ class SwipeController(val context: Context, adapter: ItemTouchHelperAdapter, rec
     //var intrinsicHeight: Int = 0
     //var intrinsicWidth: Int = 0
 
-    private lateinit var mAdapter:ItemTouchHelperAdapter
+    private lateinit var mAdapter:ItemTouchHelperAdapter2
     private lateinit var rv: RecyclerView
 
     val mContext = context
     val mBackground = ColorDrawable()
-    val mBackground2 = ColorDrawable()
-    val backgroundColor = Color.parseColor("#c8e6c9")
-    val backgroundColor2 = Color.parseColor("#D32F2F")
+    val backgroundColor = Color.parseColor("#64b5f6")
     val mClearPaint = Paint()
-    val checkDrawable = ContextCompat.getDrawable(mContext, R.drawable.icons8_checkmark)!!
-    val deleteDrawable= ContextCompat.getDrawable(mContext, R.drawable.icons8_trash_can)!!
+    val checkDrawable = ContextCompat.getDrawable(mContext, R.drawable.icons8_shortcut_32)!!
     val checkintrinsicWidth = checkDrawable.intrinsicWidth
     val checkintrinsicHeight = checkDrawable.intrinsicHeight
-    val deleteintrinsicWidth = deleteDrawable.intrinsicWidth
-    val deleteintrinsicHeight = deleteDrawable.intrinsicHeight
 
     init {
         mClearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         checkDrawable.setTint(Color.WHITE)
-        deleteDrawable.setTint(Color.WHITE)
         mAdapter=adapter
         rv=recyclerView
     }
@@ -63,7 +57,7 @@ class SwipeController(val context: Context, adapter: ItemTouchHelperAdapter, rec
             RIGHT
         ) or makeFlag(
             ACTION_STATE_SWIPE,
-            LEFT or RIGHT
+            RIGHT
         )
     }
 
@@ -78,12 +72,8 @@ class SwipeController(val context: Context, adapter: ItemTouchHelperAdapter, rec
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         //val position = viewHolder.adapterPosition
-        if (direction == LEFT) {
-            mAdapter.onItemSwiftLeft(viewHolder.adapterPosition, rv)
-            //Toast.makeText(context, "Swipe to Complete", Toast.LENGTH_SHORT).show()
-        }
         if (direction == RIGHT) {
-            mAdapter.onItemSwiftRight(viewHolder.adapterPosition, rv)
+            mAdapter.onItemSwiftRight2(viewHolder.adapterPosition, rv)
             //Toast.makeText(context, "Swipe to Delete", Toast.LENGTH_SHORT).show()
         }
     }
@@ -137,37 +127,19 @@ class SwipeController(val context: Context, adapter: ItemTouchHelperAdapter, rec
         }
 
         if (dX > 0) {// Swipe to Delete
-            mBackground2.color = backgroundColor2
-            mBackground2.setBounds(
+            mBackground.color = backgroundColor
+            mBackground.setBounds(
                 itemView.left + dX.toInt(),
                 itemView.top,
                 itemView.left,
-                itemView.bottom
-            )
-            mBackground2.draw(c)
-
-            val deleteIconTop = itemView.top + (itemHeight - deleteintrinsicHeight) / 2
-            val deleteIconMargin = (itemHeight - deleteintrinsicHeight) / 2
-            val deleteIconLeft = itemView.left + deleteIconMargin
-            val deleteIconRight = itemView.left + deleteIconMargin + deleteintrinsicWidth
-            val deleteIconBottom = deleteIconTop + deleteintrinsicHeight
-
-            deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
-            deleteDrawable.draw(c)
-        } else {
-            mBackground.color = backgroundColor
-            mBackground.setBounds(
-                itemView.right + dX.toInt(),
-                itemView.top,
-                itemView.right,
                 itemView.bottom
             )
             mBackground.draw(c)
 
             val checkIconTop = itemView.top + (itemHeight - checkintrinsicHeight) / 2
             val checkIconMargin = (itemHeight - checkintrinsicHeight) / 2
-            val checkIconLeft = itemView.right - checkIconMargin - checkintrinsicWidth
-            val checkIconRight = itemView.right - checkIconMargin
+            val checkIconLeft = itemView.left + checkIconMargin
+            val checkIconRight = itemView.left + checkIconMargin + checkintrinsicWidth
             val checkIconBottom = checkIconTop + checkintrinsicHeight
 
             checkDrawable.setBounds(checkIconLeft, checkIconTop, checkIconRight, checkIconBottom)
@@ -194,7 +166,6 @@ class SwipeController(val context: Context, adapter: ItemTouchHelperAdapter, rec
     }
 }
 
-interface ItemTouchHelperAdapter {
-    fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView)
-    fun onItemSwiftRight(position: Int, recyclerView: RecyclerView)
+interface ItemTouchHelperAdapter2 {
+    fun onItemSwiftRight2(position: Int, recyclerView: RecyclerView)
 }

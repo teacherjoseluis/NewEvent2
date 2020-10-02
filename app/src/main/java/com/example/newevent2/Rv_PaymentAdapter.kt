@@ -19,6 +19,7 @@ import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
 import com.firebase.ui.storage.images.FirebaseImageLoader
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.InputStream
@@ -31,7 +32,7 @@ import java.util.*
 // The adapter creates view holders as needed. The adapter also binds the view holders to their data.
 // It does this by assigning the view holder to a position, and calling the adapter's onBindViewHolder() method.
 
-class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) : RecyclerView.Adapter<Rv_PaymentAdapter.ViewHolder>() {
+class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) : RecyclerView.Adapter<Rv_PaymentAdapter.ViewHolder>(), ItemTouchHelperAdapterpayment {
     // ViewGroup - Views container
 
     lateinit var context: Context
@@ -73,5 +74,26 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) : RecyclerView.Ad
         val paymentname: TextView? = itemView.findViewById<TextView>(R.id.paymentname)
         val paymentdate: TextView? = itemView.findViewById<TextView>(R.id.paymentdate)
         val paymentamount: TextView? = itemView.findViewById<TextView>(R.id.paymentamount)
+    }
+
+    override fun onItemSwiftRight3(position: Int, recyclerView: RecyclerView) {
+        val payment = PaymentEntity()
+        payment.key = paymentList[position].key
+        payment.eventid = paymentList[position].eventid
+        payment.name = paymentList[position].name
+        payment.date = paymentList[position].date
+        payment.amount = paymentList[position].amount
+
+        paymentList.removeAt(position)
+        notifyItemRemoved(position)
+        payment.deletePayment()
+
+        Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
+            .setAction("UNDO") {
+                paymentList.add(payment)
+                notifyItemInserted(paymentList.lastIndex)
+                payment.addPayment()
+            }.show()
+
     }
 }

@@ -2,7 +2,7 @@ package com.example.newevent2
 
 import com.google.android.gms.maps.model.LatLng
 
-class Event {
+open class Event {
         //var imagename: String = ""
         var key: String = ""
         var imageurl: String = ""

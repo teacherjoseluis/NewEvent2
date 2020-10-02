@@ -1,13 +1,20 @@
 package com.example.newevent2
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.eventdetail_summary.*
 import kotlinx.android.synthetic.main.eventdetail_summary.view.*
+import java.text.DecimalFormat
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,42 +49,112 @@ class EventDetail_Summary : Fragment() {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.eventdetail_summary, container, false)
 
+        var taskcountpending = 0
+        var taskcountcompleted = 0
+        var sumbudget = 0.0f
+        var sumpayment: Float = 0.0F
+
+        val formatter = DecimalFormat("$#,###.00")
+        val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+        val myRef = database.reference
+
+        val postRef = myRef.child("User").child("Event").child(this.eventkey).child("Task")
+        val countListener = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    taskcountpending = 0
+                    taskcountcompleted = 0
+                    sumbudget = 0.0f
+                    for (snapshot in p0.children) {
+                        val taskitem = snapshot.getValue(Task::class.java)
+                        val re = Regex("[^A-Za-z0-9 ]")
+
+                        if (taskitem!!.status == "A") {
+                            taskcountpending += 1
+                            sumbudget += re.replace(taskitem.budget, "").dropLast(2).toFloat()
+                        }
+                        if (taskitem!!.status == "C") {
+                            taskcountcompleted += 1
+                            sumbudget += re.replace(taskitem.budget, "").dropLast(2).toFloat()
+                        }
+                    }
+                }
+
+                inf.taskpending.text = taskcountpending.toString()
+                inf.taskcompleted.text = taskcountcompleted.toString()
+                inf.tasknumber.text = (taskcountpending + taskcountcompleted).toString()
+                inf.taskbudget.text = formatter.format(sumbudget)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+
+        }
+        postRef.addValueEventListener(countListener)
+
+        val postRef2 = myRef.child("User").child("Event").child(this.eventkey).child("Payment")
+
+        val countListener2 = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    val re = Regex("[^A-Za-z0-9 ]")
+                    sumpayment = 0.0F
+                    for (snapshot in p0.children) {
+                        val paymentitem = snapshot.getValue(Payment::class.java)
+                        val paymentamount = re.replace(paymentitem!!.amount, "").dropLast(2)
+                        sumpayment += paymentamount.toFloat()
+                    }
+                }
+                inf.paymentpaid.text = formatter.format(sumpayment)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+
+        }
+        postRef2.addValueEventListener(countListener2)
+
+
         inf.cardView_venue.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskList::class.java)
-            tasklist.putExtra("eventkey",eventkey)
-            tasklist.putExtra("category","venue")
+            tasklist.putExtra("eventkey", eventkey)
+            tasklist.putExtra("category", "venue")
             startActivity(tasklist)
         }
 
         inf.cardView_photo.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskList::class.java)
-            tasklist.putExtra("eventkey",eventkey)
-            tasklist.putExtra("category","photo")
+            tasklist.putExtra("eventkey", eventkey)
+            tasklist.putExtra("category", "photo")
             startActivity(tasklist)
         }
 
         inf.cardView_entertainment.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskList::class.java)
-            tasklist.putExtra("eventkey",eventkey)
-            tasklist.putExtra("category","entertainment")
+            tasklist.putExtra("eventkey", eventkey)
+            tasklist.putExtra("category", "entertainment")
             startActivity(tasklist)
         }
 
         inf.cardView_flowers.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskList::class.java)
-            tasklist.putExtra("eventkey",eventkey)
-            tasklist.putExtra("category","flowers")
+            tasklist.putExtra("eventkey", eventkey)
+            tasklist.putExtra("category", "flowers")
             startActivity(tasklist)
         }
 
         inf.floatingActionButton.setOnClickListener()
         {
             val newtask = Intent(activity, NewTask::class.java)
-            newtask.putExtra("eventkey",eventkey)
+            newtask.putExtra("eventkey", eventkey)
             startActivity(newtask)
         }
 

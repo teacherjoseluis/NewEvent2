@@ -2,17 +2,14 @@ package com.example.newevent2
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.graphics.Canvas
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 
 // Recyclerview - Displays a scrolling list of elements based on large datasets
 // The view holder objects are managed by an adapter, which you create by extending RecyclerView.Adapter.
@@ -20,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 // It does this by assigning the view holder to a position, and calling the adapter's onBindViewHolder() method.
 
 
-
-class Rv_TaskAdapter(val taskList: MutableList<Task>) : RecyclerView.Adapter<Rv_TaskAdapter.ViewHolder>()  {
+class Rv_TaskAdapter(val taskList: MutableList<Task>) :
+    RecyclerView.Adapter<Rv_TaskAdapter.ViewHolder>(), ItemTouchHelperAdapter, ItemTouchHelperAdapter2 {
     // ViewGroup - Views container
 
     lateinit var context: Context
@@ -74,4 +71,62 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) : RecyclerView.Adapter<Rv_
         val taskdate: TextView? = itemView.findViewById<TextView>(R.id.taskdate)
         val taskbudget: TextView? = itemView.findViewById<TextView>(R.id.taskbudget)
     }
+
+    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView) {
+        val task = TaskEntity()
+        task.key = taskList[position].key
+        task.eventid = taskList[position].eventid
+        task.name = taskList[position].name
+        task.date = taskList[position].date
+        task.budget = taskList[position].budget
+
+        taskList.removeAt(position)
+        notifyItemRemoved(position)
+        task.editTask("complete")
+
+        Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
+            .setAction("UNDO") {
+                taskList.add(task)
+                notifyItemInserted(taskList.lastIndex)
+                task.editTask("active")
+            }.show()
+    }
+
+    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView) {
+        val task = TaskEntity()
+        task.key = taskList[position].key
+        task.eventid = taskList[position].eventid
+        task.name = taskList[position].name
+        task.date = taskList[position].date
+        task.budget = taskList[position].budget
+        task.category = taskList[position].category
+
+        taskList.removeAt(position)
+        notifyItemRemoved(position)
+        task.deleteTask()
+
+        Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
+            .setAction("UNDO") {
+                taskList.add(task)
+                notifyItemInserted(taskList.lastIndex)
+                task.addTask()
+            }.show()
+    }
+
+    override fun onItemSwiftRight2(position: Int, recyclerView: RecyclerView) {
+        val task = TaskEntity()
+        task.key = taskList[position].key
+        task.eventid = taskList[position].eventid
+        task.name = taskList[position].name
+        task.date = taskList[position].date
+        task.budget = taskList[position].budget
+
+        taskList.removeAt(position)
+        notifyItemRemoved(position)
+        task.editTask("active")
+    }
+
 }
+
+
+
