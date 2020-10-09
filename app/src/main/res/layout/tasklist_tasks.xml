@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/textView8"
-            style="@style/Heading5"
+            style="@style/Heading6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/textView14"
-            style="@style/Heading5"
+            style="@style/Heading6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -51,7 +51,7 @@
 
         <TextView
             android:id="@+id/textView9"
-            style="@style/Heading5"
+            style="@style/Heading6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -108,9 +108,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp"
-            android:paddingRight="20dp">
+            android:paddingTop="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -124,6 +122,7 @@
                     style="@style/Overline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:text="Active Tasks" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -147,6 +146,7 @@
                     style="@style/Overline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:text="Completed Tasks" />
 
                 <androidx.recyclerview.widget.RecyclerView

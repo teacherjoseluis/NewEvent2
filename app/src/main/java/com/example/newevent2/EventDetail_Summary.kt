@@ -16,30 +16,15 @@ import kotlinx.android.synthetic.main.eventdetail_summary.*
 import kotlinx.android.synthetic.main.eventdetail_summary.view.*
 import java.text.DecimalFormat
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [EventDetail_Summary.newInstance] factory method to
- * create an instance of this fragment.
- */
 class EventDetail_Summary : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
     lateinit var eventkey: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         eventkey = this.arguments!!.get("eventkey").toString()
 
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -49,6 +34,9 @@ class EventDetail_Summary : Fragment() {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.eventdetail_summary, container, false)
 
+        // Event Summary
+        // Tasks Summary
+        //----------------------------------------------------------------------------------------------------
         var taskcountpending = 0
         var taskcountcompleted = 0
         var sumbudget = 0.0f
@@ -58,17 +46,19 @@ class EventDetail_Summary : Fragment() {
         val database: FirebaseDatabase = FirebaseDatabase.getInstance()
         val myRef = database.reference
 
-        val postRef = myRef.child("User").child("Event").child(this.eventkey).child("Task")
-        val countListener = object : ValueEventListener {
+        val postRefEvents = myRef.child("User").child("Event").child(this.eventkey).child("Task")
+        val countListenertask = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
+                    val re = Regex("[^A-Za-z0-9 ]")
+
                     taskcountpending = 0
                     taskcountcompleted = 0
                     sumbudget = 0.0f
+
                     for (snapshot in p0.children) {
                         val taskitem = snapshot.getValue(Task::class.java)
-                        val re = Regex("[^A-Za-z0-9 ]")
 
                         if (taskitem!!.status == "A") {
                             taskcountpending += 1
@@ -90,17 +80,20 @@ class EventDetail_Summary : Fragment() {
             override fun onCancelled(databaseError: DatabaseError) {
                 println("loadPost:onCancelled ${databaseError.toException()}")
             }
-
         }
-        postRef.addValueEventListener(countListener)
+        postRefEvents.addValueEventListener(countListenertask)
 
-        val postRef2 = myRef.child("User").child("Event").child(this.eventkey).child("Payment")
+        // Payments Summary
+        //----------------------------------------------------------------------------------------------------
+        val postRefPayment =
+            myRef.child("User").child("Event").child(this.eventkey).child("Payment")
 
-        val countListener2 = object : ValueEventListener {
+        val countListenerpayment = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     val re = Regex("[^A-Za-z0-9 ]")
+
                     sumpayment = 0.0F
                     for (snapshot in p0.children) {
                         val paymentitem = snapshot.getValue(Payment::class.java)
@@ -114,9 +107,8 @@ class EventDetail_Summary : Fragment() {
             override fun onCancelled(databaseError: DatabaseError) {
                 println("loadPost:onCancelled ${databaseError.toException()}")
             }
-
         }
-        postRef2.addValueEventListener(countListener2)
+        postRefPayment.addValueEventListener(countListenerpayment)
 
 
         inf.cardView_venue.setOnClickListener()
@@ -157,27 +149,8 @@ class EventDetail_Summary : Fragment() {
             newtask.putExtra("eventkey", eventkey)
             startActivity(newtask)
         }
-
         return inf
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EventDetail_Summary.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EventDetail_Summary().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
 }

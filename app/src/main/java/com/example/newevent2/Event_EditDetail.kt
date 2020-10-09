@@ -1,7 +1,5 @@
 package com.example.newevent2
 
-import TimePickerFragment
-import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -12,7 +10,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newevent2.ui.dialog.DatePickerFragment
-import com.google.android.gms.maps.model.LatLng
+import TimePickerFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
@@ -20,25 +18,57 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.eventdetail_event.*
-import java.lang.Exception
+import kotlinx.android.synthetic.main.event_edit.*
+import android.Manifest
+import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.eventdetail_event.view.*
+import kotlinx.android.synthetic.main.task_editdetail.*
 
-class MainActivity() : AppCompatActivity() {
+class Event_EditDetail : AppCompatActivity() {
 
     private val autocomplete_place_code = 1
     private lateinit var uri: Uri
-    private lateinit var placeid: String
+    var placeid = ""
     var latitude = 0.0
     var longitude = 0.0
-    private lateinit var address: String
+    var address = ""
 
     lateinit var storage: FirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(applicationContext)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.event_edit)
+
+        val intent = intent
+        val eventkey = intent.getStringExtra("eventkey").toString()
+        val eventname = intent.getStringExtra("name").toString()
+        val eventdate = intent.getStringExtra("date").toString()
+        val eventtime = intent.getStringExtra("time").toString()
+        val eventabout = intent.getStringExtra("about").toString()
+        val eventlocation = intent.getStringExtra("location").toString()
+        placeid = intent.getStringExtra("location").toString()
+        latitude = intent.getDoubleExtra("latitude", 0.0)
+        longitude = intent.getDoubleExtra("longitude", 0.0)
+        address = intent.getStringExtra("address").toString()
+        uri = Uri.parse(intent.getStringExtra("imageurl").toString())
+
+        val eventimageurl = intent.getStringExtra("imageurl").toString()
+
+        storage = FirebaseStorage.getInstance()
+        val storageRef =
+            storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/${eventkey}/${eventimageurl}")
+
+        Glide.with(this)
+            .load(storageRef)
+            .centerCrop()
+            .into(imageViewedit)
+
+        etname.setText(eventname)
+        etPlannedDate.setText(eventdate)
+        etPlannedTime.setText(eventtime)
+        etabout.setText(eventabout)
+        etlocation.setText(eventlocation)
 
         etPlannedDate.setOnClickListener {
             showDatePickerDialog()
@@ -58,7 +88,7 @@ class MainActivity() : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            saveEvent()
+            saveEvent(eventkey)
         }
     }
 
@@ -74,13 +104,6 @@ class MainActivity() : AppCompatActivity() {
     }
 
     private fun showTimePickerDialog() {
-        /* val newFragment= TimePickerFragment.newInstance(TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            val timeValue = String.format("%02d",hour) + ":" + String.format("%02d",minute)
-            etPlannedTime.setText(timeValue)
-        })
-
-        newFragment.show(supportFragmentManager, "timePicker") */
-
         val newFragment = TimePickerFragment()
         newFragment.show(supportFragmentManager, "Time Picker")
 
@@ -115,7 +138,7 @@ class MainActivity() : AppCompatActivity() {
         private val IMAGE_PICK_CODE = 1000
 
         //Permission code
-        internal val PERMISSION_CODE = 1001
+        private val PERMISSION_CODE = 1001
     }
 
     //handle requested permission result
@@ -139,62 +162,80 @@ class MainActivity() : AppCompatActivity() {
         }
     }
 
-    private fun saveEvent() {
+    private fun saveEvent(eventkey: String) {
         val database = FirebaseDatabase.getInstance()
-        val myRef = database.getReference("User/Event").push()
-        var key = ""
+        val myRef = database.reference
+        val postRef = myRef.child("User").child("Event").child(eventkey)
 
-        val events = hashMapOf(
-            "name" to etname.text.toString(),
-            "date" to etPlannedDate.text.toString(),
-            "time" to etPlannedTime.text.toString(),
-            "location" to etlocation.text.toString(),
-            "placeid" to placeid,
-            "latitude" to latitude,
-            "longitude" to longitude,
-            "address" to address,
-            "about" to etabout.text.toString(),
-            "imageurl" to uri.lastPathSegment
-        )
+        postRef.child("name").setValue(etname.text.toString())
+        postRef.child("date").setValue(etPlannedDate.text.toString())
+        postRef.child("time").setValue(etPlannedTime.text.toString())
+        postRef.child("about").setValue(etabout.text.toString())
+        postRef.child("location").setValue(etlocation.text.toString())
+        postRef.child("latitude").setValue(latitude)
+        postRef.child("longitude").setValue(longitude)
+        postRef.child("address").setValue(address)
+        //postRef.child("imageurl").setValue(uri.lastPathSegment)
 
-        myRef.setValue(events as Map<String, Any>)
-            .addOnFailureListener {
+//        val events = hashMapOf(
+//            "name" to etname.text.toString(),
+//            "date" to etPlannedDate.text.toString(),
+//            "time" to etPlannedTime.text.toString(),
+//            "location" to etlocation.text.toString(),
+//            "placeid" to placeid,
+//            "latitude" to latitude,
+//            "longitude" to longitude,
+//            "address" to address,
+//            "about" to etabout.text.toString(),
+//            "imageurl" to uri.lastPathSegment
+//        )
+//
+//        myRef.setValue(events as Map<String, Any>)
+//            .addOnFailureListener {
+//                Snackbar.make(
+//                    findViewById(android.R.id.content),
+//                    "Error while saving the Event",
+//                    Snackbar.LENGTH_LONG
+//                ).show()
+//            }
+//            .addOnSuccessListener {
+//                Snackbar.make(
+//                    findViewById(android.R.id.content),
+//                    "Event Saved Successfully",
+//                    Snackbar.LENGTH_LONG
+//                ).show()
+//            }
+
+        if (intent.getStringExtra("imageurl").toString() != uri.lastPathSegment) {
+            postRef.child("imageurl").setValue(uri.lastPathSegment)
+
+            //key = myRef.key.toString()
+            storage = Firebase.storage
+            val storageRef = storage.reference
+            val mountainsRef = storageRef.child("images/$eventkey/${uri.lastPathSegment}")
+
+            val uploadTask = mountainsRef.putFile(uri)
+            //val imageurl = mountainsRef.toString()
+
+            uploadTask.addOnFailureListener {
                 Snackbar.make(
                     findViewById(android.R.id.content),
-                    "Error while saving the Event",
+                    "Error while uploading the Image",
                     Snackbar.LENGTH_LONG
                 ).show()
-            }
-            .addOnSuccessListener {
+            }.addOnSuccessListener {
                 Snackbar.make(
                     findViewById(android.R.id.content),
-                    "Event Saved Successfully",
+                    "Image uploaded successfully",
                     Snackbar.LENGTH_LONG
                 ).show()
+                //finish()
             }
-
-        key = myRef.key.toString()
-        storage = Firebase.storage
-        val storageRef = storage.reference
-        val mountainsRef = storageRef.child("images/$key/${uri.lastPathSegment}")
-
-        val uploadTask = mountainsRef.putFile(uri)
-        //val imageurl = mountainsRef.toString()
-
-        uploadTask.addOnFailureListener {
-            Snackbar.make(
-                findViewById(android.R.id.content),
-                "Error while uploading the Image",
-                Snackbar.LENGTH_LONG
-            ).show()
-        }.addOnSuccessListener {
-            Snackbar.make(
-                findViewById(android.R.id.content),
-                "Image uploaded successfully",
-                Snackbar.LENGTH_LONG
-            ).show()
-
         }
+
+        val myevents = Intent(this, MyEvents::class.java)
+        finish()
+        startActivity(myevents)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -223,11 +264,17 @@ class MainActivity() : AppCompatActivity() {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
                 uri = result.uri
-                imageView.setImageURI(uri)
+
+                Glide.with(this)
+                    .load(uri.toString())
+                    .centerCrop()
+                    .into(imageViewedit)
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
             }
         }
     }
 }
+
 

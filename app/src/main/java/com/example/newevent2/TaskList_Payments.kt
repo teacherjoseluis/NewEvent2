@@ -17,20 +17,7 @@ import kotlinx.android.synthetic.main.tasklist_payments.view.*
 import kotlinx.android.synthetic.main.tasklist_tasks.view.recyclerView
 import java.text.DecimalFormat
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [EventDetail_Summary.newInstance] factory method to
- * create an instance of this fragment.
- */
 class TaskList_Payments : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     lateinit var eventkey: String
     lateinit var category: String
 
@@ -38,11 +25,6 @@ class TaskList_Payments : Fragment() {
         super.onCreate(savedInstanceState)
         eventkey = this.arguments!!.get("eventkey").toString()
         category = this.arguments!!.get("category").toString()
-
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -71,6 +53,9 @@ class TaskList_Payments : Fragment() {
         val paymentListener = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
+
+                paymentlist.clear()
+
                 if (p0.exists()) {
 
                     for (snapshot in p0.children) {
@@ -87,7 +72,7 @@ class TaskList_Payments : Fragment() {
 //        set the recyclerView to the adapter
                 recyclerView.adapter = rvAdapter
 
-                val swipeController = SwipeController_Payment(inf.context, rvAdapter, recyclerView)
+                val swipeController = SwipeControllerPayment(inf.context, rvAdapter, recyclerView)
                 val itemTouchHelper = ItemTouchHelper(swipeController)
                 itemTouchHelper.attachToRecyclerView(recyclerView)
 
@@ -101,20 +86,10 @@ class TaskList_Payments : Fragment() {
                     countpayment += 1
                 }
 
-                val formatter =DecimalFormat("$#,###.00")
+                val formatter = DecimalFormat("$#,###.00")
 
                 inf.textView16.text = formatter.format(sumpayment)
                 inf.textView17.text = countpayment.toString()
-
-                /*
-                val obs = recyclerView.viewTreeObserver
-                obs.addOnGlobalLayoutListener {
-                    recyclerView.requestLayout()
-                    recyclerView.invalidate()
-                }
-                */
-                //recyclerView.scrollToPosition(recyclerView.adapter!!.itemCount - 1)
-
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -126,23 +101,4 @@ class TaskList_Payments : Fragment() {
         return inf
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EventDetail_Summary.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EventDetail_Summary().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }

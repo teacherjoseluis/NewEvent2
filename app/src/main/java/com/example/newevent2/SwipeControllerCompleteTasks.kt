@@ -17,28 +17,20 @@ import com.google.android.material.snackbar.Snackbar
 
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class SwipeController2(val context: Context, adapter: ItemTouchHelperAdapter2, recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
+class SwipeControllerCompleteTasks(val context: Context, adapter: ItemTouchHelperAdapter, recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
 
     var swipeBack: Boolean = false
 
-    //var mContext: Context
-    //private var mClearPaint: Paint
-    //private var mBackground: ColorDrawable
-    //private var deleteDrawable: Drawable
-    //var backgroundColor: Int = 0
-    //var intrinsicHeight: Int = 0
-    //var intrinsicWidth: Int = 0
+    private var mAdapter:ItemTouchHelperAdapter
+    private var rv: RecyclerView
 
-    private lateinit var mAdapter:ItemTouchHelperAdapter2
-    private lateinit var rv: RecyclerView
-
-    val mContext = context
-    val mBackground = ColorDrawable()
-    val backgroundColor = Color.parseColor("#64b5f6")
-    val mClearPaint = Paint()
-    val checkDrawable = ContextCompat.getDrawable(mContext, R.drawable.icons8_shortcut_32)!!
-    val checkintrinsicWidth = checkDrawable.intrinsicWidth
-    val checkintrinsicHeight = checkDrawable.intrinsicHeight
+    private val mContext = context
+    private val mBackground = ColorDrawable()
+    private val backgroundColor = Color.parseColor("#64b5f6")
+    private val mClearPaint = Paint()
+    private val checkDrawable = ContextCompat.getDrawable(mContext, R.drawable.icons8_shortcut_32)!!
+    private val checkintrinsicWidth = checkDrawable.intrinsicWidth
+    private val checkintrinsicHeight = checkDrawable.intrinsicHeight
 
     init {
         mClearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
@@ -71,20 +63,10 @@ class SwipeController2(val context: Context, adapter: ItemTouchHelperAdapter2, r
 
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        //val position = viewHolder.adapterPosition
         if (direction == RIGHT) {
-            mAdapter.onItemSwiftRight2(viewHolder.adapterPosition, rv)
-            //Toast.makeText(context, "Swipe to Delete", Toast.LENGTH_SHORT).show()
+            mAdapter.onItemSwiftRight(viewHolder.adapterPosition, rv)
         }
     }
-
-//    override fun convertToAbsoluteDirection(flags: Int, layoutDirection: Int): Int {
-//        if (swipeBack) {
-//            swipeBack = false
-//            return 0
-//        }
-//        return super.convertToAbsoluteDirection(flags, layoutDirection)
-//    }
 
     override fun onChildDraw(
         c: Canvas,
@@ -126,7 +108,7 @@ class SwipeController2(val context: Context, adapter: ItemTouchHelperAdapter2, r
             return
         }
 
-        if (dX > 0) {// Swipe to Delete
+        if (dX > 0) {// Swipe to Active
             mBackground.color = backgroundColor
             mBackground.setBounds(
                 itemView.left + dX.toInt(),
@@ -164,8 +146,4 @@ class SwipeController2(val context: Context, adapter: ItemTouchHelperAdapter2, r
             false
         }
     }
-}
-
-interface ItemTouchHelperAdapter2 {
-    fun onItemSwiftRight2(position: Int, recyclerView: RecyclerView)
 }

@@ -6,36 +6,36 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class Event_PagerAdapter(
+class Contacts_PagerAdapter(
     private val myContext: Context,
     fm: FragmentManager,
-    private var totalTabs: Int,
-    val eventkey: String,
-    private val imageurl: String
+    internal var totalTabs: Int
 
-) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    ) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> {
                 val bundle = Bundle()
-                bundle.putString("eventkey", eventkey)
-                val fragInfo = EventDetail_Summary()
+                val fragInfo = ContactsAll()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             1 -> {
                 val bundle = Bundle()
-                bundle.putString("eventkey", eventkey)
-                bundle.putString("imageurl", imageurl)
-                val fragInfo = EventDetail_Event()
+                val fragInfo = ContactsAll()
+                fragInfo.arguments = bundle
+                return fragInfo
+            }
+            2 -> {
+                val bundle = Bundle()
+                val fragInfo = ContactsAll()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             else -> {
                 val bundle = Bundle()
-                bundle.putString("eventkey", eventkey)
-                val fragInfo = EventDetail_Summary()
+                val fragInfo = ContactsAll()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
@@ -45,5 +45,4 @@ class Event_PagerAdapter(
     override fun getCount(): Int {
         return totalTabs
     }
-
 }

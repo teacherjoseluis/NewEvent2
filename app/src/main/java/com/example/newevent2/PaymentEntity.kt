@@ -1,10 +1,6 @@
 package com.example.newevent2
 
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.android.synthetic.main.new_task_paymentdetail.*
-import kotlinx.android.synthetic.main.new_task_paymentdetail.view.*
-import kotlinx.android.synthetic.main.new_task_paymentdetail.view.pyamount
-import kotlinx.android.synthetic.main.new_task_paymentdetail.view.pydate
 
 class PaymentEntity : Payment() {
 

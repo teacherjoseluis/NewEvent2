@@ -15,20 +15,7 @@ import kotlinx.android.synthetic.main.new_task_taskdetail.*
 import kotlinx.android.synthetic.main.new_task_taskdetail.view.*
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NewTask_TaskDetail.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NewTask_TaskDetail : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     lateinit var eventkey: String
     lateinit var storage: FirebaseStorage
     private var chiptextvalue: String? = null
@@ -38,10 +25,6 @@ class NewTask_TaskDetail : Fragment() {
         super.onCreate(savedInstanceState)
         eventkey = this.arguments!!.get("eventkey").toString()
 
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -60,7 +43,6 @@ class NewTask_TaskDetail : Fragment() {
         inf.button2.setOnClickListener {
             saveTask(inf)
         }
-
         return inf
     }
 
@@ -75,7 +57,6 @@ class NewTask_TaskDetail : Fragment() {
         newFragment.show(childFragmentManager, "datePicker")
     }
 
-
     private fun saveTask(inf: View) {
         val database = FirebaseDatabase.getInstance()
         val myRef = database.reference
@@ -85,7 +66,7 @@ class NewTask_TaskDetail : Fragment() {
             val id = inf.group.checkedChipId
             val chipselected = inf.group.findViewById<Chip>(id)
             chiptextvalue = chipselected.text.toString()
-            category = when(chiptextvalue) {
+            category = when (chiptextvalue) {
                 "Flowers & Deco" -> "flowers"
                 "Venue" -> "venue"
                 "Photo & Video" -> "photo"
@@ -98,11 +79,7 @@ class NewTask_TaskDetail : Fragment() {
                 "Guests" -> "guests"
                 else -> "none"
             }
-
         }
-
-        //val myRef = database.getReference("User/Event").push()
-        var key = ""
 
         val tasks = hashMapOf(
             "name" to tkname.text.toString(),
@@ -128,26 +105,6 @@ class NewTask_TaskDetail : Fragment() {
                     Snackbar.LENGTH_LONG
                 ).show()
                 activity!!.onBackPressed()
-            }
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NewTask_TaskDetail.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NewTask_TaskDetail().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
             }
     }
 }

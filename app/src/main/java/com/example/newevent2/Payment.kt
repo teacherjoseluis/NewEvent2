@@ -1,7 +1,5 @@
 package com.example.newevent2
 
-import com.google.android.gms.maps.model.LatLng
-
 open class Payment {
     var key: String = ""
     var name: String = ""

@@ -3,45 +3,39 @@ package com.example.newevent2
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Build
-
 import android.view.MotionEvent
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class SwipeController_Payment(val context: Context, adapter: ItemTouchHelperAdapterpayment, recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
+class SwipeControllerActiveTasks(val context: Context, adapter: ItemTouchHelperAdapter, recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
 
     var swipeBack: Boolean = false
 
-    //var mContext: Context
-    //private var mClearPaint: Paint
-    //private var mBackground: ColorDrawable
-    //private var deleteDrawable: Drawable
-    //var backgroundColor: Int = 0
-    //var intrinsicHeight: Int = 0
-    //var intrinsicWidth: Int = 0
+    private var mAdapter:ItemTouchHelperAdapter
+    private var rv: RecyclerView
 
-    private lateinit var mAdapter:ItemTouchHelperAdapterpayment
-    private lateinit var rv: RecyclerView
-
-    val mContext = context
-    val mBackground = ColorDrawable()
-    val backgroundColor = Color.parseColor("#D32F2F")
-    val mClearPaint = Paint()
-    val deleteDrawable = ContextCompat.getDrawable(mContext, R.drawable.icons8_trash_can)!!
-    val deleteintrinsicWidth = deleteDrawable.intrinsicWidth
-    val deleteintrinsicHeight = deleteDrawable.intrinsicHeight
+    private val mContext = context
+    private val mBackgrounddelete = ColorDrawable()
+    private val mBackgroundcheck = ColorDrawable()
+    private val backgroundColorcheck = Color.parseColor("#c8e6c9")
+    private val backgroundColordelete = Color.parseColor("#D32F2F")
+    private val mClearPaint = Paint()
+    private val checkDrawable = ContextCompat.getDrawable(mContext, R.drawable.icons8_checkmark)!!
+    private val deleteDrawable= ContextCompat.getDrawable(mContext, R.drawable.icons8_trash_can)!!
+    private val checkintrinsicWidth = checkDrawable.intrinsicWidth
+    private val checkintrinsicHeight = checkDrawable.intrinsicHeight
+    private val deleteintrinsicWidth = deleteDrawable.intrinsicWidth
+    private val deleteintrinsicHeight = deleteDrawable.intrinsicHeight
 
     init {
         mClearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        checkDrawable.setTint(Color.WHITE)
         deleteDrawable.setTint(Color.WHITE)
         mAdapter=adapter
         rv=recyclerView
@@ -51,13 +45,12 @@ class SwipeController_Payment(val context: Context, adapter: ItemTouchHelperAdap
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        //return makeMovementFlags(0, LEFT or RIGHT)
         return makeFlag(
             ACTION_STATE_IDLE,
             RIGHT
         ) or makeFlag(
             ACTION_STATE_SWIPE,
-            RIGHT
+            LEFT or RIGHT
         )
     }
 
@@ -69,22 +62,14 @@ class SwipeController_Payment(val context: Context, adapter: ItemTouchHelperAdap
         return false
     }
 
-
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        //val position = viewHolder.adapterPosition
+        if (direction == LEFT) {
+            mAdapter.onItemSwiftLeft(viewHolder.adapterPosition, rv)
+        }
         if (direction == RIGHT) {
-            mAdapter.onItemSwiftRight3(viewHolder.adapterPosition, rv)
-            //Toast.makeText(context, "Swipe to Delete", Toast.LENGTH_SHORT).show()
+            mAdapter.onItemSwiftRight(viewHolder.adapterPosition, rv)
         }
     }
-
-//    override fun convertToAbsoluteDirection(flags: Int, layoutDirection: Int): Int {
-//        if (swipeBack) {
-//            swipeBack = false
-//            return 0
-//        }
-//        return super.convertToAbsoluteDirection(flags, layoutDirection)
-//    }
 
     override fun onChildDraw(
         c: Canvas,
@@ -127,14 +112,14 @@ class SwipeController_Payment(val context: Context, adapter: ItemTouchHelperAdap
         }
 
         if (dX > 0) {// Swipe to Delete
-            mBackground.color = backgroundColor
-            mBackground.setBounds(
+            mBackgrounddelete.color = backgroundColordelete
+            mBackgrounddelete.setBounds(
                 itemView.left + dX.toInt(),
                 itemView.top,
                 itemView.left,
                 itemView.bottom
             )
-            mBackground.draw(c)
+            mBackgrounddelete.draw(c)
 
             val deleteIconTop = itemView.top + (itemHeight - deleteintrinsicHeight) / 2
             val deleteIconMargin = (itemHeight - deleteintrinsicHeight) / 2
@@ -144,6 +129,24 @@ class SwipeController_Payment(val context: Context, adapter: ItemTouchHelperAdap
 
             deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
             deleteDrawable.draw(c)
+        } else {// Swipe to Check
+            mBackgroundcheck.color = backgroundColorcheck
+            mBackgroundcheck.setBounds(
+                itemView.right + dX.toInt(),
+                itemView.top,
+                itemView.right,
+                itemView.bottom
+            )
+            mBackgroundcheck.draw(c)
+
+            val checkIconTop = itemView.top + (itemHeight - checkintrinsicHeight) / 2
+            val checkIconMargin = (itemHeight - checkintrinsicHeight) / 2
+            val checkIconLeft = itemView.right - checkIconMargin - checkintrinsicWidth
+            val checkIconRight = itemView.right - checkIconMargin
+            val checkIconBottom = checkIconTop + checkintrinsicHeight
+
+            checkDrawable.setBounds(checkIconLeft, checkIconTop, checkIconRight, checkIconBottom)
+            checkDrawable.draw(c)
         }
     }
 
@@ -164,8 +167,4 @@ class SwipeController_Payment(val context: Context, adapter: ItemTouchHelperAdap
             false
         }
     }
-}
-
-interface ItemTouchHelperAdapterpayment {
-    fun onItemSwiftRight3(position: Int, recyclerView: RecyclerView)
 }

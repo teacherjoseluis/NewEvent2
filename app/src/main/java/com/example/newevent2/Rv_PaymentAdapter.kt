@@ -32,7 +32,8 @@ import java.util.*
 // The adapter creates view holders as needed. The adapter also binds the view holders to their data.
 // It does this by assigning the view holder to a position, and calling the adapter's onBindViewHolder() method.
 
-class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) : RecyclerView.Adapter<Rv_PaymentAdapter.ViewHolder>(), ItemTouchHelperAdapterpayment {
+class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) :
+    RecyclerView.Adapter<Rv_PaymentAdapter.ViewHolder>(), ItemTouchHelperAdapter {
     // ViewGroup - Views container
 
     lateinit var context: Context
@@ -41,7 +42,6 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) : RecyclerView.Ad
         // Instantiates a layout XML file into its corresponding View objects
         val v = LayoutInflater.from(p0?.context).inflate(R.layout.payment_item_layout, p0, false)
         context = p0.context
-        //return ViewHolder(v, context);
         return ViewHolder(v)
     }
 
@@ -57,13 +57,16 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) : RecyclerView.Ad
         p0.paymentdate?.text = paymentList[p1].date
         p0.paymentamount?.text = paymentList[p1].amount
 
-        //var dateformatter = DateFormat.parse("dd / MM / yyyy")
-
         p0.itemView.setOnClickListener {
-            //Toast.makeText(p0.itemView.context, p0.eventname?.text, Toast.LENGTH_SHORT).show()
-            //val paymentdetail = Intent(context, EventDetail::class.java)
-            //paymentdetail.putExtra("paymentkey", eventList[p1].key)
-            //context.startActivity(taskdetail)
+            val paymentdetail = Intent(context, Payment_EditDetail::class.java)
+            paymentdetail.putExtra("paymentkey", paymentList[p1].key)
+            paymentdetail.putExtra("eventid", paymentList[p1].eventid)
+            paymentdetail.putExtra("name", paymentList[p1].name)
+            paymentdetail.putExtra("date", paymentList[p1].date)
+            paymentdetail.putExtra("category", paymentList[p1].category)
+            paymentdetail.putExtra("amount", paymentList[p1].amount)
+
+            context.startActivity(paymentdetail)
         }
     }
 
@@ -76,7 +79,11 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) : RecyclerView.Ad
         val paymentamount: TextView? = itemView.findViewById<TextView>(R.id.paymentamount)
     }
 
-    override fun onItemSwiftRight3(position: Int, recyclerView: RecyclerView) {
+    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView) {
         val payment = PaymentEntity()
         payment.key = paymentList[position].key
         payment.eventid = paymentList[position].eventid
@@ -94,6 +101,5 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) : RecyclerView.Ad
                 notifyItemInserted(paymentList.lastIndex)
                 payment.addPayment()
             }.show()
-
     }
 }

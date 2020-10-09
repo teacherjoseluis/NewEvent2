@@ -50,6 +50,7 @@ class TaskList : AppCompatActivity() {
             })
         }
 
+        // Toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -65,7 +66,6 @@ class TaskList : AppCompatActivity() {
             apptitle.text = "Flowers & Decor"
         else
             apptitle.text = "No Category"
-
     }
 
 }

@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:allowBackup="true"
@@ -59,6 +60,10 @@
         <activity android:name=".EventDetail" />
         <activity android:name=".NewTask" />
         <activity android:name=".TaskList" />
+        <activity android:name=".Task_EditDetail" />
+        <activity android:name=".Payment_EditDetail" />
+        <activity android:name=".Event_EditDetail" />
+        <activity android:name=".MyContacts" />
     </application>
 
 </manifest>

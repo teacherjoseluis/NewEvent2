@@ -7,28 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 
-class EventDetail : AppCompatActivity() {
-
-    lateinit var eventkey:String
-    lateinit var imageurl:String
+class MyContacts : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.event_detail)
+        setContentView(R.layout.contacts)
         val intent = intent
-        eventkey = intent.getStringExtra("eventkey").toString()
-        imageurl=intent.getStringExtra("imageurl").toString()
-
 
         val tablayout = findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = findViewById<View>(R.id.pager) as ViewPager
 
         if (viewPager != null) {
-            val adapter = Event_PagerAdapter(this, supportFragmentManager, tablayout.tabCount, eventkey, imageurl)
+            val adapter = Contacts_PagerAdapter(this, supportFragmentManager, tablayout.tabCount)
             viewPager.adapter = adapter
+
             viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tablayout))
 
-                tablayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+            tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(p0: TabLayout.Tab?) {
                     viewPager.currentItem = p0!!.position
                 }
@@ -43,15 +38,13 @@ class EventDetail : AppCompatActivity() {
             })
         }
 
-        // Toolbar and Title
-        //---------------------------------------------------------------------
+        // Toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
-        apptitle.text = "Event Detail"
-        //---------------------------------------------------------------------
+        apptitle.text = "Contacts"
     }
 
 }

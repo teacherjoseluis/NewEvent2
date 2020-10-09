@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/textView8"
-            style="@style/Heading5"
+            style="@style/Heading6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/textView14"
-            style="@style/Heading5"
+            style="@style/Heading6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -88,11 +88,7 @@
             android:id="@+id/relativeLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginRight="25dp"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -100,13 +96,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:paddingBottom="60dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:stackFromEnd="true" />
+                app:stackFromEnd="true"
+                android:layout_marginLeft="5dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
