@@ -1,42 +1,83 @@
 package com.example.newevent2
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.firebase.database.*
 
 class EventEntity : Event() {
 
-    var taskcount = 0
-    var database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    private var myRef = database.reference
+    val database = FirebaseDatabase.getInstance()
+    val myRef = database.reference
+    val postRef = myRef.child("User").child("Event")
 
-    fun countEventTasks(action: String) { // action = "A" & "C"
-        val postRef = myRef.child("User").child("Event").child(this.key).child("Task")
-        val countListener = object : ValueEventListener {
+    fun getEventKey(eventname: String, dataFetched: FirebaseSuccessListener) {
+        var eventkey = ""
+
+        val eventListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    for (snapshot in p0.children) {
-                        val taskitem = snapshot.getValue(Task::class.java)
 
-                        if (taskitem!!.status == action) {
-                            taskcount += 1
-                        }
-                        if (action == "") {
-                            taskcount += 1
-                        }
+                for (snapshot in p0.children) {
+                    val eventitem = snapshot.getValue(Event::class.java)!!
+                    if (eventitem.name == eventname) {
+                        eventkey = snapshot.key.toString()
                     }
                 }
+                dataFetched.onDatafound(eventkey)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 println("loadPost:onCancelled ${databaseError.toException()}")
             }
         }
-        postRef.addValueEventListener(countListener)
+        postRef.addValueEventListener(eventListenerActive)
     }
 
-    fun gettaskcount(taskcount: Int) {
-        this.taskcount = taskcount
+    fun getFirstEventKey(dataFetched: FirebaseSuccessListener) {
+        val eventListenerActive = object : ValueEventListener {
+            var eventkey = ""
+
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                loop@
+                for (snapshot in p0.children) {
+                    val eventitem = snapshot.getValue(Event::class.java)!!
+                    eventkey = snapshot.key.toString()
+                    break@loop
+                }
+                dataFetched.onDatafound(eventkey)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(eventListenerActive)
+    }
+
+
+    fun getEventNames(dataFetched: FirebaseSuccessListener) {
+        var eventList = ArrayList<String>()
+        //var eventNameList = ArrayList<String>()
+        val eventListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                eventList.clear()
+                Log.i("ListDataStart",eventList.toString())
+                for (snapshot in p0.children) {
+                    val eventitem = snapshot.getValue(Event::class.java)!!
+                    eventList.add(eventitem.name)
+                }
+                Log.i("ListDataEnd",eventList.toString())
+                dataFetched.onListCreated(eventList)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+
+        }
+        postRef.addValueEventListener(eventListenerActive)
     }
 }

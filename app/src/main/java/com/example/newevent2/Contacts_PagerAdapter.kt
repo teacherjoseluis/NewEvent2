@@ -23,7 +23,7 @@ class Contacts_PagerAdapter(
             }
             1 -> {
                 val bundle = Bundle()
-                val fragInfo = ContactsAll()
+                val fragInfo = GuestsAll()
                 fragInfo.arguments = bundle
                 return fragInfo
             }

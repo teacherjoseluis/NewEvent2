@@ -7,21 +7,42 @@
     android:background="@color/colorPrimaryLight">
 -->
 <androidx.appcompat.widget.Toolbar
+    android:id="@+id/appbartoolbar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryLight">
+    android:background="@color/colorPrimaryLight"
+    app:title=" ">
 
-    <TextView
-        android:id="@+id/appbartitle"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="44dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="22dp"
-        android:fontFamily="@font/elsieregular"
-        android:textSize="27dp"
-        android:textColor="@color/black"/>
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/appbartitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/elsieregular"
+            android:textColor="@color/black"
+            android:textSize="27dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/appbarmenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.Toolbar>
