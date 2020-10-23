@@ -7,16 +7,17 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.task_editdetail.*
 
 class GuestEntity : Guest() {
 
-    var database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    val myRef = database.reference
+    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val myRef = database.reference
     //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Guest")
 
-    fun getGuestsContacts(dataFetched: FirebaseSuccessListener) {
+    fun getGuestsContacts(dataFetched: FirebaseSuccessListenerGuest) {
         val postRef = myRef.child("User").child("Event").child(this.eventid).child("Guest")
-        var contactList = ArrayList<String>()
+        var guestList = ArrayList<Guest>()
         val guestListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
@@ -24,10 +25,12 @@ class GuestEntity : Guest() {
                 for (snapshot in p0.children) {
                     val guestitem = snapshot.getValue(Guest::class.java)!!
                     if (guestitem.eventid == eventid) {
-                        contactList.add(guestitem.contactid)
+                        guestitem.key = snapshot.key.toString()
+                        guestList.add(guestitem)
+
                     }
                 }
-                dataFetched.onListCreated(contactList)
+                dataFetched.onGuestList(guestList)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -36,7 +39,6 @@ class GuestEntity : Guest() {
         }
         postRef.addValueEventListener(guestListenerActive)
     }
-
 
 //    fun editGuest(action: String) {
 //        if (action == "complete") {
@@ -54,13 +56,18 @@ class GuestEntity : Guest() {
 //    }
 
     fun addGuest() {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Guest").push()
+        val postRef =
+            myRef.child("User").child("Event").child(this.eventid).child("Guest").push()
         val guest = hashMapOf(
+            "name" to name,
             "eventid" to eventid,
             "contactid" to contactid,
             "rsvp" to "pending",
             "companion" to companion,
-            "table" to table
+            "table" to table,
+            "imageurl" to imageurl,
+            "phone" to phone,
+            "email" to email
         )
 
         postRef.setValue(guest as Map<String, Any>)
@@ -68,5 +75,24 @@ class GuestEntity : Guest() {
             }
             .addOnSuccessListener {
             }
+    }
+
+    fun deleteGuest() {
+        myRef.child("User").child("Event").child(this.eventid).child("Guest").child(this.key)
+            .removeValue()
+    }
+
+
+    fun editGuest() {
+
+        val postRef =
+            myRef.child("User").child("Event").child(eventid).child("Guest").child(this.key)
+        postRef.child("name").setValue(name)
+        postRef.child("rsvp").setValue(rsvp)
+        postRef.child("companion").setValue(companion)
+        postRef.child("table").setValue(table)
+        postRef.child("imageurl").setValue(imageurl)
+        postRef.child("phone").setValue(phone)
+        postRef.child("email").setValue(email)
     }
 }

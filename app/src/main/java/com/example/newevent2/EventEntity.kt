@@ -11,7 +11,7 @@ class EventEntity : Event() {
     val myRef = database.reference
     val postRef = myRef.child("User").child("Event")
 
-    fun getEventKey(eventname: String, dataFetched: FirebaseSuccessListener) {
+    fun getEventKey(eventname: String, dataFetched: FirebaseSuccessListenerSingleValue) {
         var eventkey = ""
 
         val eventListenerActive = object : ValueEventListener {
@@ -34,7 +34,7 @@ class EventEntity : Event() {
         postRef.addValueEventListener(eventListenerActive)
     }
 
-    fun getFirstEventKey(dataFetched: FirebaseSuccessListener) {
+    fun getFirstEventKey(dataFetched: FirebaseSuccessListenerSingleValue) {
         val eventListenerActive = object : ValueEventListener {
             var eventkey = ""
 
@@ -57,7 +57,7 @@ class EventEntity : Event() {
     }
 
 
-    fun getEventNames(dataFetched: FirebaseSuccessListener) {
+    fun getEventNames(dataFetched: FirebaseSuccessListenerList) {
         var eventList = ArrayList<String>()
         //var eventNameList = ArrayList<String>()
         val eventListenerActive = object : ValueEventListener {

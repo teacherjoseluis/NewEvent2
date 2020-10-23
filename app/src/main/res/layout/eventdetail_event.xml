@@ -51,8 +51,8 @@
                     android:text="TextView"
                     android:textAppearance="@style/Heading5"
                     android:textColor="#FFFFFF"
-                    app:layout_constraintStart_toEndOf="@+id/view"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="MissingConstraints" />
 
                 <TextView
                     android:id="@+id/textView4"

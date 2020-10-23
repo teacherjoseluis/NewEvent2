@@ -1,6 +1,6 @@
 package com.example.newevent2
 
-open class Guest {
+open class Guest: Contact() {
     var eventid: String = ""
     var contactid: String = ""
     var rsvp: String = ""

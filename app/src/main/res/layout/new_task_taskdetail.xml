@@ -77,7 +77,8 @@
                 app:layout_constraintBottom_toBottomOf="@+id/textInputLayout13"
                 app:layout_constraintEnd_toEndOf="@+id/textInputLayout13"
                 app:layout_constraintTop_toTopOf="@+id/textInputLayout13"
-                app:srcCompat="@drawable/ic_icons8_calendar" />
+                app:srcCompat="@drawable/ic_icons8_calendar"
+                android:layout_marginRight="40dp" />
 
             <LinearLayout
                 android:id="@+id/linearLayout"

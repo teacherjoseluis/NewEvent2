@@ -2,9 +2,12 @@ package com.example.newevent2
 
 import android.net.Uri
 
-class Contact {
+open class Contact {
 
     var key: String = ""
     var name: String = ""
     var imageurl: String = ""
+    var extrafield: String = ""
+    var phone: String = ""
+    var email: String = ""
 }

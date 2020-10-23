@@ -2,39 +2,40 @@ package com.example.newevent2
 
 import android.Manifest
 import android.content.ContentResolver
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.ContactsContract.Contacts
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.contacts.floatingActionButton
 import kotlinx.android.synthetic.main.contacts_all.*
 import kotlinx.android.synthetic.main.contacts_all.view.*
-import kotlinx.android.synthetic.main.contacts_all.view.eventspinner
 
 class GuestsAll : Fragment() {
 
-    var contactlist = ArrayList<Contact>()
+    var contactlist = ArrayList<Guest>()
     lateinit var recyclerViewAllGuests: RecyclerView
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbar =
-            activity!!.findViewById(R.id.toolbar)
-        val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
-        appbartitle.text = "Guests"
+        //toolbar =
+        //    activity!!.findViewById(R.id.toolbar)
+        //val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
+        //appbartitle.text = "Guests"
     }
 
     override fun onCreateView(
@@ -47,10 +48,7 @@ class GuestsAll : Fragment() {
 
         val eventspinner = inf.findViewById<Spinner>(R.id.eventspinner)
         val evententity = EventEntity()
-        evententity.getEventNames(object : FirebaseSuccessListener {
-            override fun onDatafound(key: String) {
-                TODO("Not yet implemented")
-            }
+        evententity.getEventNames(object : FirebaseSuccessListenerList {
 
             override fun onListCreated(list: ArrayList<String>) {
                 val eventlistadapter = activity?.let {
@@ -60,6 +58,7 @@ class GuestsAll : Fragment() {
                 eventspinner.adapter = null
                 eventspinner.adapter = eventlistadapter
             }
+
         })
 
         eventspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -72,13 +71,16 @@ class GuestsAll : Fragment() {
                 val evententity = EventEntity()
                 //evententity.getEventKey(eventspinner.selectedItem.toString(),
                 evententity.getEventKey(eventname,
-                    object : FirebaseSuccessListener {
+                    object : FirebaseSuccessListenerSingleValue {
                         override fun onDatafound(key: String) {
                             readguests(key)
-                        }
 
-                        override fun onListCreated(list: ArrayList<String>) {
-                            TODO("Not yet implemented")
+                            activity!!.floatingActionButton.setOnClickListener()
+                            {
+                                val newguest = Intent(activity, NewGuest::class.java)
+                                newguest.putExtra("eventkey", key)
+                                startActivity(newguest)
+                            }
                         }
                     })
             }
@@ -108,13 +110,9 @@ class GuestsAll : Fragment() {
                 //permission already granted
                 val evententity = EventEntity()
                 evententity.getFirstEventKey(
-                    object : FirebaseSuccessListener {
+                    object : FirebaseSuccessListenerSingleValue {
                         override fun onDatafound(key: String) {
                             readguests(key)
-                        }
-
-                        override fun onListCreated(list: ArrayList<String>) {
-                            TODO("Not yet implemented")
                         }
                     })
             }
@@ -143,13 +141,9 @@ class GuestsAll : Fragment() {
                     //permission from popup granted
                     val evententity = EventEntity()
                     evententity.getFirstEventKey(
-                        object : FirebaseSuccessListener {
+                        object : FirebaseSuccessListenerSingleValue {
                             override fun onDatafound(key: String) {
                                 readguests(key)
-                            }
-
-                            override fun onListCreated(list: ArrayList<String>) {
-                                TODO("Not yet implemented")
                             }
                         })
                 } else {
@@ -162,14 +156,14 @@ class GuestsAll : Fragment() {
 
     private fun readguests(eventkey: String) {
         val contentResolver = context!!.contentResolver
-        val cursor =
-            contentResolver.query(
-                ContactsContract.Contacts.CONTENT_URI,
-                null,
-                null,
-                null,
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " DESC"
-            )
+//        val cursor =
+//            contentResolver.query(
+//                ContactsContract.Contacts.CONTENT_URI,
+//                null,
+//                null,
+//                null,
+//                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " DESC"
+//            )
 
 //        val evententity = EventEntity()
 //        evententity.getFirstEventKey(
@@ -177,62 +171,86 @@ class GuestsAll : Fragment() {
 //                override fun onDatafound(key: String) {
         val guestentity = GuestEntity()
         guestentity.eventid = eventkey
-        guestentity.getGuestsContacts(object : FirebaseSuccessListener {
-            override fun onDatafound(key: String) {
-                TODO("Not yet implemented")
-            }
+        guestentity.getGuestsContacts(object : FirebaseSuccessListenerGuest {
 
-            override fun onListCreated(list: ArrayList<String>) {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onGuestList(list: ArrayList<Guest>) {
                 contactlist.clear()
-                val contentResolver = context!!.contentResolver
-                val cursor =
-                    contentResolver.query(
-                        ContactsContract.Contacts.CONTENT_URI,
-                        null,
-                        null,
-                        null,
-                        ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " DESC"
-                    )
-                if (cursor!!.moveToFirst()) {
-                    do {
-                        if (list.contains(
-                                cursor.getString(
-                                    cursor.getColumnIndex(
-                                        ContactsContract.Contacts.LOOKUP_KEY
-                                    )
-                                )
+                //val contentResolver = context!!.contentResolver
+
+
+                for (guest in list) {
+
+                    val whereclause = StringBuffer()
+                    whereclause.append(ContactsContract.Contacts._ID)
+                    whereclause.append(" = ")
+                    whereclause.append(guest.contactid)
+
+                    var contactname: String? = null
+                    var contactphoto: String? = null
+                    var cursor: Cursor? = null
+
+                    if (guest.contactid != "local") {
+                        cursor =
+                            contentResolver.query(
+                                ContactsContract.Contacts.CONTENT_URI,
+                                null,
+                                whereclause.toString(),
+                                null, null
                             )
-                        ) {
-                            val contactitem = Contact()
-                            contactitem.key =
-                                (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)))
-                            contactitem.name =
-                                (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
-                            val image_uri =
-                                cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI))
-                            if (image_uri != null) {
-                                contactitem.imageurl = image_uri
-                            } else {
-                                contactitem.imageurl = Uri.parse(
-                                    ContentResolver.SCHEME_ANDROID_RESOURCE +
-                                            "://" + resources.getResourcePackageName(R.drawable.avatar2)
-                                            + '/' + resources.getResourceTypeName(R.drawable.avatar2) + '/' + resources.getResourceEntryName(
-                                        R.drawable.avatar2
-                                    )
-                                ).toString()
-                            }
-                            contactlist.add(contactitem)
-                        }
-                    } while (cursor.moveToNext())
+
+                        cursor?.moveToNext()
+                        contactname =
+                            cursor?.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY))
+                                .toString()
+                        contactphoto =
+                            cursor?.getString(cursor.getColumnIndex(Contacts.PHOTO_URI)).toString()
+                    }
+
+//                    val cursor = contentResolver.query(
+//                        Uri.withAppendedPath(
+//                            ContactsContract.Contacts.CONTENT_LOOKUP_URI,
+//                            "/" + guest.contactid
+//                        ), null, null, null, null
+//                    )
+
+                    val contactitem = Guest()
+                    contactitem.name = contactname?.let { it } ?: guest.name
+                    contactitem.contactid = guest.contactid
+                    contactitem.rsvp = guest.rsvp
+                    contactitem.companion = guest.companion
+                    contactitem.table = guest.table
+                    contactitem.eventid = guest.eventid
+                    val imageuri = contactphoto?.let { it } ?: guest.imageurl
+                    if (imageuri.isNotEmpty()) {
+                        contactitem.imageurl = imageuri
+                    } else {
+                        contactitem.imageurl = Uri.parse(
+                            ContentResolver.SCHEME_ANDROID_RESOURCE +
+                                    "://" + resources.getResourcePackageName(R.drawable.avatar2)
+                                    + '/' + resources.getResourceTypeName(R.drawable.avatar2) + '/' + resources.getResourceEntryName(
+                                R.drawable.avatar2
+                            )
+                        ).toString()
+                    }
+                    contactitem.key = guest.key
+                    contactitem.phone = guest.phone
+                    contactitem.email = guest.email
+
+                    contactlist.add(contactitem)
+                    cursor?.let { cursor.close() }
                 }
                 val rvAdapter = Rv_GuestAdapter(contactlist)
                 recyclerViewAllGuests.adapter = rvAdapter
+                val swipeController = SwipeControllerGuest(context!!, rvAdapter, recyclerView)
+                val itemTouchHelper = ItemTouchHelper(swipeController)
+                itemTouchHelper.attachToRecyclerView(recyclerView)
             }
         })
     }
 
-
 }
+
 
 
 

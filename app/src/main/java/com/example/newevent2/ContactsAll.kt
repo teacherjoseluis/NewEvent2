@@ -14,9 +14,11 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.contacts_all.*
 import kotlinx.android.synthetic.main.contacts_all.view.*
 
@@ -44,12 +46,12 @@ class ContactsAll : Fragment() {
         val inf = inflater.inflate(R.layout.contacts_all, container, false)
         //inf.textView9.text = category
 
+        val actionbutton = activity!!.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        actionbutton.isVisible = false
+
         val eventspinner = inf.findViewById<Spinner>(R.id.eventspinner)
         val evententity = EventEntity()
-        evententity.getEventNames(object : FirebaseSuccessListener {
-            override fun onDatafound(key: String) {
-                TODO("Not yet implemented")
-            }
+        evententity.getEventNames(object : FirebaseSuccessListenerList {
 
             override fun onListCreated(list: ArrayList<String>) {
                 val eventlistadapter = activity?.let {
@@ -130,7 +132,7 @@ class ContactsAll : Fragment() {
             do {
                 val contactitem = Contact()
                 contactitem.key =
-                    (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)))
+                    (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)))
                 contactitem.name =
                     (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
                 //contactitem.imageurl = (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI)))
@@ -175,7 +177,7 @@ class ContactsAll : Fragment() {
                             R.id.action_add -> {
                                 val evententity = EventEntity()
                                 evententity.getEventKey(eventspinner.selectedItem.toString(),
-                                    object : FirebaseSuccessListener {
+                                    object : FirebaseSuccessListenerSingleValue {
                                         override fun onDatafound(key: String) {
                                             //Toast.makeText(activity, key, Toast.LENGTH_SHORT).show()
                                             for (index in countselected) {
@@ -187,10 +189,6 @@ class ContactsAll : Fragment() {
 //                                                countselected.remove(index)
                                             }
                                             rvAdapter.onClearSelected()
-                                        }
-
-                                        override fun onListCreated(list: ArrayList<String>) {
-                                            TODO("Not yet implemented")
                                         }
                                     }
                                 )

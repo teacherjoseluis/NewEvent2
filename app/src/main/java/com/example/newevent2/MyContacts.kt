@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.contacts.*
 
 class MyContacts : AppCompatActivity() {
 
@@ -26,6 +29,14 @@ class MyContacts : AppCompatActivity() {
             tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(p0: TabLayout.Tab?) {
                     viewPager.currentItem = p0!!.position
+
+                    if (p0.position == 0){
+                        val actionbutton = findViewById<FloatingActionButton>(R.id.floatingActionButton)
+                        actionbutton.isVisible = false
+                    } else if (p0.position == 1){
+                        val actionbutton = findViewById<FloatingActionButton>(R.id.floatingActionButton)
+                        actionbutton.isVisible = true
+                    }
                 }
 
                 override fun onTabUnselected(p0: TabLayout.Tab?) {
@@ -36,6 +47,7 @@ class MyContacts : AppCompatActivity() {
 
                 }
             })
+
         }
 
         // Toolbar
