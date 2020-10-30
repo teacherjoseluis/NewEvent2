@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView25"
+            android:id="@+id/eventlabel"
             style="@style/Heading6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,8 +41,9 @@
             android:paddingBottom="10dp"
             android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView25"
+            app:layout_constraintStart_toEndOf="@+id/eventlabel"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView

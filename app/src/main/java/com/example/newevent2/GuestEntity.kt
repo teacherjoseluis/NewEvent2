@@ -95,4 +95,38 @@ class GuestEntity : Guest() {
         postRef.child("phone").setValue(phone)
         postRef.child("email").setValue(email)
     }
+
+    fun getGuestsEvent(dataFetched: FirebaseSuccessListenerGuest) {
+        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Guest")
+
+        var confirmed = 0
+        var rejected = 0
+        var pending = 0
+
+        val guestListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+
+                for (snapshot in p0.children) {
+                    val guestitem = snapshot.getValue(Guest::class.java)!!
+                    if (guestitem.eventid == eventid) {
+                        when (guestitem.rsvp) {
+                            "y" -> confirmed += 1
+                            "n" -> rejected += 1
+                            "pending" -> pending += 1
+                        }
+
+                    }
+                }
+                dataFetched.onGuestConfirmation(confirmed, rejected, pending)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(guestListenerActive)
+    }
+
+
 }

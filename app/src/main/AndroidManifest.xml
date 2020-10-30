@@ -63,7 +63,7 @@
         <activity android:name=".Task_EditDetail" />
         <activity android:name=".Payment_EditDetail" />
         <activity android:name=".Event_EditDetail" />
-        <activity android:name=".MyContacts" />
+        <activity android:name=".MyContacts"/>
         <activity android:name=".NewGuest" />
         <activity android:name=".Guest_EditDetail" />
     </application>

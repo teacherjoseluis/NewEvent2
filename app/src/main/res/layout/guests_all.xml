@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
-            android:id="@+id/eventspinner"
+            android:id="@+id/eventspinnerguest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -42,6 +42,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView25"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <!--
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/eventspinner" />
+-->
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView

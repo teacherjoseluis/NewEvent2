@@ -24,6 +24,7 @@ class Rv_ContactAdapter(
     var selectedPos = RecyclerView.NO_POSITION
 
     var mOnItemClickListener: OnItemClickListener? = null
+
     //var mClearSelected: ClearSelected? = null
     var countselected: Int = 0
 

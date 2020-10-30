@@ -10,9 +10,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -20,33 +19,83 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.contacts.floatingActionButton
-import kotlinx.android.synthetic.main.contacts_all.*
+import kotlinx.android.synthetic.main.contacts.*
+import kotlinx.android.synthetic.main.contacts_all.recyclerView
 import kotlinx.android.synthetic.main.contacts_all.view.*
+import kotlinx.android.synthetic.main.guests_all.*
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class GuestsAll : Fragment() {
 
     var contactlist = ArrayList<Guest>()
+    var eventkey: String? = null
     lateinit var recyclerViewAllGuests: RecyclerView
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //toolbar =
-        //    activity!!.findViewById(R.id.toolbar)
-        //val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
-        //appbartitle.text = "Guests"
+        toolbar = activity!!.findViewById(R.id.toolbar)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.guests_menu, menu)
+
+        val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
+        appbartitle.visibility = View.INVISIBLE
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.isIconified = true
+
+        searchView.setOnSearchClickListener {
+            eventspinnerguest.isEnabled = false
+        }
+
+        searchView.setOnCloseListener {
+            eventspinnerguest.isEnabled = true
+            false
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                val filteredModelList: List<Guest> = filter(contactlist, p0)
+                val rvAdapter = Rv_GuestAdapter(filteredModelList as MutableList<Guest>)
+                recyclerViewAllGuests.adapter = rvAdapter
+                return true
+            }
+        })
+    }
+
+    private fun filter(models: ArrayList<Guest>, query: String?): List<Guest> {
+        val lowerCaseQuery = query!!.toLowerCase()
+        val filteredModelList: ArrayList<Guest> = ArrayList()
+        for (model in models) {
+            val text: String = model.name.toLowerCase()
+            if (text.contains(lowerCaseQuery)) {
+                filteredModelList.add(model)
+            }
+        }
+        return filteredModelList
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.guests_all, container, false)
         //inf.textView9.text = category
 
-        val eventspinner = inf.findViewById<Spinner>(R.id.eventspinner)
+        val eventspinner = inf.findViewById<Spinner>(R.id.eventspinnerguest)
         val evententity = EventEntity()
         evententity.getEventNames(object : FirebaseSuccessListenerList {
 
@@ -58,7 +107,6 @@ class GuestsAll : Fragment() {
                 eventspinner.adapter = null
                 eventspinner.adapter = eventlistadapter
             }
-
         })
 
         eventspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -69,8 +117,8 @@ class GuestsAll : Fragment() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val eventname = p0!!.getItemAtPosition(p2).toString()
                 val evententity = EventEntity()
-                //evententity.getEventKey(eventspinner.selectedItem.toString(),
-                evententity.getEventKey(eventname,
+                evententity.getEventKey(
+                    eventname,
                     object : FirebaseSuccessListenerSingleValue {
                         override fun onDatafound(key: String) {
                             readguests(key)
@@ -78,7 +126,7 @@ class GuestsAll : Fragment() {
                             activity!!.floatingActionButton.setOnClickListener()
                             {
                                 val newguest = Intent(activity, NewGuest::class.java)
-                                newguest.putExtra("eventkey", key)
+                                newguest.putExtra("eventkey", eventkey)
                                 startActivity(newguest)
                             }
                         }
@@ -156,19 +204,6 @@ class GuestsAll : Fragment() {
 
     private fun readguests(eventkey: String) {
         val contentResolver = context!!.contentResolver
-//        val cursor =
-//            contentResolver.query(
-//                ContactsContract.Contacts.CONTENT_URI,
-//                null,
-//                null,
-//                null,
-//                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " DESC"
-//            )
-
-//        val evententity = EventEntity()
-//        evententity.getFirstEventKey(
-//            object : FirebaseSuccessListener {
-//                override fun onDatafound(key: String) {
         val guestentity = GuestEntity()
         guestentity.eventid = eventkey
         guestentity.getGuestsContacts(object : FirebaseSuccessListenerGuest {
@@ -202,29 +237,24 @@ class GuestsAll : Fragment() {
                         cursor?.moveToNext()
                         contactname =
                             cursor?.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY))
-                                .toString()
                         contactphoto =
-                            cursor?.getString(cursor.getColumnIndex(Contacts.PHOTO_URI)).toString()
+                            cursor?.getString(cursor.getColumnIndex(Contacts.PHOTO_URI))
                     }
-
-//                    val cursor = contentResolver.query(
-//                        Uri.withAppendedPath(
-//                            ContactsContract.Contacts.CONTENT_LOOKUP_URI,
-//                            "/" + guest.contactid
-//                        ), null, null, null, null
-//                    )
 
                     val contactitem = Guest()
                     contactitem.name = contactname?.let { it } ?: guest.name
                     contactitem.contactid = guest.contactid
-                    contactitem.rsvp = guest.rsvp
+                    contactitem.rsvp = when (guest.rsvp) {
+                        "y" -> "Yes"
+                        "n" -> "No"
+                        "pending" -> "Pending"
+                        else -> "N/A"
+                    }
                     contactitem.companion = guest.companion
                     contactitem.table = guest.table
                     contactitem.eventid = guest.eventid
                     val imageuri = contactphoto?.let { it } ?: guest.imageurl
-                    if (imageuri.isNotEmpty()) {
-                        contactitem.imageurl = imageuri
-                    } else {
+                    if (imageuri.isNullOrEmpty()) {
                         contactitem.imageurl = Uri.parse(
                             ContentResolver.SCHEME_ANDROID_RESOURCE +
                                     "://" + resources.getResourcePackageName(R.drawable.avatar2)
@@ -232,26 +262,29 @@ class GuestsAll : Fragment() {
                                 R.drawable.avatar2
                             )
                         ).toString()
+                    } else {
+                        contactitem.imageurl = imageuri
                     }
                     contactitem.key = guest.key
                     contactitem.phone = guest.phone
                     contactitem.email = guest.email
-
                     contactlist.add(contactitem)
                     cursor?.let { cursor.close() }
                 }
+
+                contactlist.sortWith(Comparator { object1, object2 -> object2.name.compareTo(object1.name) })
+
                 val rvAdapter = Rv_GuestAdapter(contactlist)
                 recyclerViewAllGuests.adapter = rvAdapter
-                val swipeController = SwipeControllerGuest(context!!, rvAdapter, recyclerView)
+                val swipeController =
+                    SwipeControllerGuest(context!!, rvAdapter, recyclerView)
                 val itemTouchHelper = ItemTouchHelper(swipeController)
                 itemTouchHelper.attachToRecyclerView(recyclerView)
             }
+
+            override fun onGuestConfirmation(confirmed: Int, rejected: Int, pending: Int) {
+                TODO("Not yet implemented")
+            }
         })
     }
-
 }
-
-
-
-
-

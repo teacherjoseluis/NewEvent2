@@ -3,40 +3,27 @@ package com.example.newevent2
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.floatingActionButton
 import kotlinx.android.synthetic.main.new_guest.*
 import kotlinx.android.synthetic.main.new_guest.button
-import kotlinx.android.synthetic.main.new_task_taskdetail.view.*
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.util.*
 
 class NewGuest : AppCompatActivity() {
 
     var eventkey: String = ""
-    private lateinit var uri: Uri
+    private var uri: Uri? = null
     private var chiptextvalue: String? = null
     private var categoryrsvp: String = ""
     private var categorycompanions: String = ""
@@ -63,8 +50,11 @@ class NewGuest : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            saveguest()
-
+            if (nameinputedit.text.toString().isEmpty()) {
+                nameinputedit.error = "Guest name is required!"
+            } else {
+                saveguest()
+            }
         }
     }
 
@@ -94,22 +84,24 @@ class NewGuest : AppCompatActivity() {
         }
 
         //val cropbitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
-        saveToInternalStorage()
+        if (uri != null) saveToInternalStorage()
 
-        val guest = GuestEntity()
-        guest.eventid = eventkey
-        guest.contactid = "local"
-        guest.rsvp = categoryrsvp
-        guest.companion = categorycompanions
+        val guest = GuestEntity().apply {
+            eventid = eventkey
+            contactid = "local"
+            rsvp = categoryrsvp
+            companion = categorycompanions
 
-        guest.name = nameinputedit.text.toString()
-        guest.phone = phoneinputedit.text.toString()
-        guest.email = mailinputedit.text.toString()
-        guest.table = tableinputedit.text.toString()
+            name = nameinputedit.text.toString()
+            phone = phoneinputedit.text.toString()
+            email = mailinputedit.text.toString()
+            table = tableinputedit.text.toString()
 
-        guest.imageurl = uri.toString()
+            imageurl = uri?.let{it.toString()} ?: ""
+        }
 
         guest.addGuest()
+        finish()
     }
 
     private fun saveToInternalStorage() {
@@ -124,37 +116,13 @@ class NewGuest : AppCompatActivity() {
                 requestPermissions(permissions, NewGuest.PERMISSION_CODE)
             } else {
                 //permission already granted
-                saveImage()
+                saveImage(applicationContext, uri)
             }
         } else {
             //system OS is < Marshmallow
-            saveImage()
+            saveImage(applicationContext, uri)
         }
     }
-
-    private fun saveImage() {
-
-        val cw = ContextWrapper(applicationContext)
-
-        var file = cw.getDir("images", Context.MODE_PRIVATE)
-        file = File(file, uri.lastPathSegment.toString())
-
-
-        try {
-            val parcelFileDescriptor = contentResolver.openFileDescriptor(uri, "r");
-            val fileDescriptor = parcelFileDescriptor!!.fileDescriptor
-            val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-
-            val fos = FileOutputStream(file)
-            image.compress(Bitmap.CompressFormat.PNG, 100, fos)
-            Log.i("File Saved",file.toString())
-            fos.flush()
-            fos.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
 
     private fun showImagePickerDialog() {
         //Intent to pick image

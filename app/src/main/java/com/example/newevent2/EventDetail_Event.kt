@@ -3,8 +3,10 @@ package com.example.newevent2
 import android.content.Intent
 import android.content.Intent.getIntent
 import android.content.Intent.getIntentOld
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -24,6 +26,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.eventdetail_event.*
 import kotlinx.android.synthetic.main.eventdetail_event.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class EventDetail_Event : Fragment() {
@@ -103,6 +107,14 @@ class EventDetail_Event : Fragment() {
                         mapview.onResume()
                         mapview.getMapAsync(this)
 
+                        mapView.setOnClickListener(object : View.OnClickListener {
+                            val uri = String.format(Locale.ENGLISH, "geo:%f,%f", eventitem.latitude, eventitem.longitude)
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+                            override fun onClick(p0: View?) {
+                                context!!.startActivity(intent)
+                            }
+                            //context!!.startActivity(intent)
+                        })
 
                         editEventButton.setOnClickListener{
                             val eventedit = Intent(context, Event_EditDetail::class.java)
@@ -130,7 +142,7 @@ class EventDetail_Event : Fragment() {
                     override fun onMapReady(p0: GoogleMap?) {
                         googleMap = p0!!
                         googleMap!!.addMarker(
-                            MarkerOptions().position(eventLocation).title("My Event")
+                            MarkerOptions().position(eventLocation).title(eventitem.location)
                         )
                         googleMap!!.moveCamera(
                             CameraUpdateFactory.newLatLngZoom(
@@ -141,6 +153,23 @@ class EventDetail_Event : Fragment() {
                         googleMap!!.uiSettings.setAllGesturesEnabled(false)
                     }
                 })
+//-------------------------------------------------------------------------------------
+            val guestentity = GuestEntity()
+            guestentity.eventid = eventkey
+            guestentity.getGuestsEvent(object : FirebaseSuccessListenerGuest {
+                override fun onGuestList(list: ArrayList<Guest>) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onGuestConfirmation(confirmed: Int, rejected: Int, pending: Int) {
+                    totaltext.text = (confirmed + rejected + pending).toString()
+                    acceptedtext.text = confirmed.toString()
+                    rejectedtext.text = rejected.toString()
+                    pendingtext.text = pending.toString()
+                }
+            })
+
+//-------------------------------------------------------------------------------------
         }
         return inf
     }

@@ -1,7 +1,9 @@
 package com.example.newevent2
 
 import android.Manifest
+import android.app.Activity
 import android.content.ContentResolver
+import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -11,27 +13,36 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.contacts.*
 import kotlinx.android.synthetic.main.contacts_all.*
 import kotlinx.android.synthetic.main.contacts_all.view.*
+import java.lang.ClassCastException
 
 class ContactsAll : Fragment() {
 
     var contactlist = ArrayList<Contact>()
+    var eventkey: String? = null
     lateinit var recyclerViewAllContacts: RecyclerView
     var toolbarmenuflag = false
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    var mOnFragmentLoadListener: com.example.newevent2.OnCompleteListener? = null
+
     //var mClearSelected: ClearSelected? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //eventkey = this.arguments!!.get("eventkey").toString()
         toolbar =
             activity!!.findViewById(R.id.toolbar)
         val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
@@ -60,8 +71,11 @@ class ContactsAll : Fragment() {
                 eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
                 eventspinner.adapter = null
                 eventspinner.adapter = eventlistadapter
-                Log.i("SPINNER","************ Estoy agregando al spinner **************************")
-                Log.i("SpinnerList",list.toString())
+                Log.i(
+                    "SPINNER",
+                    "************ Estoy agregando al spinner **************************"
+                )
+                Log.i("SpinnerList", list.toString())
             }
         })
 
@@ -87,6 +101,7 @@ class ContactsAll : Fragment() {
                 readcontacts()
             }
         }
+        //mOnFragmentLoadListener?.onComplete()
         return inf
     }
 
@@ -176,17 +191,16 @@ class ContactsAll : Fragment() {
                         when (it.itemId) {
                             R.id.action_add -> {
                                 val evententity = EventEntity()
-                                evententity.getEventKey(eventspinner.selectedItem.toString(),
+                                evententity.getEventKey(
+                                    eventspinner.selectedItem.toString(),
                                     object : FirebaseSuccessListenerSingleValue {
                                         override fun onDatafound(key: String) {
-                                            //Toast.makeText(activity, key, Toast.LENGTH_SHORT).show()
+//                                            //Toast.makeText(activity, key, Toast.LENGTH_SHORT).show()
                                             for (index in countselected) {
                                                 val guest = GuestEntity()
                                                 guest.eventid = key
                                                 guest.contactid = contactlist[index].key
                                                 guest.addGuest()
-//                                                mClearSelected!!.onClearSelected(index)
-//                                                countselected.remove(index)
                                             }
                                             rvAdapter.onClearSelected()
                                         }
@@ -219,37 +233,9 @@ class ContactsAll : Fragment() {
                     toolbarmenuflag = false
                     toolbar.menu.clear()
                 }
-                //.actionBar!!.title = "Hola Mundo$countclicks"
-
             }
         }
         recyclerViewAllContacts.adapter = rvAdapter
     }
-
 }
 
-//fun getEventKey(eventname: String, dataFetched: FirebaseSuccessListener) {
-//    val database = FirebaseDatabase.getInstance()
-//    val myRef = database.reference
-//    val postRef = myRef.child("User").child("Event")
-//    var eventkey = ""
-//
-//    val eventListenerActive = object : ValueEventListener {
-//        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-//        override fun onDataChange(p0: DataSnapshot) {
-//
-//            for (snapshot in p0.children) {
-//                val eventitem = snapshot.getValue(Event::class.java)!!
-//                if (eventitem.name == eventname) {
-//                    eventkey = snapshot.key.toString()
-//                }
-//            }
-//            dataFetched.onDatafound(eventkey)
-//        }
-//
-//        override fun onCancelled(databaseError: DatabaseError) {
-//            println("loadPost:onCancelled ${databaseError.toException()}")
-//        }
-//    }
-//    postRef.addValueEventListener(eventListenerActive)
-//}

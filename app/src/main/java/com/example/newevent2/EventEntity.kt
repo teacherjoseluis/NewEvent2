@@ -57,20 +57,44 @@ class EventEntity : Event() {
     }
 
 
+//    fun getEventNamesHash(dataFetched: FirebaseSuccessListenerHashMap) {
+//        var eventmap = HashMap<String, String>()
+//        //var eventNameList = ArrayList<String>()
+//        val eventListenerActive = object : ValueEventListener {
+//            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+//            override fun onDataChange(p0: DataSnapshot) {
+//                eventmap.clear()
+//                Log.i("ListDataStart",eventmap.toString())
+//                for (snapshot in p0.children) {
+//                    val eventitem = snapshot.getValue(Event::class.java)!!
+//                    eventmap[snapshot.key.toString()] = eventitem.name
+//                }
+//                Log.i("ListDataEnd",eventmap.toString())
+//                dataFetched.onHashMapCreated(eventmap)
+//            }
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                println("loadPost:onCancelled ${databaseError.toException()}")
+//            }
+//
+//        }
+//        postRef.addValueEventListener(eventListenerActive)
+//    }
+
     fun getEventNames(dataFetched: FirebaseSuccessListenerList) {
-        var eventList = ArrayList<String>()
+        var eventlist = ArrayList<String>()
         //var eventNameList = ArrayList<String>()
         val eventListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
-                eventList.clear()
-                Log.i("ListDataStart",eventList.toString())
+                eventlist.clear()
+                Log.i("ListDataStart", eventlist.toString())
                 for (snapshot in p0.children) {
                     val eventitem = snapshot.getValue(Event::class.java)!!
-                    eventList.add(eventitem.name)
+                    eventlist.add( eventitem.name)
                 }
-                Log.i("ListDataEnd",eventList.toString())
-                dataFetched.onListCreated(eventList)
+                Log.i("ListDataEnd", eventlist.toString())
+                dataFetched.onListCreated(eventlist)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -80,4 +104,5 @@ class EventEntity : Event() {
         }
         postRef.addValueEventListener(eventListenerActive)
     }
+
 }

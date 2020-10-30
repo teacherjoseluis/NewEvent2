@@ -21,12 +21,10 @@ import androidx.core.view.isVisible
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.button
 import kotlinx.android.synthetic.main.activity_main.floatingActionButton
 import kotlinx.android.synthetic.main.new_guest.*
-import kotlinx.android.synthetic.main.task_editdetail.*
-import com.example.newevent2.saveImage
+import java.lang.IndexOutOfBoundsException
 
 class Guest_EditDetail : AppCompatActivity() {
 
@@ -57,14 +55,25 @@ class Guest_EditDetail : AppCompatActivity() {
         var contactphone: String? = null
         var contactemail: String? = null
         var cursor: Cursor? = null
+        var phonecursor: Cursor? = null
+        var emailcursor: Cursor? = null
 
-        if (guestitem.contactid == "local") localflag=true
+        if (guestitem.contactid == "local") localflag = true
 
         val whereclause = StringBuffer()
         whereclause.append(ContactsContract.Contacts._ID)
         whereclause.append(" = ")
         whereclause.append(guestitem.contactid)
 
+        val whereclausephone = StringBuffer()
+        whereclausephone.append(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
+        whereclausephone.append(" = ")
+        whereclausephone.append(guestitem.contactid)
+
+        val whereclauseemail = StringBuffer()
+        whereclauseemail.append(ContactsContract.CommonDataKinds.Email.CONTACT_ID)
+        whereclauseemail.append(" = ")
+        whereclauseemail.append(guestitem.contactid)
 
 
         if (!localflag) {
@@ -76,30 +85,55 @@ class Guest_EditDetail : AppCompatActivity() {
                     null, null
                 )
 
+            phonecursor =
+                contentResolver.query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    whereclausephone.toString(),
+                    null, null
+                )
+
+            emailcursor =
+                contentResolver.query(
+                    ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                    null,
+                    whereclauseemail.toString(),
+                    null, null
+                )
+
             cursor?.moveToNext()
+            phonecursor?.moveToNext()
+            emailcursor?.moveToNext()
+
             contactname =
                 cursor?.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
                     .toString()
             contactphoto =
                 cursor?.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI))
+
+            contactphone =
+                phonecursor?.getString(phonecursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
                     .toString()
-            contactphone=
-                cursor?.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
-                    .toString()
-            contactemail=
-                cursor?.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email._ID))
-                    .toString()
+            contactemail =
+                try {
+                    emailcursor?.getString(emailcursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
+                        .toString()
+                } catch (e: IndexOutOfBoundsException) {
+                    "No Email"
+                }
 
             cursor?.let { cursor.close() }
+            phonecursor?.let { phonecursor.close() }
+            emailcursor?.let { emailcursor.close() }
         }
 
         val camerabutton = findViewById<ImageView>(R.id.floatingActionButton).also {
             if (!localflag) it.isVisible = false
         }
         val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit).also {
-            if (!localflag) it.isEnabled=false
+            if (!localflag) it.isEnabled = false
         }
-        mPhoneNumber.setText(contactphone?.let{it} ?: guestitem.phone)
+        mPhoneNumber.setText(contactphone?.let { it } ?: guestitem.phone)
 
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
@@ -108,15 +142,15 @@ class Guest_EditDetail : AppCompatActivity() {
 
 
         val nameinput = findViewById<TextInputEditText>(R.id.nameinputedit).also {
-            if (!localflag) it.isEnabled=false
+            if (!localflag) it.isEnabled = false
         }
         nameinput.setText(contactname?.let { it } ?: guestitem.name)
 
 
         val emailinput = findViewById<TextInputEditText>(R.id.mailinputedit).also {
-            if (!localflag) it.isEnabled=false
+            if (!localflag) it.isEnabled = false
         }
-        emailinput.setText(contactemail?.let{it} ?: guestitem.email)
+        emailinput.setText(contactemail?.let { it } ?: guestitem.email)
 
         var selectedchiprsvp = when (guestitem.rsvp) {
             "y" -> findViewById<TextView>(R.id.chip)
@@ -149,25 +183,51 @@ class Guest_EditDetail : AppCompatActivity() {
             )
         }
 
+        phoneimage.setOnClickListener {
+            if (!phoneinputedit.text.isNullOrBlank()) {
+                val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneinputedit.text.toString(), null))
+                startActivity(intent)
+            }
+        }
+
+        mailimage.setOnClickListener {
+            if (!emailinput.text.isNullOrBlank()) {
+                val intent = Intent(
+                    Intent.ACTION_SENDTO,
+                    Uri.fromParts("mailto", emailinput.text.toString(), null)
+                )
+                intent.putExtra(Intent.EXTRA_EMAIL, emailinput.text.toString())
+                startActivity(Intent.createChooser(intent, "Send Email"))
+            }
+        }
+
         floatingActionButton.setOnClickListener {
             showImagePickerDialog()
         }
 
         button.setOnClickListener {
-            editguest()
+            if (nameinputedit.text.toString().isEmpty()) {
+                nameinputedit.error = "Guest name is required!"
+            } else {
+                editguest()
+                finish()
+            }
         }
 
     }
 
-    private fun editguest(){
+    private fun editguest() {
 
-        var chiptextvalue : String
+        var chiptextvalue: String
         val guest = GuestEntity()
         guest.key = intent.getStringExtra("key").toString()
         guest.eventid = intent.getStringExtra("eventid").toString()
 
-        if(localflag) {
-            if(uri.toString() != intent.getStringExtra("imageurl").toString()) saveImage(applicationContext, uri)
+        if (localflag) {
+            if (uri.toString() != intent.getStringExtra("imageurl").toString()) saveImage(
+                applicationContext,
+                uri
+            )
             guest.imageurl = uri.toString()
             guest.name = nameinputedit.text.toString()
             guest.phone = phoneinputedit.text.toString()
