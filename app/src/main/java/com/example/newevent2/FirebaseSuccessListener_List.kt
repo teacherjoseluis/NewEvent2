@@ -2,6 +2,6 @@ package com.example.newevent2
 
 interface FirebaseSuccessListenerList {
 
-    fun onListCreated(list: ArrayList<String>)
+    fun onListCreated(list: ArrayList<Any>)
 
 }

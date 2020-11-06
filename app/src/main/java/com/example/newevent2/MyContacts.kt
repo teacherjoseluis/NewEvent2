@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -45,13 +47,27 @@ class MyContacts : AppCompatActivity() {
                     viewPager.currentItem = p0!!.position
 
                     if (p0.position == 0) {
-                        val actionbutton =
-                            findViewById<FloatingActionButton>(R.id.floatingActionButton)
-                        actionbutton.isVisible = false
+
+                        findViewById<FloatingActionButton>(R.id.floatingActionButtonGuest).isVisible =
+                            false
+                        findViewById<FloatingActionButton>(R.id.floatingActionButtonVendor).isVisible =
+                            false
+                        findViewById<TextView>(R.id.eventlabel).isVisible = true
+                        findViewById<Spinner>(R.id.eventspinner).isVisible = true
                     } else if (p0.position == 1) {
-                        val actionbutton =
-                            findViewById<FloatingActionButton>(R.id.floatingActionButton)
-                        actionbutton.isVisible = true
+                        findViewById<FloatingActionButton>(R.id.floatingActionButtonGuest).isVisible =
+                            true
+                        findViewById<FloatingActionButton>(R.id.floatingActionButtonVendor).isVisible =
+                            false
+                        findViewById<TextView>(R.id.eventlabel).isVisible = true
+                        findViewById<Spinner>(R.id.eventspinner).isVisible = true
+                    } else if (p0.position == 2) {
+                        findViewById<FloatingActionButton>(R.id.floatingActionButtonGuest).isVisible =
+                            false
+                        findViewById<FloatingActionButton>(R.id.floatingActionButtonVendor).isVisible =
+                            true
+                        findViewById<TextView>(R.id.eventlabel).isVisible = false
+                        findViewById<Spinner>(R.id.eventspinner).isVisible = false
                     }
                 }
 

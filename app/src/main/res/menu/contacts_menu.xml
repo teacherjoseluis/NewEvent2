@@ -5,12 +5,12 @@
     android:layout_height="wrap_content">
 
     <item
-        android:id="@+id/action_add"
+        android:id="@+id/add_guest"
         android:title="Add as Guest"
         app:showAsAction="never"></item>
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/add_vendor"
         android:title="Add as Vendor"
         app:showAsAction="never"></item>
 </menu>

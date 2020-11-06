@@ -66,6 +66,8 @@
         <activity android:name=".MyContacts"/>
         <activity android:name=".NewGuest" />
         <activity android:name=".Guest_EditDetail" />
+        <activity android:name=".NewVendor" />
+        <activity android:name=".Vendor_EditDetail" />
     </application>
 
 </manifest>

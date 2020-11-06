@@ -94,6 +94,7 @@ class EventEntity : Event() {
                     eventlist.add( eventitem.name)
                 }
                 Log.i("ListDataEnd", eventlist.toString())
+                val listevent = eventlist as ArrayList<Any>
                 dataFetched.onListCreated(eventlist)
             }
 

@@ -36,17 +36,28 @@ class ContactsAll : Fragment() {
     lateinit var recyclerViewAllContacts: RecyclerView
     var toolbarmenuflag = false
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
-    var mOnFragmentLoadListener: com.example.newevent2.OnCompleteListener? = null
-
-    //var mClearSelected: ClearSelected? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //eventkey = this.arguments!!.get("eventkey").toString()
         toolbar =
             activity!!.findViewById(R.id.toolbar)
         val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
         appbartitle.text = "Contacts"
+
+        val eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
+        val evententity = EventEntity()
+        evententity.getEventNames(object : FirebaseSuccessListenerList {
+            override fun onListCreated(list: ArrayList<Any>) {
+                val eventlistadapter = activity?.let {
+                    ArrayAdapter(it, R.layout.simple_spinner_item_event, list)
+                }
+                eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
+                eventspinner.adapter = null
+                eventspinner.adapter = eventlistadapter
+                Log.i("SpinnerList", list.toString())
+            }
+        })
+
     }
 
     override fun onCreateView(
@@ -55,31 +66,8 @@ class ContactsAll : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.contacts_all, container, false)
-        //inf.textView9.text = category
 
-        val actionbutton = activity!!.findViewById<FloatingActionButton>(R.id.floatingActionButton)
-        actionbutton.isVisible = false
-
-        val eventspinner = inf.findViewById<Spinner>(R.id.eventspinner)
-        val evententity = EventEntity()
-        evententity.getEventNames(object : FirebaseSuccessListenerList {
-
-            override fun onListCreated(list: ArrayList<String>) {
-                val eventlistadapter = activity?.let {
-                    ArrayAdapter(it, R.layout.simple_spinner_item_event, list)
-                }
-                eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
-                eventspinner.adapter = null
-                eventspinner.adapter = eventlistadapter
-                Log.i(
-                    "SPINNER",
-                    "************ Estoy agregando al spinner **************************"
-                )
-                Log.i("SpinnerList", list.toString())
-            }
-        })
-
-        recyclerViewAllContacts = inf.recyclerView
+        recyclerViewAllContacts = inf.recyclerViewContacts
         recyclerViewAllContacts.apply {
             layoutManager = LinearLayoutManager(inf.context).apply {
                 stackFromEnd = true
@@ -101,7 +89,6 @@ class ContactsAll : Fragment() {
                 readcontacts()
             }
         }
-        //mOnFragmentLoadListener?.onComplete()
         return inf
     }
 
@@ -150,8 +137,6 @@ class ContactsAll : Fragment() {
                     (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)))
                 contactitem.name =
                     (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
-                //contactitem.imageurl = (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI)))
-                //val image_uri = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Contactables.PHOTO_URI))
                 val image_uri =
                     cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI))
                 if (image_uri != null) {
@@ -175,8 +160,6 @@ class ContactsAll : Fragment() {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
                 val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
-//                val appbarmenu = activity!!.findViewById<ImageView>(R.id.appbarmenu)
-//                val menuDrawable = ContextCompat.getDrawable(context!!, R.drawable.icons8_menu_vertical_24)!!
 
                 if (countselected.size != 0) {
                     appbartitle.text = "${countselected.size} selected"
@@ -186,16 +169,14 @@ class ContactsAll : Fragment() {
                         toolbarmenuflag = true
                     }
 
-                    //var myeventkey = ""
                     toolbar.setOnMenuItemClickListener(androidx.appcompat.widget.Toolbar.OnMenuItemClickListener {
                         when (it.itemId) {
-                            R.id.action_add -> {
+                            R.id.add_guest -> {
                                 val evententity = EventEntity()
                                 evententity.getEventKey(
                                     eventspinner.selectedItem.toString(),
                                     object : FirebaseSuccessListenerSingleValue {
                                         override fun onDatafound(key: String) {
-//                                            //Toast.makeText(activity, key, Toast.LENGTH_SHORT).show()
                                             for (index in countselected) {
                                                 val guest = GuestEntity()
                                                 guest.eventid = key
@@ -206,17 +187,40 @@ class ContactsAll : Fragment() {
                                         }
                                     }
                                 )
-                                //countselected.clear()
                                 appbartitle.text = "Contacts"
                                 toolbarmenuflag = false
                                 toolbar.menu.clear()
+                                true
                             }
-                            R.id.action_settings -> {
-                                //Toast.makeText(activity,"Settings ${countselected.size}",Toast.LENGTH_SHORT).show()
+                            R.id.add_vendor -> {
+//                                val evententity = EventEntity()
+//                                evententity.getEventKey(
+//                                    eventspinner.selectedItem.toString(),
+//                                    object : FirebaseSuccessListenerSingleValue {
+//                                        override fun onDatafound(key: String) {
+                                for (index in countselected) {
+                                    val vendor = VendorEntity()
+                                    //vendor.eventid = key
+                                    vendor.contactid = contactlist[index].key
+                                    vendor.addVendor()
+                                }
+                                rvAdapter.onClearSelected()
+                                appbartitle.text = "Contacts"
+                                toolbarmenuflag = false
+                                toolbar.menu.clear()
+                                true
                             }
+
                         }
-                        true
+                        false
                     })
+
+                } else {
+                    appbartitle.text = "Contacts"
+                    toolbarmenuflag = false
+                    toolbar.menu.clear()
+                }
+//                    })
 //                    mClearSelected!!.onClearSelected(index)
 //                    appbarmenu.setImageDrawable(menuDrawable)
 //                    appbarmenu.isClickable = true
@@ -226,13 +230,6 @@ class ContactsAll : Fragment() {
 //                        toolbar.inflateMenu(R.menu.contacts_menu)
 //                    }
 
-                } else {
-                    appbartitle.text = "Contacts"
-//                    appbarmenu.setImageDrawable(null)
-//                    appbarmenu.isClickable = false
-                    toolbarmenuflag = false
-                    toolbar.menu.clear()
-                }
             }
         }
         recyclerViewAllContacts.adapter = rvAdapter

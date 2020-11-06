@@ -18,20 +18,18 @@ class Contacts_PagerAdapter(
             0 -> {
                 val bundle = Bundle()
                 val fragInfo = ContactsAll()
-                //bundle.putString("eventkey", eventkey)
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             1 -> {
                 val bundle = Bundle()
                 val fragInfo = GuestsAll()
-                //bundle.putString("eventkey", eventkey)
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             2 -> {
                 val bundle = Bundle()
-                val fragInfo = ContactsAll()
+                val fragInfo = VendorsAll()
                 //bundle.putString("eventkey", eventkey)
                 fragInfo.arguments = bundle
                 return fragInfo

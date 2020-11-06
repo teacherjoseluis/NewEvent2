@@ -84,7 +84,6 @@ class GuestEntity : Guest() {
 
 
     fun editGuest() {
-
         val postRef =
             myRef.child("User").child("Event").child(eventid).child("Guest").child(this.key)
         postRef.child("name").setValue(name)

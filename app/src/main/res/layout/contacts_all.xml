@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ContactsAll">
 
-
+<!--
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout5"
         android:layout_width="match_parent"
@@ -43,8 +43,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/eventlabel"
             app:layout_constraintTop_toTopOf="parent" />
+-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -69,7 +69,7 @@
                 tools:layout_editor_absoluteX="20dp">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
+                    android:id="@+id/recyclerViewContacts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
