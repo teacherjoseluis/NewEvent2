@@ -89,17 +89,21 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) :
         payment.eventid = paymentList[position].eventid
         payment.name = paymentList[position].name
         payment.date = paymentList[position].date
+        payment.category = paymentList[position].category
         payment.amount = paymentList[position].amount
 
         paymentList.removeAt(position)
         notifyItemRemoved(position)
-        payment.deletePayment()
 
-        Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
-            .setAction("UNDO") {
-                paymentList.add(payment)
-                notifyItemInserted(paymentList.lastIndex)
-                payment.addPayment()
-            }.show()
+        if (action == "delete") {
+            payment.deletePayment()
+
+            Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
+                .setAction("UNDO") {
+                    paymentList.add(payment)
+                    notifyItemInserted(paymentList.lastIndex)
+                    payment.addPayment()
+                }.show()
+        }
     }
 }
