@@ -117,7 +117,6 @@ class PaymentEntity : Payment() {
             "amount" to amount,
             "date" to date,
             "category" to category,
-            "status" to "A",
             "eventid" to eventid
         )
 
