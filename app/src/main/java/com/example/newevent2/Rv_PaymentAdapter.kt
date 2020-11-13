@@ -33,7 +33,7 @@ import java.util.*
 // It does this by assigning the view holder to a position, and calling the adapter's onBindViewHolder() method.
 
 class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) :
-    RecyclerView.Adapter<Rv_PaymentAdapter.ViewHolder>(), ItemTouchHelperAdapter {
+    RecyclerView.Adapter<Rv_PaymentAdapter.ViewHolder>(), ItemTouchAdapterAction {
     // ViewGroup - Views container
 
     lateinit var context: Context
@@ -79,11 +79,11 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) :
         val paymentamount: TextView? = itemView.findViewById<TextView>(R.id.paymentamount)
     }
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView) {
+    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
         TODO("Not yet implemented")
     }
 
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView) {
+    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
         val payment = PaymentEntity()
         payment.key = paymentList[position].key
         payment.eventid = paymentList[position].eventid
@@ -95,7 +95,7 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) :
         notifyItemRemoved(position)
         payment.deletePayment()
 
-        Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
+        Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
             .setAction("UNDO") {
                 paymentList.add(payment)
                 notifyItemInserted(paymentList.lastIndex)

@@ -20,22 +20,27 @@
     </style>
     <style name="Body1"  parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">18dp</item>
     </style>
+    <style name="Body2"  parent="TextAppearance.AppCompat.Body1">
+        <item name="android:fontFamily">@font/robotolight</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
     <style name="BodyBold"  parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotomedium</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">18dp</item>
     </style>
     <style name="BodyItalic"  parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolightitalic</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">18dp</item>
     </style>
     <style name="Caption"  parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotolight</item>
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">16dp</item>
     </style>
     <style name="Overline"  parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotomedium</item>
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">16dp</item>
     </style>
 </resources>

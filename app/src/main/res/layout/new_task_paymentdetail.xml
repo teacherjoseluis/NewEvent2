@@ -44,7 +44,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout11">
 
             <com.blackcat.currencyedittext.CurrencyEditText
-                android:id="@+id/pyamount"
+                android:id="@+id/pyamount2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter Amount"
@@ -62,7 +62,7 @@
             tools:layout_editor_absoluteX="-26dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/pydate"
+                android:id="@+id/pydate2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"

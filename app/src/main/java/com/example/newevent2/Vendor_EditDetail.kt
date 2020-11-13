@@ -30,8 +30,10 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.eventdetail_event.*
 import kotlinx.android.synthetic.main.new_guest.*
+import kotlinx.android.synthetic.main.new_guest.phoneimage
+import kotlinx.android.synthetic.main.new_guest.phoneinputedit
+import kotlinx.android.synthetic.main.vendor_editdetail.*
 import java.lang.IndexOutOfBoundsException
 import java.util.*
 
@@ -159,7 +161,7 @@ class Vendor_EditDetail : AppCompatActivity(), OnMapReadyCallback {
 
 
         if (!localflag) {
-            constraintLayout9.visibility = View.INVISIBLE
+            vendormap.visibility = View.INVISIBLE
         } else {
             vendorname = vendoritem.name
             vendorLocation = LatLng(vendoritem.latitude, vendoritem.longitude)

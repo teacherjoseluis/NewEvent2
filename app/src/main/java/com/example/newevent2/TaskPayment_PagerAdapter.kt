@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class TaskList_PagerAdapter(
+class TaskPayment_PagerAdapter(
     private val myContext: Context,
     fm: FragmentManager,
     internal var totalTabs: Int,
@@ -16,28 +16,23 @@ class TaskList_PagerAdapter(
 ) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
+        val bundle = Bundle()
+        bundle.putString("eventkey", eventkey)
+        bundle.putString("category", category)
+
         return when (position) {
             0 -> {
-                val bundle = Bundle()
-                bundle.putString("eventkey", eventkey)
-                bundle.putString("category", category)
-                val fragInfo = TaskList_Tasks()
+                val fragInfo = TaskPayment_Tasks()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             1 -> {
-                val bundle = Bundle()
-                bundle.putString("eventkey", eventkey)
-                bundle.putString("category", category)
-                val fragInfo = TaskList_Payments()
+                val fragInfo = TaskPayment_Payments()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             else -> {
-                val bundle = Bundle()
-                bundle.putString("eventkey", eventkey)
-                bundle.putString("category", category)
-                val fragInfo = TaskList_Tasks()
+                val fragInfo = TaskPayment_Tasks()
                 fragInfo.arguments = bundle
                 return fragInfo
             }

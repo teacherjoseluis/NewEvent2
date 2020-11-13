@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 
 class Rv_TaskAdapterComplete (val taskList: MutableList<Task>) :
-    RecyclerView.Adapter<Rv_TaskAdapterComplete.ViewHolder>(), ItemTouchHelperAdapter {
+    RecyclerView.Adapter<Rv_TaskAdapterComplete.ViewHolder>(), ItemTouchAdapterAction {
 
         lateinit var context: Context
 
@@ -48,7 +48,6 @@ class Rv_TaskAdapterComplete (val taskList: MutableList<Task>) :
 
                 context.startActivity(taskdetail)
             }
-
         }
 
         // A ViewHolder describes an item view and metadata about its place within the RecyclerView.
@@ -59,11 +58,11 @@ class Rv_TaskAdapterComplete (val taskList: MutableList<Task>) :
             val taskbudget: TextView? = itemView.findViewById<TextView>(R.id.taskbudget)
         }
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView) {
+    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action : String) {
         TODO("Not yet implemented")
     }
 
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView) {
+    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action : String) {
             val task = TaskEntity()
             task.key = taskList[position].key
             task.eventid = taskList[position].eventid

@@ -8,30 +8,30 @@ import android.view.MotionEvent
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
 
+
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class SwipeControllerGuest(
+class SwipeControllerTasks(
     val context: Context,
-    adapter: Rv_GuestAdapter,
-    recyclerView: RecyclerView
+    adapter: ItemTouchAdapterAction,
+    recyclerView: RecyclerView,
+    leftaction: String?,
+    rightaction: String?
 ) : ItemTouchHelper.Callback() {
 
-    var swipeBack: Boolean = false
-    private var mAdapter: ItemTouchHelperAdapter
+    private val mClearPaint = Paint()
+    private var mAdapter: ItemTouchAdapterAction
     private var rv: RecyclerView
 
-    private val mContext = context
-    private val mBackground = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#D32F2F")
-    private val mClearPaint = Paint()
-    private val deleteDrawable = ContextCompat.getDrawable(mContext, R.drawable.icons8_trash_can)!!
-    private val deleteintrinsicWidth = deleteDrawable.intrinsicWidth
-    private val deleteintrinsicHeight = deleteDrawable.intrinsicHeight
+    private var leftaction = leftaction
+    private var rightaction = rightaction
+
+    var swipeBack: Boolean = false
 
     init {
         mClearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-        deleteDrawable.setTint(Color.WHITE)
         mAdapter = adapter
         rv = recyclerView
     }
@@ -40,14 +40,10 @@ class SwipeControllerGuest(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        //return makeMovementFlags(0, LEFT or RIGHT)
-        return makeFlag(
-            ItemTouchHelper.ACTION_STATE_IDLE,
-            ItemTouchHelper.RIGHT
-        ) or makeFlag(
-            ItemTouchHelper.ACTION_STATE_SWIPE,
-            ItemTouchHelper.RIGHT
-        )
+        return when (leftaction != null) {
+            true -> makeFlag(ACTION_STATE_SWIPE, LEFT or RIGHT)
+            false -> makeFlag(ACTION_STATE_SWIPE, RIGHT)
+        }
     }
 
     override fun onMove(
@@ -59,8 +55,11 @@ class SwipeControllerGuest(
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        if (direction == ItemTouchHelper.RIGHT) {
-            mAdapter.onItemSwiftRight(viewHolder.adapterPosition, rv)
+        if (direction == LEFT) {
+            mAdapter.onItemSwiftLeft(viewHolder.adapterPosition, rv, leftaction!!)
+        }
+        if (direction == RIGHT) {
+            mAdapter.onItemSwiftRight(viewHolder.adapterPosition, rv, rightaction!!)
         }
     }
 
@@ -73,7 +72,7 @@ class SwipeControllerGuest(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+        if (actionState == ACTION_STATE_SWIPE) {
             setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -105,28 +104,58 @@ class SwipeControllerGuest(
         }
 
         if (dX > 0) {// Swipe to Delete
-            mBackground.color = backgroundColor
-            mBackground.setBounds(
+
+            var rightcontrol: SwipeControl? = null
+            if (rightaction == "delete") {
+                rightcontrol = SwipeControlDelete(context)
+            } else if (rightaction == "undo") {
+                rightcontrol = SwipeControlUndo(context)
+            }
+
+            rightcontrol!!.background.color = rightcontrol.backgroundcolor!!
+            rightcontrol.background.setBounds(
                 itemView.left + dX.toInt(),
                 itemView.top,
                 itemView.left,
                 itemView.bottom
             )
-            mBackground.draw(c)
+            rightcontrol.background.draw(c)
 
-            val deleteIconTop = itemView.top + (itemHeight - deleteintrinsicHeight) / 2
-            val deleteIconMargin = (itemHeight - deleteintrinsicHeight) / 2
-            val deleteIconLeft = itemView.left + deleteIconMargin
-            val deleteIconRight = itemView.left + deleteIconMargin + deleteintrinsicWidth
-            val deleteIconBottom = deleteIconTop + deleteintrinsicHeight
+            val IconTop = itemView.top + (itemHeight - rightcontrol.intrinsicHeight!!) / 2
+            val IconMargin = (itemHeight - rightcontrol.intrinsicHeight!!) / 2
+            val IconLeft = itemView.left + IconMargin
+            val IconRight = itemView.left + IconMargin + rightcontrol.intrinsicWidth!!
+            val IconBottom = IconTop + rightcontrol.intrinsicWidth!!
 
-            deleteDrawable.setBounds(
-                deleteIconLeft,
-                deleteIconTop,
-                deleteIconRight,
-                deleteIconBottom
+            rightcontrol.drawable!!.setBounds(
+                IconLeft,
+                IconTop,
+                IconRight,
+                IconBottom
             )
-            deleteDrawable.draw(c)
+            rightcontrol.drawable!!.draw(c)
+        } else {// Swipe to Check
+            if (leftaction == "check") {
+                var leftcontrol = SwipeControlCheck(context)
+
+                leftcontrol.background.color = leftcontrol.backgroundcolor
+                leftcontrol.background.setBounds(
+                    itemView.right + dX.toInt(),
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
+                leftcontrol.background.draw(c)
+
+                val IconTop = itemView.top + (itemHeight - leftcontrol.intrinsicHeight) / 2
+                val IconMargin = (itemHeight - leftcontrol.intrinsicHeight) / 2
+                val IconLeft = itemView.right - IconMargin - leftcontrol.intrinsicWidth
+                val IconRight = itemView.right - IconMargin
+                val IconBottom = IconTop + leftcontrol.intrinsicHeight
+
+                leftcontrol.drawable.setBounds(IconLeft, IconTop, IconRight, IconBottom)
+                leftcontrol.drawable.draw(c)
+            }
         }
     }
 
@@ -148,4 +177,3 @@ class SwipeControllerGuest(
         }
     }
 }
-

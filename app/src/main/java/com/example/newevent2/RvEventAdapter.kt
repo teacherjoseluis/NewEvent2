@@ -1,9 +1,11 @@
 package com.example.newevent2
 
 import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Registry
@@ -42,17 +43,16 @@ class MyAppGlideModule : AppGlideModule() {
 // The adapter creates view holders as needed. The adapter also binds the view holders to their data.
 // It does this by assigning the view holder to a position, and calling the adapter's onBindViewHolder() method.
 
-class RvAdapter(val eventList: MutableList<Event>) : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+class RvEventAdapter(private val eventList: MutableList<Event>) :
+    RecyclerView.Adapter<RvEventAdapter.ViewHolder>() {
     // ViewGroup - Views container
 
     lateinit var storage: FirebaseStorage
     lateinit var context: Context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        // Instantiates a layout XML file into its corresponding View objects
-        val v = LayoutInflater.from(p0?.context).inflate(R.layout.adapter_item_layout, p0, false)
+        val v = LayoutInflater.from(p0?.context).inflate(R.layout.event_item_layout, p0, false)
         context = p0.context
-        //return ViewHolder(v, context);
         return ViewHolder(v)
     }
 
@@ -68,8 +68,7 @@ class RvAdapter(val eventList: MutableList<Event>) : RecyclerView.Adapter<RvAdap
         p0.eventdate?.text = eventList[p1].date
         p0.eventtime?.text = eventList[p1].time
 
-        //var dateformatter = DateFormat.parse("dd / MM / yyyy")
-        val dateformatter = SimpleDateFormat("dd / MM / yyyy")
+        val dateformatter = SimpleDateFormat("dd/MM/yyyy")
         val eventdate = dateformatter.parse(eventList[p1].date)
         val currdate = Date()
         val diffinmillisec = eventdate.time - currdate.time
@@ -79,30 +78,54 @@ class RvAdapter(val eventList: MutableList<Event>) : RecyclerView.Adapter<RvAdap
         val hours = minutes / 60
         val days = hours / 24
 
-        if (days > 0) {
-            p0.daysleft?.text = "$days days left"
-        } else if (days < 0) {
-            p0.daysleft?.text = (days * -1).toString() + " days passed"
-        } else {
-            p0.daysleft?.text = "Today"
+        when {
+            days > 0 -> {
+                p0.daysleft?.text = "$days days left"
+            }
+            days < 0 -> {
+                p0.daysleft?.text = (days * -1).toString() + " days passed"
+            }
+            else -> {
+                p0.daysleft?.text = "Today"
+            }
         }
 
-        if (eventList[p1].imageurl != "") {
+
+        var storageRef: Any
+        if (eventList[p1].imageurl != "null") {
             storage = FirebaseStorage.getInstance()
-            val storageRef =
+            storageRef =
                 storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/${eventList[p1].key}/${eventList[p1].imageurl}")
-            //val postRef = storageRef.child(eventList[p1].imageurl)
             Log.i(TAG, eventList[p1].imageurl)
-            Glide.with(p0.itemView.context)
-                .load(storageRef)
-                .into(p0.imageView)
+        } else {
+            storageRef =
+                Uri.parse(
+                    ContentResolver.SCHEME_ANDROID_RESOURCE +
+                            "://" + context.resources.getResourcePackageName(R.drawable.frame_206)
+                            + '/' + context.resources.getResourceTypeName(R.drawable.frame_206) + '/' + context.resources.getResourceEntryName(
+                        R.drawable.frame_206
+                    )
+                ).toString()
         }
+
+        Glide.with(p0.itemView.context)
+            .load(storageRef)
+            .centerCrop()
+            .into(p0.imageView)
 
         p0.itemView.setOnClickListener {
-            //Toast.makeText(p0.itemView.context, p0.eventname?.text, Toast.LENGTH_SHORT).show()
             val eventdetail = Intent(context, EventDetail::class.java)
             eventdetail.putExtra("eventkey", eventList[p1].key)
+            eventdetail.putExtra("placeid", eventList[p1].placeid)
+            eventdetail.putExtra("name", eventList[p1].name)
+            eventdetail.putExtra("date", eventList[p1].date)
+            eventdetail.putExtra("time", eventList[p1].time)
+            eventdetail.putExtra("about", eventList[p1].about)
+            eventdetail.putExtra("location", eventList[p1].location)
+            eventdetail.putExtra("latitude", eventList[p1].latitude)
+            eventdetail.putExtra("longitude", eventList[p1].longitude)
             eventdetail.putExtra("imageurl", eventList[p1].imageurl)
+            eventdetail.putExtra("address", eventList[p1].address)
             context.startActivity(eventdetail)
         }
     }

@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_main.floatingActionButton
 import kotlinx.android.synthetic.main.new_guest.*
 import kotlinx.android.synthetic.main.new_guest.button
 

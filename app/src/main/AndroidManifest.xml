@@ -58,8 +58,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".EventDetail" />
-        <activity android:name=".NewTask" />
-        <activity android:name=".TaskList" />
+<!--        <activity android:name=".NewTask" />-->
+        <activity android:name=".NewTask_TaskDetail" />
+        <activity android:name=".NewTask_PaymentDetail" />
+        <activity android:name=".TaskPaymentList" />
         <activity android:name=".Task_EditDetail" />
         <activity android:name=".Payment_EditDetail" />
         <activity android:name=".Event_EditDetail" />

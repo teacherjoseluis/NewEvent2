@@ -96,7 +96,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout9"
+        android:id="@+id/vendormap"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_weight=".5"

@@ -21,7 +21,7 @@
         app:srcCompat="@drawable/frame_206" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/saveImageActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -42,14 +42,9 @@
         android:shadowRadius="4"
         android:text="save changes"
         app:backgroundTint="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toTopOf="@+id/include2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <include
-        layout="@layout/toolbar"
-        tools:layout_editor_absoluteX="70dp"
-        tools:layout_editor_absoluteY="432dp"></include>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout11"
@@ -70,6 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/newevent_eventnameinput_en"
+            android:maxLength="20"
             android:textAppearance="@style/Body1" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -167,16 +163,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/newevent_eventaboutinput_en"
+            android:maxLength="50"
             android:textAppearance="@style/Body1" />
     </com.google.android.material.textfield.TextInputLayout>
-
+<!--
     <include
         android:id="@+id/include2"
         layout="@layout/navbottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"></include>
-
+-->
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="24dp"

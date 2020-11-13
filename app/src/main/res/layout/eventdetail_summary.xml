@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EventDetail_Summary">
+    tools:context=".EventDetailSummary">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -686,7 +686,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
-
+<!--
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayout4"
                 android:layout_width="match_parent"
@@ -713,7 +713,7 @@
                     app:srcCompat="@drawable/ic_icons8_plus" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+-->
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

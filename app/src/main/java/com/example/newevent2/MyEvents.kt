@@ -31,10 +31,7 @@ class MyEvents : AppCompatActivity() {
 
 
 //        initialize the recyclerView from the XML
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-//        Initializing the type of layout, here I have used LinearLayoutManager you can try GridLayoutManager
-//        Based on your requirement to allow vertical or horizontal scroll , you can change it in  LinearLayout.VERTICAL
-
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewEvent)
         recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MyEvents).apply {
                 stackFromEnd = true
@@ -42,50 +39,22 @@ class MyEvents : AppCompatActivity() {
             }
         }
 
+        // Query DB and populate RecyclerView
+        val evententity = EventEntity()
 
-//        Create an arraylist
-
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.reference
-
-        val postRef = myRef.child("User").child("Event")
-        var eventlist = ArrayList<Event>()
-
-        val eventListener = object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                eventlist.clear()
-                if (p0.exists()) {
-
-                    for (snapshot in p0.children) {
-                        val eventitem = snapshot.getValue(Event::class.java)
-                        eventitem!!.key = snapshot.key.toString()
-                        eventlist.add(eventitem!!)
-                    }
-                }
-
-                //        pass the values to RvAdapter
-                val rvAdapter = RvAdapter(eventlist)
-//        set the recyclerView to the adapter
-                recyclerView.adapter = rvAdapter
+        evententity.getEvents(object : FirebaseSuccessListenerEvent {
+            override fun onEventList(list: ArrayList<Event>) {
+                val rvEventAdapter = RvEventAdapter(list)
+                recyclerView.adapter = rvEventAdapter
             }
+        })
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
-            }
-        }
-        postRef.addValueEventListener(eventListener)
-
-        floatingActionButton.setOnClickListener()
+        NewEventActionButton.setOnClickListener()
         {
             val newevent = Intent(this, MainActivity::class.java)
             startActivity(newevent)
         }
 
-
-//        floatingActionButton2.setOnClickListener {
-//            val contacts = Intent(this, MyContacts::class.java)
-//            startActivity(contacts)
-//        }
 
         imageButton3.setOnClickListener {
             val contacts = Intent(this, MyContacts::class.java)

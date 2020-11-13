@@ -19,15 +19,11 @@ import java.util.*
 
 class MapsActivity() : AppCompatActivity() {
 
-    var eventkey: String? = null
-//    private var wasPaused: Boolean = false
+    private var eventkey: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-
-        //val prefs = getSharedPreferences("MyPref", MODE_PRIVATE)
-        //prefs.edit().remove("waspaused").commit()
 
         eventkey = intent.getStringExtra("eventkey").toString()
 
@@ -53,7 +49,7 @@ class MapsActivity() : AppCompatActivity() {
                 Place.Field.RATING,
                 Place.Field.USER_RATINGS_TOTAL
             )
-        );
+        )
         autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(p0: Place) {
                 val resultIntent = Intent()
@@ -74,56 +70,7 @@ class MapsActivity() : AppCompatActivity() {
                 Toast.makeText(applicationContext, "" + p0.toString(), Toast.LENGTH_LONG).show();
             }
         })
-
     }
-
-//    override fun onPause() {
-//        super.onPause()
-//        if (isApplicationInBackground()) {
-//            val editor = getSharedPreferences("MyPref", MODE_PRIVATE).edit()
-//            editor.putBoolean("waspaused", true)
-//            editor.apply()
-//            //wasPaused = true
-//       }
-//    }
-
-//    override fun onResume() {
-//        super.onResume()
-//
-//        val prefs = getSharedPreferences("MyPref", MODE_PRIVATE)
-//
-///        if (prefs.getBoolean("waspaused", false)) {
-//            val prefs = getSharedPreferences("MyPref", MODE_PRIVATE)
-//            prefs.edit().remove("waspaused").commit()
-//            this.finish()
-//
-//
-//            //lockScreen()
-//            //wasPaused = false
-//        }
-//    }
-
-//    override fun onPlaceSelected(place: Place) {
-//        //Toast.makeText(applicationContext,""+place.name+ place.latLng,Toast.LENGTH_LONG).show();
-//
-//        val resultIntent = Intent()
-//        resultIntent.putExtra("eventid", eventkey)
-//        resultIntent.putExtra("place_name", place.name)
-//        resultIntent.putExtra("place_id", place.id)
-//        resultIntent.putExtra("place_latitude", place.latLng!!.latitude)
-//        resultIntent.putExtra("place_longitude", place.latLng!!.longitude)
-//        resultIntent.putExtra("place_address", place.address)
-//        resultIntent.putExtra("place_phone", place.phoneNumber)
-//        resultIntent.putExtra("place_rating", place.rating)
-//        resultIntent.putExtra("place_userrating", place.userRatingsTotal)
-//        setResult(Activity.RESULT_OK, resultIntent)
-//        finish()
-//
-//    }
-//
-//    override fun onError(status: Status) {
-//        Toast.makeText(applicationContext, "" + status.toString(), Toast.LENGTH_LONG).show();
-//    }
 }
 
 

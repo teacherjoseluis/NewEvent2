@@ -3,91 +3,36 @@ package com.example.newevent2
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.new_task_taskdetail.*
+import kotlinx.android.synthetic.main.new_task_taskdetail.view.*
 import kotlinx.android.synthetic.main.task_editdetail.*
+import kotlinx.android.synthetic.main.task_editdetail.button2
+import kotlinx.android.synthetic.main.task_editdetail.tkbudget
+import kotlinx.android.synthetic.main.task_editdetail.tkdate
+import kotlinx.android.synthetic.main.task_editdetail.tkname
 
 class Task_EditDetail : AppCompatActivity() {
 
-    lateinit var taskitem: Task
+    var eventkey = ""
+    var taskstatus=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.task_editdetail)
-        taskitem = Task()
 
         val intent = intent
         val taskkey = intent.getStringExtra("taskkey").toString()
-        val eventid = intent.getStringExtra("eventid").toString()
-
+        eventkey = intent.getStringExtra("eventid").toString()
         val taskname = intent.getStringExtra("name").toString()
         val taskdateextra = intent.getStringExtra("date").toString()
         val taskcategory = intent.getStringExtra("category").toString()
         val taskbudgetextra = intent.getStringExtra("budget").toString()
-
-        if (taskkey != "" && eventid != "") {
-
-            val tasktitle = findViewById<TextView>(R.id.tkname)
-            tasktitle.text = taskname
-
-            val taskdate = findViewById<TextView>(R.id.tkdate)
-            taskdate.text = taskdateextra
-
-            var selectedchip: TextView
-            selectedchip = findViewById<TextView>(R.id.chip)
-
-            if (taskcategory == "flowers") {
-                selectedchip = findViewById<TextView>(R.id.chip)
-            }
-
-            if (taskcategory == "venue") {
-                selectedchip = findViewById<TextView>(R.id.chip2)
-            }
-
-            if (taskcategory == "photo") {
-                selectedchip = findViewById<TextView>(R.id.chip3)
-            }
-
-            if (taskcategory == "entertainment") {
-                selectedchip = findViewById<TextView>(R.id.chip4)
-            }
-
-            if (taskcategory == "transport") {
-                selectedchip = findViewById<TextView>(R.id.chip5)
-            }
-
-            if (taskcategory == "ceremony") {
-                selectedchip = findViewById<TextView>(R.id.chip6)
-            }
-
-            if (taskcategory == "accesories") {
-                selectedchip = findViewById<TextView>(R.id.chip7)
-            }
-
-            if (taskcategory == "beauty") {
-                selectedchip = findViewById<TextView>(R.id.chip8)
-            }
-
-            if (taskcategory == "food") {
-                selectedchip = findViewById<TextView>(R.id.chip9)
-            }
-
-            if (taskcategory == "guests") {
-                selectedchip = findViewById<TextView>(R.id.chip10)
-            }
-
-            if (taskcategory == "none") {
-            }
-
-            groupedit.check(selectedchip.id)
-            selectedchip.isSelected = true
-
-            val taskbudget = findViewById<TextView>(R.id.tkbudget)
-            taskbudget.text = taskbudgetextra
-
-        }
+        taskstatus = intent.getStringExtra("status").toString()
 
         //---------------------------------------------------------------------------------//
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -98,18 +43,62 @@ class Task_EditDetail : AppCompatActivity() {
         apptitle.text = "Task Detail"
         //-------------------------------------------------------------------------------//
 
+        val tasktitle = findViewById<TextView>(R.id.tkname)
+        tasktitle.text = taskname
+
+        val taskdate = findViewById<TextView>(R.id.tkdate)
+        taskdate.text = taskdateextra
+
+        val selectedchip = when (taskcategory) {
+                "flowers" -> findViewById<TextView>(R.id.chip)
+                "venue" -> findViewById<TextView>(R.id.chip2)
+                "photo" -> findViewById<TextView>(R.id.chip3)
+                "entertainment" -> findViewById<TextView>(R.id.chip4)
+                "transport" -> findViewById<TextView>(R.id.chip5)
+                "ceremony" -> findViewById<TextView>(R.id.chip6)
+                "accesories" -> findViewById<TextView>(R.id.chip7)
+                "beauty" -> findViewById<TextView>(R.id.chip8)
+                "food" -> findViewById<TextView>(R.id.chip9)
+                "guests" -> findViewById<TextView>(R.id.chip10)
+                else -> findViewById<TextView>(R.id.chip)
+            }
+
+        selectedchip.isSelected = true
+        groupedit.check(selectedchip.id)
         groupedit.isSingleSelection = true
 
-        tkdate.setOnClickListener()
-        {
+        val taskbudget = findViewById<TextView>(R.id.tkbudget)
+        taskbudget.text = taskbudgetextra
+
+        tkname.setOnClickListener {
+            tkname.error = null
+        }
+
+        tkdate.setOnClickListener {
+            tkdate.error = null
             showDatePickerDialog()
         }
 
         button2.setOnClickListener()
         {
-            saveTask(taskkey, eventid)
+            var inputvalflag = true
+            if (tkname.text.toString().isEmpty()) {
+                tkname.error = "Task name is required!"
+                inputvalflag = false
+            }
+            if (tkdate.text.toString().isEmpty()) {
+                tkdate.error = "Task due date is required!"
+                inputvalflag = false
+            }
+            if (groupedit.checkedChipId == -1) {
+                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
+                inputvalflag = false
+            }
+            if (inputvalflag) {
+                saveTask(taskkey, eventkey)
+                this.onBackPressed()
+            }
         }
-
     }
 
     private fun showDatePickerDialog() {
@@ -119,41 +108,43 @@ class Task_EditDetail : AppCompatActivity() {
                 val selectedDate = day.toString() + " / " + (month + 1) + " / " + year
                 tkdate.setText(selectedDate)
             })
-
         newFragment.show(supportFragmentManager, "datePicker")
     }
-
 
     private fun saveTask(taskkey: String, eventid: String) {
         val database = FirebaseDatabase.getInstance()
         val myRef = database.reference
         val postRef = myRef.child("User").child("Event").child(eventid).child("Task").child(taskkey)
-        var category = ""
+        var taskcategory = ""
 
-        if (groupedit.checkedChipId != null) {
-            val id = groupedit.checkedChipId
-            val chipselected = groupedit.findViewById<Chip>(id)
-            val chiptextvalue = chipselected.text.toString()
-            category = when (chiptextvalue) {
-                "Flowers & Deco" -> "flowers"
-                "Venue" -> "venue"
-                "Photo & Video" -> "photo"
-                "Entertainment" -> "entertainment"
-                "Transportation" -> "transport"
-                "Ceremony" -> "ceremony"
-                "Attire & Accessories" -> "accesories"
-                "Health & Beauty" -> "beauty"
-                "Food & Drink" -> "food"
-                "Guests" -> "guests"
-                else -> "none"
-            }
 
+        val id = groupedit.checkedChipId
+        val chipselected = groupedit.findViewById<Chip>(id)
+        val chiptextvalue = chipselected.text.toString()
+        taskcategory = when (chiptextvalue) {
+            "Flowers & Deco" -> "flowers"
+            "Venue" -> "venue"
+            "Photo & Video" -> "photo"
+            "Entertainment" -> "entertainment"
+            "Transportation" -> "transport"
+            "Ceremony" -> "ceremony"
+            "Attire & Accessories" -> "accesories"
+            "Health & Beauty" -> "beauty"
+            "Food & Drink" -> "food"
+            "Guests" -> "guests"
+            else -> "none"
         }
 
-        postRef.child("name").setValue(tkname.text.toString())
-        postRef.child("budget").setValue(tkbudget.text.toString())
-        postRef.child("date").setValue(tkdate.text.toString())
-        postRef.child("category").setValue(category)
-        this.onBackPressed()
+        val taskentity = TaskEntity().apply {
+            key= taskkey
+            name = tkname.text.toString()
+            budget = tkbudget.text.toString()
+            date = tkdate.text.toString()
+            category = taskcategory
+            this.eventid = eventkey
+            status=taskstatus
+
+        }
+        taskentity.editTask()
     }
 }

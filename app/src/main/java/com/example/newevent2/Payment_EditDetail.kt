@@ -9,12 +9,6 @@ import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.android.synthetic.main.new_task_paymentdetail.*
-import kotlinx.android.synthetic.main.new_task_paymentdetail.pyamount
-import kotlinx.android.synthetic.main.new_task_paymentdetail.pydate
-import kotlinx.android.synthetic.main.new_task_paymentdetail.view.*
-import kotlinx.android.synthetic.main.new_task_paymentdetail.view.pyamount
-import kotlinx.android.synthetic.main.new_task_paymentdetail.view.pydate
 import kotlinx.android.synthetic.main.payment_editdetail.*
 import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.android.synthetic.main.task_editdetail.button2

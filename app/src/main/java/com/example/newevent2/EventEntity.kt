@@ -1,15 +1,24 @@
 package com.example.newevent2
 
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import kotlinx.android.synthetic.main.activity_main.*
 
 class EventEntity : Event() {
 
-    val database = FirebaseDatabase.getInstance()
-    val myRef = database.reference
-    val postRef = myRef.child("User").child("Event")
+    private val database = FirebaseDatabase.getInstance()
+    private val storage = Firebase.storage
+
+    private val myRef = database.reference
+    private val storageRef = storage.reference
+
+    private val postRef = myRef.child("User").child("Event")
 
     fun getEventKey(eventname: String, dataFetched: FirebaseSuccessListenerSingleValue) {
         var eventkey = ""
@@ -56,31 +65,6 @@ class EventEntity : Event() {
         postRef.addValueEventListener(eventListenerActive)
     }
 
-
-//    fun getEventNamesHash(dataFetched: FirebaseSuccessListenerHashMap) {
-//        var eventmap = HashMap<String, String>()
-//        //var eventNameList = ArrayList<String>()
-//        val eventListenerActive = object : ValueEventListener {
-//            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-//            override fun onDataChange(p0: DataSnapshot) {
-//                eventmap.clear()
-//                Log.i("ListDataStart",eventmap.toString())
-//                for (snapshot in p0.children) {
-//                    val eventitem = snapshot.getValue(Event::class.java)!!
-//                    eventmap[snapshot.key.toString()] = eventitem.name
-//                }
-//                Log.i("ListDataEnd",eventmap.toString())
-//                dataFetched.onHashMapCreated(eventmap)
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                println("loadPost:onCancelled ${databaseError.toException()}")
-//            }
-//
-//        }
-//        postRef.addValueEventListener(eventListenerActive)
-//    }
-
     fun getEventNames(dataFetched: FirebaseSuccessListenerList) {
         var eventlist = ArrayList<String>()
         //var eventNameList = ArrayList<String>()
@@ -91,7 +75,7 @@ class EventEntity : Event() {
                 Log.i("ListDataStart", eventlist.toString())
                 for (snapshot in p0.children) {
                     val eventitem = snapshot.getValue(Event::class.java)!!
-                    eventlist.add( eventitem.name)
+                    eventlist.add(eventitem.name)
                 }
                 Log.i("ListDataEnd", eventlist.toString())
                 val listevent = eventlist as ArrayList<Any>
@@ -106,4 +90,98 @@ class EventEntity : Event() {
         postRef.addValueEventListener(eventListenerActive)
     }
 
+    fun getEvents(dataFetched: FirebaseSuccessListenerEvent) {
+
+        var eventList = ArrayList<Event>()
+        val eventListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                eventList.clear()
+                for (snapshot in p0.children) {
+                    val eventitem = snapshot.getValue(Event::class.java)!!
+                    eventitem!!.key = snapshot.key.toString()
+                    eventList.add(eventitem!!)
+                }
+                dataFetched.onEventList(eventList)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(eventListenerActive)
+    }
+
+
+    fun addEvent(uri: Uri?) {
+        // Save Event detail in DB
+        val myRef = postRef.push()
+        val events = hashMapOf(
+            "name" to name,
+            "date" to date,
+            "time" to time,
+            "location" to location,
+            "placeid" to placeid,
+            "latitude" to latitude,
+            "longitude" to longitude,
+            "address" to address,
+            "about" to about,
+            "imageurl" to imageurl
+        )
+
+        myRef.setValue(events as Map<String, Any>)
+            .addOnFailureListener {
+                return@addOnFailureListener
+            }
+            .addOnSuccessListener {
+                //Save Event image in Storage
+                if (uri != null) {
+                    val eventkey = myRef.key.toString()
+                    val imageRef = storageRef.child("images/$eventkey/${uri.lastPathSegment}")
+                    val uploadTask = imageRef.putFile(uri)
+
+                    uploadTask.addOnFailureListener {
+                        return@addOnFailureListener
+                    }.addOnSuccessListener {
+                        return@addOnSuccessListener
+                    }
+                }
+            }
+    }
+
+    fun editEvent(uri: Uri?) {
+        // Save Event detail in DB
+        val myRef = postRef.child(key)
+        val events = hashMapOf(
+            "name" to name,
+            "date" to date,
+            "time" to time,
+            "location" to location,
+            "placeid" to placeid,
+            "latitude" to latitude,
+            "longitude" to longitude,
+            "address" to address,
+            "about" to about,
+            "imageurl" to uri!!.lastPathSegment
+        )
+
+        myRef.setValue(events as Map<String, Any>)
+            .addOnFailureListener {
+                return@addOnFailureListener
+            }
+            .addOnSuccessListener {
+                //Save Event image in Storage
+                if (uri != null && uri.lastPathSegment != imageurl) {
+                    val eventkey = myRef.key.toString()
+                    val imageRef = storageRef.child("images/$eventkey/${uri.lastPathSegment}")
+                    val uploadTask = imageRef.putFile(uri)
+
+                    uploadTask.addOnFailureListener {
+                        return@addOnFailureListener
+                    }.addOnSuccessListener {
+                        return@addOnSuccessListener
+                    }
+                }
+            }
+    }
 }
