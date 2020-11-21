@@ -80,7 +80,8 @@ class NoteEntity : Note() {
             "title" to title,
             "datetime" to datetime,
             "noteurl" to noteurl,
-            "eventid" to eventid
+            "eventid" to eventid,
+            "summary" to summary
         )
 
         postRef.setValue(notes as Map<String, Any>)
@@ -109,7 +110,8 @@ class NoteEntity : Note() {
             "title" to title,
             "datetime" to datetime,
             "noteurl" to noteurl,
-            "eventid" to eventid
+            "eventid" to eventid,
+            "summary" to summary
         )
 
         postRef.setValue(notes as Map<String, Any>)

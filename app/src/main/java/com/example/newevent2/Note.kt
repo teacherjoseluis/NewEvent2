@@ -6,4 +6,5 @@ open class Note {
     var datetime: String = ""
     var noteurl: String = ""
     var eventid: String = ""
+    var summary: String = ""
 }

@@ -46,6 +46,7 @@ class NewNote : AppCompatActivity() {
             noteurl = intent.getStringExtra("noteurl").toString()
             eventkey = intent.getStringExtra("eventid").toString()
             val title = intent.getStringExtra("notetitle").toString()
+
             val notetitle = findViewById<TextView>(R.id.notetitle)
             notetitle.text = title
 
@@ -166,6 +167,7 @@ class NewNote : AppCompatActivity() {
                 noteurl = uri.lastPathSegment.toString()
                 eventid = eventkey
                 key = notekey
+                summary = note.substring(0, 50) + "..."
             }
 
             if (notekey != "null") {

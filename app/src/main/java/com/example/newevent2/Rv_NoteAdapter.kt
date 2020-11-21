@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.new_note.*
 
 // Recyclerview - Displays a scrolling list of elements based on large datasets
 // The view holder objects are managed by an adapter, which you create by extending RecyclerView.Adapter.
@@ -41,6 +42,7 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.notetitle?.text = noteList[p1].title
         p0.notedatetime?.text = noteList[p1].datetime
+        p0.notesummary?.text = noteList[p1].summary
 //        p0.notedatetime?.text = noteList[p1].key
 //        p0.notedatetime?.text = noteList[p1].eventid
 
@@ -67,6 +69,7 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val notetitle: TextView? = itemView.findViewById<TextView>(R.id.notetitle)
         val notedatetime: TextView? = itemView.findViewById<TextView>(R.id.notedatetime)
+        val notesummary: TextView? = itemView.findViewById<TextView>(R.id.notesummary)
     }
 
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
@@ -93,6 +96,22 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
     }
 
     override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
+        val note = NoteEntity().apply {
+            key = noteList[position].key
+            title = noteList[position].title
+            datetime = noteList[position].datetime
+            noteurl = noteList[position].noteurl
+            eventid = noteList[position].eventid
+            summary = noteList[position].summary
+        }
+
+        noteList.removeAt(position)
+        notifyItemRemoved(position)
+
+        if (action == "delete") {
+            note.deleteNote()
+        }
+
 //        val task = TaskEntity()
 //        task.key = taskList[position].key
 //        task.eventid = taskList[position].eventid

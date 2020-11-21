@@ -51,14 +51,15 @@ class MyNotes : AppCompatActivity() {
         notentity.eventid = eventkey
 
         notentity.getNotesList(object : FirebaseSuccessListenerNote {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onNotesList(list: ArrayList<Note>) {
                 val rvAdapter = Rv_NoteAdapter(list)
                 recyclerView.adapter = rvAdapter
 
-//                val swipeController =
-//                    SwipeControllerTasks(inf.context, rvAdapter, recyclerViewComplete, null, "undo")
-//                val itemTouchHelper = ItemTouchHelper(swipeController)
-//                itemTouchHelper.attachToRecyclerView(recyclerViewComplete)
+                val swipeController =
+                    SwipeControllerTasks(this@MyNotes, rvAdapter, recyclerView, null, "delete")
+                val itemTouchHelper = ItemTouchHelper(swipeController)
+                itemTouchHelper.attachToRecyclerView(recyclerView)
             }
         })
 //----------------------------------------------------------------------------------------------
