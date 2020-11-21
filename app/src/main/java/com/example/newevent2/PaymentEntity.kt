@@ -6,6 +6,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PaymentEntity : Payment() {
 
@@ -92,6 +95,55 @@ class PaymentEntity : Payment() {
         postRef.addValueEventListener(paymentListenerActive)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getPaymentsDatesEvent(month: Int, dataFetched: FirebaseSuccessListenerPaymentCalendar) {
+        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+        val paymentdates = ArrayList<Date>()
+
+        val paymentlListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+
+                for (snapshot in p0.children) {
+                    val paymentitem = snapshot.getValue(Payment::class.java)!!
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        val str = paymentitem.date.split("/")
+                        if (month == Integer.parseInt(str[1]) - 1) {
+                            paymentdates.add(SimpleDateFormat("dd/MM/yyyy").parse(paymentitem.date))
+                        }
+                    }
+                }
+                dataFetched.onPaymentsDatesEvent(paymentdates)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(paymentlListenerActive)
+    }
+
+    fun getPaymentsperDay(calendar: Calendar, dataFetched: FirebaseSuccessListenerPaymentCalendar) {
+        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+        var paymentlist = ArrayList<Payment>()
+
+        val paymentListenerActive = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                for (snapshot in p0.children) {
+                    val paymentitem = snapshot.getValue(Payment::class.java)!!
+                    if (SimpleDateFormat("dd/MM/yyyy").parse(paymentitem.date) == calendar.time) {
+                        paymentlist.add(paymentitem)
+                    }
+                }
+                dataFetched.onPaymentsperDay(paymentlist)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
+        postRef.addValueEventListener(paymentListenerActive)
+    }
 
     fun editPayment(action: String) {
         if (action == "complete") {

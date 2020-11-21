@@ -14,6 +14,7 @@ import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
@@ -182,9 +183,21 @@ class Guest_EditDetail : AppCompatActivity() {
             )
         }
 
+        nameinputedit.setOnClickListener {
+            nameinputedit.error = null
+        }
+
+        phoneinputedit.setOnClickListener {
+            phoneinputedit.error = null
+        }
+
+
         phoneimage.setOnClickListener {
             if (!phoneinputedit.text.isNullOrBlank()) {
-                val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneinputedit.text.toString(), null))
+                val intent = Intent(
+                    Intent.ACTION_DIAL,
+                    Uri.fromParts("tel", phoneinputedit.text.toString(), null)
+                )
                 startActivity(intent)
             }
         }
@@ -205,14 +218,28 @@ class Guest_EditDetail : AppCompatActivity() {
         }
 
         button.setOnClickListener {
+            var inputvalflag = true
             if (nameinputedit.text.toString().isEmpty()) {
                 nameinputedit.error = "Guest name is required!"
-            } else {
+                inputvalflag = false
+            }
+            if (phoneinputedit.text.toString().isEmpty()) {
+                phoneinputedit.error = "Task due date is required!"
+                inputvalflag = false
+            }
+            if (rsvpgroup.checkedChipId == -1) {
+                Toast.makeText(this, "RSVP is required!", Toast.LENGTH_SHORT).show()
+                inputvalflag = false
+            }
+            if (companionsgroup.checkedChipId == -1) {
+                Toast.makeText(this, "Companion info is required!", Toast.LENGTH_SHORT).show()
+                inputvalflag = false
+            }
+            if (inputvalflag) {
                 editguest()
                 finish()
             }
         }
-
     }
 
     private fun editguest() {
@@ -234,29 +261,26 @@ class Guest_EditDetail : AppCompatActivity() {
         }
         guest.table = tableinputedit.text.toString()
 
-        if (rsvpgroup.checkedChipId != null) {
-            var id = rsvpgroup.checkedChipId
-            var chipselected = rsvpgroup.findViewById<Chip>(id)
-            chiptextvalue = chipselected.text.toString()
-            guest.rsvp = when (chiptextvalue) {
-                "Yes" -> "y"
-                "No" -> "n"
-                "Pending" -> "pending"
-                else -> "pending"
-            }
-
-            id = companionsgroup.checkedChipId
-            chipselected = companionsgroup.findViewById<Chip>(id)
-            chiptextvalue = chipselected.text.toString()
-            guest.companion = when (chiptextvalue) {
-                "Adult" -> "adult"
-                "Child" -> "child"
-                "Baby" -> "baby"
-                "None" -> "none"
-                else -> "none"
-            }
+        var id = rsvpgroup.checkedChipId
+        var chipselected = rsvpgroup.findViewById<Chip>(id)
+        chiptextvalue = chipselected.text.toString()
+        guest.rsvp = when (chiptextvalue) {
+            "Yes" -> "y"
+            "No" -> "n"
+            "Pending" -> "pending"
+            else -> "pending"
         }
 
+        id = companionsgroup.checkedChipId
+        chipselected = companionsgroup.findViewById<Chip>(id)
+        chiptextvalue = chipselected.text.toString()
+        guest.companion = when (chiptextvalue) {
+            "Adult" -> "adult"
+            "Child" -> "child"
+            "Baby" -> "baby"
+            "None" -> "none"
+            else -> "none"
+        }
         guest.editGuest()
     }
 

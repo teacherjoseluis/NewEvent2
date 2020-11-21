@@ -88,61 +88,6 @@ class TaskPayment_Payments : Fragment() {
                 inf.payments.text = countpayment.toString()
             }
         })
-
-//        val database = FirebaseDatabase.getInstance()
-//        val myRef = database.reference
-//        //FirebaseUser user = mAuth.getCurrentUser();
-//        val postRef = myRef.child("User").child("Event").child(eventkey).child("Payment")
-//        var paymentlist = ArrayList<Payment>()
-//
-//        val paymentListener = object : ValueEventListener {
-//            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-//            override fun onDataChange(p0: DataSnapshot) {
-//
-//                paymentlist.clear()
-//
-//                if (p0.exists()) {
-//
-//                    for (snapshot in p0.children) {
-//                        val paymentitem = snapshot.getValue(Payment::class.java)
-//                        if (paymentitem!!.category == category) {
-//                            paymentitem!!.key = snapshot.key.toString()
-//                            paymentlist.add(paymentitem!!)
-//                        }
-//                    }
-//                }
-//
-//                //        pass the values to RvAdapter
-//                val rvAdapter = Rv_PaymentAdapter(paymentlist)
-////        set the recyclerView to the adapter
-//                recyclerView.adapter = rvAdapter
-//
-//                val swipeController = SwipeControllerPayment(inf.context, rvAdapter, recyclerView)
-//                val itemTouchHelper = ItemTouchHelper(swipeController)
-//                itemTouchHelper.attachToRecyclerView(recyclerView)
-//
-//                var sumpayment: Float = 0.0F
-//                var countpayment: Int = 0
-//
-//                for (payment in paymentlist) {
-//                    val re = Regex("[^A-Za-z0-9 ]")
-//                    val paymentamount = re.replace(payment.amount, "").dropLast(2)
-//                    sumpayment += paymentamount.toFloat()
-//                    countpayment += 1
-//                }
-//
-//                val formatter = DecimalFormat("$#,###.00")
-//
-//                inf.totalpaid.text = formatter.format(sumpayment)
-//                inf.payments.text = countpayment.toString()
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                println("loadPost:onCancelled ${databaseError.toException()}")
-//            }
-//        }
-//        postRef.addValueEventListener(paymentListener)
-
         return inf
     }
 

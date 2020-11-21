@@ -27,6 +27,30 @@ class MyContacts : AppCompatActivity() {
         val tablayout = findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = findViewById<View>(R.id.pager) as ViewPager
 
+        // Toolbar
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        //------------------------------------------------------------------------------------
+        val eventspinner = findViewById<Spinner>(R.id.eventspinner)
+        val evententity = EventEntity()
+        evententity.getEventNames(object : FirebaseSuccessListenerList {
+            override fun onListCreated(list: ArrayList<Any>) {
+                val eventlistadapter =
+                    ArrayAdapter(this@MyContacts, R.layout.simple_spinner_item_event, list)
+                eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
+                eventspinner.adapter = null
+                eventspinner.adapter = eventlistadapter
+                Log.i("SpinnerList", list.toString())
+            }
+        })
+        //------------------------------------------------------------------------------------
+
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = "Contacts"
+
+
         if (viewPager != null) {
             val adapter =
                 Contacts_PagerAdapter(
@@ -54,6 +78,10 @@ class MyContacts : AppCompatActivity() {
                             false
                         findViewById<TextView>(R.id.eventlabel).isVisible = true
                         findViewById<Spinner>(R.id.eventspinner).isVisible = true
+
+                        findViewById<ConstraintLayout>(R.id.LocalLayout).isVisible = false
+                        findViewById<ConstraintLayout>(R.id.GoogleLayout).isVisible = false
+
                     } else if (p0.position == 1) {
                         findViewById<FloatingActionButton>(R.id.floatingActionButtonGuest).isVisible =
                             true
@@ -61,6 +89,10 @@ class MyContacts : AppCompatActivity() {
                             false
                         findViewById<TextView>(R.id.eventlabel).isVisible = true
                         findViewById<Spinner>(R.id.eventspinner).isVisible = true
+
+                        findViewById<ConstraintLayout>(R.id.LocalLayout).isVisible = false
+                        findViewById<ConstraintLayout>(R.id.GoogleLayout).isVisible = false
+
                     } else if (p0.position == 2) {
                         findViewById<FloatingActionButton>(R.id.floatingActionButtonGuest).isVisible =
                             false
@@ -80,62 +112,6 @@ class MyContacts : AppCompatActivity() {
                 }
             })
         }
-
-        // Toolbar
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        val apptitle = findViewById<TextView>(R.id.appbartitle)
-        apptitle.text = "Contacts"
-
     }
-
-//    override fun onComplete() {
-//        val eventspinner = findViewById<Spinner>(R.id.eventspinner)
-//        val evententity = EventEntity()
-//        evententity.getEventNames(object : FirebaseSuccessListenerHashMap {
-//
-//            override fun onHashMapCreated(map: HashMap<String, String>) {
-//                val eventlist = ArrayList<String>(map.values)
-//                val eventlistadapter =
-//                    ArrayAdapter(
-//                        this@MyContacts,
-//                        R.layout.simple_spinner_item_event,
-//                        eventlist
-//                    )
-//
-//                eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
-//                eventspinner.adapter = null
-//                eventspinner.adapter = eventlistadapter
-//                Log.i(
-//                    "SPINNER",
-//                    "************ Estoy agregando al spinner **************************"
-//                )
-//                Log.i("SpinnerList", eventlist.toString())
-//
-//                eventspinner.onItemSelectedListener =
-//                    object : AdapterView.OnItemSelectedListener {
-//                        override fun onNothingSelected(p0: AdapterView<*>?) {
-//                            TODO("Not yet implemented")
-//                        }
-//
-//                        override fun onItemSelected(
-//                            p0: AdapterView<*>?,
-//                            p1: View?,
-//                            p2: Int,
-//                            p3: Long
-//                        ) {
-//                            val eventname = p0!!.getItemAtPosition(p2).toString()
-//                            eventkey =
-//                                map.filterValues { it == eventname }.keys.toString()
-//                        }
-//                    }
-//
-//            }
-//        })
-//    }
-
-
 }
 

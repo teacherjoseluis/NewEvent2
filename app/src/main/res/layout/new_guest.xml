@@ -58,7 +58,8 @@
                 style="@style/Body1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Name" />
+                android:hint="Name"
+                android:maxLength="50"/>
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -89,7 +90,8 @@
                 android:layout_height="match_parent"
                 android:digits="0123456789+"
                 android:hint="Phone"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:maxLength="50"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -133,7 +135,8 @@
                 style="@style/Body1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Email" />
+                android:hint="Email"
+                android:maxLength="50"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -294,7 +297,8 @@
                 android:id="@+id/tableinputedit"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Table" />
+                android:hint="Table"
+                android:maxLength="10"/>
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -12,14 +12,9 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 
 class Rv_VendorAdapter(val contactlist: MutableList<Vendor>) :
-    RecyclerView.Adapter<Rv_VendorAdapter.ViewHolder>(), ItemTouchHelperAdapter {
+    RecyclerView.Adapter<Rv_VendorAdapter.ViewHolder>(), ItemTouchAdapterAction {
 
     lateinit var context: Context
-    private val selected: ArrayList<Int> = ArrayList()
-    private var selectedPos = RecyclerView.NO_POSITION
-
-    var mOnItemClickListener: OnItemClickListener? = null
-    var countselected: Int = 0
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
@@ -55,7 +50,7 @@ class Rv_VendorAdapter(val contactlist: MutableList<Vendor>) :
             vendordetail.putExtra("phone", contactlist[p1].phone)
             vendordetail.putExtra("email", contactlist[p1].email)
 
-           // vendordetail.putExtra("eventid", contactlist[p1].eventid)
+            // vendordetail.putExtra("eventid", contactlist[p1].eventid)
             context.startActivity(vendordetail)
         }
     }
@@ -65,34 +60,33 @@ class Rv_VendorAdapter(val contactlist: MutableList<Vendor>) :
         val contactavatar = itemView.findViewById<ImageView>(R.id.contactavatar)!!
     }
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView) {
+    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
         TODO("Not yet implemented")
     }
 
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView) {
+    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
         val vendor = VendorEntity().apply {
-//            eventid = contactlist[position].eventid
             contactid = contactlist[position].contactid
             key = contactlist[position].key
-
             name = contactlist[position].name
-//            imageurl = contactlist[position].imageurl
             phone = contactlist[position].phone
-//            email = contactlist[position].email
-            placeid= contactlist[position].placeid
-            latitude= contactlist[position].latitude
-            longitude= contactlist[position].longitude
+            placeid = contactlist[position].placeid
+            latitude = contactlist[position].latitude
+            longitude = contactlist[position].longitude
         }
 
         contactlist.removeAt(position)
         notifyItemRemoved(position)
-        vendor.deleteVendor()
 
-        Snackbar.make(recyclerView, "Vendor deleted", Snackbar.LENGTH_LONG)
-            .setAction("UNDO") {
-                contactlist.add(vendor)
-                notifyItemInserted(contactlist.lastIndex)
-                vendor.addVendor()
-            }.show()
+        if (action == "delete") {
+            vendor.deleteVendor()
+
+            Snackbar.make(recyclerView, "Vendor deleted", Snackbar.LENGTH_LONG)
+                .setAction("UNDO") {
+                    contactlist.add(vendor)
+                    notifyItemInserted(contactlist.lastIndex)
+                    vendor.addVendor()
+                }.show()
+        }
     }
 }

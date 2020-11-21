@@ -35,6 +35,8 @@ class GuestsAll : Fragment() {
     var contactlist = ArrayList<Guest>()
     var eventkey: String? = null
     lateinit var recyclerViewAllGuests: RecyclerView
+
+    lateinit var eventspinner: Spinner
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,20 +44,7 @@ class GuestsAll : Fragment() {
         toolbar = activity!!.findViewById(R.id.toolbar)
         setHasOptionsMenu(true)
 
-        val eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
-        val evententity = EventEntity()
-        evententity.getEventNames(object : FirebaseSuccessListenerList {
-
-            override fun onListCreated(list: ArrayList<Any>) {
-                val eventlistadapter = activity?.let {
-                    ArrayAdapter(it, R.layout.simple_spinner_item_event, list)
-                }
-                eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
-                eventspinner.adapter = null
-                eventspinner.adapter = eventlistadapter
-            }
-        })
-
+        eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
         eventspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
@@ -80,7 +69,6 @@ class GuestsAll : Fragment() {
                     })
             }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -88,10 +76,14 @@ class GuestsAll : Fragment() {
         inflater.inflate(R.menu.guests_menu, menu)
 
         val sortItem = menu.findItem(R.id.action_sortguest)
-        sortItem.setOnMenuItemClickListener{
+        sortItem.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_sortguest -> {
-                    contactlist.sortWith(Comparator { object1, object2 -> object2.name.compareTo(object1.name) })
+                    contactlist.sortWith(Comparator { object1, object2 ->
+                        object2.name.compareTo(
+                            object1.name
+                        )
+                    })
                     recyclerViewAllGuests.adapter?.notifyDataSetChanged()
                 }
             }
@@ -145,57 +137,6 @@ class GuestsAll : Fragment() {
 
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.guests_all, container, false)
-
-//        toolbar.setOnMenuItemClickListener {
-//            when (it.itemId) {
-//                R.id.action_sortguest -> {
-//                    contactlist.sortWith(Comparator { object1, object2 -> object2.name.compareTo(object1.name) })
-//                    recyclerViewAllGuests.adapter?.notifyDataSetChanged()
-//                }
-//            }
-//            true
-//        }
-
-        //inf.textView9.text = category
-
-//        val eventspinner = inf.findViewById<Spinner>(R.id.eventspinnerguest)
-//        val evententity = EventEntity()
-//        evententity.getEventNames(object : FirebaseSuccessListenerList {
-//
-//            override fun onListCreated(list: ArrayList<Any>) {
-//                val eventlistadapter = activity?.let {
-//                    ArrayAdapter(it, R.layout.simple_spinner_item_event, list)
-//                }
-//                eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
-//                eventspinner.adapter = null
-//                eventspinner.adapter = eventlistadapter
-//            }
-//        })
-//
-//        eventspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onNothingSelected(p0: AdapterView<*>?) {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//                val eventname = p0!!.getItemAtPosition(p2).toString()
-//                val evententity = EventEntity()
-//                evententity.getEventKey(
-//                    eventname,
-//                    object : FirebaseSuccessListenerSingleValue {
-//                        override fun onDatafound(key: String) {
-//                            readguests(key)
-//
-//                            activity!!.floatingActionButton.setOnClickListener()
-//                            {
-//                                val newguest = Intent(activity, NewGuest::class.java)
-//                                newguest.putExtra("eventkey", eventkey)
-//                                startActivity(newguest)
-//                            }
-//                        }
-//                    })
-//            }
-//        }
 
         recyclerViewAllGuests = inf.recyclerViewGuests
         recyclerViewAllGuests.apply {
@@ -274,8 +215,6 @@ class GuestsAll : Fragment() {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onGuestList(list: ArrayList<Guest>) {
                 contactlist.clear()
-                //val contentResolver = context!!.contentResolver
-
 
                 for (guest in list) {
 
@@ -338,7 +277,7 @@ class GuestsAll : Fragment() {
                 val rvAdapter = Rv_GuestAdapter(contactlist)
                 recyclerViewAllGuests.adapter = rvAdapter
                 val swipeController =
-                    SwipeControllerGuest(context!!, rvAdapter, recyclerViewGuests)
+                SwipeControllerTasks(context!!, rvAdapter, recyclerViewAllGuests,null,"delete")
                 val itemTouchHelper = ItemTouchHelper(swipeController)
                 itemTouchHelper.attachToRecyclerView(recyclerViewGuests)
             }

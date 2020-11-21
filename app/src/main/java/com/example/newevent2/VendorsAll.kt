@@ -21,8 +21,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newevent2.ui.ViewAnimation
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.contacts.*
+import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.vendors_all.*
 import kotlinx.android.synthetic.main.vendors_all.view.*
 
@@ -46,16 +48,36 @@ class VendorsAll : Fragment() {
     private var rating = 0.0
     private var userrating = 0
 
+    var isRotate = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbar = activity!!.findViewById(R.id.toolbar)
         setHasOptionsMenu(true)
 
+
         activity!!.floatingActionButtonVendor.setOnClickListener()
         {
+            isRotate = ViewAnimation.rotateFab(activity!!.floatingActionButtonVendor, !isRotate)
+            if(isRotate){
+                ViewAnimation.showIn(activity!!.GoogleLayout);
+                ViewAnimation.showIn(activity!!.LocalLayout);
+            }else{
+                ViewAnimation.showOut(activity!!.GoogleLayout);
+                ViewAnimation.showOut(activity!!.LocalLayout);
+            }
+        }
+
+        activity!!.fabGoogle.setOnClickListener(View.OnClickListener {
             val newvendor = Intent(activity, MapsActivity::class.java)
             startActivityForResult(newvendor, autocomplete_place_code)
-        }
+        })
+
+        activity!!.fabLocal.setOnClickListener(View.OnClickListener {
+            val newvendor = Intent(activity, NewVendor::class.java)
+            newvendor.putExtra("source", "local")
+            startActivity(newvendor)
+        })
     }
 
 
@@ -65,25 +87,19 @@ class VendorsAll : Fragment() {
 
 
         val sortItem = menu.findItem(R.id.action_sortvendor)
-        sortItem.setOnMenuItemClickListener{
+        sortItem.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_sortvendor -> {
-                    contactlist.sortWith(Comparator { object1, object2 -> object2.name.compareTo(object1.name) })
+                    contactlist.sortWith(Comparator { object1, object2 ->
+                        object2.name.compareTo(
+                            object1.name
+                        )
+                    })
                     recyclerViewAllVendor.adapter?.notifyDataSetChanged()
                 }
             }
             true
         }
-
-//        toolbar.setOnMenuItemClickListener {
-//            when (it.itemId) {
-//                R.id.action_sortvendor -> {
-//                    contactlist.sortWith(Comparator { object1, object2 -> object2.name.compareTo(object1.name) })
-//                    recyclerViewAllVendor.adapter?.notifyDataSetChanged()
-//                }
-//            }
-//            true
-//        }
 
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
@@ -209,7 +225,7 @@ class VendorsAll : Fragment() {
                     var contactphoto: String? = null
                     var cursor: Cursor? = null
 
-                    if (vendor.contactid != "local") {
+                    if (vendor.contactid != "local" && vendor.contactid != "google") {
                         cursor =
                             contentResolver.query(
                                 ContactsContract.Contacts.CONTENT_URI,
@@ -266,10 +282,10 @@ class VendorsAll : Fragment() {
                         }
                     })
 
-                recyclerViewReadyCallback = object: RecyclerViewReadyCallback {
+                recyclerViewReadyCallback = object : RecyclerViewReadyCallback {
                     override fun onLayoutReady() {
                         val swipeController =
-                            SwipeControllerVendor(context!!, rvAdapter, recyclerViewVendors)
+                            SwipeControllerTasks(context!!, rvAdapter, recyclerViewVendors,null,"delete")
                         val itemTouchHelper = ItemTouchHelper(swipeController)
                         itemTouchHelper.attachToRecyclerView(recyclerViewVendors)
                     }
@@ -304,6 +320,8 @@ class VendorsAll : Fragment() {
             newvendor.putExtra("web", web)
             newvendor.putExtra("rating", rating)
             newvendor.putExtra("userrating", userrating)
+
+            newvendor.putExtra("source", "google")
 
             startActivity(newvendor)
             //etlocation.setText(placenameString)

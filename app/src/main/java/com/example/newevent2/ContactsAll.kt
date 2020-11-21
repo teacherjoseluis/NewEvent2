@@ -35,6 +35,8 @@ class ContactsAll : Fragment() {
     var eventkey: String? = null
     lateinit var recyclerViewAllContacts: RecyclerView
     var toolbarmenuflag = false
+
+    lateinit var eventspinner: Spinner
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,20 +46,7 @@ class ContactsAll : Fragment() {
         val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
         appbartitle.text = "Contacts"
 
-        val eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
-        val evententity = EventEntity()
-        evententity.getEventNames(object : FirebaseSuccessListenerList {
-            override fun onListCreated(list: ArrayList<Any>) {
-                val eventlistadapter = activity?.let {
-                    ArrayAdapter(it, R.layout.simple_spinner_item_event, list)
-                }
-                eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
-                eventspinner.adapter = null
-                eventspinner.adapter = eventlistadapter
-                Log.i("SpinnerList", list.toString())
-            }
-        })
-
+        eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
     }
 
     override fun onCreateView(
@@ -130,6 +119,7 @@ class ContactsAll : Fragment() {
                 null,
                 ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " DESC"
             )
+        contactlist.clear()
         if (cursor!!.moveToFirst()) {
             do {
                 val contactitem = Contact()
@@ -193,11 +183,6 @@ class ContactsAll : Fragment() {
                                 true
                             }
                             R.id.add_vendor -> {
-//                                val evententity = EventEntity()
-//                                evententity.getEventKey(
-//                                    eventspinner.selectedItem.toString(),
-//                                    object : FirebaseSuccessListenerSingleValue {
-//                                        override fun onDatafound(key: String) {
                                 for (index in countselected) {
                                     val vendor = VendorEntity()
                                     //vendor.eventid = key
@@ -220,19 +205,8 @@ class ContactsAll : Fragment() {
                     toolbarmenuflag = false
                     toolbar.menu.clear()
                 }
-//                    })
-//                    mClearSelected!!.onClearSelected(index)
-//                    appbarmenu.setImageDrawable(menuDrawable)
-//                    appbarmenu.isClickable = true
-
-//                    appbarmenu.setOnClickListener {
-//                        val toolbar = activity!!.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-//                        toolbar.inflateMenu(R.menu.contacts_menu)
-//                    }
-
             }
         }
         recyclerViewAllContacts.adapter = rvAdapter
     }
 }
-

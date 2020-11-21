@@ -55,12 +55,6 @@ class MyEvents : AppCompatActivity() {
             startActivity(newevent)
         }
 
-
-        imageButton3.setOnClickListener {
-            val contacts = Intent(this, MyContacts::class.java)
-            startActivity(contacts)
-        }
-
     }
 }
 

@@ -8,6 +8,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TaskEntity : Task() {
 
@@ -43,6 +48,56 @@ class TaskEntity : Task() {
 
             override fun onCancelled(databaseError: DatabaseError) {
                 println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(tasklListenerActive)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTasksDatesEvent(month: Int, dataFetched: FirebaseSuccessListenerTaskCalendar) {
+        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val taskdates = ArrayList<Date>()
+
+        val tasklListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+
+                for (snapshot in p0.children) {
+                    val taskitem = snapshot.getValue(Task::class.java)!!
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        val str = taskitem.date.split("/")
+                        if (month == Integer.parseInt(str[1]) - 1) {
+                            taskdates.add(SimpleDateFormat("dd/MM/yyyy").parse(taskitem.date))
+                        }
+                    }
+                }
+                dataFetched.onTasksDatesEvent(taskdates)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(tasklListenerActive)
+    }
+
+    fun getTasksperDay(calendar: Calendar, dataFetched: FirebaseSuccessListenerTaskCalendar) {
+        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        var tasklist = ArrayList<Task>()
+
+        val tasklListenerActive = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                for (snapshot in p0.children) {
+                    val taskitem = snapshot.getValue(Task::class.java)!!
+                    if (SimpleDateFormat("dd/MM/yyyy").parse(taskitem.date) == calendar.time) {
+                        tasklist.add(taskitem)
+                    }
+                }
+                dataFetched.onTasksperDay(tasklist)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
             }
         }
         postRef.addValueEventListener(tasklListenerActive)
@@ -112,7 +167,8 @@ class TaskEntity : Task() {
     }
 
     fun editTask() {
-        val postRef=myRef.child("User").child("Event").child(this.eventid).child("Task").child(this.key)
+        val postRef =
+            myRef.child("User").child("Event").child(this.eventid).child("Task").child(this.key)
 
         val tasks = hashMapOf(
             "name" to name,

@@ -18,6 +18,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.new_guest.*
 import kotlinx.android.synthetic.main.new_guest.button
+import kotlinx.android.synthetic.main.new_task_taskdetail.*
+import kotlinx.android.synthetic.main.new_task_taskdetail.tkdate
+import kotlinx.android.synthetic.main.new_task_taskdetail.tkname
+import kotlinx.android.synthetic.main.task_editdetail.*
 
 class NewGuest : AppCompatActivity() {
 
@@ -37,6 +41,14 @@ class NewGuest : AppCompatActivity() {
         val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
+        nameinputedit.setOnClickListener {
+            nameinputedit.error = null
+        }
+
+        phoneinputedit.setOnClickListener {
+            phoneinputedit.error = null
+        }
+
         mPhoneNumber.setOnFocusChangeListener { p0, p1 ->
             PhoneNumberUtils.formatNumber(
                 mPhoneNumber.text.toString(),
@@ -49,40 +61,53 @@ class NewGuest : AppCompatActivity() {
         }
 
         button.setOnClickListener {
+            var inputvalflag = true
             if (nameinputedit.text.toString().isEmpty()) {
                 nameinputedit.error = "Guest name is required!"
-            } else {
+                inputvalflag = false
+            }
+            if (phoneinputedit.text.toString().isEmpty()) {
+                phoneinputedit.error = "Task due date is required!"
+                inputvalflag = false
+            }
+            if (rsvpgroup.checkedChipId == -1) {
+                Toast.makeText(this, "RSVP is required!", Toast.LENGTH_SHORT).show()
+                inputvalflag = false
+            }
+            if (companionsgroup.checkedChipId == -1) {
+                Toast.makeText(this, "Companion info is required!", Toast.LENGTH_SHORT).show()
+                inputvalflag = false
+            }
+            if (inputvalflag) {
                 saveguest()
+                finish()
             }
         }
     }
 
     private fun saveguest() {
 
-        if (rsvpgroup.checkedChipId != null) {
-            var id = rsvpgroup.checkedChipId
-            var chipselected = rsvpgroup.findViewById<Chip>(id)
-            chiptextvalue = chipselected.text.toString()
-            categoryrsvp = when (chiptextvalue) {
-                "Yes" -> "y"
-                "No" -> "n"
-                "Pending" -> "pending"
-                else -> "pending"
-            }
-
-            id = companionsgroup.checkedChipId
-            chipselected = companionsgroup.findViewById<Chip>(id)
-            chiptextvalue = chipselected.text.toString()
-            categorycompanions = when (chiptextvalue) {
-                "Adult" -> "adult"
-                "Child" -> "child"
-                "Baby" -> "baby"
-                "None" -> "none"
-                else -> "none"
-            }
+        var id = rsvpgroup.checkedChipId
+        var chipselected = rsvpgroup.findViewById<Chip>(id)
+        chiptextvalue = chipselected.text.toString()
+        categoryrsvp = when (chiptextvalue) {
+            "Yes" -> "y"
+            "No" -> "n"
+            "Pending" -> "pending"
+            else -> "pending"
         }
 
-        //val cropbitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
+        id = companionsgroup.checkedChipId
+        chipselected = companionsgroup.findViewById<Chip>(id)
+        chiptextvalue = chipselected.text.toString()
+        categorycompanions = when (chiptextvalue) {
+            "Adult" -> "adult"
+            "Child" -> "child"
+            "Baby" -> "baby"
+            "None" -> "none"
+            else -> "none"
+        }
+
         if (uri != null) saveToInternalStorage()
 
         val guest = GuestEntity().apply {
@@ -96,11 +121,9 @@ class NewGuest : AppCompatActivity() {
             email = mailinputedit.text.toString()
             table = tableinputedit.text.toString()
 
-            imageurl = uri?.let{it.toString()} ?: ""
+            imageurl = uri?.let { it.toString() } ?: ""
         }
-
         guest.addGuest()
-        finish()
     }
 
     private fun saveToInternalStorage() {

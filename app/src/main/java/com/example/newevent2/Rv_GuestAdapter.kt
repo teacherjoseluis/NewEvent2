@@ -19,14 +19,9 @@ import com.google.android.material.snackbar.Snackbar
 class Rv_GuestAdapter(
     val contactlist: MutableList<Guest>
 ) :
-    RecyclerView.Adapter<Rv_GuestAdapter.ViewHolder>(), ItemTouchHelperAdapter {
+    RecyclerView.Adapter<Rv_GuestAdapter.ViewHolder>(), ItemTouchAdapterAction {
 
     lateinit var context: Context
-    private val selected: ArrayList<Int> = ArrayList()
-    private var selectedPos = RecyclerView.NO_POSITION
-
-    var mOnItemClickListener: OnItemClickListener? = null
-    var countselected: Int = 0
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
@@ -75,11 +70,11 @@ class Rv_GuestAdapter(
         val rsvp = itemView.findViewById<TextView>(R.id.rsvp)!!
     }
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView) {
+    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
         TODO("Not yet implemented")
     }
 
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView) {
+    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
         val guest = GuestEntity().apply {
             eventid = contactlist[position].eventid
             contactid = contactlist[position].contactid
@@ -96,14 +91,17 @@ class Rv_GuestAdapter(
 
         contactlist.removeAt(position)
         notifyItemRemoved(position)
-        guest.deleteGuest()
 
-        Snackbar.make(recyclerView, "Guest deleted", Snackbar.LENGTH_LONG)
-            .setAction("UNDO") {
-                contactlist.add(guest)
-                notifyItemInserted(contactlist.lastIndex)
-                guest.addGuest()
-            }.show()
+        if (action == "delete") {
+            guest.deleteGuest()
+
+            Snackbar.make(recyclerView, "Guest deleted", Snackbar.LENGTH_LONG)
+                .setAction("UNDO") {
+                    contactlist.add(guest)
+                    notifyItemInserted(contactlist.lastIndex)
+                    guest.addGuest()
+                }.show()
+        }
     }
 }
 

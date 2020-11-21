@@ -71,7 +71,7 @@
 
         <Spinner
             android:id="@+id/eventspinner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
@@ -79,6 +79,7 @@
             android:paddingBottom="10dp"
             android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/eventlabel"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -99,13 +100,14 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:tint="#FFFFFF"
-        android:visibility="visible"
         app:backgroundTint="@color/colorPrimaryDark"
         app:fabSize="normal"
         app:layout_constraintBottom_toTopOf="@+id/include2"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="24dp"
-        app:srcCompat="@drawable/ic_icons8_plus" />
+        app:srcCompat="@drawable/ic_icons8_plus"
+        android:visibility="invisible"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonVendor"
@@ -116,13 +118,104 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:tint="#FFFFFF"
-        android:visibility="visible"
         app:backgroundTint="@color/colorPrimaryDark"
         app:fabSize="normal"
         app:layout_constraintBottom_toTopOf="@+id/include2"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="24dp"
-        app:srcCompat="@drawable/ic_icons8_plus" />
+        app:srcCompat="@drawable/ic_icons8_plus"
+        android:visibility="invisible"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/GoogleLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/LocalLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/icons8_google"
+            android:tint="@color/black"
+            app:backgroundTint="@color/colorPrimaryLight"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:maxImageSize="24dp"
+            app:rippleColor="@color/white"
+            android:elevation="0dp"
+            app:elevation="0dp"/>
+
+        <TextView
+            style="@style/Overline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="2dp"
+            android:background="@color/secondaryText"
+            android:padding="5dp"
+            android:text="Vendor from Google"
+            android:elevation="0dp"
+            app:elevation="0dp"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/fabGoogle"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/LocalLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonVendor"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabLocal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icons8_market_square_24"
+            android:tint="@color/black"
+            app:backgroundTint="@color/colorPrimaryLight"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:maxImageSize="24dp"
+            app:rippleColor="@color/white"
+            android:elevation="0dp"
+            app:elevation="0dp"/>
+
+        <TextView
+            style="@style/Overline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="2dp"
+            android:background="@color/secondaryText"
+            android:padding="5dp"
+            android:text="New Vendor"
+            android:elevation="0dp"
+            app:elevation="0dp"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/fabLocal"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <include
         android:id="@+id/include2"
