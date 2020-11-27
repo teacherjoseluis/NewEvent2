@@ -73,6 +73,7 @@
         <activity android:name=".MyCalendar" />
         <activity android:name=".MyNotes"/>
         <activity android:name=".NewNote"/>
+        <activity android:name=".Welcome"/>
     </application>
 
 </manifest>

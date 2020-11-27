@@ -55,6 +55,12 @@ class MyEvents : AppCompatActivity() {
             startActivity(newevent)
         }
 
+        imageButton.setOnClickListener()
+        {
+            val welcome = Intent(this, Welcome::class.java)
+            startActivity(welcome)
+        }
+
     }
 }
 
