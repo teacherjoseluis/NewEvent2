@@ -8,4 +8,6 @@ open class Task {
     var budget: String = ""
     var status: String = ""
     var eventid: String = ""
+    var createdatetime: String = ""
+    //At some point I will be adding the updatedatetime
 }

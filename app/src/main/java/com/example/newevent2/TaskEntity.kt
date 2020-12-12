@@ -4,10 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -166,6 +164,56 @@ class TaskEntity : Task() {
         postRef.addValueEventListener(taskListenerActive)
     }
 
+    fun getDueNextTask(dataFetched: FirebaseSuccessListenerTaskWelcome) {
+        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+            .orderByChild("date")
+        val taskListenerActive = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                //val todaydate= SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)
+                var duenexttask = Task()
+                val todaydate = Date()
+                for (snapshot in p0.children) {
+                    val taskitem = snapshot.getValue(Task::class.java)
+                    if (taskitem!!.status == "A") {
+                        if (todaydate.before(SimpleDateFormat("dd/MM/yyyy").parse(taskitem.date))) {
+                            duenexttask = taskitem
+                        }
+                    }
+                }
+                dataFetched.onTask(duenexttask)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
+        postRef.addValueEventListener(taskListenerActive)
+    }
+
+    fun getRecentCreatedTask(dataFetched: FirebaseSuccessListenerTaskWelcome) {
+        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+            .orderByChild("createdatetime")
+        val taskListenerActive = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                //val todaydate= SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)
+                var taskcreated = Task()
+                loop@ for (snapshot in p0.children) {
+                    val taskitem = snapshot.getValue(Task::class.java)
+                    if (taskitem!!.status == "A" && taskitem.createdatetime.isNotEmpty()) {
+                        taskcreated = taskitem
+                        break@loop
+                    }
+                }
+                dataFetched.onTask(taskcreated)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
+        postRef.addValueEventListener(taskListenerActive)
+    }
+
     fun editTask() {
         val postRef =
             myRef.child("User").child("Event").child(this.eventid).child("Task").child(this.key)
@@ -208,13 +256,22 @@ class TaskEntity : Task() {
         val postRef =
             myRef.child("User").child("Event").child(this.eventid).child("Task").push()
 
+        //---------------------------------------
+        // Getting the time and date to record in the recently created task
+        val timestamp = Time(System.currentTimeMillis())
+        val taskdatetime = Date(timestamp.time)
+        val sdf = SimpleDateFormat("MM/dd/yyyy h:mm:ss a")
+        //---------------------------------------
+
+
         val tasks = hashMapOf(
             "name" to name,
             "budget" to budget,
             "date" to date,
             "category" to category,
             "status" to "A",
-            "eventid" to eventid
+            "eventid" to eventid,
+            "createdatetime" to sdf.format(taskdatetime)
         )
 
         postRef.setValue(tasks as Map<String, Any>)

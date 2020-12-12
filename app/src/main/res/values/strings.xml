@@ -17,4 +17,8 @@
     <!--
     <string name="google_api_key">AIzaSyC6nCSLYrxoARX3OAEqNdpSFsf73OOHdbo</string>
     -->
+    <string name="facebook_app_id">420436362323049</string>
+    <string name="fb_login_protocol_scheme">fb420436362323049</string>
+
+
 </resources>

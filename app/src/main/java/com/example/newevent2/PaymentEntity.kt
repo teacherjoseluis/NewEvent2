@@ -6,6 +6,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -145,6 +146,30 @@ class PaymentEntity : Payment() {
         postRef.addValueEventListener(paymentListenerActive)
     }
 
+    fun getRecentCreatedPayment(dataFetched: FirebaseSuccessListenerPaymentWelcome) {
+        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+            .orderByChild("createdatetime")
+        val paymentListenerActive = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                //val todaydate= SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)
+                var paymentcreated = Payment()
+                loop@ for (snapshot in p0.children) {
+                    val paymentitem = snapshot.getValue(Payment::class.java)
+                    if (paymentitem!!.createdatetime.isNotEmpty()) {
+                        paymentcreated = paymentitem!!
+                        break@loop
+                    }
+                }
+                dataFetched.onPayment(paymentcreated)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
+        postRef.addValueEventListener(paymentListenerActive)
+    }
+
     fun editPayment(action: String) {
         if (action == "complete") {
             myRef.child("User").child("Event").child(this.eventid).child("Payment").child(this.key)
@@ -164,12 +189,21 @@ class PaymentEntity : Payment() {
     fun addPayment() {
         val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment").push()
 
+        //---------------------------------------
+        // Getting the time and date to record in the recently created payment
+        val timestamp = Time(System.currentTimeMillis())
+        val paymentdatetime = Date(timestamp.time)
+        val sdf = SimpleDateFormat("MM/dd/yyyy h:mm:ss a")
+        //---------------------------------------
+
+
         val payment = hashMapOf(
             "name" to name,
             "amount" to amount,
             "date" to date,
             "category" to category,
-            "eventid" to eventid
+            "eventid" to eventid,
+            "createdatetime" to sdf.format(paymentdatetime)
         )
 
         postRef.setValue(payment as Map<String, Any>)

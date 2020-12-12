@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.animation.Easing
@@ -18,6 +19,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.MPPointF
+import kotlinx.android.synthetic.main.welcome.*
 import java.text.DecimalFormat
 
 class Welcome : AppCompatActivity() {
@@ -127,9 +129,45 @@ class Welcome : AppCompatActivity() {
             yEntrySpace = 0f
             yOffset = 0f
         }
-
         setData()
+//--------------------------------------------------------------------------------------------------
+        val taskduenext = TaskEntity()
+        taskduenext.eventid =
+            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+
+        taskduenext.getDueNextTask(object : FirebaseSuccessListenerTaskWelcome {
+            override fun onTask(task: Task) {
+                duenextdate.text = task.date
+                duenexttask.text = task.name
+            }
+        })
+//--------------------------------------------------------------------------------------------------
+        val taskcreated = TaskEntity()
+        taskcreated.eventid =
+            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+
+        taskcreated.getRecentCreatedTask(object : FirebaseSuccessListenerTaskWelcome {
+            override fun onTask(task: Task) {
+                recenttaskdate.text = task.createdatetime
+                recentcreatedtask.text = task.name
+            }
+        })
+//--------------------------------------------------------------------------------------------------
+        val paymentcreated = PaymentEntity()
+        paymentcreated.eventid =
+            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+
+        paymentcreated.getRecentCreatedPayment(object : FirebaseSuccessListenerPaymentWelcome {
+            override fun onPayment(payment: Payment) {
+                recentpaymentdate.text = payment.createdatetime
+                recentcreatedpayment.text = payment.name
+            }
+        })
+//--------------------------------------------------------------------------------------------------
+
     }
+
+
 
     private fun setData() {
         val taskentries = ArrayList<PieEntry>()
