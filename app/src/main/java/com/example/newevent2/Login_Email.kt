@@ -11,14 +11,14 @@ import kotlinx.android.synthetic.main.login_email.button
 
 class Login_Email : AppCompatActivity() {
 
-    private var mAuth: FirebaseAuth? = null
+    //private var mAuth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_email)
 
         // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance()
+        //mAuth = FirebaseAuth.getInstance()
 
         button.setOnClickListener {
             var inputvalflag = true
@@ -31,16 +31,25 @@ class Login_Email : AppCompatActivity() {
                 inputvalflag = false
             }
             if (inputvalflag) {
-               mAuth!!.createUserWithEmailAndPassword(editTextTextEmailAddress.text.toString(), editTextTextPassword.text.toString())
-                   //Need to implement functionality to save user session. Class
-                   .addOnCompleteListener(this) { task ->
-                       if(task.isSuccessful) {
-                           startActivity(Intent(this, Welcome::class.java))
-                           finish()
-                       } else {
-                           Log.e("MyTag", task.exception.toString())
-                       }
-                   }
+                val user = UserAccount()
+                user.UserEmail = editTextTextEmailAddress.text.toString()
+                user.UserPassword = editTextTextPassword.text.toString()
+
+                if (user!!.login("email", this, null, null)) {
+                    startActivity(Intent(this, Welcome::class.java))
+                    finish()
+                }
+
+//               mAuth!!.createUserWithEmailAndPassword(editTextTextEmailAddress.text.toString(), editTextTextPassword.text.toString())
+//                   //Need to implement functionality to save user session. Class
+//                   .addOnCompleteListener(this) { task ->
+//                       if(task.isSuccessful) {
+//                           startActivity(Intent(this, Welcome::class.java))
+//                           finish()
+//                       } else {
+//                           Log.e("MyTag", task.exception.toString())
+//                       }
+//                   }
             }
         }
     }
