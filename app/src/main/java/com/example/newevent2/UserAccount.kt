@@ -1,81 +1,207 @@
 package com.example.newevent2
 
+import android.R
 import android.app.Activity
-import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.core.content.ContextCompat.startActivity
+import android.widget.Toast
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.android.synthetic.main.login_email.*
+import kotlinx.android.synthetic.main.onboarding_name.*
+
 
 class UserAccount(
     var UserEmail: String = ""
 ) {
 
     var UserPassword: String = ""
+    var authtype: String = ""
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var loginresult = false
     private var logoutresult = false
 
+    private var userexistsflag = false
+
     fun checklogin(): Boolean {
-        return mAuth!!.currentUser != null
+        return mAuth.currentUser != null
+    }
+
+    fun signup(activity: Activity) {
+        Log.i("signUpWithEmail", "Sign Up with Email")
+        mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
+            .addOnCompleteListener(activity) { task ->
+                if (task.isSuccessful) {
+                    Log.i("Email Signup", "Successful Signup: $UserEmail")
+                    Toast.makeText(activity, "Account created", Toast.LENGTH_SHORT).show()
+                    verifyaccount(activity)
+                } else {
+                    Log.e("Email Signup", "Failed SignUp:" + task.exception.toString())
+                    val errorcode = task.exception!!.message
+                    Toast.makeText(activity, errorcode, Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     fun login(
-        authtype: String,
         activity: Activity,
         acct: GoogleSignInAccount?,
         fbtoken: AccessToken?
-    ): Boolean {
-
+    ) {
         when (authtype) {
             "email" -> {
-                mAuth!!.createUserWithEmailAndPassword(UserEmail, UserPassword)
+                Log.i("signInWithEmail", "Authentication with Email")
+                mAuth.signInWithEmailAndPassword(UserEmail, UserPassword)
                     .addOnCompleteListener(activity) { task ->
                         if (task.isSuccessful) {
-                            Log.i("Email Login", "Successful Login: $UserEmail")
-                            loginresult = true
+                            if (mAuth.currentUser!!.isEmailVerified) {
+                                Log.i("Email Verification", "Email Verified: $UserEmail")
+                                Log.i("Email Login", "Successful Login: $UserEmail")
+                                savesession(authtype, activity, UserEmail)
+                                // Need to implement also the decision between going to the onboarding flow or the Welcome page
+                                // Through the checkuser, I think it needs to be called through an interface to keep the logic here
+                                // Logic from Login_Email
+                                // Can't get out of this listener as it's a asynch call
+                                val userEntity = UserEntity()
+                                userEntity.key = mAuth.currentUser!!.uid
+                                userEntity.getUserexists(object : FirebaseSuccessListenerUser {
+                                    override fun onUserexists(userexists: Boolean) {
+                                        if (userexists) {
+                                            val intent = Intent(activity, Welcome::class.java)
+                                            activity.startActivity(intent)
+                                            activity.finish()
+                                        } else {
+                                            // Creating the user for the moment but the idea is to to to Onboarding process
+//                                            userEntity.eventid = "-MLy-LKwd8RnRb-Bwesn"
+//                                            userEntity.shortname = "Jose"
+//                                            userEntity.email = UserEmail
+//                                            userEntity.country = "MX"
+//                                            userEntity.language = "SPA"
+//                                            userEntity.addUser()
+                                            val onboardingname =
+                                                Intent(activity, Onboarding_Name::class.java)
+                                            onboardingname.putExtra("useremail", UserEmail)
+                                            onboardingname.putExtra("userkey", userEntity.key)
+                                            activity.startActivity(onboardingname)
+                                        }
+                                    }
+                                })
+                            } else {
+                                Log.e("Email Verification", "Email NOT Verified: $UserEmail")
+                                Toast.makeText(
+                                    activity,
+                                    "Verify your email account",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                activity.onBackPressed()
+                            }
                         } else {
+                            Log.e("Task Exception", task.exception.toString())
                             Log.e("Email Login", "Failed Login:" + task.exception.toString())
                         }
                     }
             }
             "google" -> {
                 val credential = GoogleAuthProvider.getCredential(acct!!.idToken, null)
-                mAuth!!.signInWithCredential(credential)
+                mAuth.signInWithCredential(credential)
                     .addOnCompleteListener(activity) { task ->
                         if (task.isSuccessful) {
                             //val user = mAuth!!.currentUser
                             //Need to implement functionality to save user session. Class
                             Log.i("Google Login", "Successful Login: $UserEmail")
-                            loginresult = true
+                            savesession(authtype, activity, UserEmail)
+                            val userEntity = UserEntity()
+                            userEntity.key = mAuth.currentUser!!.uid
+                            userEntity.getUserexists(object : FirebaseSuccessListenerUser {
+                                override fun onUserexists(userexists: Boolean) {
+                                    if (userexists) {
+                                        val intent = Intent(activity, Welcome::class.java)
+                                        activity.startActivity(intent)
+                                        activity.finish()
+                                    } else {
+                                        val onboardingname =
+                                            Intent(activity, Onboarding_Name::class.java)
+                                        onboardingname.putExtra("useremail", UserEmail)
+                                        onboardingname.putExtra("userkey", userEntity.key)
+                                        activity.startActivity(onboardingname)
+                                    }
+                                }
+                            })
                         } else {
+                            Log.e("Task Exception", task.exception.toString())
                             Log.e("Google Login", "Failed Login:" + task.exception.toString())
                         }
                     }
             }
             "facebook" -> {
                 val credential = FacebookAuthProvider.getCredential(fbtoken!!.token)
-                mAuth!!.signInWithCredential(credential)
+                mAuth.signInWithCredential(credential)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             //val user = mAuth!!.currentUser
                             //Need to implement functionality to save user session. Class
                             Log.i("Facebook Login", "Successful Login: $UserEmail")
-                            loginresult = true
+                            savesession(authtype, activity, UserEmail)
+                            val userEntity = UserEntity()
+                            userEntity.key = mAuth.currentUser!!.uid
+                            userEntity.getUserexists(object : FirebaseSuccessListenerUser {
+                                override fun onUserexists(userexists: Boolean) {
+                                    if (userexists) {
+                                        val intent = Intent(activity, Welcome::class.java)
+                                        activity.startActivity(intent)
+                                        activity.finish()
+                                    } else {
+                                        val onboardingname =
+                                            Intent(activity, Onboarding_Name::class.java)
+                                        onboardingname.putExtra("useremail", UserEmail)
+                                        onboardingname.putExtra("userkey", userEntity.key)
+                                        activity.startActivity(onboardingname)
+                                    }
+                                }
+                            })
                         } else {
+                            Log.e("Task Exception", task.exception.toString())
                             Log.e("Facebook Login", "Failed Login:" + task.exception.toString())
                         }
                     }
             }
         }
-        return loginresult
+    }
+
+    private fun verifyaccount(activity: Activity) {
+        val user = mAuth.currentUser
+        user!!.sendEmailVerification()
+            .addOnCompleteListener(activity) { task ->
+                if (task.isSuccessful) {
+                    Log.i("Email Verification", "Successful Verification: $UserEmail")
+                } else {
+                    Log.e("Email Verification", "Failed Verification:" + task.exception.toString())
+                }
+            }
+    }
+
+    fun sendpasswordreset(activity: Activity) {
+        mAuth.sendPasswordResetEmail(UserEmail)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    //val user = mAuth!!.currentUser
+                    //Need to implement functionality to save user session. Class
+                    Log.i("Send Password Reset", "Successfully Sent: $UserEmail")
+                    Toast.makeText(activity, "Verify your email account", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("Task Exception", task.exception.toString())
+                    Toast.makeText(
+                        activity,
+                        "There was a problem with your account",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
     }
 
     fun logout(
@@ -85,7 +211,7 @@ class UserAccount(
         mFacebookLoginManager: LoginManager
     ): Boolean {
 
-        mAuth!!.signOut()
+        mAuth.signOut()
 
         when (authtype) {
             "google" -> {
@@ -99,20 +225,36 @@ class UserAccount(
                 logoutresult = true
             }
         }
+
+        if (logoutresult) {
+            deletesession(activity)
+        }
+
         return logoutresult
     }
 
-
-    fun checkuser(emailaccount: String) {
-
+    private fun savesession(authtype: String, activity: Activity, UserEmail: String): Boolean {
+        var userSession = activity.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+        return try {
+            val sessionEditor = userSession!!.edit()
+            sessionEditor.putString("UID", mAuth.currentUser!!.uid) // UID from Firebase
+            sessionEditor.putString("Email", UserEmail)
+            sessionEditor.putString("Autentication", authtype)
+            sessionEditor.apply()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    fun getuser(emailaccount: String) {
-
-    }
-
-    fun saveuser(emailaccount: String) {
-
+    private fun deletesession(activity: Activity): Boolean {
+        var userSession = activity.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+        return try {
+            userSession.edit().clear().apply()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }
 

@@ -21,26 +21,15 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.login.*
+import kotlinx.android.synthetic.main.login_email.*
 
 
-class Login() : AppCompatActivity()
-//, View.OnClickListener
-{
+class Login() : AppCompatActivity() {
 
-    //private var mAuth: FirebaseAuth? = null
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private var mCallbackManager: CallbackManager? = null
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var user: UserAccount? = null
-
-    public override fun onStart() {
-        super.onStart()
-        // if user logged in, go to sign-in screen
-        if (mAuth!!.currentUser != null) {
-            startActivity(Intent(this, Welcome::class.java))
-            finish()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +38,22 @@ class Login() : AppCompatActivity()
 
         user = UserAccount()
 
-        // Initialize Firebase Auth
-        //mAuth = FirebaseAuth.getInstance()
-
         // Initialize Facebook login button
         mCallbackManager = CallbackManager.Factory.create()
 
-        //signgoogle.setSize(SignInButton.SIZE_WIDE)
-
         signemail.setOnClickListener {
-            startActivity(Intent(this, Login_Email::class.java))
+
+            var inputvalflag = true
+            if (mailinputeditlogin.text.toString().isEmpty()) {
+                mailinputeditlogin.error = "Email is required!"
+                inputvalflag = false
+            }
+
+            if (inputvalflag) {
+                val loginemail = Intent(this, Login_Email::class.java)
+                loginemail.putExtra("email", mailinputeditlogin.text.toString())
+                startActivity(loginemail)
+            }
         }
 
         signgoogle.setOnClickListener {
@@ -80,25 +75,8 @@ class Login() : AppCompatActivity()
                     override fun onSuccess(result: LoginResult?) {
                         Log.d(TAGF, "facebook:onSuccess:$result")
                         val token = result!!.accessToken
-
-                        if (user!!.login("facebook", this@Login, null, token)) {
-                            startActivity(Intent(applicationContext, Welcome::class.java))
-                        }
-//                        val credential = FacebookAuthProvider.getCredential(token.token)
-//                        mAuth!!.signInWithCredential(credential)
-//                            .addOnCompleteListener {
-//                                if (it.isSuccessful) {
-//                                    val user = mAuth!!.currentUser
-//                                    //Need to implement functionality to save user session. Class
-//                                    Log.d(
-//                                        TAG,
-//                                        "signInWithCredential:success: currentUser: " + user!!.email!!
-//                                    )
-//                                } else {
-//                                    Log.w(TAG, "sigInWithCredential:failure", it.exception)
-//                                }
-//
-//                            }
+                        user!!.authtype = "facebook"
+                        user!!.login(this@Login, null, token)
                     }
 
                     override fun onCancel() {
@@ -111,17 +89,15 @@ class Login() : AppCompatActivity()
 
                 })
         }
+
+        signemaillink.setOnClickListener {
+            val loginemail = Intent(this, Login_Email::class.java)
+            loginemail.putExtra("email", "")
+            startActivity(loginemail)
+        }
     }
 
-//    override fun onClick(p0: View?) {
-//        when (p0!!.id) {
-//            signgoogle.id -> signInToGoogle()
-//            button.id -> signOut()
-//        }
-//    }
-
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
         mCallbackManager!!.onActivityResult(requestCode, resultCode, data)
         // Pass the activity result back to the Facebook SDK
         super.onActivityResult(requestCode, resultCode, data)
@@ -130,58 +106,17 @@ class Login() : AppCompatActivity()
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                if (user!!.login("google", this, account, null)) {
-                    startActivity(Intent(this, Welcome::class.java))
-                }
-                //firebaseAuthWithGoogle(account!!)
+                user!!.authtype = "google"
+                user!!.login(this, account, null)
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)
             }
         }
     }
 
-//    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-//        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-//        mAuth!!.signInWithCredential(credential)
-//            .addOnCompleteListener(this) { task ->
-//                if (task.isSuccessful) {
-//                    val user = mAuth!!.currentUser
-//                    //Need to implement functionality to save user session. Class
-//                    Log.d(TAG, "signInWithCredential:success: currentUser: " + user!!.email!!)
-//                } else {
-//                    Log.w(TAG, "sigInWithCredential:failure", task.exception)
-//                }
-//            }
-//    }
-
-
-//    private fun signInToGoogle() {
-//        val signInIntent = mGoogleSignInClient.signInIntent
-//        startActivityForResult(signInIntent, RC_SIGN_IN)
-//    }
-
-
-//    private fun signOut() {
-//        mAuth!!.signOut()
-//        mGoogleSignInClient.signOut().addOnCompleteListener(this) {
-//            Log.w(TAG, "Signed out of google")
-//        }
-//    }
-
     companion object {
         private val TAG = "GoogleActivity"
         private val TAGF = "FacebookLogin"
         private val RC_SIGN_IN = 9001
     }
-//
-//    public override fun onStart() {
-//        super.onStart()
-//
-//        // if user logged in, go to sign-in screen
-//        if (mAuth!!.currentUser != null) {
-//            startActivity(Intent(this, Welcome::class.java))
-//            finish()
-//        }
-//    }
-
 }

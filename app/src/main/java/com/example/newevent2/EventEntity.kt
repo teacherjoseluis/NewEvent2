@@ -136,8 +136,8 @@ class EventEntity : Event() {
             .addOnSuccessListener {
                 //Save Event image in Storage
                 if (uri != null) {
-                    val eventkey = myRef.key.toString()
-                    val imageRef = storageRef.child("images/$eventkey/${uri.lastPathSegment}")
+                    key = myRef.key.toString()
+                    val imageRef = storageRef.child("images/$key/${uri.lastPathSegment}")
                     val uploadTask = imageRef.putFile(uri)
 
                     uploadTask.addOnFailureListener {
