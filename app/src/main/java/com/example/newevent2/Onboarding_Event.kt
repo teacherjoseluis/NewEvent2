@@ -39,6 +39,8 @@ class Onboarding_Event : AppCompatActivity() {
     private var useremail = ""
     private var userkey = ""
 
+    private var userSession = User()
+
     private val database = FirebaseDatabase.getInstance()
     private val myRef = database.reference
     //private val postRef = myRef.child("User").child("Event")
@@ -48,9 +50,10 @@ class Onboarding_Event : AppCompatActivity() {
         setContentView(R.layout.onboarding_event)
 
         val intent = intent
-        username = intent.getStringExtra("username").toString()
-        useremail = intent.getStringExtra("useremail").toString()
-        userkey = intent.getStringExtra("userkey").toString()
+//        username = intent.getStringExtra("username").toString()
+//        useremail = intent.getStringExtra("useremail").toString()
+//        userkey = intent.getStringExtra("userkey").toString()
+        userSession = intent.getParcelableExtra("usersession")!!
 
         etname.setOnClickListener {
             etname.error = null
@@ -97,29 +100,35 @@ class Onboarding_Event : AppCompatActivity() {
     }
 
     private fun saveUserEvent() {
-        var postRef = myRef.child("User").child(userkey)
+        var postRef = myRef.child("User").child(userSession!!.key)
 
         //---------------------------------------
         // Getting the time and date to record in the recently created task
         val timestamp = Time(System.currentTimeMillis())
         val taskdatetime = Date(timestamp.time)
         val sdf = SimpleDateFormat("MM/dd/yyyy h:mm:ss a")
+
+        userSession!!.createdatetime = sdf.format(taskdatetime)
+        userSession!!.country = this.resources.configuration.locale.country
+        userSession!!.language = this.resources.configuration.locale.language
+        userSession!!.status = "A"
         //---------------------------------------
 
         val user = hashMapOf(
-            "shortname" to username,
-            "email" to useremail,
-            "country" to this.resources.configuration.locale.country,
-            "language" to this.resources.configuration.locale.language,
-            "createdatetime" to sdf.format(taskdatetime),
-            "status" to "A"
+            "shortname" to userSession!!.shortname,
+            "email" to userSession!!.email,
+            "country" to userSession!!.country,
+            "language" to userSession!!.language,
+            "createdatetime" to userSession!!.createdatetime,
+            "status" to userSession!!.status,
+            "hasevent" to "Y"
         )
 
         postRef.setValue(user as Map<String, Any>)
             .addOnFailureListener {
             }
             .addOnSuccessListener {
-                postRef = myRef.child("User").child(userkey).child("Event")
+                postRef = myRef.child("User").child(userSession!!.key).child("Event").push()
                 val events = hashMapOf(
                     "name" to etname.text.toString(),
                     "date" to etPlannedDate.text.toString(),
@@ -139,11 +148,15 @@ class Onboarding_Event : AppCompatActivity() {
                     }
                     .addOnSuccessListener {
                         //Save the eventkey in the user session
-                        var userSession =
+                        val eventkey = postRef.key.toString()
+                        var userlocalsession =
                             this.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
                         try {
-                            val sessionEditor = userSession!!.edit()
-                            sessionEditor.putString("eventkey", myRef.key.toString())
+                            val sessionEditor = userlocalsession!!.edit()
+                            sessionEditor.putString("UID", userSession!!.key) // UID from Firebase
+                            sessionEditor.putString("Email", userSession!!.email)
+                            sessionEditor.putString("Autentication", userSession!!.authtype)
+                            sessionEditor.putString("Eventid", eventkey)
                             sessionEditor.apply()
                         } catch (e: Exception) {
                             Log.e("Save Session Exception", e.toString())

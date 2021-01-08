@@ -12,14 +12,46 @@
         tools:layout_editor_absoluteY="34dp"></include>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/userprofile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <TextView
+            android:id="@+id/hellouser"
+            style="@style/Heading6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Hello,"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></TextView>
+
+        <TextView
+            android:id="@+id/usershortname"
+            style="@style/Heading6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:text="User"
+            app:layout_constraintStart_toEndOf="@+id/hellouser"
+            app:layout_constraintTop_toTopOf="parent"></TextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/duenextlayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:padding="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/userprofile">
 
         <TextView
             android:id="@+id/duenextlabel"
@@ -30,61 +62,51 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"></TextView>
 
-        <ImageView
-            android:id="@+id/duenexticon"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingTop="5dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/duenextlabel"
-            app:srcCompat="@drawable/icons8_task_completed_24">
+            app:layout_constraintTop_toBottomOf="@id/duenextlabel">
 
-        </ImageView>
+            <ImageView
+                android:id="@+id/duenexticon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/icons8_task_completed_24"></ImageView>
 
-        <TextView
-            android:id="@+id/duenextdate"
-            style="@style/BodyItalic2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:text="date"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/duenexticon"
-            app:layout_constraintTop_toBottomOf="parent">
+            <TextView
+                android:id="@+id/duenextdate"
+                style="@style/BodyItalic2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="date"
+                app:layout_constraintStart_toEndOf="@id/duenexticon"
+                app:layout_constraintTop_toTopOf="parent"></TextView>
 
-        </TextView>
+            <TextView
+                android:id="@+id/hyphen3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="3dp"
+                android:text="-"
+                app:layout_constraintStart_toEndOf="@id/duenextdate"
+                app:layout_constraintTop_toTopOf="parent"></TextView>
 
-        <TextView
-            android:id="@+id/hyphen3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:text="-"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/duenextdate"
-            app:layout_constraintTop_toBottomOf="parent">
+            <TextView
+                android:id="@+id/duenexttask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="3dp"
+                android:text="task"
+                app:layout_constraintStart_toEndOf="@id/hyphen3"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </TextView>
-
-        <TextView
-            android:id="@+id/duenexttask"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:text="task"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/hyphen3"
-            app:layout_constraintTop_toBottomOf="parent">
-
-        </TextView>
+            </TextView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

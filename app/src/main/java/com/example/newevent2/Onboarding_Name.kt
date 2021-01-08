@@ -9,15 +9,15 @@ import kotlinx.android.synthetic.main.onboarding_name.*
 
 class Onboarding_Name : AppCompatActivity() {
 
-    private var useremail=""
-    private var userkey=""
+    private var userSession = User()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.onboarding_name)
 
-        useremail = intent.getStringExtra("useremail").toString()
-        userkey = intent.getStringExtra("userkey").toString()
+        userSession = intent.getParcelableExtra("usersession")!!
+//        useremail = intent.getStringExtra("useremail").toString()
+//        userkey = intent.getStringExtra("userkey").toString()
 
         buttonname.setOnClickListener {
             var inputvalflag = true
@@ -27,10 +27,13 @@ class Onboarding_Name : AppCompatActivity() {
             }
 
             if (inputvalflag) {
+                userSession!!.shortname = nameinputedit.text.toString()
+
                 val onboardingevent = Intent(this, Onboarding_Event::class.java)
-                onboardingevent.putExtra("username", nameinputedit.text.toString())
-                onboardingevent.putExtra("useremail", useremail)
-                onboardingevent.putExtra("userkey", userkey)
+//                onboardingevent.putExtra("username", nameinputedit.text.toString())
+//                onboardingevent.putExtra("useremail", useremail)
+//                onboardingevent.putExtra("userkey", userkey)
+                onboardingevent.putExtra("usersession", userSession)
                 startActivity(onboardingevent)
             }
         }

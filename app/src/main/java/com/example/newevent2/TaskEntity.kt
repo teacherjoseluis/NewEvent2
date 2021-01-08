@@ -1,5 +1,7 @@
 package com.example.newevent2
 
+import android.app.Activity
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.android.gms.tasks.OnSuccessListener
@@ -17,8 +19,13 @@ class TaskEntity : Task() {
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
 
-    fun getTasksEvent(dataFetched: FirebaseSuccessListenerTask) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+    fun getTasksEvent(context: Context, dataFetched: FirebaseSuccessListenerTask) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Task")
+                .orderByChild("date")
 
         var taskcountpending = 0
         var taskcountcompleted = 0
@@ -164,9 +171,13 @@ class TaskEntity : Task() {
         postRef.addValueEventListener(taskListenerActive)
     }
 
-    fun getDueNextTask(dataFetched: FirebaseSuccessListenerTaskWelcome) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
-            .orderByChild("date")
+    fun getDueNextTask(context: Context, dataFetched: FirebaseSuccessListenerTaskWelcome) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Task")
+                .orderByChild("date")
         val taskListenerActive = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 //val todaydate= SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)
@@ -190,9 +201,13 @@ class TaskEntity : Task() {
         postRef.addValueEventListener(taskListenerActive)
     }
 
-    fun getRecentCreatedTask(dataFetched: FirebaseSuccessListenerTaskWelcome) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
-            .orderByChild("createdatetime")
+    fun getRecentCreatedTask(context: Context, dataFetched: FirebaseSuccessListenerTaskWelcome) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Task")
+                .orderByChild("createdatetime")
         val taskListenerActive = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 //val todaydate= SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)

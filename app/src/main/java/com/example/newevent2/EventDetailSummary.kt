@@ -43,7 +43,7 @@ class EventDetailSummary : Fragment() {
 
         val taskentity = TaskEntity()
         taskentity.eventid = eventkey
-        taskentity.getTasksEvent(object : FirebaseSuccessListenerTask {
+        taskentity.getTasksEvent(activity!!.applicationContext, object : FirebaseSuccessListenerTask {
             override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
                 inf.taskpending.text = taskpending.toString()
                 inf.taskcompleted.text = taskcompleted.toString()
@@ -58,7 +58,7 @@ class EventDetailSummary : Fragment() {
 
         val paymententity = PaymentEntity()
         paymententity.eventid = eventkey
-        paymententity.getPaymentEvent(object : FirebaseSuccessListenerPayment {
+        paymententity.getPaymentEvent(activity!!.applicationContext, object : FirebaseSuccessListenerPayment {
             override fun onPaymentEvent(sumpayment: Float) {
                 inf.paymentpaid.text = formatter.format(sumpayment)
             }

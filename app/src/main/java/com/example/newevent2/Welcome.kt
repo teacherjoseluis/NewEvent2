@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -27,8 +28,10 @@ class Welcome : AppCompatActivity() {
     private lateinit var charttask: PieChart
     private lateinit var chartpayment: PieChart
 
-    var tfRegular: Typeface? = null
-    var tfLight: Typeface? = null
+    private var userSession = User()
+
+    private var tfRegular: Typeface? = null
+    private var tfLight: Typeface? = null
 
     var sharedPreference: SharedPreferences? = null
 
@@ -45,6 +48,13 @@ class Welcome : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.welcome)
+
+        val intent = intent
+        userSession = intent.getParcelableExtra("usersession")!!
+
+        usershortname.text = userSession!!.shortname
+
         sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
         // Pie charts
         window.setFlags(
@@ -55,8 +65,6 @@ class Welcome : AppCompatActivity() {
         //Typeface.createFromAsset(assets, "fonts/robotoregular.ttf")
         tfLight = ResourcesCompat.getFont(this.applicationContext, R.font.robotolight)
         //Typeface.createFromAsset(assets, "fonts/robotolight.ttf")
-
-        setContentView(R.layout.welcome)
 
         charttask = findViewById(R.id.charttask)
         charttask.apply {
@@ -132,10 +140,10 @@ class Welcome : AppCompatActivity() {
         setData()
 //--------------------------------------------------------------------------------------------------
         val taskduenext = TaskEntity()
-        taskduenext.eventid =
-            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+//        taskduenext.eventid =
+//            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
 
-        taskduenext.getDueNextTask(object : FirebaseSuccessListenerTaskWelcome {
+        taskduenext.getDueNextTask(this, object : FirebaseSuccessListenerTaskWelcome {
             override fun onTask(task: Task) {
                 duenextdate.text = task.date
                 duenexttask.text = task.name
@@ -143,10 +151,10 @@ class Welcome : AppCompatActivity() {
         })
 //--------------------------------------------------------------------------------------------------
         val taskcreated = TaskEntity()
-        taskcreated.eventid =
-            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+//        taskcreated.eventid =
+//            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
 
-        taskcreated.getRecentCreatedTask(object : FirebaseSuccessListenerTaskWelcome {
+        taskcreated.getRecentCreatedTask(this, object : FirebaseSuccessListenerTaskWelcome {
             override fun onTask(task: Task) {
                 recenttaskdate.text = task.createdatetime
                 recentcreatedtask.text = task.name
@@ -154,10 +162,10 @@ class Welcome : AppCompatActivity() {
         })
 //--------------------------------------------------------------------------------------------------
         val paymentcreated = PaymentEntity()
-        paymentcreated.eventid =
-            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+//        paymentcreated.eventid =
+//            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
 
-        paymentcreated.getRecentCreatedPayment(object : FirebaseSuccessListenerPaymentWelcome {
+        paymentcreated.getRecentCreatedPayment(this, object : FirebaseSuccessListenerPaymentWelcome {
             override fun onPayment(payment: Payment) {
                 recentpaymentdate.text = payment.createdatetime
                 recentcreatedpayment.text = payment.name
@@ -168,14 +176,13 @@ class Welcome : AppCompatActivity() {
     }
 
 
-
     private fun setData() {
         val taskentries = ArrayList<PieEntry>()
         val taskentity = TaskEntity()
-        taskentity.eventid =
-            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+//        taskentity.eventid =
+//            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
 
-        taskentity.getTasksEvent(object : FirebaseSuccessListenerTask {
+        taskentity.getTasksEvent(this, object : FirebaseSuccessListenerTask {
             override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
                 taskentries.add(PieEntry(taskpending.toFloat(), "Pending"))
                 taskentries.add(PieEntry(taskcompleted.toFloat(), "Completed"))
@@ -216,10 +223,10 @@ class Welcome : AppCompatActivity() {
 
         val paymententries = ArrayList<PieEntry>()
         val paymententity = PaymentEntity()
-        paymententity.eventid =
-            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+//        paymententity.eventid =
+//            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
 
-        paymententity.getPaymentEvent(object : FirebaseSuccessListenerPayment {
+        paymententity.getPaymentEvent(this, object : FirebaseSuccessListenerPayment {
             override fun onPaymentEvent(sumpayment: Float) {
                 //--------------------------------------------------------------------------------
                 val sumbudget = sharedPreference!!.getFloat("sumbudget", 0.0f)

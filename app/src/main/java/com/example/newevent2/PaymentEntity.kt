@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.firebase.database.DataSnapshot
@@ -16,8 +17,13 @@ class PaymentEntity : Payment() {
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
 
-    fun getPaymentEvent(dataFetched: FirebaseSuccessListenerPayment) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+    fun getPaymentEvent(context: Context, dataFetched: FirebaseSuccessListenerPayment) {
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+        val usersessionlist = getUserSession(context)
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Payment")
+                .orderByChild("createdatetime")
 
         var sumpayment = 0.0F
 
@@ -83,9 +89,9 @@ class PaymentEntity : Payment() {
                     if (paymentitem!!.category == category) {
                         val paidamount = re.replace(paymentitem.amount, "").dropLast(2)
                         sumpayment += paidamount.toFloat()
-                            countpayment += 1
-                        }
+                        countpayment += 1
                     }
+                }
                 dataFetched.onPaymentStats(countpayment, sumpayment)
             }
 
@@ -146,9 +152,16 @@ class PaymentEntity : Payment() {
         postRef.addValueEventListener(paymentListenerActive)
     }
 
-    fun getRecentCreatedPayment(dataFetched: FirebaseSuccessListenerPaymentWelcome) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
-            .orderByChild("createdatetime")
+    fun getRecentCreatedPayment(
+        context: Context,
+        dataFetched: FirebaseSuccessListenerPaymentWelcome
+    ) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Payment")
+                .orderByChild("createdatetime")
         val paymentListenerActive = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 //val todaydate= SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().time)
