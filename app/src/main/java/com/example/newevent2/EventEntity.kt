@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -112,6 +113,26 @@ class EventEntity : Event() {
         postRef.addValueEventListener(eventListenerActive)
     }
 
+    fun getEventdetail(context: Context, dataFetched: FirebaseSuccessListenerEvent) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+
+        val eventListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                val eventitem = p0.getValue(Event::class.java)!!
+                eventitem!!.key = p0.key.toString()
+                dataFetched.onEvent(eventitem)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(eventListenerActive)
+    }
 
     fun addEvent(uri: Uri?) {
         // Save Event detail in DB
@@ -149,9 +170,13 @@ class EventEntity : Event() {
             }
     }
 
-    fun editEvent(uri: Uri?) {
+    fun editEvent(context: Context, uri: Uri?) {
         // Save Event detail in DB
-        val myRef = postRef.child(key)
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+
         val events = hashMapOf(
             "name" to name,
             "date" to date,
@@ -165,14 +190,14 @@ class EventEntity : Event() {
             "imageurl" to uri!!.lastPathSegment
         )
 
-        myRef.setValue(events as Map<String, Any>)
+        postRef.setValue(events as Map<String, Any>)
             .addOnFailureListener {
                 return@addOnFailureListener
             }
             .addOnSuccessListener {
                 //Save Event image in Storage
                 if (uri != null && uri.lastPathSegment != imageurl) {
-                    val eventkey = myRef.key.toString()
+                    val eventkey = postRef.key.toString()
                     val imageRef = storageRef.child("images/$eventkey/${uri.lastPathSegment}")
                     val uploadTask = imageRef.putFile(uri)
 

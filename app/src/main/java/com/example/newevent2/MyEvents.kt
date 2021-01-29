@@ -47,6 +47,10 @@ class MyEvents : AppCompatActivity() {
                 val rvEventAdapter = RvEventAdapter(list)
                 recyclerView.adapter = rvEventAdapter
             }
+
+            override fun onEvent(event: Event) {
+                TODO("Not yet implemented")
+            }
         })
 
         NewEventActionButton.setOnClickListener()

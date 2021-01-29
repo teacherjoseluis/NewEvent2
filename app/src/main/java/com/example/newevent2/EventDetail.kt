@@ -28,83 +28,88 @@ class EventDetail : AppCompatActivity() {
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = "Event Detail"
         //---------------------------------------------------------------------
-        val intent = intent
-        val eventkey = intent.getStringExtra("eventkey").toString()
-        val imageurl = intent.getStringExtra("imageurl").toString()
-        val name = intent.getStringExtra("name").toString()
-        val placeid = intent.getStringExtra("placeid").toString()
-        val date = intent.getStringExtra("date").toString()
-        val time = intent.getStringExtra("time").toString()
-        val about = intent.getStringExtra("about").toString()
-        val location = intent.getStringExtra("location").toString()
-        val address = intent.getStringExtra("address").toString()
-        val latitude = intent.getDoubleExtra("latitude", 0.0)
-        val longitude = intent.getDoubleExtra("longitude", 0.0)
 
-        if (viewPager != null) {
-            val adapter = EventPagerAdapter(
-//                this,
-                supportFragmentManager,
-                tablayout.tabCount,
-                eventkey,
-                imageurl,
-                name,
-                placeid,
-                date,
-                time,
-                about,
-                location,
-                address,
-                latitude,
-                longitude
-            )
-            viewPager.adapter = adapter
-            viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tablayout))
+        val event = EventEntity()
+        event.getEventdetail(this, object : FirebaseSuccessListenerEvent {
+            override fun onEventList(list: ArrayList<Event>) {
+                TODO("Not yet implemented")
+            }
 
-            tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(p0: TabLayout.Tab?) {
-                    viewPager.currentItem = p0!!.position
+            override fun onEvent(event: Event) {
+                if (viewPager != null) {
+                    val adapter = EventPagerAdapter(
+                        supportFragmentManager,
+                        tablayout.tabCount,
+                        event.key,
+                        event.imageurl,
+                        event.name,
+                        event.placeid,
+                        event.date,
+                        event.time,
+                        event.about,
+                        event.location,
+                        event.address,
+                        event.latitude,
+                        event.longitude
+                    )
+                    viewPager.adapter = adapter
+                    viewPager.addOnPageChangeListener(
+                        TabLayout.TabLayoutOnPageChangeListener(
+                            tablayout
+                        )
+                    )
 
-                    if (p0.position == 0) {
-                        findViewById<FloatingActionButton>(R.id.NewTaskPaymentActionButton).isVisible =
-                            true
-                    } else if (p0.position == 1) {
-                        findViewById<FloatingActionButton>(R.id.NewTaskPaymentActionButton).isVisible =
-                            false
+                    tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                        override fun onTabSelected(p0: TabLayout.Tab?) {
+                            viewPager.currentItem = p0!!.position
 
-                        findViewById<ConstraintLayout>(R.id.TaskLayout).isVisible = false
-                        findViewById<ConstraintLayout>(R.id.PaymentLayout).isVisible = false
-                    }
+                            if (p0.position == 0) {
+                                findViewById<FloatingActionButton>(R.id.NewTaskPaymentActionButton).isVisible =
+                                    true
+                            } else if (p0.position == 1) {
+                                findViewById<FloatingActionButton>(R.id.NewTaskPaymentActionButton).isVisible =
+                                    false
+
+                                findViewById<ConstraintLayout>(R.id.TaskLayout).isVisible = false
+                                findViewById<ConstraintLayout>(R.id.PaymentLayout).isVisible = false
+                            }
+                        }
+
+                        override fun onTabUnselected(p0: TabLayout.Tab?) {
+
+                        }
+
+                        override fun onTabReselected(p0: TabLayout.Tab?) {
+
+                        }
+                    })
                 }
+            }
 
-                override fun onTabUnselected(p0: TabLayout.Tab?) {
-
-                }
-
-                override fun onTabReselected(p0: TabLayout.Tab?) {
-
-                }
-            })
-        }
-
+        })
         imageButton2.setOnClickListener {
             val calendar = Intent(this, MyCalendar::class.java)
-            calendar.putExtra("eventkey", eventkey)
+            //calendar.putExtra("eventkey", eventkey)
             startActivity(calendar)
         }
 
         imageButton3.setOnClickListener {
             val contacts = Intent(this, MyContacts::class.java)
-            contacts.putExtra("eventkey", eventkey)
+            //contacts.putExtra("eventkey", eventkey)
             startActivity(contacts)
         }
 
         imageButton4.setOnClickListener {
             val notes = Intent(this, MyNotes::class.java)
-            notes.putExtra("eventkey", eventkey)
+            //notes.putExtra("eventkey", eventkey)
             startActivity(notes)
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
 }

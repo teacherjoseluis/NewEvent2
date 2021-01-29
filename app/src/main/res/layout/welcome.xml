@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -41,6 +42,20 @@
             android:text="User"
             app:layout_constraintStart_toEndOf="@+id/hellouser"
             app:layout_constraintTop_toTopOf="parent"></TextView>
+
+        <TextView
+            android:id="@+id/progress"
+            style="@style/BodyItalic2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:text="Progress"
+            android:textColor="@color/secondaryText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/hellouser" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -150,7 +165,7 @@
             style="@style/Heading6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recently created"
+            android:text="Recent Activity"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"></TextView>
 
@@ -162,124 +177,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recentcreatedlabel">
 
-            <ImageView
-                android:id="@+id/recenttaskicon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/icons8_task_completed_24">
-
-            </ImageView>
-
-            <TextView
-                android:id="@+id/recenttaskdate"
-                style="@style/BodyItalic2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:text="date"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/recenttaskicon"
-                app:layout_constraintTop_toBottomOf="parent">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/hyphen2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:text="-"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/recenttaskdate"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/recentcreatedtask"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:text="task"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/hyphen2"
-                app:layout_constraintTop_toBottomOf="parent">
-
-            </TextView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recentactivityrv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/recentcreatedpaymentlayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recentcreatedtasklayout">
-
-            <ImageView
-                android:id="@+id/recentpaymenticon"
-                android:layout_width="24dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/icons8_invoice_paid_32">
-
-            </ImageView>
-
-            <TextView
-                android:id="@+id/recentpaymentdate"
-                style="@style/BodyItalic2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:text="date"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/recentpaymenticon"
-                app:layout_constraintTop_toBottomOf="parent">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/hyphen1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:text="-"
-                app:layout_constraintStart_toEndOf="@id/recentpaymentdate"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/recentcreatedpayment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:text="payment"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/hyphen1"
-                app:layout_constraintTop_toBottomOf="parent">
-
-            </TextView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/foryoulayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recentcreatedlayout">
+
+        <TextView
+            android:id="@+id/foryoulabel"
+            style="@style/Heading6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="For You"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></TextView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/foryouitemlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/foryoulabel">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/blogrv"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

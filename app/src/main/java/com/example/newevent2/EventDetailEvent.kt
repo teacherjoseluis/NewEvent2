@@ -35,48 +35,41 @@ class EventDetailEvent : Fragment() {
 
     lateinit var storage: FirebaseStorage
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val inf = inflater.inflate(R.layout.eventdetail_event, container, false)
-        val imageurl = this.arguments!!.get("imageurl").toString()
 
         // Get Event details
-        val eventkey = this.arguments!!.get("eventkey").toString()
-        val name = this.arguments!!.get("name").toString()
-        val placeid = this.arguments!!.get("placeid").toString()
-        val date = this.arguments!!.get("date").toString()
-        val time = this.arguments!!.get("time").toString()
-        val about = this.arguments!!.get("about").toString()
-        val location = this.arguments!!.get("location").toString()
-        val address = this.arguments!!.get("address").toString()
-        val latitude = this.arguments!!.get("latitude") as Double
-        val longitude = this.arguments!!.get("longitude") as Double
 
-        val eventtitle = inf.findViewById<TextView>(R.id.textView2)
-        eventtitle.text = name
-        val eventdate = inf.findViewById<TextView>(R.id.textView3)
-        eventdate.text = date
-        val eventtime = inf.findViewById<TextView>(R.id.textView4)
-        eventtime.text = time
-        val eventabout = inf.findViewById<TextView>(R.id.eventabout)
-        eventabout.text = about
-        val eventlocation = inf.findViewById<TextView>(R.id.MyLocation)
-        eventlocation.text = location
-        val eventaddress = inf.findViewById<TextView>(R.id.eventlocation)
-        eventaddress.text = address
+        val event = Event().apply {
+            key = arguments!!.get("eventkey").toString()
+            name = arguments!!.get("name").toString()
+            placeid = arguments!!.get("placeid").toString()
+            date = arguments!!.get("date").toString()
+            time = arguments!!.get("time").toString()
+            about = arguments!!.get("about").toString()
+            location= arguments!!.get("location").toString()
+            address = arguments!!.get("address").toString()
+            latitude = arguments!!.get("latitude") as Double
+            longitude = arguments!!.get("longitude") as Double
+            imageurl = arguments!!.get("imageurl").toString()
+        }
+
+        inf.findViewById<TextView>(R.id.textView2).text = event.name
+        inf.findViewById<TextView>(R.id.textView3).text = event.date
+        inf.findViewById<TextView>(R.id.textView4).text = event.time
+        inf.findViewById<TextView>(R.id.eventabout).text = event.about
+        inf.findViewById<TextView>(R.id.MyLocation).text = event.location
+        inf.findViewById<TextView>(R.id.eventlocation).text = event.address
 
         // Load thumbnail
         var storageRef: Any
-        if (imageurl != "null") {
+        if (event.imageurl != "") {
             storage = FirebaseStorage.getInstance()
             storageRef =
-                storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/${eventkey}/${imageurl}")
+                storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/${event.key}/${event.imageurl}")
         } else {
             storageRef =
                 Uri.parse(
@@ -92,12 +85,11 @@ class EventDetailEvent : Fragment() {
             .centerCrop()
             .into(inf.imageView5)
 
-        val eventLocationLnLg = LatLng(latitude, longitude)
+        val eventLocationLnLg = LatLng(event.latitude, event.longitude)
         val latLng = LatLngBounds(
-            LatLng(latitude - 5, longitude - 5),
-            LatLng(latitude + 5, longitude + 5)
+            LatLng(event.latitude - 5, event.longitude - 5),
+            LatLng(event.latitude + 5, event.longitude + 5)
         )
-
 
         val mapview = inf.findViewById<MapView>(R.id.mapView)
         // Show Map
@@ -106,7 +98,7 @@ class EventDetailEvent : Fragment() {
         mapview.getMapAsync { p0 ->
             val googleMap = p0!!
             googleMap!!.addMarker(
-                MarkerOptions().position(eventLocationLnLg).title(location)
+                MarkerOptions().position(eventLocationLnLg).title(event.location)
             )
             googleMap!!.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
@@ -118,7 +110,7 @@ class EventDetailEvent : Fragment() {
 
             mapView.setOnClickListener(object : View.OnClickListener {
                 val uri =
-                    String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude)
+                    String.format(Locale.ENGLISH, "geo:%f,%f", event.latitude, event.longitude)
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
                 override fun onClick(p0: View?) {
                     context!!.startActivity(intent)
@@ -128,24 +120,14 @@ class EventDetailEvent : Fragment() {
 
         inf.editEventButton.setOnClickListener {
             val eventedit = Intent(context, Event_EditDetail::class.java)
-            eventedit.putExtra("eventkey", eventkey)
-            eventedit.putExtra("placeid", placeid)
-            eventedit.putExtra("name", name)
-            eventedit.putExtra("date", date)
-            eventedit.putExtra("time", time)
-            eventedit.putExtra("about", about)
-            eventedit.putExtra("location", location)
-            eventedit.putExtra("latitude", latitude)
-            eventedit.putExtra("longitude", longitude)
-            eventedit.putExtra("imageurl", imageurl)
-            eventedit.putExtra("address", address)
+            eventedit.putExtra("evententity", event)
             context!!.startActivity(eventedit)
         }
 
 //-------------------------------------------------------------------------------------
         val guestentity = GuestEntity()
-        guestentity.eventid = eventkey!!
-        guestentity.getGuestsEvent(object : FirebaseSuccessListenerGuest {
+//        guestentity.eventid = eventkey!!
+        guestentity.getGuestsEvent(activity!!.applicationContext, object : FirebaseSuccessListenerGuest {
             override fun onGuestList(list: ArrayList<Guest>) {
                 TODO("Not yet implemented")
             }

@@ -1,0 +1,39 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_seccion_1"
+            android:icon="@drawable/icons8_home"
+            android:title="Home"/>
+        <item
+            android:id="@+id/menu_seccion_2"
+            android:icon="@drawable/balloons_1"
+            android:title="Events"/>
+        <item
+            android:id="@+id/menu_seccion_3"
+            android:icon="@drawable/organizer"
+            android:title="Tasks"/>
+        <item
+            android:id="@+id/menu_seccion_4"
+            android:icon="@drawable/guests2"
+            android:title="Contacts"/>
+        <item
+            android:id="@+id/menu_seccion_5"
+            android:icon="@drawable/icons8_edit"
+            android:title="Notes"/>
+    </group>
+
+    <item
+        android:id="@+id/navigation_subheader"
+        android:title="More Options">
+        <menu>
+            <item
+                android:id="@+id/menu_opcion_1"
+                android:icon="@drawable/vector"
+                android:title="Settings"/>
+            <item
+                android:id="@+id/menu_opcion_2"
+                android:icon="@drawable/person"
+                android:title="Account"/>
+        </menu>
+    </item>
+</menu>

@@ -12,10 +12,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class PaymentEntity : Payment() {
+class PaymentEntity() : Payment() {
 
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
+    //val usersessionlist = getUserSession(context)
+    //At some point when the refactor on all of the PaymentEntity applications ends, I'll be making the call to the
+    //usersession function here and avoid repeating the calling code in each of the methods of this class
 
     fun getPaymentEvent(context: Context, dataFetched: FirebaseSuccessListenerPayment) {
         //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")

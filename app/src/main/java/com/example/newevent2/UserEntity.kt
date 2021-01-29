@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.firebase.database.DataSnapshot
@@ -47,6 +48,11 @@ class UserEntity : User() {
         }
         postRef.addValueEventListener(userListenerActive)
     }
+
+//    fun getProfileprogress(context: Context, dataFetched: FirebaseSuccessListenerUser) {
+//        val usersessionlist = getUserSession(context)
+//
+//    }
 
     fun addUser() {
         val postRef = myRef.child("User").child(this.key)

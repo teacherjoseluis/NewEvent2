@@ -19,6 +19,9 @@ class TaskEntity : Task() {
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
 
+    //At some point when the refactor on all of the TaskEntity applications ends, I'll be making the call to the
+    //usersession function here and avoid repeating the calling code in each of the methods of this class
+
     fun getTasksEvent(context: Context, dataFetched: FirebaseSuccessListenerTask) {
         val usersessionlist = getUserSession(context)
         //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")

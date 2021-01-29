@@ -5,7 +5,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowStyle</item>
+    </style>
 
+    <style name="AppTheme.DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/black</item>
     </style>
 
     <style name="Heading5">
@@ -23,9 +27,18 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="Heading8">
+        <item name="android:fontFamily">@font/elsie</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
     <style name="BodySmall"  parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>
         <item name="android:textSize">14dp</item>
+    </style>
+    <style name="BodyXSmall"  parent="TextAppearance.AppCompat.Body1">
+        <item name="android:fontFamily">@font/robotolight</item>
+        <item name="android:textSize">12dp</item>
     </style>
     <style name="Body1"  parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>

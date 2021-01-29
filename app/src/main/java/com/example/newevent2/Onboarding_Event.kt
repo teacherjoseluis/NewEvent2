@@ -158,6 +158,7 @@ class Onboarding_Event : AppCompatActivity() {
                             sessionEditor.putString("Autentication", userSession!!.authtype)
                             sessionEditor.putString("Eventid", eventkey)
                             sessionEditor.apply()
+                            saveLog(this, "INSERT", "event", eventkey, etname.text.toString())
                         } catch (e: Exception) {
                             Log.e("Save Session Exception", e.toString())
                         }

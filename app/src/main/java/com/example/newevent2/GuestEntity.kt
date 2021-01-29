@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.android.material.snackbar.Snackbar
@@ -95,8 +96,12 @@ class GuestEntity : Guest() {
         postRef.child("email").setValue(email)
     }
 
-    fun getGuestsEvent(dataFetched: FirebaseSuccessListenerGuest) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Guest")
+    fun getGuestsEvent(context: Context, dataFetched: FirebaseSuccessListenerGuest) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3]).child("Guest")
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Guest")
 
         var confirmed = 0
         var rejected = 0

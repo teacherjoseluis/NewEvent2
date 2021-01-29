@@ -74,7 +74,7 @@ class UserAccount(var UserEmail: String = "") {
                                     //This is to be changed for a method that obtains the information for the user into a User Session
                                     //This will be then passed as a paramter to Welcome from which all data will be available
                                     override fun onUserexists(user: User) {
-                                        if (user != null) {
+                                        if (user.email != "") {
 //                                            UserSession.apply {
 //                                                useremail = user.email
 //                                                eventid = user.eventid
@@ -105,7 +105,7 @@ class UserAccount(var UserEmail: String = "") {
                                                 Intent(activity, Onboarding_Name::class.java)
 //                                            onboardingname.putExtra("useremail", UserEmail)
 //                                            onboardingname.putExtra("userkey", userEntity.key)
-                                            onboardingname.putExtra("user", UserSession)
+                                            onboardingname.putExtra("usersession", UserSession)
                                             activity.startActivity(onboardingname)
                                         }
                                     }
@@ -138,7 +138,7 @@ class UserAccount(var UserEmail: String = "") {
                             userEntity.key = mAuth.currentUser!!.uid
                             userEntity.getUser(object : FirebaseSuccessListenerUser {
                                 override fun onUserexists(user: User) {
-                                    if (user != null) {
+                                    if (user.email != "") {
 //                                        UserSession.apply {
 //                                            useremail = user.email
 //                                            eventid = user.eventid
@@ -162,7 +162,7 @@ class UserAccount(var UserEmail: String = "") {
                                             Intent(activity, Onboarding_Name::class.java)
 //                                            onboardingname.putExtra("useremail", UserEmail)
 //                                            onboardingname.putExtra("userkey", userEntity.key)
-                                        onboardingname.putExtra("user", UserSession)
+                                        onboardingname.putExtra("usersession", UserSession)
                                         activity.startActivity(onboardingname)
                                     }
                                 }

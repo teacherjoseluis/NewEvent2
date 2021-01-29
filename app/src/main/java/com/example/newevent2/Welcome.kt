@@ -2,15 +2,20 @@ package com.example.newevent2
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
@@ -20,6 +25,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.MPPointF
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.welcome.*
 import java.text.DecimalFormat
 
@@ -46,241 +52,357 @@ class Welcome : AppCompatActivity() {
         Color.parseColor("#9E9E9E")
     )
 
+    lateinit var drawerLayout: DrawerLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.welcome)
+        setContentView(R.layout.welcome_navigation)
 
-        val intent = intent
-        userSession = intent.getParcelableExtra("usersession")!!
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
-        usershortname.text = userSession!!.shortname
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_google)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
-        // Pie charts
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        drawerLayout = findViewById(R.id.drawer_layout)
+
+        val toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.nav_app_bar_open_drawer_description,
+            R.string.nav_app_bar_navigate_up_description
         )
-        tfRegular = ResourcesCompat.getFont(this.applicationContext, R.font.robotoregular)
-        //Typeface.createFromAsset(assets, "fonts/robotoregular.ttf")
-        tfLight = ResourcesCompat.getFont(this.applicationContext, R.font.robotolight)
-        //Typeface.createFromAsset(assets, "fonts/robotolight.ttf")
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
-        charttask = findViewById(R.id.charttask)
-        charttask.apply {
-            setUsePercentValues(false)
-            description.isEnabled = false
-            setExtraOffsets(5f, 10f, 5f, 5f)
-            dragDecelerationFrictionCoef = 0.95f
-            setCenterTextTypeface(tfLight)
-            //centerText = generateCenterSpannableTextTask()
-            isDrawHoleEnabled = true
-            setHoleColor(Color.WHITE)
-            setTransparentCircleColor(Color.WHITE)
-            setTransparentCircleAlpha(110)
-            holeRadius = 58f
-            transparentCircleRadius = 61f
-            setDrawCenterText(true)
-            rotationAngle = 0f
-            isRotationEnabled = true
-            isHighlightPerTapEnabled = true
-            animateY(1400, Easing.EaseInOutQuad)
-            setEntryLabelColor(Color.BLACK)
-            setEntryLabelTypeface(tfRegular)
-            setEntryLabelTextSize(12f)
+        val navView = findViewById<NavigationView>(R.id.navview)
+
+
+        navView.setNavigationItemSelectedListener { p0 ->
+            when (p0.itemId) {
+                R.id.menu_seccion_1 -> Toast.makeText(
+                    applicationContext,
+                    "Seccion 1",
+                    Toast.LENGTH_SHORT
+                ).show()
+                R.id.menu_seccion_2 -> {
+//                    Toast.makeText(
+//                    applicationContext,
+//                    "Seccion 1",
+//                    Toast.LENGTH_SHORT).show()
+                    val events =
+                        Intent(this, EventDetail::class.java)
+                    //welcome.putExtra("usersession", user)
+                    startActivity(events)
+                    //finish()
+                }
+                R.id.menu_seccion_3 -> Toast.makeText(
+                    applicationContext,
+                    "Seccion 3",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            drawerLayout.closeDrawers()
+            true
         }
 
-        val l: Legend = charttask.legend
-        l.apply {
-            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-            orientation = Legend.LegendOrientation.HORIZONTAL
-            setDrawInside(false)
-            xEntrySpace = 0f
-            yEntrySpace = 0f
-            yOffset = 0f
-        }
+        navView.menu.getItem(0).isChecked = true
+
+            //---------------------------------------------------------------------------------------------------------------------
+
+            // I think this needs to be validated. In case the Activity is not accessed via Login or Onboarding. The User information needs to be taken
+            // from the User Session
+            val intent = intent
+            userSession = intent.getParcelableExtra("usersession")!!
+
+            usershortname.text = userSession!!.shortname
+            progress.text = "Your profile has a ${getProfileprogress()}% progress"
+
+            sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
+            // Pie charts
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+            //---------------------------------------------------------------------------------------------------------------
+            val recyclerViewActivity = recentactivityrv
+
+            recentactivityrv.apply {
+                layoutManager = LinearLayoutManager(context).apply {
+                    stackFromEnd = true
+                    reverseLayout = true
+                }
+            }
+
+            getLog(this, object : FirebaseSuccessListenerLogWelcome {
+                override fun onLogList(list: ArrayList<Loginfo>) {
+                    val rvAdapter = Rv_LogAdapter(list)
+                    recentactivityrv.adapter = rvAdapter
+                }
+
+            })
+
+            //---------------------------------------------------------------------------------------------------------------
+            val recyclerViewBlog = blogrv
+
+            blogrv.apply {
+                layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false).apply {
+                        stackFromEnd = true
+                        reverseLayout = true
+                    }
+            }
+
+            getBlog(object : FirebaseSuccessListenerBlogWelcome {
+                override fun onBlogList(list: ArrayList<Blog>) {
+                    val rvAdapter = Rv_BlogAdapter(list)
+                    blogrv.adapter = rvAdapter
+                }
+            })
+
+            //---------------------------------------------------------------------------------------------------------------
+            tfRegular = ResourcesCompat.getFont(this.applicationContext, R.font.robotoregular)
+            //Typeface.createFromAsset(assets, "fonts/robotoregular.ttf")
+            tfLight = ResourcesCompat.getFont(this.applicationContext, R.font.robotolight)
+            //Typeface.createFromAsset(assets, "fonts/robotolight.ttf")
+
+            charttask = findViewById(R.id.charttask)
+            charttask.apply {
+                setUsePercentValues(false)
+                description.isEnabled = false
+                setExtraOffsets(5f, 10f, 5f, 5f)
+                dragDecelerationFrictionCoef = 0.95f
+                setCenterTextTypeface(tfLight)
+                //centerText = generateCenterSpannableTextTask()
+                isDrawHoleEnabled = true
+                setHoleColor(Color.WHITE)
+                setTransparentCircleColor(Color.WHITE)
+                setTransparentCircleAlpha(110)
+                holeRadius = 58f
+                transparentCircleRadius = 61f
+                setDrawCenterText(true)
+                rotationAngle = 0f
+                isRotationEnabled = true
+                isHighlightPerTapEnabled = true
+                animateY(1400, Easing.EaseInOutQuad)
+                setEntryLabelColor(Color.BLACK)
+                setEntryLabelTypeface(tfRegular)
+                setEntryLabelTextSize(12f)
+            }
+
+            val l: Legend = charttask.legend
+            l.apply {
+                verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+                horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                orientation = Legend.LegendOrientation.HORIZONTAL
+                setDrawInside(false)
+                xEntrySpace = 0f
+                yEntrySpace = 0f
+                yOffset = 0f
+            }
 
 //----------------------------------------------------------------------------------------------------//
 
-        chartpayment = findViewById(R.id.chartpayment)
-        chartpayment.apply {
-            setUsePercentValues(false)
-            description.isEnabled = false
-            setExtraOffsets(5f, 10f, 5f, 5f)
-            dragDecelerationFrictionCoef = 0.95f
-            setCenterTextTypeface(tfLight)
-            //centerText = generateCenterSpannableTextPayment()
-            isDrawHoleEnabled = true
-            setHoleColor(Color.WHITE)
-            setTransparentCircleColor(Color.WHITE)
-            setTransparentCircleAlpha(110)
-            holeRadius = 58f
-            transparentCircleRadius = 61f
-            setDrawCenterText(true)
-            rotationAngle = 0f
-            isRotationEnabled = true
-            isHighlightPerTapEnabled = true
-            animateY(1400, Easing.EaseInOutQuad)
-            setEntryLabelColor(Color.BLACK)
-            setEntryLabelTypeface(tfRegular)
-            setEntryLabelTextSize(12f)
-        }
+            chartpayment = findViewById(R.id.chartpayment)
+            chartpayment.apply {
+                setUsePercentValues(false)
+                description.isEnabled = false
+                setExtraOffsets(5f, 10f, 5f, 5f)
+                dragDecelerationFrictionCoef = 0.95f
+                setCenterTextTypeface(tfLight)
+                //centerText = generateCenterSpannableTextPayment()
+                isDrawHoleEnabled = true
+                setHoleColor(Color.WHITE)
+                setTransparentCircleColor(Color.WHITE)
+                setTransparentCircleAlpha(110)
+                holeRadius = 58f
+                transparentCircleRadius = 61f
+                setDrawCenterText(true)
+                rotationAngle = 0f
+                isRotationEnabled = true
+                isHighlightPerTapEnabled = true
+                animateY(1400, Easing.EaseInOutQuad)
+                setEntryLabelColor(Color.BLACK)
+                setEntryLabelTypeface(tfRegular)
+                setEntryLabelTextSize(12f)
+            }
 
-        val g: Legend = charttask.legend
-        g.apply {
-            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-            orientation = Legend.LegendOrientation.HORIZONTAL
-            setDrawInside(false)
-            xEntrySpace = 0f
-            yEntrySpace = 0f
-            yOffset = 0f
-        }
-        setData()
+            val g: Legend = charttask.legend
+            g.apply {
+                verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+                horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                orientation = Legend.LegendOrientation.HORIZONTAL
+                setDrawInside(false)
+                xEntrySpace = 0f
+                yEntrySpace = 0f
+                yOffset = 0f
+            }
+            setData()
 //--------------------------------------------------------------------------------------------------
-        val taskduenext = TaskEntity()
+            val taskduenext = TaskEntity()
 //        taskduenext.eventid =
 //            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
 
-        taskduenext.getDueNextTask(this, object : FirebaseSuccessListenerTaskWelcome {
-            override fun onTask(task: Task) {
-                duenextdate.text = task.date
-                duenexttask.text = task.name
-            }
-        })
-//--------------------------------------------------------------------------------------------------
-        val taskcreated = TaskEntity()
-//        taskcreated.eventid =
-//            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+            taskduenext.getDueNextTask(this, object : FirebaseSuccessListenerTaskWelcome {
+                override fun onTask(task: Task) {
+                    duenextdate.text = task.date
+                    duenexttask.text = task.name
+                }
+            })
+////--------------------------------------------------------------------------------------------------
+//        val taskcreated = TaskEntity()
+////        taskcreated.eventid =
+////            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+//
+//        taskcreated.getRecentCreatedTask(this, object : FirebaseSuccessListenerTaskWelcome {
+//            override fun onTask(task: Task) {
+//                recenttaskdate.text = task.createdatetime
+//                recentcreatedtask.text = task.name
+//            }
+//        })
+////--------------------------------------------------------------------------------------------------
+//        val paymentcreated = PaymentEntity()
+////        paymentcreated.eventid =
+////            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+//
+//        paymentcreated.getRecentCreatedPayment(
+//            this,
+//            object : FirebaseSuccessListenerPaymentWelcome {
+//                override fun onPayment(payment: Payment) {
+//                    recentpaymentdate.text = payment.createdatetime
+//                    recentcreatedpayment.text = payment.name
+//                }
+//            })
+////--------------------------------------------------------------------------------------------------
 
-        taskcreated.getRecentCreatedTask(this, object : FirebaseSuccessListenerTaskWelcome {
-            override fun onTask(task: Task) {
-                recenttaskdate.text = task.createdatetime
-                recentcreatedtask.text = task.name
-            }
-        })
-//--------------------------------------------------------------------------------------------------
-        val paymentcreated = PaymentEntity()
-//        paymentcreated.eventid =
-//            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
+        }
 
-        paymentcreated.getRecentCreatedPayment(this, object : FirebaseSuccessListenerPaymentWelcome {
-            override fun onPayment(payment: Payment) {
-                recentpaymentdate.text = payment.createdatetime
-                recentcreatedpayment.text = payment.name
-            }
-        })
-//--------------------------------------------------------------------------------------------------
-
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
     }
 
 
-    private fun setData() {
-        val taskentries = ArrayList<PieEntry>()
-        val taskentity = TaskEntity()
+        private fun setData() {
+            val taskentries = ArrayList<PieEntry>()
+            val taskentity = TaskEntity()
 //        taskentity.eventid =
 //            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
 
-        taskentity.getTasksEvent(this, object : FirebaseSuccessListenerTask {
-            override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-                taskentries.add(PieEntry(taskpending.toFloat(), "Pending"))
-                taskentries.add(PieEntry(taskcompleted.toFloat(), "Completed"))
+            taskentity.getTasksEvent(this, object : FirebaseSuccessListenerTask {
+                override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
+                    taskentries.add(PieEntry(taskpending.toFloat(), " To Do "))
+                    taskentries.add(PieEntry(taskcompleted.toFloat(), " Done "))
 
-                //------------------------------------------------------------------
-                var editor = sharedPreference!!.edit()
-                editor.putFloat("sumbudget", sumbudget)
-                editor.commit()
-                //------------------------------------------------------------------
+                    //------------------------------------------------------------------
+                    var editor = sharedPreference!!.edit()
+                    editor.putFloat("sumbudget", sumbudget)
+                    editor.commit()
+                    //------------------------------------------------------------------
 
-                val dataSettask = PieDataSet(taskentries, "").apply {
-                    setDrawIcons(false)
-                    sliceSpace = 3f
-                    iconsOffset = MPPointF(0f, 40f)
-                    selectionShift = 5f
+                    val dataSettask = PieDataSet(taskentries, "").apply {
+                        setDrawIcons(false)
+                        sliceSpace = 3f
+                        iconsOffset = MPPointF(0f, 40f)
+                        selectionShift = 5f
+                    }
+
+                    val colors = ArrayList<Int>()
+                    for (c in BandG_Colors) colors.add(c)
+                    dataSettask.colors = colors
+
+                    val datatask = PieData(dataSettask).apply {
+                        setValueFormatter(DefaultValueFormatter(0))
+                        setValueTextSize(11f)
+                        setValueTextColor(Color.BLACK)
+                        setValueTypeface(tfLight)
+                    }
+                    charttask.centerText = "${taskcompleted + taskpending}\ntasks"
+                    charttask.data = datatask
+                    charttask.highlightValues(null)
+                    charttask.invalidate()
                 }
 
-                val colors = ArrayList<Int>()
-                for (c in BandG_Colors) colors.add(c)
-                dataSettask.colors = colors
-
-                val datatask = PieData(dataSettask).apply {
-                    setValueFormatter(DefaultValueFormatter(0))
-                    setValueTextSize(11f)
-                    setValueTextColor(Color.BLACK)
-                    setValueTypeface(tfLight)
+                override fun onTasksList(list: ArrayList<Task>) {
+                    TODO("Not yet implemented")
                 }
-                charttask.centerText = "${taskcompleted + taskpending}\ntasks"
-                charttask.data = datatask
-                charttask.highlightValues(null)
-                charttask.invalidate()
-            }
+            })
 
-            override fun onTasksList(list: ArrayList<Task>) {
-                TODO("Not yet implemented")
-            }
-        })
-
-        val paymententries = ArrayList<PieEntry>()
-        val paymententity = PaymentEntity()
+            val paymententries = ArrayList<PieEntry>()
+            val paymententity = PaymentEntity()
 //        paymententity.eventid =
 //            "-MLy-LKwd8RnRb-Bwesn" //HARDCODE********************************************************
 
-        paymententity.getPaymentEvent(this, object : FirebaseSuccessListenerPayment {
-            override fun onPaymentEvent(sumpayment: Float) {
-                //--------------------------------------------------------------------------------
-                val sumbudget = sharedPreference!!.getFloat("sumbudget", 0.0f)
-                //--------------------------------------------------------------------------------
+            paymententity.getPaymentEvent(this, object : FirebaseSuccessListenerPayment {
+                override fun onPaymentEvent(sumpayment: Float) {
+                    //--------------------------------------------------------------------------------
+                    val sumbudget = sharedPreference!!.getFloat("sumbudget", 0.0f)
+                    //--------------------------------------------------------------------------------
 
-                paymententries.add(PieEntry(sumpayment, "Spent"))
-                paymententries.add(PieEntry(sumbudget - sumpayment, "Available"))
+                    paymententries.add(PieEntry(sumpayment, "Spent"))
+                    paymententries.add(PieEntry(sumbudget - sumpayment, "Available"))
 
-                val dataSetpayment = PieDataSet(paymententries, "").apply {
-                    setDrawIcons(false)
-                    sliceSpace = 3f
-                    iconsOffset = MPPointF(0f, 40f)
-                    selectionShift = 5f
+                    val dataSetpayment = PieDataSet(paymententries, "").apply {
+                        setDrawIcons(false)
+                        sliceSpace = 3f
+                        iconsOffset = MPPointF(0f, 40f)
+                        selectionShift = 5f
+                    }
+
+                    val colors = ArrayList<Int>()
+                    for (c in BandG_Colors2) colors.add(c)
+                    dataSetpayment.colors = colors
+
+                    val datapayment = PieData(dataSetpayment).apply {
+                        //setValueFormatter(PercentFormatter(chartpayment))
+                        setValueFormatter(CurrencyFormatter())
+                        setValueTextSize(11f)
+                        setValueTextColor(Color.BLACK)
+                        setValueTypeface(tfLight)
+                    }
+                    val formatter = DecimalFormat("$#,###.00")
+                    chartpayment.centerText = "Budget\n${formatter.format(sumbudget)}"
+                    chartpayment.data = datapayment
+                    chartpayment.highlightValues(null)
+                    chartpayment.invalidate()
                 }
 
-                val colors = ArrayList<Int>()
-                for (c in BandG_Colors2) colors.add(c)
-                dataSetpayment.colors = colors
-
-                val datapayment = PieData(dataSetpayment).apply {
-                    //setValueFormatter(PercentFormatter(chartpayment))
-                    setValueFormatter(CurrencyFormatter())
-                    setValueTextSize(11f)
-                    setValueTextColor(Color.BLACK)
-                    setValueTypeface(tfLight)
+                override fun onPaymentList(list: ArrayList<Payment>) {
+                    TODO("Not yet implemented")
                 }
-                val formatter = DecimalFormat("$#,###.00")
-                chartpayment.centerText = "Budget\n${formatter.format(sumbudget)}"
-                chartpayment.data = datapayment
-                chartpayment.highlightValues(null)
-                chartpayment.invalidate()
-            }
 
-            override fun onPaymentList(list: ArrayList<Payment>) {
-                TODO("Not yet implemented")
-            }
+                override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
-
-    class CurrencyFormatter : ValueFormatter {
-        var mFormat: DecimalFormat? = null
-
-        constructor() {
-            mFormat = DecimalFormat("$###,###.00")
+            })
         }
 
-        override fun getFormattedValue(value: Float): String? {
-            return mFormat!!.format(value.toDouble())
+        private fun getProfileprogress(): Int {
+            var profileprogress = 0
+            if (userSession.hasevent == "Y") profileprogress += 20
+            if (userSession.hastask == "Y") profileprogress += 20
+            if (userSession.haspayment == "Y") profileprogress += 20
+            if (userSession.hasguest == "Y") profileprogress += 20
+            if (userSession.hasvendor == "Y") profileprogress += 20
+            return profileprogress
         }
 
+
+        class CurrencyFormatter : ValueFormatter {
+            var mFormat: DecimalFormat? = null
+
+            constructor() {
+                mFormat = DecimalFormat("$###,###.00")
+            }
+
+            override fun getFormattedValue(value: Float): String? {
+                return mFormat!!.format(value.toDouble())
+            }
+
+        }
     }
-}

@@ -37,12 +37,14 @@ class Event_EditDetail : AppCompatActivity() {
 
     private val autocomplete_place_code = 1
     private lateinit var uri: Uri
-    var eventkey = ""
-    var event_imageurl = ""
-    var event_placeid = ""
-    var event_latitude = 0.0
-    var event_longitude = 0.0
-    var event_address = ""
+//    var eventkey = ""
+//    var event_imageurl = ""
+//    var event_placeid = ""
+//    var event_latitude = 0.0
+//    var event_longitude = 0.0
+//    var event_address = ""
+
+    var evententity = Event()
 
     lateinit var storage: FirebaseStorage
 
@@ -54,25 +56,28 @@ class Event_EditDetail : AppCompatActivity() {
 
 
         val intent = intent
-        eventkey = intent.getStringExtra("eventkey").toString()
-        event_imageurl = intent.getStringExtra("imageurl").toString()
-        val eventname = intent.getStringExtra("name").toString()
-        val eventdate = intent.getStringExtra("date").toString()
-        val eventtime = intent.getStringExtra("time").toString()
-        val eventabout = intent.getStringExtra("about").toString()
-        val eventlocation = intent.getStringExtra("location").toString()
-        event_placeid = intent.getStringExtra("location").toString()
-        event_latitude = intent.getDoubleExtra("latitude", 0.0)
-        event_longitude = intent.getDoubleExtra("longitude", 0.0)
-        event_address = intent.getStringExtra("address").toString()
-        uri = Uri.parse(intent.getStringExtra("imageurl").toString())
+        evententity = intent.getParcelableExtra<Event>("evententity")!!
+
+//        eventkey = intent.getStringExtra("eventkey").toString()
+//        event_imageurl = intent.getStringExtra("imageurl").toString()
+//        val eventname = intent.getStringExtra("name").toString()
+//        val eventdate = intent.getStringExtra("date").toString()
+//        val eventtime = intent.getStringExtra("time").toString()
+//        val eventabout = intent.getStringExtra("about").toString()
+//        val eventlocation = intent.getStringExtra("location").toString()
+//        event_placeid = intent.getStringExtra("location").toString()
+//        event_latitude = intent.getDoubleExtra("latitude", 0.0)
+//        event_longitude = intent.getDoubleExtra("longitude", 0.0)
+//        event_address = intent.getStringExtra("address").toString()
+        //uri = Uri.parse(intent.getStringExtra("imageurl").toString())
+        uri = Uri.parse(evententity!!.imageurl)
 
 
         var storageRef: Any
-        if (event_imageurl != "null") {
+        if (evententity.imageurl != "") {
             storage = FirebaseStorage.getInstance()
             storageRef =
-                storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/${eventkey}/${event_imageurl}")
+                storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/${evententity.key}/${evententity.imageurl}")
         } else {
             storageRef =
                 Uri.parse(
@@ -88,11 +93,11 @@ class Event_EditDetail : AppCompatActivity() {
             .centerCrop()
             .into(imageView)
 
-        etname.setText(eventname)
-        etPlannedDate.setText(eventdate)
-        etPlannedTime.setText(eventtime)
-        etabout.setText(eventabout)
-        etlocation.setText(eventlocation)
+        etname.setText(evententity.name)
+        etPlannedDate.setText(evententity.date)
+        etPlannedTime.setText(evententity.time)
+        etabout.setText(evententity.about)
+        etlocation.setText(evententity.location)
 
         etname.setOnClickListener {
             etname.error = null
@@ -221,25 +226,27 @@ class Event_EditDetail : AppCompatActivity() {
 
 
     private fun saveEvent() {
-        val evententity = EventEntity().apply {
-            key = eventkey
+        val editevent = EventEntity().apply {
+            key = evententity.key
             name = etname.text.toString()
             date = etPlannedDate.text.toString()
             time = etPlannedTime.text.toString()
             location = etlocation.text.toString()
-            placeid = event_placeid
-            latitude = event_latitude
-            longitude = event_longitude
-            address = event_address.toString()
+            placeid = evententity.placeid
+            latitude = evententity.latitude
+            longitude = evententity.longitude
+            address = evententity.address
             about = etabout.text.toString()
-            imageurl = event_imageurl
+            imageurl = evententity.imageurl
         }
-        evententity.editEvent(uri)
+        editevent.editEvent(this, uri).also {
+           onBackPressed()
+        }
         //onBackPressed()
-
-        val myevents = Intent(this, MyEvents::class.java)
-        finish()
-        startActivity(myevents)
+//
+//        val myevents = Intent(this, MyEvents::class.java)
+//        finish()
+//        startActivity(myevents)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -247,10 +254,10 @@ class Event_EditDetail : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == autocomplete_place_code) {
             val placenameString = data?.getStringExtra("place_name")
-            event_placeid = data?.getStringExtra("place_id").toString()
-            event_latitude = data!!.getDoubleExtra("place_latitude", 0.0)
-            event_longitude = data!!.getDoubleExtra("place_longitude", 0.0)
-            event_address = data?.getStringExtra("place_address").toString()
+            evententity.placeid = data?.getStringExtra("place_id").toString()
+            evententity.latitude = data!!.getDoubleExtra("place_latitude", 0.0)
+            evententity.longitude = data!!.getDoubleExtra("place_longitude", 0.0)
+            evententity.address = data?.getStringExtra("place_address").toString()
             etlocation.setText(placenameString)
         } else {
             Toast.makeText(this, "Error in autocomplete location", Toast.LENGTH_SHORT).show()
