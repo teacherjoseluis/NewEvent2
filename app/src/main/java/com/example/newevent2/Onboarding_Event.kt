@@ -121,7 +121,9 @@ class Onboarding_Event : AppCompatActivity() {
             "language" to userSession!!.language,
             "createdatetime" to userSession!!.createdatetime,
             "status" to userSession!!.status,
-            "hasevent" to "Y"
+            "hasevent" to "Y",
+            "imageurl" to "",
+            "role" to ""
         )
 
         postRef.setValue(user as Map<String, Any>)
@@ -157,11 +159,16 @@ class Onboarding_Event : AppCompatActivity() {
                             sessionEditor.putString("Email", userSession!!.email)
                             sessionEditor.putString("Autentication", userSession!!.authtype)
                             sessionEditor.putString("Eventid", eventkey)
+                            sessionEditor.putString("Shortname", userSession!!.shortname)
                             sessionEditor.apply()
                             saveLog(this, "INSERT", "event", eventkey, etname.text.toString())
                         } catch (e: Exception) {
                             Log.e("Save Session Exception", e.toString())
                         }
+                        val userentity = UserEntity()
+                        userentity.key = userSession!!.key
+                        userentity.eventid = eventkey
+                        userentity.editUserEvent()
                     }
             }
     }

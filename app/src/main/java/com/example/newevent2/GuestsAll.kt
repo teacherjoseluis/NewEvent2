@@ -33,10 +33,11 @@ import kotlin.collections.ArrayList
 class GuestsAll : Fragment() {
 
     var contactlist = ArrayList<Guest>()
-    var eventkey: String? = null
+
+    //var eventkey: String? = null
     lateinit var recyclerViewAllGuests: RecyclerView
 
-    lateinit var eventspinner: Spinner
+    //lateinit var eventspinner: Spinner
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,31 +45,31 @@ class GuestsAll : Fragment() {
         toolbar = activity!!.findViewById(R.id.toolbar)
         setHasOptionsMenu(true)
 
-        eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
-        eventspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
+        //eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
+//        eventspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onNothingSelected(p0: AdapterView<*>?) {
+//                TODO("Not yet implemented")
+//            }
 
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                val eventname = p0!!.getItemAtPosition(p2).toString()
-                val evententity = EventEntity()
-                evententity.getEventKey(
-                    eventname,
-                    object : FirebaseSuccessListenerSingleValue {
-                        override fun onDatafound(key: String) {
-                            readguests(key)
-
+//            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+//                val eventname = p0!!.getItemAtPosition(p2).toString()
+//                val evententity = EventEntity()
+//                evententity.getEventKey(
+//                    eventname,
+//                    object : FirebaseSuccessListenerSingleValue {
+//                        override fun onDatafound(key: String) {
+//                            readguests()
+//
                             activity!!.floatingActionButtonGuest.setOnClickListener()
                             {
                                 val newguest = Intent(activity, NewGuest::class.java)
-                                newguest.putExtra("eventkey", eventkey)
+                                //newguest.putExtra("eventkey", eventkey)
                                 startActivity(newguest)
                             }
-                        }
-                    })
-            }
-        }
+//                        }
+//                    })
+//            }
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -95,11 +96,11 @@ class GuestsAll : Fragment() {
         searchView.isIconified = false
 
         searchView.setOnSearchClickListener {
-            eventspinner.isEnabled = false
+ //           eventspinner.isEnabled = false
         }
 
         searchView.setOnCloseListener {
-            eventspinner.isEnabled = true
+ //           eventspinner.isEnabled = true
             toolbar.collapseActionView()
             true
         }
@@ -160,13 +161,14 @@ class GuestsAll : Fragment() {
                 requestPermissions(permissions, PERMISSION_CODE)
             } else {
                 //permission already granted
-                val evententity = EventEntity()
-                evententity.getFirstEventKey(
-                    object : FirebaseSuccessListenerSingleValue {
-                        override fun onDatafound(key: String) {
-                            readguests(key)
-                        }
-                    })
+//                val evententity = EventEntity()
+//                evententity.getFirstEventKey(
+//                    object : FirebaseSuccessListenerSingleValue {
+//                        override fun onDatafound(key: String) {
+//                            readguests()
+//                        }
+//                    })
+                readguests()
             }
         }
         return inf
@@ -191,13 +193,14 @@ class GuestsAll : Fragment() {
                     PackageManager.PERMISSION_GRANTED
                 ) {
                     //permission from popup granted
-                    val evententity = EventEntity()
-                    evententity.getFirstEventKey(
-                        object : FirebaseSuccessListenerSingleValue {
-                            override fun onDatafound(key: String) {
-                                readguests(key)
-                            }
-                        })
+//                    val evententity = EventEntity()
+//                    evententity.getFirstEventKey(
+//                        object : FirebaseSuccessListenerSingleValue {
+//                            override fun onDatafound(key: String) {
+//                                readguests()
+//                            }
+//                        })
+                    readguests()
                 } else {
                     //permission from popup denied
                     //Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
@@ -206,11 +209,11 @@ class GuestsAll : Fragment() {
         }
     }
 
-    private fun readguests(eventkey: String) {
+    private fun readguests() {
         val contentResolver = context!!.contentResolver
         val guestentity = GuestEntity()
-        guestentity.eventid = eventkey
-        guestentity.getGuestsContacts(object : FirebaseSuccessListenerGuest {
+        //guestentity.eventid = eventkey
+        guestentity.getGuestsContacts(activity!!.applicationContext, object : FirebaseSuccessListenerGuest {
 
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onGuestList(list: ArrayList<Guest>) {
@@ -277,7 +280,13 @@ class GuestsAll : Fragment() {
                 val rvAdapter = Rv_GuestAdapter(contactlist)
                 recyclerViewAllGuests.adapter = rvAdapter
                 val swipeController =
-                SwipeControllerTasks(context!!, rvAdapter, recyclerViewAllGuests,null,"delete")
+                    SwipeControllerTasks(
+                        context!!,
+                        rvAdapter,
+                        recyclerViewAllGuests,
+                        null,
+                        "delete"
+                    )
                 val itemTouchHelper = ItemTouchHelper(swipeController)
                 itemTouchHelper.attachToRecyclerView(recyclerViewGuests)
             }

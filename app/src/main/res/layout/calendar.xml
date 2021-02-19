@@ -76,5 +76,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
         -->
+    <include
+        android:id="@+id/include2"
+        layout="@layout/navbottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"></include>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,9 +8,8 @@
     tools:context=".NewGuest">
 
     <include
-        android:id="@+id/include"
-        layout="@layout/toolbar"
-        app:layout_constraintTop_toTopOf="parent"></include>
+        android:id="@+id/toolbar"
+        layout="@layout/main_toolbar"></include>
 
     <ImageView
         android:id="@+id/contactavatar"
@@ -20,7 +19,7 @@
         android:paddingBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:srcCompat="@drawable/avatar2" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -18,16 +18,15 @@ import kotlinx.android.synthetic.main.task_editdetail.tkname
 
 class Task_EditDetail : AppCompatActivity() {
 
-    var eventkey = ""
+    //var eventkey = ""
     var taskstatus=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.task_editdetail)
 
-        val intent = intent
-        val taskkey = intent.getStringExtra("taskkey").toString()
-        eventkey = intent.getStringExtra("eventid").toString()
+       val taskkey = intent.getStringExtra("taskkey").toString()
+        //eventkey = intent.getStringExtra("eventid").toString()
         val taskname = intent.getStringExtra("name").toString()
         val taskdateextra = intent.getStringExtra("date").toString()
         val taskcategory = intent.getStringExtra("category").toString()
@@ -35,9 +34,9 @@ class Task_EditDetail : AppCompatActivity() {
         taskstatus = intent.getStringExtra("status").toString()
 
         //---------------------------------------------------------------------------------//
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        //setSupportActionBar(findViewById(R.id.toolbar))
+        //supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+        //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = "Task Detail"
@@ -95,8 +94,9 @@ class Task_EditDetail : AppCompatActivity() {
                 inputvalflag = false
             }
             if (inputvalflag) {
-                saveTask(taskkey, eventkey)
-                this.onBackPressed()
+                saveTask(taskkey)
+                onBackPressed()
+                //this.onBackPressed()
             }
         }
     }
@@ -111,10 +111,10 @@ class Task_EditDetail : AppCompatActivity() {
         newFragment.show(supportFragmentManager, "datePicker")
     }
 
-    private fun saveTask(taskkey: String, eventid: String) {
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.reference
-        val postRef = myRef.child("User").child("Event").child(eventid).child("Task").child(taskkey)
+    private fun saveTask(taskkey: String) {
+        //val database = FirebaseDatabase.getInstance()
+        //val myRef = database.reference
+        //val postRef = myRef.child("User").child("Event").child(eventid).child("Task").child(taskkey)
         var taskcategory = ""
 
 
@@ -141,10 +141,10 @@ class Task_EditDetail : AppCompatActivity() {
             budget = tkbudget.text.toString()
             date = tkdate.text.toString()
             category = taskcategory
-            this.eventid = eventkey
+            //this.eventid = eventkey
             status=taskstatus
 
         }
-        taskentity.editTask()
+        taskentity.editTask(this)
     }
 }

@@ -8,6 +8,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.ActivityCompat.finishAfterTransition
+import androidx.core.content.ContextCompat.startActivity
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -133,7 +135,9 @@ class UserAccount(var UserEmail: String = "") {
                             //val user = mAuth!!.currentUser
                             //Need to implement functionality to save user session. Class
                             Log.i("Google Login", "Successful Login: $UserEmail")
-
+//*************************************************************************************************
+// Probably this is way too nested into the code. I might need to take it out to the Login class
+//**************************************************************************************************
                             val userEntity = UserEntity()
                             userEntity.key = mAuth.currentUser!!.uid
                             userEntity.getUser(object : FirebaseSuccessListenerUser {
@@ -167,7 +171,7 @@ class UserAccount(var UserEmail: String = "") {
                                     }
                                 }
                             })
-                        } else {
+//****************************************************************************************************                        } else {
                             Log.e("Task Exception", task.exception.toString())
                             Log.e("Google Login", "Failed Login:" + task.exception.toString())
                         }

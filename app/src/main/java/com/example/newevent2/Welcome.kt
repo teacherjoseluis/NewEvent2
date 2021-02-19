@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.Toast
@@ -54,6 +55,23 @@ class Welcome : AppCompatActivity() {
 
     lateinit var drawerLayout: DrawerLayout
 
+    override fun onStart() {
+        super.onStart()
+
+        //val sharedPreference = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).edit().clear().commit()
+
+        //--------------------------------------------
+        // need to check if the user is logged and then continue, otherwise I redirect to login
+        val usersessionlist = getUserSession(this)
+        if (usersessionlist[0] == "") {
+            val loginactivity =
+                Intent(this, Login::class.java)
+            startActivity(loginactivity)
+            finish()
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.welcome_navigation)
@@ -87,21 +105,40 @@ class Welcome : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
                 R.id.menu_seccion_2 -> {
-//                    Toast.makeText(
-//                    applicationContext,
-//                    "Seccion 1",
-//                    Toast.LENGTH_SHORT).show()
                     val events =
                         Intent(this, EventDetail::class.java)
-                    //welcome.putExtra("usersession", user)
+                    Log.d("Activity Starts", "EventDetail")
+                    events.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(events)
-                    //finish()
                 }
-                R.id.menu_seccion_3 -> Toast.makeText(
-                    applicationContext,
-                    "Seccion 3",
-                    Toast.LENGTH_SHORT
-                ).show()
+                R.id.menu_seccion_3 -> {
+                    val calendar =
+                        Intent(this, MyCalendar::class.java)
+                    Log.d("Activity Starts", "Calendar")
+                    calendar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(calendar)
+                }
+                R.id.menu_seccion_4 -> {
+                    val contacts =
+                        Intent(this, MyContacts::class.java)
+                    Log.d("Activity Starts", "Contacts")
+                    contacts.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(contacts)
+                }
+                R.id.menu_seccion_5 -> {
+                    val notes =
+                        Intent(this, MyNotes::class.java)
+                    Log.d("Activity Starts", "Notes")
+                    notes.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(notes)
+                }
+                R.id.menu_opcion_1 -> {
+                    val settings =
+                        Intent(this, Settings::class.java)
+                    Log.d("Activity Starts", "Settings")
+                    settings.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(settings)
+                }
             }
             drawerLayout.closeDrawers()
             true
@@ -113,12 +150,13 @@ class Welcome : AppCompatActivity() {
 
             // I think this needs to be validated. In case the Activity is not accessed via Login or Onboarding. The User information needs to be taken
             // from the User Session
-            val intent = intent
-            userSession = intent.getParcelableExtra("usersession")!!
-
-            usershortname.text = userSession!!.shortname
-            progress.text = "Your profile has a ${getProfileprogress()}% progress"
-
+//            val intent = intent
+//            userSession = intent.getParcelableExtra("usersession")!!
+//
+//            usershortname.text = userSession!!.shortname
+        usershortname.text = "Jose"
+//            progress.text = "Your profile has a ${getProfileprogress()}% progress"
+//-----------------------------------------------------------------------------------------------------
             sharedPreference = getSharedPreferences("PREFERENCE_NAME", Context.MODE_PRIVATE)
             // Pie charts
             window.setFlags(

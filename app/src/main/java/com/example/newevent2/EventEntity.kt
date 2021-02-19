@@ -10,6 +10,7 @@ import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.event_edit.*
 
 class EventEntity : Event() {
 
@@ -195,9 +196,10 @@ class EventEntity : Event() {
                 return@addOnFailureListener
             }
             .addOnSuccessListener {
+                val eventkey = postRef.key.toString()
+                saveLog(context, "UPDATE", "event", eventkey, name)
                 //Save Event image in Storage
                 if (uri != null && uri.lastPathSegment != imageurl) {
-                    val eventkey = postRef.key.toString()
                     val imageRef = storageRef.child("images/$eventkey/${uri.lastPathSegment}")
                     val uploadTask = imageRef.putFile(uri)
 

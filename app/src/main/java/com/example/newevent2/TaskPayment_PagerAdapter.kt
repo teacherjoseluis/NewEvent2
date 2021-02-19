@@ -10,14 +10,14 @@ class TaskPayment_PagerAdapter(
     private val myContext: Context,
     fm: FragmentManager,
     internal var totalTabs: Int,
-    val eventkey: String,
+    //val eventkey: String,
     val category: String
 
 ) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         val bundle = Bundle()
-        bundle.putString("eventkey", eventkey)
+        //bundle.putString("eventkey", eventkey)
         bundle.putString("category", category)
 
         return when (position) {

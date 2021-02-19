@@ -21,9 +21,9 @@ class EventDetail : AppCompatActivity() {
         val viewPager = findViewById<View>(R.id.pager) as ViewPager
         // Toolbar and Title
         //---------------------------------------------------------------------
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        setSupportActionBar(findViewById(R.id.toolbar))
+////        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+////        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = "Event Detail"
@@ -87,6 +87,11 @@ class EventDetail : AppCompatActivity() {
             }
 
         })
+
+        imageButton1.setOnClickListener {
+            val home = Intent(this, Welcome::class.java)
+            startActivity(home)
+        }
         imageButton2.setOnClickListener {
             val calendar = Intent(this, MyCalendar::class.java)
             //calendar.putExtra("eventkey", eventkey)
@@ -107,9 +112,9 @@ class EventDetail : AppCompatActivity() {
 
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
+//    override fun onSupportNavigateUp(): Boolean {
+//        finish()
+//        return true
+//    }
 
 }

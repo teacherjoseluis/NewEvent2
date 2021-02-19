@@ -42,12 +42,20 @@ class NewVendor : AppCompatActivity() {
         if (source == "google") {
             setContentView(R.layout.new_vendor)
 
+            // Toolbar
+            setSupportActionBar(findViewById(R.id.toolbar))
+            supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+            val apptitle = findViewById<TextView>(R.id.appbartitle)
+            apptitle.text = "New Vendor"
+
             val height = Resources.getSystem().displayMetrics.heightPixels
             val maplayout = findViewById<ConstraintLayout>(R.id.constraintLayout8)
             maplayout.layoutParams.height = height - 800
 
             val intent = intent
-            val eventkey = intent.getStringExtra("eventkey").toString()
+            //val eventkey = intent.getStringExtra("eventkey").toString()
             val location = intent.getStringExtra("location").toString()
             val placeid = intent.getStringExtra("placeid").toString()
             val latitude = intent.getDoubleExtra("latitude", 0.0)
@@ -102,7 +110,7 @@ class NewVendor : AppCompatActivity() {
             val button = findViewById<Button>(R.id.newvendorbutton)
             button.setOnClickListener {
                 val vendor = VendorEntity().apply {
-                    eventid = eventkey
+                    //eventid = eventkey
                     contactid = "google"
                     name = location
                     this.phone = phone
@@ -116,6 +124,14 @@ class NewVendor : AppCompatActivity() {
         }
         else if (source == "local") {
             setContentView(R.layout.vendor_editdetail)
+
+            // Toolbar
+            setSupportActionBar(findViewById(R.id.toolbar))
+            supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+            val apptitle = findViewById<TextView>(R.id.appbartitle)
+            apptitle.text = "New Vendor"
 
             val vendormap = findViewById<ConstraintLayout>(R.id.vendormap)
             vendormap.visibility = View.INVISIBLE
@@ -158,6 +174,11 @@ class NewVendor : AppCompatActivity() {
         }
         vendor.addVendor()
         finish()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
 }

@@ -111,8 +111,12 @@ class TaskEntity : Task() {
         postRef.addValueEventListener(tasklListenerActive)
     }
 
-    fun getTasksList(dataFetched: FirebaseSuccessListenerTask) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+    fun getTasksList(context: Context, dataFetched: FirebaseSuccessListenerTask) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Task")
         var tasklist = ArrayList<Task>()
 
         val tasklListenerActive = object : ValueEventListener {
@@ -138,12 +142,18 @@ class TaskEntity : Task() {
         postRef.addValueEventListener(tasklListenerActive)
     }
 
-    fun getTaskStats(dataFetched: FirebaseSuccessListenerTask) {
+    fun getTaskStats(context: Context, dataFetched: FirebaseSuccessListenerTask) {
         var sumbudget: Float
         var countactive: Int
         var countcompleted: Int
 
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Task")
+
         val taskListenerActive = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 countactive = 0
@@ -232,9 +242,12 @@ class TaskEntity : Task() {
         postRef.addValueEventListener(taskListenerActive)
     }
 
-    fun editTask() {
+    fun editTask(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
         val postRef =
-            myRef.child("User").child("Event").child(this.eventid).child("Task").child(this.key)
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Task").child(this.key)
 
         val tasks = hashMapOf(
             "name" to name,
@@ -250,29 +263,47 @@ class TaskEntity : Task() {
                 return@addOnFailureListener
             }
             .addOnSuccessListener {
+                saveLog(context, "UPDATE", "task", key, name)
                 return@addOnSuccessListener
             }
     }
 
-    fun editTask(action: String) {
+    fun editTask(context: Context, action: String) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Task").child(this.key)
+
         if (action == "complete") {
-            myRef.child("User").child("Event").child(this.eventid).child("Task").child(this.key)
-                .child("status").setValue("C")
+            postRef.child("status").setValue("C")
+                .addOnSuccessListener {
+                    saveLog(context, "UPDATE", "task", key, name)
+                }
         }
         if (action == "active") {
-            myRef.child("User").child("Event").child(this.eventid).child("Task").child(this.key)
-                .child("status").setValue("A")
+            postRef.child("status").setValue("A")
+                .addOnSuccessListener {
+                    saveLog(context, "UPDATE", "task", key, name)
+                }
         }
     }
 
-    fun deleteTask() {
-        myRef.child("User").child("Event").child(this.eventid).child("Task").child(this.key)
+    fun deleteTask(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Task").child(this.key)
             .removeValue()
     }
 
-    fun addTask() {
+    fun addTask(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
         val postRef =
-            myRef.child("User").child("Event").child(this.eventid).child("Task").push()
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Task").push()
 
         //---------------------------------------
         // Getting the time and date to record in the recently created task
@@ -288,7 +319,7 @@ class TaskEntity : Task() {
             "date" to date,
             "category" to category,
             "status" to "A",
-            "eventid" to eventid,
+            //"eventid" to eventid,
             "createdatetime" to sdf.format(taskdatetime)
         )
 
@@ -296,6 +327,8 @@ class TaskEntity : Task() {
             .addOnFailureListener {
             }
             .addOnSuccessListener {
+                val taskkey = postRef.key.toString()
+                saveLog(context, "INSERT", "task", taskkey, name)
             }
     }
 }

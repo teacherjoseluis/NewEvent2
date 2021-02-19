@@ -20,5 +20,10 @@
     <string name="facebook_app_id">420436362323049</string>
     <string name="fb_login_protocol_scheme">fb420436362323049</string>
 
+    <string-array name="role" >
+        <item>Bride</item>
+        <item>Groom</item>
+    </string-array>
+
 
 </resources>

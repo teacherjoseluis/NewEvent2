@@ -1,12 +1,15 @@
 package com.example.newevent2
 
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -15,6 +18,8 @@ class UserEntity : User() {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
+    private val storage = Firebase.storage
+    private val storageRef = storage.reference
 
     // Change for getUser data not only check if the user exists
     fun getUser(dataFetched: FirebaseSuccessListenerUser) {
@@ -35,7 +40,11 @@ class UserEntity : User() {
                     userexists.language = p0.child("language").getValue(String::class.java)!!
                     userexists.country = p0.child("country").getValue(String::class.java)!!
                     userexists.hasevent = p0.child("hasevent").getValue(String::class.java)!!
-                    //val useritem = snapshot.getValue(User::class.java)!!
+                    userexists.eventid = p0.child("eventid").getValue(String::class.java)!!
+
+                    userexists.imageurl = p0.child("imageurl").getValue(String::class.java)!!
+                    userexists.role = p0.child("role").getValue(String::class.java)!!
+                    //val useritem = snapshot.getValue(User::class.java)
                     //userexists = useritem
                     //}
                 }
@@ -53,6 +62,45 @@ class UserEntity : User() {
 //        val usersessionlist = getUserSession(context)
 //
 //    }
+
+    fun editUser(context: Context, uri: Uri?) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0])
+
+        val userkey = usersessionlist[0]
+
+        postRef.child("shortname").setValue(shortname)
+        postRef.child("country").setValue(country)
+        postRef.child("language").setValue(language)
+        postRef.child("role").setValue(role)
+
+        var userlocalsession =
+            context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+        val sessionEditor = userlocalsession!!.edit()
+        sessionEditor.putString("Shortname", shortname) // UID from Firebase
+        sessionEditor.putString("Role", role)
+
+        //Save Event image in Storage
+        if (uri != null && uri.lastPathSegment != imageurl) {
+            val imageRef = storageRef.child("images/User/$userkey/${uri.lastPathSegment}")
+            val uploadTask = imageRef.putFile(uri)
+
+            uploadTask.addOnFailureListener {
+                return@addOnFailureListener
+            }.addOnSuccessListener {
+                sessionEditor.putString("Imageurl", uri.lastPathSegment)
+                return@addOnSuccessListener
+            }
+        }
+        sessionEditor.apply()
+    }
+
+    fun editUserEvent() {
+        val postRef = myRef.child("User").child(key)
+        postRef.child("eventid").setValue(eventid)
+    }
 
     fun addUser() {
         val postRef = myRef.child("User").child(this.key)

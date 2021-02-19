@@ -9,7 +9,7 @@ import com.google.android.material.tabs.TabLayout
 
 class TaskPaymentList : AppCompatActivity() {
 
-    lateinit var eventkey: String
+    //lateinit var eventkey: String
     lateinit var category: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +17,7 @@ class TaskPaymentList : AppCompatActivity() {
         setContentView(R.layout.taskpayment_list)
 
         val intent = intent
-        eventkey = intent.getStringExtra("eventkey").toString()
+        //eventkey = intent.getStringExtra("eventkey").toString()
         category = intent.getStringExtra("category").toString()
 
         val tablayout = findViewById<TabLayout>(R.id.tabLayout)
@@ -33,7 +33,7 @@ class TaskPaymentList : AppCompatActivity() {
                 this,
                 supportFragmentManager,
                 tablayout.tabCount,
-                eventkey,
+                //eventkey,
                 category
             )
             viewPager.adapter = adapter
@@ -68,5 +68,10 @@ class TaskPaymentList : AppCompatActivity() {
             "guests" -> apptitle.text = "Guests"
             else -> apptitle.text = "No Category"
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 }

@@ -93,13 +93,13 @@ class Rv_GuestAdapter(
         notifyItemRemoved(position)
 
         if (action == "delete") {
-            guest.deleteGuest()
+            guest.deleteGuest(context)
 
             Snackbar.make(recyclerView, "Guest deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
                     contactlist.add(guest)
                     notifyItemInserted(contactlist.lastIndex)
-                    guest.addGuest()
+                    guest.addGuest(context)
                 }.show()
         }
     }

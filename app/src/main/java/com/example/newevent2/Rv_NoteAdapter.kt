@@ -52,7 +52,7 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
             notedetail.putExtra("notekey", noteList[p1].key)
             notedetail.putExtra("notetitle", noteList[p1].title)
             notedetail.putExtra("noteurl", noteList[p1].noteurl)
-            notedetail.putExtra("eventid", noteList[p1].eventid)
+            //notedetail.putExtra("eventid", noteList[p1].eventid)
 //            taskdetail.putExtra("eventid", taskList[p1].eventid)
 //            taskdetail.putExtra("name", taskList[p1].name)
 //            taskdetail.putExtra("date", taskList[p1].date)
@@ -109,7 +109,7 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
         notifyItemRemoved(position)
 
         if (action == "delete") {
-            note.deleteNote()
+            note.deleteNote(context)
         }
 
 //        val task = TaskEntity()

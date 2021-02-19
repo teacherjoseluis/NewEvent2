@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,7 @@ import kotlinx.android.synthetic.main.task_editdetail.*
 
 class NewGuest : AppCompatActivity() {
 
-    var eventkey: String = ""
+    //var eventkey: String = ""
     private var uri: Uri? = null
     private var chiptextvalue: String? = null
     private var categoryrsvp: String = ""
@@ -36,7 +37,15 @@ class NewGuest : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_guest)
 
-        eventkey = intent.getStringExtra("eventkey").toString()
+        // Toolbar
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = "New Guest"
+
+        //eventkey = intent.getStringExtra("eventkey").toString()
 
         val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -111,7 +120,7 @@ class NewGuest : AppCompatActivity() {
         if (uri != null) saveToInternalStorage()
 
         val guest = GuestEntity().apply {
-            eventid = eventkey
+            //eventid = eventkey
             contactid = "local"
             rsvp = categoryrsvp
             companion = categorycompanions
@@ -123,7 +132,7 @@ class NewGuest : AppCompatActivity() {
 
             imageurl = uri?.let { it.toString() } ?: ""
         }
-        guest.addGuest()
+        guest.addGuest(this)
     }
 
     private fun saveToInternalStorage() {
@@ -218,6 +227,11 @@ class NewGuest : AppCompatActivity() {
                 val error = result.error
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 }
 

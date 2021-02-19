@@ -60,7 +60,7 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) :
         p0.itemView.setOnClickListener {
             val paymentdetail = Intent(context, Payment_EditDetail::class.java)
             paymentdetail.putExtra("paymentkey", paymentList[p1].key)
-            paymentdetail.putExtra("eventid", paymentList[p1].eventid)
+            //paymentdetail.putExtra("eventid", paymentList[p1].eventid)
             paymentdetail.putExtra("name", paymentList[p1].name)
             paymentdetail.putExtra("date", paymentList[p1].date)
             paymentdetail.putExtra("category", paymentList[p1].category)
@@ -86,7 +86,7 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) :
     override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
         val payment = PaymentEntity()
         payment.key = paymentList[position].key
-        payment.eventid = paymentList[position].eventid
+        //payment.eventid = paymentList[position].eventid
         payment.name = paymentList[position].name
         payment.date = paymentList[position].date
         payment.category = paymentList[position].category
@@ -96,13 +96,13 @@ class Rv_PaymentAdapter(val paymentList: MutableList<Payment>) :
         notifyItemRemoved(position)
 
         if (action == "delete") {
-            payment.deletePayment()
+            payment.deletePayment(context)
 
             Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
                     paymentList.add(payment)
                     notifyItemInserted(paymentList.lastIndex)
-                    payment.addPayment()
+                    payment.addPayment(context)
                 }.show()
         }
     }

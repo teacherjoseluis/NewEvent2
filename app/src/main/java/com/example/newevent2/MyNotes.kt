@@ -20,24 +20,22 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.my_notes.*
+import kotlinx.android.synthetic.main.navbottom.*
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 
 class MyNotes : AppCompatActivity() {
 
-    var eventkey = ""
+    //var eventkey = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.my_notes)
-        val intent = intent
+        //val intent = intent
 
-        eventkey = intent.getStringExtra("eventkey").toString()
+        //eventkey = intent.getStringExtra("eventkey").toString()
 
-        // Toolbar
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = "My Notes"
 
         val recyclerView = recyclerViewNotes
         recyclerView.apply {
@@ -48,9 +46,9 @@ class MyNotes : AppCompatActivity() {
         }
 //----------------------------------------------------------------------------------------------
         val notentity = NoteEntity()
-        notentity.eventid = eventkey
+        //notentity.eventid = eventkey
 
-        notentity.getNotesList(object : FirebaseSuccessListenerNote {
+        notentity.getNotesList(this, object : FirebaseSuccessListenerNote {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onNotesList(list: ArrayList<Note>) {
                 val rvAdapter = Rv_NoteAdapter(list)
@@ -66,8 +64,30 @@ class MyNotes : AppCompatActivity() {
 
         floatingNewNote.setOnClickListener {
             val newnote = Intent(this, NewNote::class.java)
-            newnote.putExtra("eventkey", eventkey)
+            //newnote.putExtra("eventkey", eventkey)
             startActivity(newnote)
+        }
+
+        imageButton1.setOnClickListener {
+            val home = Intent(this, Welcome::class.java)
+            startActivity(home)
+        }
+        imageButton2.setOnClickListener {
+            val calendar = Intent(this, MyCalendar::class.java)
+            //calendar.putExtra("eventkey", eventkey)
+            startActivity(calendar)
+        }
+
+        imageButton3.setOnClickListener {
+            val contacts = Intent(this, MyContacts::class.java)
+            //contacts.putExtra("eventkey", eventkey)
+            startActivity(contacts)
+        }
+
+        imageButton.setOnClickListener {
+            val events = Intent(this, EventDetail::class.java)
+            //notes.putExtra("eventkey", eventkey)
+            startActivity(events)
         }
 
     }

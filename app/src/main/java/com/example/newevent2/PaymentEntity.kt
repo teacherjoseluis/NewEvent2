@@ -48,8 +48,11 @@ class PaymentEntity() : Payment() {
         postRef.addValueEventListener(paymentlListenerActive)
     }
 
-    fun getPaymentsList(dataFetched: FirebaseSuccessListenerPayment) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+    fun getPaymentsList(context: Context, dataFetched: FirebaseSuccessListenerPayment) {
+        val usersessionlist = getUserSession(context)
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Payment")
         var paymentlist = ArrayList<Payment>()
 
         val paymentlListenerActive = object : ValueEventListener {
@@ -75,11 +78,15 @@ class PaymentEntity() : Payment() {
         postRef.addValueEventListener(paymentlListenerActive)
     }
 
-    fun getPaymentStats(dataFetched: FirebaseSuccessListenerPayment) {
+    fun getPaymentStats(context: Context, dataFetched: FirebaseSuccessListenerPayment) {
         var sumpayment: Float
         var countpayment: Int
 
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+        val usersessionlist = getUserSession(context)
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Payment")
+
         val paymentListenerActive = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 countpayment = 0
@@ -197,13 +204,45 @@ class PaymentEntity() : Payment() {
         }
     }
 
-    fun deletePayment() {
-        myRef.child("User").child("Event").child(this.eventid).child("Payment").child(this.key)
+    fun editPayment(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Payment").child(this.key)
+
+        val payment = hashMapOf(
+            "name" to name,
+            "amount" to amount,
+            "date" to date,
+            "category" to category
+        )
+
+        postRef.setValue(payment as Map<String, Any>)
+            .addOnFailureListener {
+                //return@addOnFailureListener
+            }
+            .addOnSuccessListener {
+                saveLog(context, "UPDATE", "payment", key, name)
+                //return@addOnSuccessListener
+            }
+    }
+
+    fun deletePayment(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Payment").child(this.key)
             .removeValue()
     }
 
-    fun addPayment() {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment").push()
+    fun addPayment(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Payment")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Payment").push()
 
         //---------------------------------------
         // Getting the time and date to record in the recently created payment
@@ -218,7 +257,7 @@ class PaymentEntity() : Payment() {
             "amount" to amount,
             "date" to date,
             "category" to category,
-            "eventid" to eventid,
+            //"eventid" to eventid,
             "createdatetime" to sdf.format(paymentdatetime)
         )
 
@@ -226,6 +265,8 @@ class PaymentEntity() : Payment() {
             .addOnFailureListener {
             }
             .addOnSuccessListener {
+                val paymentkey = postRef.key.toString()
+                saveLog(context, "INSERT", "payment", paymentkey, name)
             }
     }
 }

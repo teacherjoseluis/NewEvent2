@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
@@ -12,6 +13,7 @@ import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import kotlinx.android.synthetic.main.calendar.*
 import kotlinx.android.synthetic.main.guests_all.view.*
+import kotlinx.android.synthetic.main.navbottom.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -121,6 +123,27 @@ internal class MyCalendar : AppCompatActivity() {
             }
         })
 
+        imageButton1.setOnClickListener {
+            val home = Intent(this, Welcome::class.java)
+            startActivity(home)
+        }
+        imageButton.setOnClickListener {
+            val events = Intent(this, EventDetail::class.java)
+            //calendar.putExtra("eventkey", eventkey)
+            startActivity(events)
+        }
+
+        imageButton3.setOnClickListener {
+            val contacts = Intent(this, MyContacts::class.java)
+            //contacts.putExtra("eventkey", eventkey)
+            startActivity(contacts)
+        }
+
+        imageButton4.setOnClickListener {
+            val notes = Intent(this, MyNotes::class.java)
+            //notes.putExtra("eventkey", eventkey)
+            startActivity(notes)
+        }
     }
 
     private fun loadcalendar(calendar: Calendar?) {
@@ -197,6 +220,7 @@ internal class MyCalendar : AppCompatActivity() {
 //        const val EVENT = "event"
 //        private const val ADD_NOTE = 44
 //    }
+
 }
 
 

@@ -2,6 +2,7 @@ package com.example.newevent2
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,7 @@ class TaskPayment_Tasks : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        eventkey = this.arguments!!.get("eventkey").toString()
+        //eventkey = this.arguments!!.get("eventkey").toString()
         category = this.arguments!!.get("category").toString()
     }
 
@@ -46,68 +47,80 @@ class TaskPayment_Tasks : Fragment() {
         }
 
         val taskentity = TaskEntity()
-        taskentity.eventid = eventkey
+        //taskentity.eventid = eventkey
         taskentity.category = category
         taskentity.status = "A"
 
-        taskentity.getTasksList(object : FirebaseSuccessListenerTask {
-            override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-                TODO("Not yet implemented")
-            }
+        taskentity.getTasksList(
+            activity!!.applicationContext,
+            object : FirebaseSuccessListenerTask {
+                override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
+                    TODO("Not yet implemented")
+                }
 
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onTasksList(list: ArrayList<Task>) {
-                val rvAdapter = Rv_TaskAdapter(list)
-                recyclerViewActive.adapter = rvAdapter
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                override fun onTasksList(list: ArrayList<Task>) {
+                    val rvAdapter = Rv_TaskAdapter(list)
+                    recyclerViewActive.adapter = rvAdapter
 
-                val swipeController = SwipeControllerTasks(
-                    inf.context,
-                    rvAdapter,
-                    recyclerViewActive,
-                    "check",
-                    "delete"
-                )
-                val itemTouchHelper = ItemTouchHelper(swipeController)
-                itemTouchHelper.attachToRecyclerView(recyclerViewActive)
-            }
-        })
+                    val swipeController = SwipeControllerTasks(
+                        inf.context,
+                        rvAdapter,
+                        recyclerViewActive,
+                        "check",
+                        "delete"
+                    )
+                    val itemTouchHelper = ItemTouchHelper(swipeController)
+                    itemTouchHelper.attachToRecyclerView(recyclerViewActive)
+                }
+            })
 
-        taskentity.getTaskStats(object: FirebaseSuccessListenerTask {
-            override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-                inf.activetasks.text = taskpending.toString()
-                inf.completedtasks.text = taskcompleted.toString()
-                val formatter = DecimalFormat("$#,###.00")
-                inf.budgettasks.text = formatter.format(sumbudget)
-            }
+        taskentity.getTaskStats(
+            activity!!.applicationContext,
+            object : FirebaseSuccessListenerTask {
+                override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
+                    inf.activetasks.text = taskpending.toString()
+                    inf.completedtasks.text = taskcompleted.toString()
+                    val formatter = DecimalFormat("$#,###.00")
+                    inf.budgettasks.text = formatter.format(sumbudget)
+                }
 
-            override fun onTasksList(list: ArrayList<Task>) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onTasksList(list: ArrayList<Task>) {
+                    TODO("Not yet implemented")
+                }
+            })
 
         //---------------------------------------------------------------------------------------
 
         val taskentitycomplete = TaskEntity()
-        taskentitycomplete.eventid = eventkey
+        //taskentitycomplete.eventid = eventkey
         taskentitycomplete.category = category
         taskentitycomplete.status = "C"
 
-        taskentitycomplete.getTasksList(object : FirebaseSuccessListenerTask {
-            override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-                TODO("Not yet implemented")
-            }
+        taskentitycomplete.getTasksList(activity!!.applicationContext,
+            object : FirebaseSuccessListenerTask {
+                override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
+                    TODO("Not yet implemented")
+                }
 
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onTasksList(list: ArrayList<Task>) {
-                val rvAdapter = Rv_TaskAdapter(list)
-                recyclerViewComplete.adapter = rvAdapter
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                override fun onTasksList(list: ArrayList<Task>) {
+                    val rvAdapter = Rv_TaskAdapter(list)
+                    Log.d("Link to Task Detail", "TaskPayment_Tasks")
+                    recyclerViewComplete.adapter = rvAdapter
 
-                val swipeController =
-                    SwipeControllerTasks(inf.context, rvAdapter, recyclerViewComplete, null, "undo")
-                val itemTouchHelper = ItemTouchHelper(swipeController)
-                itemTouchHelper.attachToRecyclerView(recyclerViewComplete)
-            }
-        })
+                    val swipeController =
+                        SwipeControllerTasks(
+                            inf.context,
+                            rvAdapter,
+                            recyclerViewComplete,
+                            null,
+                            "undo"
+                        )
+                    val itemTouchHelper = ItemTouchHelper(swipeController)
+                    itemTouchHelper.attachToRecyclerView(recyclerViewComplete)
+                }
+            })
         return inf
     }
 }

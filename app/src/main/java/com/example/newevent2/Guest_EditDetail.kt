@@ -35,6 +35,15 @@ class Guest_EditDetail : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_guest)
+
+        // Toolbar
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = "Edit Guest"
+
         val intent = intent
 
         val guestitem = GuestEntity().apply {
@@ -281,7 +290,7 @@ class Guest_EditDetail : AppCompatActivity() {
             "None" -> "none"
             else -> "none"
         }
-        guest.editGuest()
+        guest.editGuest(this)
     }
 
 
@@ -337,6 +346,11 @@ class Guest_EditDetail : AppCompatActivity() {
                 val error = result.error
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
 }

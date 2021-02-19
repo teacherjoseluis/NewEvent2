@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.android.synthetic.main.task_editdetail.button2
 import kotlinx.android.synthetic.main.task_editdetail.groupedit
 
-class Payment_EditDetail: AppCompatActivity() {
+class Payment_EditDetail : AppCompatActivity() {
 
     lateinit var paymentitem: Payment
 
@@ -25,13 +25,13 @@ class Payment_EditDetail: AppCompatActivity() {
 
         val intent = intent
         val paymentkey = intent.getStringExtra("paymentkey").toString()
-        val eventid = intent.getStringExtra("eventid").toString()
+        //val eventid = intent.getStringExtra("eventid").toString()
         val paymentnameextra = intent.getStringExtra("name").toString()
         val paymentdateextra = intent.getStringExtra("date").toString()
         val paymentcategory = intent.getStringExtra("category").toString()
         val paymentamountextra = intent.getStringExtra("amount").toString()
 
-        if (paymentkey != "" && eventid != "") {
+        if (paymentkey != "" ) {
 
             val paymentname = findViewById<TextView>(R.id.pyname)
             paymentname.text = paymentnameextra
@@ -111,7 +111,7 @@ class Payment_EditDetail: AppCompatActivity() {
 
         button2.setOnClickListener()
         {
-            savePayment(paymentkey, eventid)
+            savePayment(paymentkey)
         }
 
     }
@@ -127,10 +127,10 @@ class Payment_EditDetail: AppCompatActivity() {
         newFragment.show(supportFragmentManager, "datePicker")
     }
 
-    private fun savePayment(paymentkey: String, eventid: String) {
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.reference
-        val postRef = myRef.child("User").child("Event").child(eventid).child("Payment").child(paymentkey)
+    private fun savePayment(paymentkey: String) {
+//        val database = FirebaseDatabase.getInstance()
+//        val myRef = database.reference
+//        val postRef = myRef.child("User").child("Event").child(eventid).child("Payment").child(paymentkey)
         var category = ""
 
         if (groupedit.checkedChipId != null) {
@@ -152,11 +152,18 @@ class Payment_EditDetail: AppCompatActivity() {
             }
         }
 
-        postRef.child("name").setValue(pyname.text.toString())
-        postRef.child("amount").setValue(pyamount.text.toString())
-        postRef.child("date").setValue(pydate.text.toString())
-        postRef.child("category").setValue(category)
-        this.onBackPressed()
-    }
+        val paymententity = PaymentEntity().apply {
+            key= paymentkey
+            name = pyname.text.toString()
+            amount = pyamount.text.toString()
+            date = pydate.text.toString()
+            this.category = category
+        }
 
+        paymententity.editPayment(this)
+//        postRef.child("name").setValue(pyname.text.toString())
+//        postRef.child("amount").setValue(pyamount.text.toString())
+//        postRef.child("date").setValue(pydate.text.toString())
+//        postRef.child("category").setValue(category)
+    }
 }

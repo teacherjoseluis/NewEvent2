@@ -16,8 +16,11 @@ class GuestEntity : Guest() {
     private val myRef = database.reference
     //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Guest")
 
-    fun getGuestsContacts(dataFetched: FirebaseSuccessListenerGuest) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Guest")
+    fun getGuestsContacts(context: Context, dataFetched: FirebaseSuccessListenerGuest) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3]).child("Guest")
         var guestList = ArrayList<Guest>()
         val guestListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -56,12 +59,14 @@ class GuestEntity : Guest() {
 //        myRef.child("User").child("Event").child(this.eventid).child("Guest").child(this.key).removeValue()
 //    }
 
-    fun addGuest() {
+    fun addGuest(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
         val postRef =
-            myRef.child("User").child("Event").child(this.eventid).child("Guest").push()
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3]).child("Guest").push()
         val guest = hashMapOf(
             "name" to name,
-            "eventid" to eventid,
+            //"eventid" to eventid,
             "contactid" to contactid,
             "rsvp" to "pending",
             "companion" to companion,
@@ -78,15 +83,20 @@ class GuestEntity : Guest() {
             }
     }
 
-    fun deleteGuest() {
-        myRef.child("User").child("Event").child(this.eventid).child("Guest").child(this.key)
+    fun deleteGuest(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3]).child("Guest")
             .removeValue()
     }
 
 
-    fun editGuest() {
+    fun editGuest(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
         val postRef =
-            myRef.child("User").child("Event").child(eventid).child("Guest").child(this.key)
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3]).child("Guest")
         postRef.child("name").setValue(name)
         postRef.child("rsvp").setValue(rsvp)
         postRef.child("companion").setValue(companion)

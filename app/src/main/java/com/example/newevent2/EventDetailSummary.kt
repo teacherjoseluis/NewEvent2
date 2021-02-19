@@ -2,6 +2,7 @@ package com.example.newevent2
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,6 @@ import java.text.DecimalFormat
 
 class EventDetailSummary : Fragment() {
 
-    //lateinit var eventkey: String
     var isRotate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,115 +42,108 @@ class EventDetailSummary : Fragment() {
         val formatter = DecimalFormat("$#,###.00")
 
         val taskentity = TaskEntity()
-        //taskentity.eventid = eventkey
-        taskentity.getTasksEvent(activity!!.applicationContext, object : FirebaseSuccessListenerTask {
-            override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-                inf.taskpending.text = taskpending.toString()
-                inf.taskcompleted.text = taskcompleted.toString()
-                inf.tasknumber.text = (taskpending + taskcompleted).toString()
-                inf.taskbudget.text = formatter.format(sumbudget)
-            }
+        taskentity.getTasksEvent(
+            activity!!.applicationContext,
+            object : FirebaseSuccessListenerTask {
+                override fun onTasksEvent(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
+                    inf.taskpending.text = taskpending.toString()
+                    inf.taskcompleted.text = taskcompleted.toString()
+                    inf.tasknumber.text = (taskpending + taskcompleted).toString()
+                    inf.taskbudget.text = formatter.format(sumbudget)
+                }
 
-            override fun onTasksList(list: ArrayList<Task>) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onTasksList(list: ArrayList<Task>) {
+                    TODO("Not yet implemented")
+                }
+            })
 
         val paymententity = PaymentEntity()
-        //paymententity.eventid = eventkey
-        paymententity.getPaymentEvent(activity!!.applicationContext, object : FirebaseSuccessListenerPayment {
-            override fun onPaymentEvent(sumpayment: Float) {
-                inf.paymentpaid.text = formatter.format(sumpayment)
-            }
+        paymententity.getPaymentEvent(
+            activity!!.applicationContext,
+            object : FirebaseSuccessListenerPayment {
+                override fun onPaymentEvent(sumpayment: Float) {
+                    inf.paymentpaid.text = formatter.format(sumpayment)
+                }
 
-            override fun onPaymentList(list: ArrayList<Payment>) {
-                TODO("Not yet implemented")
-            }
+                override fun onPaymentList(list: ArrayList<Payment>) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
+                    TODO("Not yet implemented")
+                }
+            })
 
         inf.cardView_venue.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "venue")
+            Log.d("Activity Starts", "TaskPaymentList")
             startActivity(tasklist)
         }
         inf.cardView_photo.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "photo")
             startActivity(tasklist)
         }
         inf.cardView_entertainment.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "entertainment")
             startActivity(tasklist)
         }
         inf.cardView_flowers.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "flowers")
+            Log.d("Activity Starts", "TaskPaymentList")
             startActivity(tasklist)
         }
         inf.cardView_transportation.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "transportation")
             startActivity(tasklist)
         }
         inf.cardView_ceremony.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "ceremony")
             startActivity(tasklist)
         }
         inf.cardView_attire.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "attire")
             startActivity(tasklist)
         }
         inf.cardView_beauty.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "beauty")
             startActivity(tasklist)
         }
         inf.cardView_food.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "food")
             startActivity(tasklist)
         }
         inf.cardView_guests.setOnClickListener()
         {
             val tasklist = Intent(activity, TaskPaymentList::class.java)
-            //tasklist.putExtra("eventkey", eventkey)
             tasklist.putExtra("category", "guests")
             startActivity(tasklist)
         }
 
         activity!!.NewTaskPaymentActionButton.setOnClickListener()
         {
-
             isRotate = ViewAnimation.rotateFab(activity!!.NewTaskPaymentActionButton, !isRotate)
-            if(isRotate){
+            if (isRotate) {
                 ViewAnimation.showIn(activity!!.TaskLayout);
                 ViewAnimation.showIn(activity!!.PaymentLayout);
-            }else{
+            } else {
                 ViewAnimation.showOut(activity!!.TaskLayout);
                 ViewAnimation.showOut(activity!!.PaymentLayout);
             }
@@ -158,24 +151,12 @@ class EventDetailSummary : Fragment() {
 
         activity!!.fabTask.setOnClickListener(View.OnClickListener {
             val newtask = Intent(activity, NewTask_TaskDetail::class.java)
-            //newtask.putExtra("eventkey", eventkey)
             startActivity(newtask)
-//            Toast.makeText(
-//                activity,
-//                "New Task",
-//                Toast.LENGTH_SHORT
-//            ).show()
         })
 
         activity!!.fabPayment.setOnClickListener(View.OnClickListener {
             val newpayment = Intent(activity, NewTask_PaymentDetail::class.java)
-            //newpayment.putExtra("eventkey", eventkey)
             startActivity(newpayment)
-//            Toast.makeText(
-//                activity,
-//                "New Payment",
-//                Toast.LENGTH_SHORT
-//            ).show()
         })
         return inf
     }

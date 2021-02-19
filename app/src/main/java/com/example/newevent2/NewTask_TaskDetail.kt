@@ -2,6 +2,7 @@ package com.example.newevent2
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newevent2.ui.dialog.DatePickerFragment
@@ -14,7 +15,7 @@ import kotlinx.android.synthetic.main.task_editdetail.*
 
 
 class NewTask_TaskDetail : AppCompatActivity() {
-    private var eventkey: String = ""
+    //private var eventkey: String = ""
     private var taskcategory: String = ""
 
     private var chiptextvalue: String? = null
@@ -23,7 +24,15 @@ class NewTask_TaskDetail : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.task_editdetail)
 
-        eventkey = intent.getStringExtra("eventkey").toString()
+        // Toolbar
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = "New Task"
+
+        //eventkey = intent.getStringExtra("eventkey").toString()
 
         groupedit.isSingleSelection = true
 
@@ -92,8 +101,13 @@ class NewTask_TaskDetail : AppCompatActivity() {
             budget = tkbudget.text.toString()
             date = tkdate.text.toString()
             category = taskcategory
-            eventid = eventkey
+            //eventid = eventkey
         }
-        taskentity.addTask()
+        taskentity.addTask(this)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 }

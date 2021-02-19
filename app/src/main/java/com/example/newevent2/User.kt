@@ -14,6 +14,8 @@ open class User() :Parcelable {
     var createdatetime: String = ""
     var authtype: String = ""
     var status: String = ""
+    var imageurl: String = ""
+    var role: String = ""
 
     //At some point I will be adding the updatedatetime
     // Need to add the flags to calculate the profile progress
@@ -33,6 +35,8 @@ open class User() :Parcelable {
         createdatetime = parcel.readString()!!
         authtype = parcel.readString()!!
         status = parcel.readString()!!
+        imageurl = parcel.readString()!!
+        role = parcel.readString()!!
         hasevent = parcel.readString()!!
         hastask = parcel.readString()!!
         haspayment = parcel.readString()!!
@@ -50,6 +54,8 @@ open class User() :Parcelable {
         parcel.writeString(createdatetime)
         parcel.writeString(authtype)
         parcel.writeString(status)
+        parcel.writeString(imageurl)
+        parcel.writeString(role)
         parcel.writeString(hasevent)
         parcel.writeString(hastask)
         parcel.writeString(haspayment)

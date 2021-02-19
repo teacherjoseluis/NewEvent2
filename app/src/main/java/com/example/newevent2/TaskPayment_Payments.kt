@@ -18,12 +18,12 @@ import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 import java.text.DecimalFormat
 
 class TaskPayment_Payments : Fragment() {
-    private var eventkey: String = ""
+    //private var eventkey: String = ""
     private var category: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        eventkey = this.arguments!!.get("eventkey").toString()
+        //eventkey = this.arguments!!.get("eventkey").toString()
         category = this.arguments!!.get("category").toString()
     }
 
@@ -44,10 +44,10 @@ class TaskPayment_Payments : Fragment() {
         }
 
         val paymententity = PaymentEntity()
-        paymententity.eventid = eventkey
+        //paymententity.eventid = eventkey
         paymententity.category = category
 
-        paymententity.getPaymentsList(object : FirebaseSuccessListenerPayment {
+        paymententity.getPaymentsList(activity!!.applicationContext, object : FirebaseSuccessListenerPayment {
             override fun onPaymentEvent(sumpayment: Float) {
                 TODO("Not yet implemented")
             }
@@ -73,7 +73,7 @@ class TaskPayment_Payments : Fragment() {
             }
         })
 
-        paymententity.getPaymentStats(object: FirebaseSuccessListenerPayment {
+        paymententity.getPaymentStats(activity!!.applicationContext, object: FirebaseSuccessListenerPayment {
             override fun onPaymentEvent(sumpayment: Float) {
                 TODO("Not yet implemented")
             }

@@ -2,6 +2,7 @@ package com.example.newevent2
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newevent2.ui.dialog.DatePickerFragment
@@ -11,7 +12,7 @@ import kotlinx.android.synthetic.main.payment_editdetail.button2
 
 
 class NewTask_PaymentDetail : AppCompatActivity() {
-    private var eventkey: String = ""
+    //private var eventkey: String = ""
     private var paymentcategory: String = ""
 
     private var chiptextvalue: String? = null
@@ -20,7 +21,15 @@ class NewTask_PaymentDetail : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.payment_editdetail)
 
-        eventkey = intent.getStringExtra("eventkey").toString()
+        // Toolbar
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = "New Payment"
+
+        //eventkey = intent.getStringExtra("eventkey").toString()
 
         groupedit.isSingleSelection = true
 
@@ -53,7 +62,7 @@ class NewTask_PaymentDetail : AppCompatActivity() {
             }
             if (inputvalflag) {
                 savePayment()
-                onBackPressed()
+                //onBackPressed()
             }
         }
     }
@@ -92,8 +101,13 @@ class NewTask_PaymentDetail : AppCompatActivity() {
             amount = pyamount.text.toString()
             date = pydate.text.toString()
             category = paymentcategory
-            eventid = eventkey
+            //eventid = eventkey
         }
-        paymententity.addPayment()
+        paymententity.addPayment(this)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 }

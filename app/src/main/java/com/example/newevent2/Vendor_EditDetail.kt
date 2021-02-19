@@ -52,6 +52,15 @@ class Vendor_EditDetail : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.vendor_editdetail)
+
+        // Toolbar
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = "Edit Vendor"
+
         val intent = intent
 
         val vendoritem = VendorEntity().apply {
@@ -253,6 +262,11 @@ class Vendor_EditDetail : AppCompatActivity(), OnMapReadyCallback {
             )
         )
         googleMap!!.uiSettings.setAllGesturesEnabled(false)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -20,8 +21,12 @@ class NoteEntity : Note() {
     private val myRef = database.reference
     private val storageRef = storage.reference
 
-    fun getNotesList(dataFetched: FirebaseSuccessListenerNote) {
-        val postRef = myRef.child("User").child("Event").child(this.eventid).child("Note")
+    fun getNotesList(context: Context, dataFetched: FirebaseSuccessListenerNote) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Note")
         var notelist = ArrayList<Note>()
 
         val notelListenerActive = object : ValueEventListener {
@@ -67,20 +72,28 @@ class NoteEntity : Note() {
 //        }
 
 
-    fun deleteNote() {
-        myRef.child("User").child("Event").child(this.eventid).child("Note").child(this.key)
-            .removeValue()
+    fun deleteNote(context: Context) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
+        val postRef =
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Note").child(this.key)
+                .removeValue()
     }
 
-    fun addNote(uri: Uri) {
+    fun addNote(context: Context, uri: Uri) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
         val postRef =
-            myRef.child("User").child("Event").child(this.eventid).child("Note").push()
-
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Note").push()
+        val userkey = usersessionlist[0]
+        val eventkey = usersessionlist[3]
         val notes = hashMapOf(
             "title" to title,
             "datetime" to datetime,
             "noteurl" to noteurl,
-            "eventid" to eventid,
+            //"eventid" to eventid,
             "summary" to summary
         )
 
@@ -90,22 +103,28 @@ class NoteEntity : Note() {
             .addOnSuccessListener {
                 if (uri != null) {
                     val notekey = postRef.key.toString()
-                    val noteRef = storageRef.child("User/Event/$eventid/Note/$notekey/${uri.lastPathSegment}")
+                    val noteRef =
+                        storageRef.child("User/$userkey/Event/$eventkey/Note/$notekey/${uri.lastPathSegment}")
                     val uploadTask = noteRef.putFile(uri)
 
                     uploadTask.addOnFailureListener {
                         return@addOnFailureListener
                     }.addOnSuccessListener {
+                        saveLog(context, "INSERT", "note", notekey, title)
                         return@addOnSuccessListener
                     }
                 }
             }
     }
 
-    fun editNote(uri: Uri, oldurl:String) {
+    fun editNote(context: Context, uri: Uri, oldurl: String) {
+        val usersessionlist = getUserSession(context)
+        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
         val postRef =
-            myRef.child("User").child("Event").child(this.eventid).child("Note").child(this.key)
-
+            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+                .child("Note").child(this.key)
+        val userkey = usersessionlist[0]
+        val eventkey = usersessionlist[3]
         val notes = hashMapOf(
             "title" to title,
             "datetime" to datetime,
@@ -120,13 +139,16 @@ class NoteEntity : Note() {
             .addOnSuccessListener {
                 if (uri != null) {
                     val notekey = postRef.key.toString()
-                    val noteRef = storageRef.child("User/Event/$eventid/Note/$notekey/${uri.lastPathSegment}")
+                    val noteRef =
+                        storageRef.child("User/$userkey/Event/$eventkey/Note/$notekey/${uri.lastPathSegment}")
                     val uploadTask = noteRef.putFile(uri)
 
                     uploadTask.addOnFailureListener {
                         return@addOnFailureListener
                     }.addOnSuccessListener {
-                        val oldfileRef = storageRef.child("User/Event/$eventid/Note/$notekey/$oldurl")
+                        saveLog(context, "UPDATE", "note", notekey, title)
+                        val oldfileRef =
+                            storageRef.child("User/$userkey/Event/$eventkey/Note/$notekey/$oldurl")
                         oldfileRef.delete()
                     }
                 }

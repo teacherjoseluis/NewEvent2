@@ -19,6 +19,8 @@ internal fun getUserSession(context: Context): List<String> {
     val Email = sharedPreference!!.getString("Email", "")!!
     val Authtype = sharedPreference!!.getString("Autentication", "")!!
     val EventId = sharedPreference!!.getString("Eventid", "")!!
-
-    return listOf(UserId, Email, Authtype, EventId)
+    val ShortName = sharedPreference!!.getString("Shortname", "")!!
+    val Role = sharedPreference!!.getString("Role", "")!!
+    val Imageurl = sharedPreference!!.getString("Imageurl", "")!!
+    return listOf(UserId, Email, Authtype, EventId, ShortName, Role, Imageurl)
 }

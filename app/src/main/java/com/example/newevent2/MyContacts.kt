@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.navbottom.*
 
 class MyContacts : AppCompatActivity() {
 
@@ -28,23 +30,23 @@ class MyContacts : AppCompatActivity() {
         val viewPager = findViewById<View>(R.id.pager) as ViewPager
 
         // Toolbar
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        setSupportActionBar(findViewById(R.id.toolbar))
+//        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         //------------------------------------------------------------------------------------
-        val eventspinner = findViewById<Spinner>(R.id.eventspinner)
-        val evententity = EventEntity()
-        evententity.getEventNames(object : FirebaseSuccessListenerList {
-            override fun onListCreated(list: ArrayList<Any>) {
-                val eventlistadapter =
-                    ArrayAdapter(this@MyContacts, R.layout.simple_spinner_item_event, list)
-                eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
-                eventspinner.adapter = null
-                eventspinner.adapter = eventlistadapter
-                Log.i("SpinnerList", list.toString())
-            }
-        })
+        //val eventspinner = findViewById<Spinner>(R.id.eventspinner)
+//        val evententity = EventEntity()
+//        evententity.getEventNames(object : FirebaseSuccessListenerList {
+//            override fun onListCreated(list: ArrayList<Any>) {
+//                val eventlistadapter =
+//                    ArrayAdapter(this@MyContacts, R.layout.simple_spinner_item_event, list)
+//                eventlistadapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_event)
+//                eventspinner.adapter = null
+//                eventspinner.adapter = eventlistadapter
+//                Log.i("SpinnerList", list.toString())
+//            }
+//        })
         //------------------------------------------------------------------------------------
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
@@ -76,8 +78,8 @@ class MyContacts : AppCompatActivity() {
                             false
                         findViewById<FloatingActionButton>(R.id.floatingActionButtonVendor).isVisible =
                             false
-                        findViewById<TextView>(R.id.eventlabel).isVisible = true
-                        findViewById<Spinner>(R.id.eventspinner).isVisible = true
+                        //findViewById<TextView>(R.id.eventlabel).isVisible = true
+                        //findViewById<Spinner>(R.id.eventspinner).isVisible = true
 
                         findViewById<ConstraintLayout>(R.id.LocalLayout).isVisible = false
                         findViewById<ConstraintLayout>(R.id.GoogleLayout).isVisible = false
@@ -87,8 +89,8 @@ class MyContacts : AppCompatActivity() {
                             true
                         findViewById<FloatingActionButton>(R.id.floatingActionButtonVendor).isVisible =
                             false
-                        findViewById<TextView>(R.id.eventlabel).isVisible = true
-                        findViewById<Spinner>(R.id.eventspinner).isVisible = true
+                        //findViewById<TextView>(R.id.eventlabel).isVisible = true
+                        //findViewById<Spinner>(R.id.eventspinner).isVisible = true
 
                         findViewById<ConstraintLayout>(R.id.LocalLayout).isVisible = false
                         findViewById<ConstraintLayout>(R.id.GoogleLayout).isVisible = false
@@ -98,8 +100,8 @@ class MyContacts : AppCompatActivity() {
                             false
                         findViewById<FloatingActionButton>(R.id.floatingActionButtonVendor).isVisible =
                             true
-                        findViewById<TextView>(R.id.eventlabel).isVisible = false
-                        findViewById<Spinner>(R.id.eventspinner).isVisible = false
+                        //findViewById<TextView>(R.id.eventlabel).isVisible = false
+                        //findViewById<Spinner>(R.id.eventspinner).isVisible = false
                     }
                 }
 
@@ -111,6 +113,28 @@ class MyContacts : AppCompatActivity() {
 
                 }
             })
+        }
+
+        imageButton1.setOnClickListener {
+            val home = Intent(this, Welcome::class.java)
+            startActivity(home)
+        }
+        imageButton2.setOnClickListener {
+            val calendar = Intent(this, MyCalendar::class.java)
+            //calendar.putExtra("eventkey", eventkey)
+            startActivity(calendar)
+        }
+
+        imageButton.setOnClickListener {
+            val events = Intent(this, EventDetail::class.java)
+            //contacts.putExtra("eventkey", eventkey)
+            startActivity(events)
+        }
+
+        imageButton4.setOnClickListener {
+            val notes = Intent(this, MyNotes::class.java)
+            //notes.putExtra("eventkey", eventkey)
+            startActivity(notes)
         }
     }
 }

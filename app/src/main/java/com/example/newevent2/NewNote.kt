@@ -38,13 +38,20 @@ class NewNote : AppCompatActivity() {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = "New Note"
+
         val intent = intent
-        eventkey = intent.getStringExtra("eventkey").toString()
+        //eventkey = intent.getStringExtra("eventkey").toString()
         notekey = intent.getStringExtra("notekey").toString()
 
         if (notekey != "null") {
+            val usersessionlist = getUserSession(this)
+            val userkey = usersessionlist[0]
+            val eventkey = usersessionlist[3]
+
             noteurl = intent.getStringExtra("noteurl").toString()
-            eventkey = intent.getStringExtra("eventid").toString()
+            //eventkey = intent.getStringExtra("eventid").toString()
             val title = intent.getStringExtra("notetitle").toString()
 
             val notetitle = findViewById<TextView>(R.id.notetitle)
@@ -52,7 +59,7 @@ class NewNote : AppCompatActivity() {
 
             storage = FirebaseStorage.getInstance()
             val storageRef =
-                storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/User/Event/$eventkey/Note/$notekey/$noteurl")
+                storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/User/$userkey/Event/$eventkey/Note/$notekey/$noteurl")
             val localFile = File.createTempFile("notes", ".txt")
             storageRef.getFile(localFile).addOnSuccessListener {
 
@@ -167,13 +174,13 @@ class NewNote : AppCompatActivity() {
                 noteurl = uri.lastPathSegment.toString()
                 eventid = eventkey
                 key = notekey
-                summary = note.substring(0, 50) + "..."
+                summary = note.substring(0, 5) + "..." // El titulo debe de tener una extension minima
             }
 
             if (notekey != "null") {
-                noteEntity.editNote(uri, noteurl)
+                noteEntity.editNote(this, uri, noteurl)
             } else {
-                noteEntity.addNote(uri)
+                noteEntity.addNote(this, uri)
             }
 
             // delete text file
@@ -181,5 +188,10 @@ class NewNote : AppCompatActivity() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 }

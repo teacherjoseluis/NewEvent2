@@ -8,9 +8,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/main_toolbar"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="34dp"></include>
+        layout="@layout/main_toolbar"></include>
 
     <ScrollView
         android:layout_width="0dp"

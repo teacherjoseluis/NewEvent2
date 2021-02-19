@@ -32,11 +32,11 @@ import java.lang.ClassCastException
 class ContactsAll : Fragment() {
 
     var contactlist = ArrayList<Contact>()
-    var eventkey: String? = null
+    //var eventkey: String? = null
     lateinit var recyclerViewAllContacts: RecyclerView
     var toolbarmenuflag = false
 
-    lateinit var eventspinner: Spinner
+    //lateinit var eventspinner: Spinner
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +46,7 @@ class ContactsAll : Fragment() {
         val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
         appbartitle.text = "Contacts"
 
-        eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
+        //eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
     }
 
     override fun onCreateView(
@@ -162,21 +162,21 @@ class ContactsAll : Fragment() {
                     toolbar.setOnMenuItemClickListener(androidx.appcompat.widget.Toolbar.OnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.add_guest -> {
-                                val evententity = EventEntity()
-                                evententity.getEventKey(
-                                    eventspinner.selectedItem.toString(),
-                                    object : FirebaseSuccessListenerSingleValue {
-                                        override fun onDatafound(key: String) {
+//                                val evententity = EventEntity()
+//                                evententity.getEventKey(
+//                                    eventspinner.selectedItem.toString(),
+//                                    object : FirebaseSuccessListenerSingleValue {
+//                                        override fun onDatafound(key: String) {
                                             for (index in countselected) {
                                                 val guest = GuestEntity()
-                                                guest.eventid = key
+                                                //guest.eventid = key
                                                 guest.contactid = contactlist[index].key
-                                                guest.addGuest()
+                                                guest.addGuest(activity!!.applicationContext)
                                             }
                                             rvAdapter.onClearSelected()
-                                        }
-                                    }
-                                )
+                                     //   }
+                                  //  }
+                                //)
                                 appbartitle.text = "Contacts"
                                 toolbarmenuflag = false
                                 toolbar.menu.clear()

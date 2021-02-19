@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,13 +48,13 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
         p0.itemView.setOnClickListener {
             val taskdetail = Intent(context, Task_EditDetail::class.java)
             taskdetail.putExtra("taskkey", taskList[p1].key)
-            taskdetail.putExtra("eventid", taskList[p1].eventid)
+            //taskdetail.putExtra("eventid", taskList[p1].eventid)
             taskdetail.putExtra("name", taskList[p1].name)
             taskdetail.putExtra("date", taskList[p1].date)
             taskdetail.putExtra("category", taskList[p1].category)
             taskdetail.putExtra("budget", taskList[p1].budget)
             taskdetail.putExtra("status", taskList[p1].status)
-
+            Log.d("Activity Starts", "Task_EditDetail")
             context.startActivity(taskdetail)
         }
     }
@@ -69,7 +70,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
         val task = TaskEntity()
         task.key = taskList[position].key
-        task.eventid = taskList[position].eventid
+        //task.eventid = taskList[position].eventid
         task.name = taskList[position].name
         task.date = taskList[position].date
         task.budget = taskList[position].budget
@@ -78,13 +79,13 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
         notifyItemRemoved(position)
 
         if (action == "check") {
-            task.editTask("complete")
+            task.editTask(context,"complete")
 
             Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
                     taskList.add(task)
                     notifyItemInserted(taskList.lastIndex)
-                    task.editTask("active")
+                    task.editTask(context,"active")
                 }.show()
         }
     }
@@ -92,7 +93,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
     override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
         val task = TaskEntity()
         task.key = taskList[position].key
-        task.eventid = taskList[position].eventid
+        //task.eventid = taskList[position].eventid
         task.name = taskList[position].name
         task.date = taskList[position].date
         task.budget = taskList[position].budget
@@ -102,16 +103,16 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
         notifyItemRemoved(position)
 
         if (action == "delete") {
-            task.deleteTask()
+            task.deleteTask(context)
 
             Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
                     taskList.add(task)
                     notifyItemInserted(taskList.lastIndex)
-                    task.addTask()
+                    task.addTask(context)
                 }.show()
         } else if (action == "undo") {
-            task.editTask("active")
+            task.editTask(context,"active")
         }
     }
 
