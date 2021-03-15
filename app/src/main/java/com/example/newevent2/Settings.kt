@@ -9,18 +9,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.etname
 import kotlinx.android.synthetic.main.activity_main.saveImageActionButton
-import kotlinx.android.synthetic.main.event_edit.*
-import kotlinx.android.synthetic.main.eventdetail_event.view.*
 import kotlinx.android.synthetic.main.settings.*
 
 class Settings : AppCompatActivity() {
@@ -44,7 +39,7 @@ class Settings : AppCompatActivity() {
         userEntity.key = usersessionlist[0]
 
         userEntity.getUser(object : FirebaseSuccessListenerUser {
-            override fun onUserexists(user: User) {
+            override fun onUserexists(user: com.example.newevent2.Model.User) {
                 uri = Uri.parse(user.imageurl)
 
                 // Load thumbnail

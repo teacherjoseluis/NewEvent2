@@ -170,7 +170,7 @@ class Login() : AppCompatActivity() {
                                 userEntity.getUser(object : FirebaseSuccessListenerUser {
                                     //This is to be changed for a method that obtains the information for the user into a User Session
                                     //This will be then passed as a paramter to Welcome from which all data will be available
-                                    override fun onUserexists(user: User) {
+                                    override fun onUserexists(user: com.example.newevent2.Model.User) {
                                         if (user.email != "") {
 //                                            UserSession.apply {
 //                                                useremail = user.email
@@ -236,7 +236,7 @@ class Login() : AppCompatActivity() {
                             val userEntity = UserEntity()
                             userEntity.key = mAuth.currentUser!!.uid
                             userEntity.getUser(object : FirebaseSuccessListenerUser {
-                                override fun onUserexists(user: User) {
+                                override fun onUserexists(user: com.example.newevent2.Model.User) {
                                     if (user.email != "") {
 //                                        UserSession.apply {
 //                                            useremail = user.email
@@ -300,7 +300,7 @@ class Login() : AppCompatActivity() {
                             val userEntity = UserEntity()
                             userEntity.key = mAuth.currentUser!!.uid
                             userEntity.getUser(object : FirebaseSuccessListenerUser {
-                                override fun onUserexists(user: User) {
+                                override fun onUserexists(user: com.example.newevent2.Model.User) {
                                     if (user.email != "") {
 //                                        UserSession.apply {
 //                                            useremail = user.email

@@ -16,9 +16,6 @@ open class User() :Parcelable {
     var status: String = ""
     var imageurl: String = ""
     var role: String = ""
-
-    //At some point I will be adding the updatedatetime
-    // Need to add the flags to calculate the profile progress
     var hasevent: String = ""
     var hastask: String = ""
     var haspayment: String = ""

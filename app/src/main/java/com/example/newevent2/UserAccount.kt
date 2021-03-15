@@ -1,24 +1,17 @@
 package com.example.newevent2
 
-import android.R
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
-import androidx.core.app.ActivityCompat.finishAfterTransition
-import androidx.core.content.ContextCompat.startActivity
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.android.synthetic.main.onboarding_name.*
 
 
 class UserAccount(var UserEmail: String = "") {
@@ -75,7 +68,7 @@ class UserAccount(var UserEmail: String = "") {
                                 userEntity.getUser(object : FirebaseSuccessListenerUser {
                                     //This is to be changed for a method that obtains the information for the user into a User Session
                                     //This will be then passed as a paramter to Welcome from which all data will be available
-                                    override fun onUserexists(user: User) {
+                                    override fun onUserexists(user: com.example.newevent2.Model.User) {
                                         if (user.email != "") {
 //                                            UserSession.apply {
 //                                                useremail = user.email
@@ -141,7 +134,7 @@ class UserAccount(var UserEmail: String = "") {
                             val userEntity = UserEntity()
                             userEntity.key = mAuth.currentUser!!.uid
                             userEntity.getUser(object : FirebaseSuccessListenerUser {
-                                override fun onUserexists(user: User) {
+                                override fun onUserexists(user: com.example.newevent2.Model.User) {
                                     if (user.email != "") {
 //                                        UserSession.apply {
 //                                            useremail = user.email
@@ -190,7 +183,7 @@ class UserAccount(var UserEmail: String = "") {
                             val userEntity = UserEntity()
                             userEntity.key = mAuth.currentUser!!.uid
                             userEntity.getUser(object : FirebaseSuccessListenerUser {
-                                override fun onUserexists(user: User) {
+                                override fun onUserexists(user: com.example.newevent2.Model.User) {
                                     if (user.email != "") {
 //                                        UserSession.apply {
 //                                            useremail = user.email
