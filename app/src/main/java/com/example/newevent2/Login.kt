@@ -182,7 +182,7 @@ class Login() : AppCompatActivity() {
 //                                            }
                                             val welcome =
                                                 Intent(activity, Welcome::class.java)
-                                            welcome.putExtra("usersession", user)
+                                            //welcome.putExtra("usersession", user)
                                             activity.startActivity(welcome)
                                             activity.finish()
                                         } else {
@@ -260,7 +260,7 @@ class Login() : AppCompatActivity() {
 
                                         val welcome =
                                             Intent(applicationContext, Welcome::class.java)
-                                        welcome.putExtra("usersession", user)
+                                        //welcome.putExtra("usersession", user)
                                         welcome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                                         startActivity(welcome)
                                         Log.d("Activity Starts", "Welcome")
@@ -312,7 +312,7 @@ class Login() : AppCompatActivity() {
 //                                        }
                                         val welcome =
                                             Intent(activity, Welcome::class.java)
-                                        welcome.putExtra("usersession", user)
+                                        //welcome.putExtra("usersession", user)
                                         activity.startActivity(welcome)
                                         activity.finish()
                                     } else {

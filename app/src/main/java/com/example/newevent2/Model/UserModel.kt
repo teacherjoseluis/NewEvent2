@@ -29,7 +29,7 @@ class UserModel(
     private val storageRef = storage.reference
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    fun getUser(dataFetched: FirebaseSuccessListenerUser) {
+    fun getUser(dataFetched: FirebaseSuccessUser) {
         val firebaseUser = User(key)
         val userListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -118,107 +118,7 @@ class UserModel(
             }
     }
 
-    fun login(
-        activity: Activity,
-        authtype: String,
-        UserEmail: String?,
-        UserPassword: String?,
-        credential: AuthCredential?
-    ) {
-        when (authtype) {
-            "email" -> {
-                mAuth.signInWithEmailAndPassword(UserEmail!!, UserPassword!!)
-                if (mAuth.currentUser!!.isEmailVerified) {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.success_email_login),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.notverified_email_login),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-            }
-            else -> {
-                mAuth.signInWithCredential(credential!!)
-                    .addOnCompleteListener(activity) { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(
-                                activity,
-                                activity.getString(R.string.success_sn_login),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            try {
-                                throw task.exception!!
-                            } catch (e: Exception) {
-                                Toast.makeText(
-                                    activity,
-                                    activity.getString(R.string.failure_sn_login),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    }
-            }
-
-
-        }
-    }
-
-    fun logout(
-        activity: Activity,
-        authtype: String,
-        mGoogleSignInClient: GoogleSignInClient?,
-        mFacebookLoginManager: LoginManager?
-    ) {
-        when (authtype) {
-            "google" -> {
-                mGoogleSignInClient!!.signOut().addOnCompleteListener(activity) {
-                }
-            }
-            "facebook" -> {
-                mFacebookLoginManager!!.logOut()
-            }
-        }
-        mAuth.signOut()
-        Toast.makeText(activity, activity.getString(R.string.success_logout), Toast.LENGTH_SHORT)
-            .show()
-    }
-
-    private fun verifyaccount(activity: Activity) {
-        val user = mAuth.currentUser
-        user!!.sendEmailVerification()
-            .addOnCompleteListener(activity) { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(activity, activity.getString(R.string.success_account_verification), Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(activity, activity.getString(R.string.failed_account_verification), Toast.LENGTH_SHORT).show()
-                }
-            }
-    }
-
-    fun sendpasswordreset(activity: Activity, userEmail: String) {
-        mAuth.sendPasswordResetEmail(userEmail)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(activity, activity.getString(R.string.success_password_reset_email), Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.failed_password_reset_email),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-    }
-
-
-    interface FirebaseSuccessListenerUser {
+    interface FirebaseSuccessUser {
         fun onUserexists(user: User)
     }
 }

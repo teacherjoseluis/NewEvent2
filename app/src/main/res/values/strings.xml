@@ -28,6 +28,10 @@
     <string name="failed_account_verification">Your account couldnt\' be verified</string>
     <string name="success_password_reset_email">Check your email account for a password reset email</string>
     <string name="failed_password_reset_email">The password reset email couldn\'t be sent</string>
+    <string name="error_valid_emailaccount">A valid email account is required!</string>
+    <string name="welcome_message">Welcome Back!</string>
+    <string name="onboarding_message">Welcome, we\'ll need to create your account</string>
+    <string name="login_error_message">There was an error in the log in</string>
 
     <string-array name="role" >
         <item>Bride</item>

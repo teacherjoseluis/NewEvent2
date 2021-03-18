@@ -1,10 +1,16 @@
 package com.example.newevent2.Model
 
-import com.example.newevent2.FirebaseSuccessListenerUser
-import com.example.newevent2.User
+import android.app.Activity
+import android.widget.Toast
+import com.example.newevent2.R
+import com.facebook.login.LoginManager
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
 
-open class User(
-    var key: String?,
+class User(
+    var key: String = "",
     var eventid: String = "",
     var shortname: String = "",
     var email: String = "",
@@ -20,4 +26,126 @@ open class User(
     var haspayment: String = "",
     var hasguest: String = "",
     var hasvendor: String = ""
-)
+) {
+
+    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    fun login(
+        activity: Activity,
+        authtype: String,
+        UserEmail: String?,
+        UserPassword: String?,
+        credential: AuthCredential?,
+        dataFetched: FirebaseUserId
+    ) {
+        when (authtype) {
+            "email" -> {
+                mAuth.signInWithEmailAndPassword(UserEmail!!, UserPassword!!)
+                if (mAuth.currentUser!!.isEmailVerified) {
+                    Toast.makeText(
+                        activity,
+                        activity.getString(R.string.success_email_login),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    //Upon login pass UserId to the Presenter
+                    dataFetched.onUserId(mAuth.currentUser!!.uid)
+                } else {
+                    Toast.makeText(
+                        activity,
+                        activity.getString(R.string.notverified_email_login),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            }
+            else -> {
+                mAuth.signInWithCredential(credential!!)
+                    .addOnCompleteListener(activity) { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(
+                                activity,
+                                activity.getString(R.string.success_sn_login),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            //Upon login pass UserId to the Presenter
+                            dataFetched.onUserId(mAuth.currentUser!!.uid)
+                        } else {
+                            try {
+                                throw task.exception!!
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                    activity,
+                                    activity.getString(R.string.failure_sn_login),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+            }
+        }
+    }
+
+    fun logout(
+        activity: Activity,
+        authtype: String,
+        mGoogleSignInClient: GoogleSignInClient?,
+        mFacebookLoginManager: LoginManager?
+    ) {
+        when (authtype) {
+            "google" -> {
+                mGoogleSignInClient!!.signOut().addOnCompleteListener(activity) {
+                }
+            }
+            "facebook" -> {
+                mFacebookLoginManager!!.logOut()
+            }
+        }
+        mAuth.signOut()
+        Toast.makeText(activity, activity.getString(R.string.success_logout), Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun verifyaccount(activity: Activity) {
+        val user = mAuth.currentUser
+        user!!.sendEmailVerification()
+            .addOnCompleteListener(activity) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        activity,
+                        activity.getString(R.string.success_account_verification),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        activity,
+                        activity.getString(R.string.failed_account_verification),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+    }
+
+    fun sendpasswordreset(activity: Activity, userEmail: String) {
+        mAuth.sendPasswordResetEmail(userEmail)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        activity,
+                        activity.getString(R.string.success_password_reset_email),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        activity,
+                        activity.getString(R.string.failed_password_reset_email),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+    }
+
+    interface FirebaseUserId {
+        fun onUserId(userid: String)
+    }
+}
+
