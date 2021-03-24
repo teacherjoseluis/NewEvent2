@@ -24,20 +24,7 @@ import kotlinx.android.synthetic.main.login.*
 
 class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
 
-    //private lateinit var mGoogleSignInClient: GoogleSignInClient
-    private var mCallbackManager: CallbackManager? = null
-    //private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    //private var user: UserAccount? = null
-
-    // ----------------------------------------
-    // From User Account
-    //var UserEmail: String = ""
-    //var UserPassword: String = ""
-    //var authtype: String = ""
-    //private var UserSession = User()
-    //private var logoutresult = false
-    //-----------------------------------------
-
+    private lateinit var mCallbackManager: CallbackManager
     private lateinit var presenter: LoginPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,8 +82,6 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
                             this@LoginView,
                             this@LoginView,
                             "facebook",
-                            null,
-                            null,
                             credential
                         )
                     }
@@ -126,8 +111,6 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
                     this,
                     this@LoginView,
                     "google",
-                    null,
-                    null,
                     credential
                 )
             } catch (e: ApiException) {
@@ -158,7 +141,10 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
             Toast.LENGTH_SHORT
         ).show()
 
-        //TODO revisar la correcta llamada a la funcionalidad de Onboarding
+        //TODO Onboarding_Name recibe un objeto User que en este caso ya no estaria mandando
+        //se me ocurre ne este caso que se maneje toda la funcionalidad de Onboarding solamente en una vista y no en dos
+        //Se queda pendinete hacer un refactor de esa funcionalidad
+
         val onboardingname =
             Intent(this, Onboarding_Name::class.java)
         startActivity(onboardingname)
@@ -171,6 +157,4 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
             Toast.LENGTH_SHORT
         ).show()
     }
-
-    //--------------------------------------------------------------------------------------------------------
 }

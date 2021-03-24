@@ -1,6 +1,8 @@
 package com.example.newevent2.Model
 
 import android.app.Activity
+import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.example.newevent2.R
 import com.facebook.login.LoginManager
@@ -85,6 +87,23 @@ class User(
         }
     }
 
+    fun saveUserSession (activity: Activity){
+        // Clearing User Session
+        activity.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).edit().clear().apply()
+
+        //Creating User Session
+        val usersession =
+            activity.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+
+        val sessionEditor = usersession!!.edit()
+        sessionEditor.putString("UID", key)
+        sessionEditor.putString("Email", email)
+        sessionEditor.putString("Autentication", authtype)
+        sessionEditor.putString("Eventid", eventid)
+        sessionEditor.putString("Shortname", shortname)
+        sessionEditor.apply()
+    }
+
     fun logout(
         activity: Activity,
         authtype: String,
@@ -103,6 +122,19 @@ class User(
         mAuth.signOut()
         Toast.makeText(activity, activity.getString(R.string.success_logout), Toast.LENGTH_SHORT)
             .show()
+    }
+
+    fun signup(activity: Activity, UserEmail: String, UserPassword: String) {
+        mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
+            .addOnCompleteListener(activity) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(activity, activity.getString(R.string.email_signup_success), Toast.LENGTH_SHORT).show()
+                    verifyaccount(activity)
+                } else {
+                    val errorcode = task.exception!!.message
+                    Toast.makeText(activity, errorcode, Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     private fun verifyaccount(activity: Activity) {

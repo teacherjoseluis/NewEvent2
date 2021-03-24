@@ -2,37 +2,38 @@ package com.example.newevent2.MVP
 
 import android.app.Activity
 import android.view.View
+import com.example.newevent2.LoginEmailView
 import com.example.newevent2.LoginView
 import com.example.newevent2.Model.User
 import com.example.newevent2.Model.UserModel
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.AuthCredential
 
-class LoginPresenter(
-    view: LoginView,
+class LoginEmailPresenter(
+    view: LoginEmailView,
     activity: Activity,
-    authtype: String,
-    credential: AuthCredential
+    UserEmail: String,
+    UserPassword: String
 ) {
 
-    var viewLogin: LoginView = view
+    var viewLogin: LoginEmailView = view
 
     init {
-        loginUser(activity, authtype, credential)
+        loginUser(activity, UserEmail, UserPassword)
     }
 
     private fun loginUser(
         activity: Activity,
-        authtype: String,
-        credential: AuthCredential
+        UserEmail: String,
+        UserPassword: String
     ) {
         val user = User()
         user.login(
             activity,
-            authtype,
+            "email",
+            UserEmail,
+            UserPassword,
             null,
-            null,
-            credential,
             object : User.FirebaseUserId {
                 override fun onUserId(userid: String) {
                     if (userid != "") {

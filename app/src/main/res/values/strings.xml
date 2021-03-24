@@ -28,10 +28,13 @@
     <string name="failed_account_verification">Your account couldnt\' be verified</string>
     <string name="success_password_reset_email">Check your email account for a password reset email</string>
     <string name="failed_password_reset_email">The password reset email couldn\'t be sent</string>
-    <string name="error_valid_emailaccount">A valid email account is required!</string>
+    <string name="error_valid_emailaccount">A valid email account is required</string>
     <string name="welcome_message">Welcome Back!</string>
     <string name="onboarding_message">Welcome, we\'ll need to create your account</string>
     <string name="login_error_message">There was an error in the log in</string>
+    <string name="email_signup_success">Account was succesfully created</string>
+    <string name="password_requiredformat">The required formatting for the password is 8 characters, 1 upper case, 1 number and 1 symbol</string>
+    <string name="passwords_dontmatch">Both passwords are not matching</string>
 
     <string-array name="role" >
         <item>Bride</item>
