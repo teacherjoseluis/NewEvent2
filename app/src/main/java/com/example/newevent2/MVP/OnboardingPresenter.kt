@@ -19,6 +19,7 @@ class OnboardingPresenter(
     user: User,
     event: Event
 ) {
+    
 
     var viewOnboarding: OnboardingView = view
 
