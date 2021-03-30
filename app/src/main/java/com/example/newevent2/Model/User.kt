@@ -128,7 +128,7 @@ class User(
         mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
             .addOnCompleteListener(activity) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(activity, activity.getString(R.string.email_signup_success), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, context.getString(R.string.email_signup_success), Toast.LENGTH_SHORT).show()
                     verifyaccount(activity)
                 } else {
                     val errorcode = task.exception!!.message

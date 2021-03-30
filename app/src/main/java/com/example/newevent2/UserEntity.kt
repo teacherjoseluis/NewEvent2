@@ -48,7 +48,7 @@ class UserEntity : User() {
                     //userexists = useritem
                     //}
                 }
-                dataFetched.onUserexists(userexists)
+                //dataFetched.onUserexists(userexists)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

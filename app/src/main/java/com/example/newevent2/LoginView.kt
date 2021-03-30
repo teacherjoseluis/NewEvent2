@@ -134,7 +134,7 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
         finish()
     }
 
-    override fun onOnboarding() {
+    override fun onOnboarding(userid: String) {
         Toast.makeText(
             this,
             getString(R.string.onboarding_message),
@@ -146,7 +146,7 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
         //Se queda pendinete hacer un refactor de esa funcionalidad
 
         val onboardingname =
-            Intent(this, Onboarding_Name::class.java)
+            Intent(this, Onboarding_Name::class.java) //OnboardingView pasando userid como parametro
         startActivity(onboardingname)
     }
 

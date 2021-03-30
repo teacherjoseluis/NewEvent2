@@ -35,6 +35,14 @@
     <string name="email_signup_success">Account was succesfully created</string>
     <string name="password_requiredformat">The required formatting for the password is 8 characters, 1 upper case, 1 number and 1 symbol</string>
     <string name="passwords_dontmatch">Both passwords are not matching</string>
+    <string name="error_shortnameinput">What\'s your name?</string>
+    <string name="error_eventnameinput">What is the name of your Event?</string>
+    <string name="error_eventdateinput">What is the date of your Event?</string>
+    <string name="error_eventtimeinput">At what time is your Event?</string>
+    <string name="error_eventlocationinput">What is the location of your Event?</string>
+    <string name="sucess_onboardingwelcome">Your account and event were created, Welcome!</string>
+    <string name="error_onboardingcreateaccount">There was an error trying to create your account</string>
+    <string name="error_onboardingcreateevent">There was an error trying to create the event</string>
 
     <string-array name="role" >
         <item>Bride</item>

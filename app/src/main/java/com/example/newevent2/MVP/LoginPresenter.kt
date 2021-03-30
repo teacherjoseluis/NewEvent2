@@ -44,7 +44,7 @@ class LoginPresenter(
                                     user.saveUserSession(activity)
                                     viewLogin.onSuccess()
                                 } else {
-                                    viewLogin.onOnboarding()
+                                    viewLogin.onOnboarding(userid)
                                 }
                             }
                         })
@@ -57,7 +57,7 @@ class LoginPresenter(
 
     interface ViewLoginActivity {
         fun onSuccess()
-        fun onOnboarding()
+        fun onOnboarding(userid: String)
         fun onLoginError()
     }
 }

@@ -11,10 +11,7 @@ import com.example.newevent2.R
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.*
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
@@ -95,7 +92,7 @@ class UserModel(
         }
     }
 
-    fun addUser(user: User) {
+    fun addUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
         val user = hashMapOf(
             "eventid" to user.eventid,
             "shortname" to user.shortname,
@@ -109,16 +106,28 @@ class UserModel(
             "status" to "A"
         )
 
-        postRef.setValue(user as Map<String, Any>)
-            .addOnFailureListener {
-                return@addOnFailureListener
+        postRef.setValue(user as Map<String, Any>
+        ) { error, _ ->
+            if (error != null) {
+                //Se loggea un error al guardar el usuario TODO databaseError.getMessage()
+                savesuccessflag.onSaveSuccess(false)
+            } else {
+                savesuccessflag.onSaveSuccess(true)
             }
-            .addOnSuccessListener {
-                return@addOnSuccessListener
-            }
+        }
+//            .addOnFailureListener {
+//                return@addOnFailureListener
+//            }
+//            .addOnSuccessListener {
+//                return@addOnSuccessListener
+//            }
     }
 
     interface FirebaseSuccessUser {
         fun onUserexists(user: User)
+    }
+
+    interface FirebaseSaveSuccess {
+        fun onSaveSuccess(flag: Boolean)
     }
 }

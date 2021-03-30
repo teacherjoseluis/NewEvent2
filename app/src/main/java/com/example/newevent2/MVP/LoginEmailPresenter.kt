@@ -45,7 +45,7 @@ class LoginEmailPresenter(
                                     user.saveUserSession(activity)
                                     viewLogin.onSuccess()
                                 } else {
-                                    viewLogin.onOnboarding()
+                                    viewLogin.onOnboarding(userid)
                                 }
                             }
                         })
@@ -58,7 +58,7 @@ class LoginEmailPresenter(
 
     interface ViewLoginActivity {
         fun onSuccess()
-        fun onOnboarding()
+        fun onOnboarding(userid: String)
         fun onLoginError()
     }
 }

@@ -113,7 +113,7 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewLoginActivit
         finish()
     }
 
-    override fun onOnboarding() {
+    override fun onOnboarding(userid: String) {
         Toast.makeText(
             this,
             getString(R.string.onboarding_message),
