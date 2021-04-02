@@ -78,7 +78,8 @@
         android:paddingRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mailinput">
+        app:layout_constraintTop_toBottomOf="@id/mailinput"
+        app:passwordToggleEnabled="true">
 
         <EditText
             android:id="@+id/editTextTextPassword"
@@ -89,18 +90,6 @@
             android:ems="10"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <ImageView
-        android:id="@+id/passwordimage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/passwordinput"
-        app:layout_constraintEnd_toEndOf="@id/passwordinput"
-        app:layout_constraintTop_toTopOf="@id/passwordinput"
-        app:srcCompat="@drawable/icons8_key" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordinput2"
@@ -116,7 +105,8 @@
         android:paddingRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordinput">
+        app:layout_constraintTop_toBottomOf="@id/passwordinput"
+        app:passwordToggleEnabled="true">
 
         <EditText
             android:id="@+id/editTextTextPassword2"
@@ -127,19 +117,6 @@
             android:ems="10"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
-
-
-    <ImageView
-        android:id="@+id/passwordimage2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/passwordinput2"
-        app:layout_constraintEnd_toEndOf="@id/passwordinput2"
-        app:layout_constraintTop_toTopOf="@id/passwordinput2"
-        app:srcCompat="@drawable/icons8_key" />
 
     <Button
         android:id="@+id/button"

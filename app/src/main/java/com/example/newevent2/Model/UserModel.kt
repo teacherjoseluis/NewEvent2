@@ -71,7 +71,7 @@ class UserModel(
         //postRef.child("authtype").setValue(user.authtype)
         //postRef.child("imageurl").setValue(user.imageurl)
         postRef.child("role").setValue(user.role)
-        //postRef.child("hasevent").setValue(user.hasevent)
+        postRef.child("hasevent").setValue(user.hasevent)
         //postRef.child("hastask").setValue(user.hastask)
         //postRef.child("haspayment").setValue(user.haspayment)
         //postRef.child("hasguest").setValue(user.hasguest)
@@ -93,7 +93,8 @@ class UserModel(
     }
 
     fun addUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
-        val user = hashMapOf(
+
+        val userfb = hashMapOf(
             "eventid" to user.eventid,
             "shortname" to user.shortname,
             "email" to user.email,
@@ -101,12 +102,18 @@ class UserModel(
             "language" to user.language,
             "createdatetime" to getCurrentDateTime(),
             "authtype" to user.authtype,
+            "imageurl" to "",
             "role" to user.role,
             "hasevent" to user.hasevent,
+            "hastask" to "",
+            "haspayment" to "",
+            "hasguest" to "",
+            "hasvendor" to "",
             "status" to "A"
         )
 
-        postRef.setValue(user as Map<String, Any>
+        postRef.setValue(
+            userfb as Map<String, Any>
         ) { error, _ ->
             if (error != null) {
                 //Se loggea un error al guardar el usuario TODO databaseError.getMessage()

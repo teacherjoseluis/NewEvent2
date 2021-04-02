@@ -65,9 +65,9 @@ class Welcome : AppCompatActivity() {
         val usersessionlist = getUserSession(this)
         if (usersessionlist[0] == "") {
             val loginactivity =
-                Intent(this, Login::class.java)
+                Intent(this, LoginView::class.java)
             startActivity(loginactivity)
-            finish()
+            //finish()
         }
 
     }

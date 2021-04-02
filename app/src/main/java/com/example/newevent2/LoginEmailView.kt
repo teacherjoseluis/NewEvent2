@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.login_email.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewLoginActivity {
+class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginActivity {
 
     private lateinit var presenter: LoginEmailPresenter
 
@@ -32,7 +32,6 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewLoginActivit
         } else {
             //SignUp
             passwordinput2.isVisible = false
-            passwordimage2.isVisible = false
         }
 
         button.setOnClickListener {
@@ -76,7 +75,7 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewLoginActivit
                     val userEmail = mailinputedit.text.toString()
                     val userPassword = editTextTextPassword.text.toString()
                     presenter =
-                        LoginEmailPresenter(this, this,  userEmail, userPassword)
+                        LoginEmailPresenter(this, this, userEmail, userPassword)
                 }
             }
         }
@@ -104,7 +103,7 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewLoginActivit
         return matcher.matches()
     }
 
-    override fun onSuccess() {
+    override fun onLoginEmailSuccess() {
         Toast.makeText(
             this,
             getString(R.string.welcome_message),
@@ -113,7 +112,7 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewLoginActivit
         finish()
     }
 
-    override fun onOnboarding(userid: String) {
+    override fun onOnboarding(userid: String, email: String, authtype: String) {
         Toast.makeText(
             this,
             getString(R.string.onboarding_message),
@@ -124,16 +123,23 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewLoginActivit
         //        //se me ocurre ne este caso que se maneje toda la funcionalidad de Onboarding solamente en una vista y no en dos
         //        //Se queda pendinete hacer un refactor de esa funcionalidad")
 
-        val onboardingname =
-            Intent(this, Onboarding_Name::class.java)
-        startActivity(onboardingname)
+        val onboarding =
+            Intent(this, OnboardingView::class.java)
+        onboarding.putExtra("userid", userid)
+        onboarding.putExtra("email", email)
+        onboarding.putExtra("authtype", authtype)
+        startActivity(onboarding)
     }
 
-    override fun onLoginError() {
+    override fun onLoginEmailError() {
         Toast.makeText(
             this,
             getString(R.string.login_error_message),
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    interface ViewEmailLoginActivity {
+        fun onLoginEmailSuccess()
     }
 }

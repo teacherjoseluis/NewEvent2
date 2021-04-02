@@ -43,6 +43,7 @@
     <string name="sucess_onboardingwelcome">Your account and event were created, Welcome!</string>
     <string name="error_onboardingcreateaccount">There was an error trying to create your account</string>
     <string name="error_onboardingcreateevent">There was an error trying to create the event</string>
+    <string name="failed_email_login">There was a problem trying to log in or the account does not exist</string>
 
     <string-array name="role" >
         <item>Bride</item>

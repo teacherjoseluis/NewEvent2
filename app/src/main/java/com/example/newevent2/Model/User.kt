@@ -43,22 +43,35 @@ class User(
         when (authtype) {
             "email" -> {
                 mAuth.signInWithEmailAndPassword(UserEmail!!, UserPassword!!)
-                if (mAuth.currentUser!!.isEmailVerified) {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.success_email_login),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    //Upon login pass UserId to the Presenter
-                    dataFetched.onUserId(mAuth.currentUser!!.uid)
-                } else {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.notverified_email_login),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
+                    .addOnCompleteListener(activity) { task ->
+                        if(task.isSuccessful) {
+                            if (mAuth.currentUser!!.isEmailVerified) {
+                                Toast.makeText(
+                                    activity,
+                                    activity.getString(R.string.success_email_login),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                //Upon login pass UserId to the Presenter
+                                dataFetched.onUserId(mAuth.currentUser!!.uid, UserEmail!!)
+                            } else {
+                                Toast.makeText(
+                                    activity,
+                                    activity.getString(R.string.notverified_email_login),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            try {
+                                throw task.exception!!
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                    activity,
+                                    activity.getString(R.string.failed_email_login),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
             }
             else -> {
                 mAuth.signInWithCredential(credential!!)
@@ -70,7 +83,7 @@ class User(
                                 Toast.LENGTH_SHORT
                             ).show()
                             //Upon login pass UserId to the Presenter
-                            dataFetched.onUserId(mAuth.currentUser!!.uid)
+                            dataFetched.onUserId(mAuth.currentUser!!.uid, mAuth.currentUser!!.email.toString())
                         } else {
                             try {
                                 throw task.exception!!
@@ -128,7 +141,7 @@ class User(
         mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
             .addOnCompleteListener(activity) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(activity, context.getString(R.string.email_signup_success), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, activity.getString(R.string.email_signup_success), Toast.LENGTH_SHORT).show()
                     verifyaccount(activity)
                 } else {
                     val errorcode = task.exception!!.message
@@ -177,7 +190,7 @@ class User(
     }
 
     interface FirebaseUserId {
-        fun onUserId(userid: String)
+        fun onUserId(userid: String, email: String)
     }
 }
 

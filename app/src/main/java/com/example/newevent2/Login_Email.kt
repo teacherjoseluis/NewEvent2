@@ -25,7 +25,6 @@ class Login_Email : AppCompatActivity() {
             forgotemaillink.isVisible = false
         } else {
             passwordinput2.isVisible = false
-            passwordimage2.isVisible = false
         }
 
         button.setOnClickListener {

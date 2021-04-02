@@ -34,7 +34,7 @@ class LoginPresenter(
             null,
             credential,
             object : User.FirebaseUserId {
-                override fun onUserId(userid: String) {
+                override fun onUserId(userid: String, email: String) {
                     if (userid != "") {
                         val userModel = UserModel(userid)
                         userModel.getUser(object : UserModel.FirebaseSuccessUser {
@@ -42,9 +42,9 @@ class LoginPresenter(
                                 if (user.createdatetime != "") {
                                     //save user into local storage
                                     user.saveUserSession(activity)
-                                    viewLogin.onSuccess()
+                                    viewLogin.onLoginSuccess()
                                 } else {
-                                    viewLogin.onOnboarding(userid)
+                                    viewLogin.onOnboarding(userid, email, authtype)
                                 }
                             }
                         })
@@ -56,8 +56,8 @@ class LoginPresenter(
     }
 
     interface ViewLoginActivity {
-        fun onSuccess()
-        fun onOnboarding(userid: String)
+        fun onLoginSuccess()
+        fun onOnboarding(userid: String, email: String, authtype: String)
         fun onLoginError()
     }
 }

@@ -19,11 +19,13 @@ class OnboardingPresenter(
     user: User,
     event: Event
 ) {
-    
 
     var viewOnboarding: OnboardingView = view
 
     init {
+        user!!.country = activity.resources.configuration.locale.country
+        user!!.language = activity.resources.configuration.locale.language
+
         onboardUser(activity, user, event)
     }
 
@@ -33,6 +35,8 @@ class OnboardingPresenter(
         event: Event
     ) {
         val userModel = UserModel(user.key)
+
+        // Including more information for the user
         userModel.addUser(user, object : UserModel.FirebaseSaveSuccess {
             override fun onSaveSuccess(flag: Boolean) {
                 if (flag) {
@@ -42,6 +46,7 @@ class OnboardingPresenter(
                             if (eventid != "") {
                                 // Event was saved successfully and will be passed to the user so the session can be saved
                                 user.eventid = eventid
+                                user.hasevent = "Y"
                                 // This is made to save the eventid to the user, although several other values will be overwritten.
                                 // Hopefully this won't be a problem.
                                 userModel.editUser(user)
@@ -52,22 +57,22 @@ class OnboardingPresenter(
 //                                Eventid
 //                                Shortname
                                 user.saveUserSession(activity)
-                                viewOnboarding.onSuccess()
+                                viewOnboarding.onOnboardingSuccess()
                             } else {
                                 // There was an issue when saving the event
-                                viewOnboarding.onError("EVENTERROR")
+                                viewOnboarding.onOnboardingError("EVENTERROR")
                             }
                         }
                     })
                 } else {
-                    viewOnboarding.onError("USERERROR")
+                    viewOnboarding.onOnboardingError("USERERROR")
                 }
             }
         })
     }
 
     interface ViewOnboardingActivity {
-        fun onSuccess()
-        fun onError(errorcode: String) // A fin de que se pueda especificar en que parte del proceso se dio el error
+        fun onOnboardingSuccess()
+        fun onOnboardingError(errorcode: String) // A fin de que se pueda especificar en que parte del proceso se dio el error
     }
 }

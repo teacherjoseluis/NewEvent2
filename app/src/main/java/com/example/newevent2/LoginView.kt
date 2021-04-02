@@ -35,7 +35,7 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
         FacebookSdk.sdkInitialize(applicationContext)
         mCallbackManager = CallbackManager.Factory.create()
 
-        // Email Sign In
+        // Email Sign Up
         signemail.setOnClickListener {
             var inputvalflag = true
             if (mailinputeditlogin.text.toString().isEmpty()) {
@@ -45,17 +45,19 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
 
             // Call to Login Email Activity
             if (inputvalflag) {
-                val loginemail = Intent(this, Login_Email::class.java)
+                val loginemail = Intent(this, LoginEmailView::class.java)
                 loginemail.putExtra("email", mailinputeditlogin.text.toString())
                 startActivity(loginemail)
+                //finish()
             }
         }
 
-        // Email Sign Up
+        // Email Sign In
         signemaillink.setOnClickListener {
-            val loginemail = Intent(this, Login_Email::class.java)
+            val loginemail = Intent(this, LoginEmailView::class.java)
             loginemail.putExtra("email", "")
             startActivity(loginemail)
+            finish()
         }
 
         // Google Sign In
@@ -125,7 +127,7 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
         private val RC_SIGN_IN = 9001
     }
 
-    override fun onSuccess() {
+    override fun onLoginSuccess() {
         Toast.makeText(
             this,
             getString(R.string.welcome_message),
@@ -134,7 +136,7 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
         finish()
     }
 
-    override fun onOnboarding(userid: String) {
+    override fun onOnboarding(userid: String, email: String, authtype: String) {
         Toast.makeText(
             this,
             getString(R.string.onboarding_message),
@@ -145,9 +147,13 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
         //se me ocurre ne este caso que se maneje toda la funcionalidad de Onboarding solamente en una vista y no en dos
         //Se queda pendinete hacer un refactor de esa funcionalidad
 
-        val onboardingname =
-            Intent(this, Onboarding_Name::class.java) //OnboardingView pasando userid como parametro
-        startActivity(onboardingname)
+        val onboarding =
+            Intent(this, OnboardingView::class.java)
+        //OnboardingView pasando userid como parametro
+        onboarding.putExtra("userid", userid)
+        onboarding.putExtra("email", email)
+        onboarding.putExtra("authtype", authtype)
+        startActivity(onboarding)
     }
 
     override fun onLoginError() {
@@ -157,4 +163,6 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity {
             Toast.LENGTH_SHORT
         ).show()
     }
+
+
 }

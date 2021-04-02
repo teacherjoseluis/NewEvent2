@@ -22,6 +22,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.MVP.OnboardingPresenter
 import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.User
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -29,11 +30,12 @@ import kotlinx.android.synthetic.main.onboarding.*
 import kotlinx.android.synthetic.main.onboarding.buttonname
 import kotlinx.android.synthetic.main.onboarding.nameinputedit
 import kotlinx.android.synthetic.main.onboarding_name.*
+import kotlinx.android.synthetic.main.welcome.*
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
-class OnboardingView(user: com.example.newevent2.Model.User) : AppCompatActivity(),
+class OnboardingView() : AppCompatActivity(),
     OnboardingPresenter.ViewOnboardingActivity {
 
     private val autocompletePlaceCode = 1
@@ -43,11 +45,16 @@ class OnboardingView(user: com.example.newevent2.Model.User) : AppCompatActivity
     private var event_longitude = 0.0
     private var event_address: String? = null
 
-    private var userSession = user
     private lateinit var presenter: OnboardingPresenter
+    private lateinit var userSession: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        userSession = User()
+        userSession.key = intent.getStringExtra("userid").toString()
+        userSession.email = intent.getStringExtra("email").toString()
+        userSession.authtype = intent.getStringExtra("authtype").toString()
+
         setContentView(R.layout.onboarding)
 
         // Hide Layout for Onboarding Event
@@ -121,7 +128,6 @@ class OnboardingView(user: com.example.newevent2.Model.User) : AppCompatActivity
                             location = etlocation.text.toString()
                         }
                         presenter = OnboardingPresenter(this, this, userSession, event)
-                        this.onBackPressed()
                     }
                 }
             }
@@ -160,7 +166,7 @@ class OnboardingView(user: com.example.newevent2.Model.User) : AppCompatActivity
 
     }
 
-    override fun onSuccess() {
+    override fun onOnboardingSuccess() {
         Toast.makeText(
             this,
             getString(R.string.sucess_onboardingwelcome),
@@ -169,7 +175,7 @@ class OnboardingView(user: com.example.newevent2.Model.User) : AppCompatActivity
         finish()
     }
 
-    override fun onError(errorcode: String) {
+    override fun onOnboardingError(errorcode: String) {
         when(errorcode) {
             "USERERROR" -> Toast.makeText(
                 this,

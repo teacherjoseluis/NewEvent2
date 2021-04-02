@@ -88,6 +88,11 @@
         <activity android:name=".Onboarding_Event" />
         <activity android:name=".MyEvents" />
 
+        <activity android:name=".LoginView" />
+        <activity android:name=".LoginEmailView" />
+        <activity android:name=".OnboardingView" />
+
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

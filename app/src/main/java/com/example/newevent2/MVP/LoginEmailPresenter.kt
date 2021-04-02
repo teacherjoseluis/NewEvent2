@@ -16,7 +16,7 @@ class LoginEmailPresenter(
     UserPassword: String
 ) {
 
-    var viewLogin: LoginEmailView = view
+    var viewEmailLogin: LoginEmailView = view
 
     init {
         loginUser(activity, UserEmail, UserPassword)
@@ -35,7 +35,7 @@ class LoginEmailPresenter(
             UserPassword,
             null,
             object : User.FirebaseUserId {
-                override fun onUserId(userid: String) {
+                override fun onUserId(userid: String, email: String) {
                     if (userid != "") {
                         val userModel = UserModel(userid)
                         userModel.getUser(object : UserModel.FirebaseSuccessUser {
@@ -43,22 +43,22 @@ class LoginEmailPresenter(
                                 if (user.createdatetime != "") {
                                     //save user into local storage
                                     user.saveUserSession(activity)
-                                    viewLogin.onSuccess()
+                                    viewEmailLogin.onLoginEmailSuccess()
                                 } else {
-                                    viewLogin.onOnboarding(userid)
+                                    viewEmailLogin.onOnboarding(userid, email, "email")
                                 }
                             }
                         })
                     } else {
-                        viewLogin.onLoginError()
+                        viewEmailLogin.onLoginEmailError()
                     }
                 }
             })
     }
 
-    interface ViewLoginActivity {
-        fun onSuccess()
-        fun onOnboarding(userid: String)
-        fun onLoginError()
+    interface ViewEmailLoginActivity {
+        fun onLoginEmailSuccess()
+        fun onOnboarding(userid: String, email: String, authtype: String)
+        fun onLoginEmailError()
     }
 }

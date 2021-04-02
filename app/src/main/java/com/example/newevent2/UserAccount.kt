@@ -80,7 +80,7 @@ class UserAccount(var UserEmail: String = "") {
 //                                            }
                                             val welcome =
                                                 Intent(activity, Welcome::class.java)
-                                            welcome.putExtra("usersession", user)
+                                            //welcome.putExtra("usersession", user)
                                             activity.startActivity(welcome)
                                             activity.finish()
                                         } else {
@@ -146,7 +146,7 @@ class UserAccount(var UserEmail: String = "") {
 //                                        }
                                         val welcome =
                                             Intent(activity, Welcome::class.java)
-                                        welcome.putExtra("usersession", user)
+                                        //welcome.putExtra("usersession", user)
                                         activity.startActivity(welcome)
                                         activity.finish()
                                     } else {
@@ -195,7 +195,7 @@ class UserAccount(var UserEmail: String = "") {
 //                                        }
                                         val welcome =
                                             Intent(activity, Welcome::class.java)
-                                        welcome.putExtra("usersession", user)
+                                        //welcome.putExtra("usersession", user)
                                         activity.startActivity(welcome)
                                         activity.finish()
                                     } else {

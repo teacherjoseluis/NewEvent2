@@ -42,10 +42,10 @@ class EventModel (context: Context) {
                 savesuccessflag.onSaveSuccess("")
             } else {
                 // Saving in the log the new creation of the event
-                saveLog(context, "INSERT", "event", myRef.key.toString(), event.name)
+                saveLog(context, "INSERT", "event", postRef.key.toString(), event.name)
                 //Save Event image in Storage
                 if (uri != null) {
-                    val imageRef = storageRef.child("User/$userid/Event/${myRef.key.toString()}/images/${uri.lastPathSegment}")
+                    val imageRef = storageRef.child("User/$userid/Event/${postRef.key.toString()}/images/${uri.lastPathSegment}")
                     val uploadTask = imageRef.putFile(uri)
 
                     uploadTask.addOnFailureListener {
@@ -54,7 +54,7 @@ class EventModel (context: Context) {
                         return@addOnSuccessListener
                     }
                 }
-                savesuccessflag.onSaveSuccess(myRef.key.toString())
+                savesuccessflag.onSaveSuccess(postRef.key.toString())
             }
         }
     }
