@@ -55,11 +55,10 @@ class OnboardingView() : AppCompatActivity(),
         userSession.email = intent.getStringExtra("email").toString()
         userSession.authtype = intent.getStringExtra("authtype").toString()
 
-        setContentView(R.layout.onboarding)
+        setContentView(R.layout.onboarding_name)
 
         // Hide Layout for Onboarding Event
-        onboardingevent.visibility = ConstraintLayout.INVISIBLE
-
+        eventonboaarding.visibility = ConstraintLayout.INVISIBLE
 
         nameinputedit.setOnClickListener {
             nameinputedit.error = null
@@ -76,8 +75,8 @@ class OnboardingView() : AppCompatActivity(),
                 userSession.shortname = nameinputedit.text.toString()
 
                 // Hide Layout for Onboarding Name and show Onboarding Event
-                onboardingname.visibility = ConstraintLayout.INVISIBLE
-                onboardingevent.visibility = ConstraintLayout.VISIBLE
+                nameonboaarding.visibility = ConstraintLayout.INVISIBLE
+                eventonboaarding.visibility = ConstraintLayout.VISIBLE
 
                 etname.setOnClickListener {
                     etname.error = null

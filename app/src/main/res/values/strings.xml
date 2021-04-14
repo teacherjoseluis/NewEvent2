@@ -44,6 +44,10 @@
     <string name="error_onboardingcreateaccount">There was an error trying to create your account</string>
     <string name="error_onboardingcreateevent">There was an error trying to create the event</string>
     <string name="failed_email_login">There was a problem trying to log in or the account does not exist</string>
+    <string name="error_emailaccountnotfound">The email account was not found, you\'d need to Sign Up first</string>
+    <string name="error_emailpasswordincorrect">The password is incorrect</string>
+    <string name="error_emailaccountexists">The email you are trying to use already exists</string>
+    <string name="error_emailsignup">There was a problem tryng in the Sign Up</string>
 
     <string-array name="role" >
         <item>Bride</item>

@@ -12,26 +12,30 @@ class LoginPresenter(
     view: LoginView,
     activity: Activity,
     authtype: String,
-    credential: AuthCredential
+    username: String?,
+    password: String?,
+    credential: AuthCredential?
 ) {
 
     var viewLogin: LoginView = view
 
     init {
-        loginUser(activity, authtype, credential)
+        loginUser(activity, authtype, username, password, credential)
     }
 
     private fun loginUser(
         activity: Activity,
         authtype: String,
-        credential: AuthCredential
+        username: String?,
+        password: String?,
+        credential: AuthCredential?
     ) {
         val user = User()
         user.login(
             activity,
             authtype,
-            null,
-            null,
+            username,
+            password,
             credential,
             object : User.FirebaseUserId {
                 override fun onUserId(userid: String, email: String) {
@@ -39,7 +43,7 @@ class LoginPresenter(
                         val userModel = UserModel(userid)
                         userModel.getUser(object : UserModel.FirebaseSuccessUser {
                             override fun onUserexists(user: User) {
-                                if (user.createdatetime != "") {
+                                if (user.eventid != "") {
                                     //save user into local storage
                                     user.saveUserSession(activity)
                                     viewLogin.onLoginSuccess()

@@ -28,52 +28,52 @@ class Login_Email : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            var inputvalflag = true
-            if (email != "") {
-                if (mailinputedit.text.toString().isEmpty()) {
-                    mailinputedit.error = "Email is required!"
-                    inputvalflag = false
-                }
-                if (editTextTextPassword.text.toString()
-                        .isEmpty() || editTextTextPassword.text.toString().length < 8 || !isValidPassword(
-                        editTextTextPassword.text.toString()
-                    )
-                ) {
-                    editTextTextPassword.error =
-                        "A valid password is required! (8 characters, 1 upper case, 1 number and 1 symbol"
-                    inputvalflag = false
-                }
-                if (editTextTextPassword2.text.toString()
-                        .isEmpty() && editTextTextPassword2.text != editTextTextPassword.text
-                ) {
-                    editTextTextPassword2.error = "Password does not match"
-                    inputvalflag = false
-                }
-                if (inputvalflag) {
-                    val user = UserAccount()
-                    user.UserEmail = mailinputedit.text.toString()
-                    user.UserPassword = editTextTextPassword.text.toString()
-                    user!!.authtype = "email"
-                    user!!.signup(this)
-                }
-            } else {
-                if (editTextTextPassword.text.toString()
-                        .isEmpty() || editTextTextPassword.text.toString().length < 8 || !isValidPassword(
-                        editTextTextPassword.text.toString()
-                    )
-                ) {
-                    editTextTextPassword.error =
-                        "A valid password is required! (8 characters, 1 upper case, 1 number and 1 symbol"
-                    inputvalflag = false
-                }
-                if (inputvalflag) {
-                    val user = UserAccount()
-                    user.UserEmail = mailinputedit.text.toString()
-                    user.UserPassword = editTextTextPassword.text.toString()
-                    user!!.authtype = "email"
-                    user!!.login(this, null, null)
-                }
-            }
+//            var inputvalflag = true
+//            if (email != "") {
+//                if (mailinputedit.text.toString().isEmpty()) {
+//                    mailinputedit.error = "Email is required!"
+//                    inputvalflag = false
+//                }
+//                if (editTextTextPassword.text.toString()
+//                        .isEmpty() || editTextTextPassword.text.toString().length < 8 || !isValidPassword(
+//                        editTextTextPassword.text.toString()
+//                    )
+//                ) {
+//                    editTextTextPassword.error =
+//                        "A valid password is required! (8 characters, 1 upper case, 1 number and 1 symbol"
+//                    inputvalflag = false
+//                }
+//                if (editTextTextPassword2.text.toString()
+//                        .isEmpty() && editTextTextPassword2.text != editTextTextPassword.text
+//                ) {
+//                    editTextTextPassword2.error = "Password does not match"
+//                    inputvalflag = false
+//                }
+//                if (inputvalflag) {
+//                    val user = UserAccount()
+//                    user.UserEmail = mailinputedit.text.toString()
+//                    user.UserPassword = editTextTextPassword.text.toString()
+//                    user!!.authtype = "email"
+//                    user!!.signup(this)
+//                }
+//            } else {
+//                if (editTextTextPassword.text.toString()
+//                        .isEmpty() || editTextTextPassword.text.toString().length < 8 || !isValidPassword(
+//                        editTextTextPassword.text.toString()
+//                    )
+//                ) {
+//                    editTextTextPassword.error =
+//                        "A valid password is required! (8 characters, 1 upper case, 1 number and 1 symbol"
+//                    inputvalflag = false
+//                }
+//                if (inputvalflag) {
+//                    val user = UserAccount()
+//                    user.UserEmail = mailinputedit.text.toString()
+//                    user.UserPassword = editTextTextPassword.text.toString()
+//                    user!!.authtype = "email"
+//                    user!!.login(this, null, null)
+//                }
+//            }
         }
 
         forgotemaillink.setOnClickListener {

@@ -122,12 +122,6 @@ class UserModel(
                 savesuccessflag.onSaveSuccess(true)
             }
         }
-//            .addOnFailureListener {
-//                return@addOnFailureListener
-//            }
-//            .addOnSuccessListener {
-//                return@addOnSuccessListener
-//            }
     }
 
     interface FirebaseSuccessUser {

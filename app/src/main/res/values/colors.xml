@@ -7,4 +7,6 @@
     <color name="secondaryText">#757575</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="rosaChillon">#FA4094</color>
+    <color name="azulOscuro">#1B1752</color>
 </resources>

@@ -58,7 +58,7 @@ class Welcome : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        //val sharedPreference = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).edit().clear().commit()
+        val sharedPreference = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).edit().clear().commit()
 
         //--------------------------------------------
         // need to check if the user is logged and then continue, otherwise I redirect to login

@@ -41,42 +41,42 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginAc
                     mailinputedit.error = getString(R.string.error_valid_emailaccount)
                     inputvalflag = false
                 }
-                if (editTextTextPassword.text.toString()
-                        .isEmpty() || editTextTextPassword.text.toString().length < 8 || !isValidPassword(
-                        editTextTextPassword.text.toString()
-                    )
-                ) {
-                    editTextTextPassword.error =
-                        getString(R.string.password_requiredformat)
-                    inputvalflag = false
-                }
-                if (editTextTextPassword2.text.toString()
-                        .isEmpty() && editTextTextPassword2.text != editTextTextPassword.text
-                ) {
-                    editTextTextPassword2.error = getString(R.string.passwords_dontmatch)
-                    inputvalflag = false
-                }
-                if (inputvalflag) {
-                    val userEmail = mailinputedit.text.toString()
-                    val userPassword = editTextTextPassword.text.toString()
-                    user.signup(this, userEmail, userPassword)
-                }
-            } else {
-                if (editTextTextPassword.text.toString()
-                        .isEmpty() || editTextTextPassword.text.toString().length < 8 || !isValidPassword(
-                        editTextTextPassword.text.toString()
-                    )
-                ) {
-                    editTextTextPassword.error =
-                        getString(R.string.password_requiredformat)
-                    inputvalflag = false
-                }
-                if (inputvalflag) {
-                    val userEmail = mailinputedit.text.toString()
-                    val userPassword = editTextTextPassword.text.toString()
-                    presenter =
-                        LoginEmailPresenter(this, this, userEmail, userPassword)
-                }
+//                if (editTextTextPassword.text.toString()
+//                        .isEmpty() || editTextTextPassword.text.toString().length < 8 || !isValidPassword(
+//                        editTextTextPassword.text.toString()
+//                    )
+//                ) {
+//                    editTextTextPassword.error =
+//                        getString(R.string.password_requiredformat)
+//                    inputvalflag = false
+//                }
+//                if (editTextTextPassword2.text.toString()
+//                        .isEmpty() && editTextTextPassword2.text != editTextTextPassword.text
+//                ) {
+//                    editTextTextPassword2.error = getString(R.string.passwords_dontmatch)
+//                    inputvalflag = false
+//                }
+//                if (inputvalflag) {
+//                    val userEmail = mailinputedit.text.toString()
+//                    val userPassword = editTextTextPassword.text.toString()
+//                    //user.signup(this, userEmail, userPassword)
+//                }
+//            } else {
+//                if (editTextTextPassword.text.toString()
+//                        .isEmpty() || editTextTextPassword.text.toString().length < 8 || !isValidPassword(
+//                        editTextTextPassword.text.toString()
+//                    )
+//                ) {
+//                    editTextTextPassword.error =
+//                        getString(R.string.password_requiredformat)
+//                    inputvalflag = false
+//                }
+//                if (inputvalflag) {
+//                    val userEmail = mailinputedit.text.toString()
+//                    val userPassword = editTextTextPassword.text.toString()
+//                    presenter =
+//                        LoginEmailPresenter(this, this, userEmail, userPassword)
+//                }
             }
         }
 
@@ -137,9 +137,5 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginAc
             getString(R.string.login_error_message),
             Toast.LENGTH_SHORT
         ).show()
-    }
-
-    interface ViewEmailLoginActivity {
-        fun onLoginEmailSuccess()
     }
 }

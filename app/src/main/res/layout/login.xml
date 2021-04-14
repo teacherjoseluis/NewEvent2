@@ -108,7 +108,7 @@
         app:srcCompat="@drawable/frame_180" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/legallogin"
         style="@style/Legal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
