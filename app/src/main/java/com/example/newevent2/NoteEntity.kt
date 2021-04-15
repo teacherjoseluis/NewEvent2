@@ -110,7 +110,7 @@ class NoteEntity : Note() {
                     uploadTask.addOnFailureListener {
                         return@addOnFailureListener
                     }.addOnSuccessListener {
-                        saveLog(context, "INSERT", "note", notekey, title)
+                        //saveLog(context, "INSERT", "note", notekey, title)
                         return@addOnSuccessListener
                     }
                 }
@@ -146,7 +146,7 @@ class NoteEntity : Note() {
                     uploadTask.addOnFailureListener {
                         return@addOnFailureListener
                     }.addOnSuccessListener {
-                        saveLog(context, "UPDATE", "note", notekey, title)
+                        //saveLog(context, "UPDATE", "note", notekey, title)
                         val oldfileRef =
                             storageRef.child("User/$userkey/Event/$eventkey/Note/$notekey/$oldurl")
                         oldfileRef.delete()

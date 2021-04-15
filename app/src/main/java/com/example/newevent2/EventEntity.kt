@@ -197,7 +197,7 @@ class EventEntity : Event() {
             }
             .addOnSuccessListener {
                 val eventkey = postRef.key.toString()
-                saveLog(context, "UPDATE", "event", eventkey, name)
+                //saveLog(context, "UPDATE", "event", eventkey, name)
                 //Save Event image in Storage
                 if (uri != null && uri.lastPathSegment != imageurl) {
                     val imageRef = storageRef.child("images/$eventkey/${uri.lastPathSegment}")

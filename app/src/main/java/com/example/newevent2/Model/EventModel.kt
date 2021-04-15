@@ -9,14 +9,14 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-class EventModel (context: Context) {
+class EventModel(context: Context) {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     private val storage = Firebase.storage
     private val storageRef = storage.reference
 
-    private val userid = getUserSession(context)
+    var userid = ""
     private val context = context
 
     fun addEvent(event: Event, uri: Uri?, savesuccessflag: EventModel.FirebaseSaveSuccess) {
@@ -35,17 +35,20 @@ class EventModel (context: Context) {
             "location" to event.location
         )
 
-        postRef.setValue(eventmap as Map<String, Any>
+        postRef.setValue(
+            eventmap as Map<String, Any>
         ) { error, _ ->
             if (error != null) {
                 //Se loggea un error al guardar el usuario TODO databaseError.getMessage()
                 savesuccessflag.onSaveSuccess("")
             } else {
                 // Saving in the log the new creation of the event
-                saveLog(context, "INSERT", "event", postRef.key.toString(), event.name)
+                val eventid = postRef.key.toString()
+                saveLog(context, "INSERT", "event", eventid, event.name, userid, eventid)
                 //Save Event image in Storage
                 if (uri != null) {
-                    val imageRef = storageRef.child("User/$userid/Event/${postRef.key.toString()}/images/${uri.lastPathSegment}")
+                    val imageRef =
+                        storageRef.child("User/$userid/Event/${eventid}/images/${uri.lastPathSegment}")
                     val uploadTask = imageRef.putFile(uri)
 
                     uploadTask.addOnFailureListener {

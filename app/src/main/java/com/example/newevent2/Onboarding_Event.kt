@@ -161,7 +161,7 @@ class Onboarding_Event : AppCompatActivity() {
                             sessionEditor.putString("Eventid", eventkey)
                             sessionEditor.putString("Shortname", userSession!!.shortname)
                             sessionEditor.apply()
-                            saveLog(this, "INSERT", "event", eventkey, etname.text.toString())
+                            //saveLog(this, "INSERT", "event", eventkey, etname.text.toString())
                         } catch (e: Exception) {
                             Log.e("Save Session Exception", e.toString())
                         }

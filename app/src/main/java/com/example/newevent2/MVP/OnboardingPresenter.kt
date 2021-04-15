@@ -41,6 +41,7 @@ class OnboardingPresenter(
             override fun onSaveSuccess(flag: Boolean) {
                 if (flag) {
                     val eventModel = EventModel(activity)
+                    eventModel.userid = user.key
                     eventModel.addEvent(event, null, object : EventModel.FirebaseSaveSuccess {
                         override fun onSaveSuccess(eventid: String) {
                             if (eventid != "") {

@@ -223,7 +223,7 @@ class PaymentEntity() : Payment() {
                 //return@addOnFailureListener
             }
             .addOnSuccessListener {
-                saveLog(context, "UPDATE", "payment", key, name)
+                //saveLog(context, "UPDATE", "payment", key, name)
                 //return@addOnSuccessListener
             }
     }
@@ -266,7 +266,7 @@ class PaymentEntity() : Payment() {
             }
             .addOnSuccessListener {
                 val paymentkey = postRef.key.toString()
-                saveLog(context, "INSERT", "payment", paymentkey, name)
+                //saveLog(context, "INSERT", "payment", paymentkey, name)
             }
     }
 }

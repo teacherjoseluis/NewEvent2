@@ -19,23 +19,23 @@ class Onboarding_Name : AppCompatActivity() {
 //        useremail = intent.getStringExtra("useremail").toString()
 //        userkey = intent.getStringExtra("userkey").toString()
 
-        buttonname.setOnClickListener {
-            var inputvalflag = true
-            if (nameinputedit.text.toString().isEmpty()) {
-                nameinputedit.error = "Name is required!"
-                inputvalflag = false
-            }
-
-            if (inputvalflag) {
-                userSession!!.shortname = nameinputedit.text.toString()
-
-                val onboardingevent = Intent(this, Onboarding_Event::class.java)
-//                onboardingevent.putExtra("username", nameinputedit.text.toString())
-//                onboardingevent.putExtra("useremail", useremail)
-//                onboardingevent.putExtra("userkey", userkey)
-                onboardingevent.putExtra("usersession", userSession)
-                startActivity(onboardingevent)
-            }
-        }
+//        buttonname.setOnClickListener {
+//            var inputvalflag = true
+//            if (nameinputedit.text.toString().isEmpty()) {
+//                nameinputedit.error = "Name is required!"
+//                inputvalflag = false
+//            }
+//
+//            if (inputvalflag) {
+//                userSession!!.shortname = nameinputedit.text.toString()
+//
+//                val onboardingevent = Intent(this, Onboarding_Event::class.java)
+////                onboardingevent.putExtra("username", nameinputedit.text.toString())
+////                onboardingevent.putExtra("useremail", useremail)
+////                onboardingevent.putExtra("userkey", userkey)
+//                onboardingevent.putExtra("usersession", userSession)
+//                startActivity(onboardingevent)
+//            }
+//        }
     }
 }

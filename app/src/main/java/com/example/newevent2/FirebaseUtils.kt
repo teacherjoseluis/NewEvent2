@@ -22,12 +22,14 @@ internal fun saveLog(
     action: String,
     entity: String,
     entityid: String,
-    entityname: String
+    entityname: String,
+    userid: String,
+    eventid: String
 ) {
     val usersessionlist = getUserSession(context)
 
     val postRef =
-        myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
+        myRef.child("User").child(userid).child("Event").child(eventid)
             .child("Log").push()
 
     //---------------------------------------
@@ -39,7 +41,7 @@ internal fun saveLog(
     //---------------------------------------
 
     val loginfo = hashMapOf(
-        "userid" to usersessionlist[0],
+        "userid" to userid,
         //"eventid" to usersessionlist[3],
         "action" to action,
         "entity" to entity,

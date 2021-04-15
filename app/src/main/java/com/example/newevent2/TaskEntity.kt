@@ -263,7 +263,7 @@ class TaskEntity : Task() {
                 return@addOnFailureListener
             }
             .addOnSuccessListener {
-                saveLog(context, "UPDATE", "task", key, name)
+                //saveLog(context, "UPDATE", "task", key, name)
                 return@addOnSuccessListener
             }
     }
@@ -278,13 +278,13 @@ class TaskEntity : Task() {
         if (action == "complete") {
             postRef.child("status").setValue("C")
                 .addOnSuccessListener {
-                    saveLog(context, "UPDATE", "task", key, name)
+                    //saveLog(context, "UPDATE", "task", key, name)
                 }
         }
         if (action == "active") {
             postRef.child("status").setValue("A")
                 .addOnSuccessListener {
-                    saveLog(context, "UPDATE", "task", key, name)
+                    //saveLog(context, "UPDATE", "task", key, name)
                 }
         }
     }
@@ -328,7 +328,7 @@ class TaskEntity : Task() {
             }
             .addOnSuccessListener {
                 val taskkey = postRef.key.toString()
-                saveLog(context, "INSERT", "task", taskkey, name)
+                //saveLog(context, "INSERT", "task", taskkey, name)
             }
     }
 }

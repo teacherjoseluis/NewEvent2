@@ -18,6 +18,7 @@ import TimePickerFragment
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.MVP.OnboardingPresenter
@@ -59,12 +60,13 @@ class OnboardingView() : AppCompatActivity(),
 
         // Hide Layout for Onboarding Event
         eventonboaarding.visibility = ConstraintLayout.INVISIBLE
+        submitevent.visibility = Button.INVISIBLE
 
         nameinputedit.setOnClickListener {
             nameinputedit.error = null
         }
 
-        buttonname.setOnClickListener {
+        submituser.setOnClickListener {
             var inputvalflag = true
             if (nameinputedit.text.toString().isEmpty()) {
                 nameinputedit.error = getString(R.string.error_shortnameinput)
@@ -76,7 +78,10 @@ class OnboardingView() : AppCompatActivity(),
 
                 // Hide Layout for Onboarding Name and show Onboarding Event
                 nameonboaarding.visibility = ConstraintLayout.INVISIBLE
+                submituser.visibility = Button.INVISIBLE
+
                 eventonboaarding.visibility = ConstraintLayout.VISIBLE
+                submitevent.visibility = Button.VISIBLE
 
                 etname.setOnClickListener {
                     etname.error = null
@@ -97,7 +102,7 @@ class OnboardingView() : AppCompatActivity(),
                     startActivityForResult(locationmap, autocompletePlaceCode)
                 }
 
-                buttonevent.setOnClickListener {
+                submitevent.setOnClickListener {
                     var inputvalflag = true
                     if (etname.text.toString().isEmpty()) {
                         etname.error = getString(R.string.error_eventnameinput)
