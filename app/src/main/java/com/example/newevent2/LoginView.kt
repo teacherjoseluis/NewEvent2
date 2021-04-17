@@ -40,7 +40,6 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login0)
 
-
         // Facebook Initializations
         FacebookSdk.sdkInitialize(applicationContext)
         mCallbackManager = CallbackManager.Factory.create()
@@ -85,31 +84,6 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
                 frame3.visibility = ConstraintLayout.VISIBLE
             }
 
-//        // Email Sign Up
-//        signemail.setOnClickListener {
-//            var inputvalflag = true
-//            if (mailinputeditlogin.text.toString().isEmpty()) {
-//                mailinputeditlogin.error = getString(R.string.error_valid_emailaccount)
-//                inputvalflag = false
-//            }
-//
-//            // Call to Login Email Activity
-//            if (inputvalflag) {
-//                val loginemail = Intent(this, LoginEmailView::class.java)
-//                loginemail.putExtra("email", mailinputeditlogin.text.toString())
-//                startActivity(loginemail)
-//                //finish()
-//            }
-//        }
-
-//        // Email Sign In
-//        signemaillink.setOnClickListener {
-//            val loginemail = Intent(this, LoginEmailView::class.java)
-//            loginemail.putExtra("email", "")
-//            startActivity(loginemail)
-//            finish()
-//        }
-
             // Google Sign In
             signgoogle.setOnClickListener {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -153,7 +127,6 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
 
         signupbuttonstart.setOnClickListener {
             //Maybe this is a good moment to implement an animation for the transition
-
             //Signup layout becomes visible
             frame1.visibility = ConstraintLayout.INVISIBLE
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -242,10 +215,6 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
             Toast.LENGTH_SHORT
         ).show()
 
-        //TODO Onboarding_Name recibe un objeto User que en este caso ya no estaria mandando
-        //se me ocurre ne este caso que se maneje toda la funcionalidad de Onboarding solamente en una vista y no en dos
-        //Se queda pendinete hacer un refactor de esa funcionalidad
-
         val onboarding =
             Intent(this, OnboardingView::class.java)
         //OnboardingView pasando userid como parametro
@@ -284,5 +253,4 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
         frame3.visibility = ConstraintLayout.INVISIBLE
         frame1.visibility = ConstraintLayout.VISIBLE
     }
-
 }
