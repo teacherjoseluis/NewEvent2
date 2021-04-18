@@ -65,6 +65,31 @@ class TaskModel {
         postRef.addValueEventListener(taskListenerActive)
     }
 
+    fun getTasksBudget(userid: String, eventid: String, dataFetched: FirebaseSuccessTaskBudget) {
+        var sumbudget: Float
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task")
+        val taskListenerActive = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                sumbudget = 0.0f // Budget Amount for all Tasks
+
+                val re = Regex("[^A-Za-z0-9 ]")
+                for (snapshot in p0.children) {
+                    val taskitem = snapshot.getValue(Task::class.java)!!
+                    val budgetamount = re.replace(taskitem.budget, "").dropLast(2)
+                    sumbudget += budgetamount.toFloat()
+                }
+                dataFetched.onTasksBudget(sumbudget)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("loadPost:onCancelled ${error.toException()}")
+            }
+        }
+        postRef.addValueEventListener(taskListenerActive)
+    }
+
     fun getDueNextTask(
         userid: String,
         eventid: String,
@@ -99,6 +124,10 @@ class TaskModel {
 
     interface FirebaseSuccessStatsTask {
         fun onTasksStats(taskpending: Int, taskcompleted: Int, sumbudget: Float)
+    }
+
+    interface FirebaseSuccessTaskBudget {
+        fun onTasksBudget(sumbudget: Float)
     }
 
     interface FirebaseSuccessTask {
