@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -173,13 +172,13 @@ class Welcome : AppCompatActivity() {
                 }
             }
 
-            getLog(this, object : FirebaseSuccessListenerLogWelcome {
-                override fun onLogList(list: ArrayList<Loginfo>) {
-                    val rvAdapter = Rv_LogAdapter(list)
-                    recentactivityrv.adapter = rvAdapter
-                }
-
-            })
+//            getLog(this, object : FirebaseSuccessListenerLogWelcome {
+//                override fun onLogList(list: ArrayList<Loginfo>) {
+//                    val rvAdapter = Rv_LogAdapter(list)
+//                    recentactivityrv.adapter = rvAdapter
+//                }
+//
+//            })
 
             //---------------------------------------------------------------------------------------------------------------
             val recyclerViewBlog = blogrv
@@ -192,12 +191,12 @@ class Welcome : AppCompatActivity() {
                     }
             }
 
-            getBlog(object : FirebaseSuccessListenerBlogWelcome {
-                override fun onBlogList(list: ArrayList<Blog>) {
-                    val rvAdapter = Rv_BlogAdapter(list)
-                    blogrv.adapter = rvAdapter
-                }
-            })
+//            getBlog(object : FirebaseSuccessListenerBlogWelcome {
+//                override fun onBlogList(list: ArrayList<Blog>) {
+//                    val rvAdapter = Rv_BlogAdapter(list)
+//                    blogrv.adapter = rvAdapter
+//                }
+//            })
 
             //---------------------------------------------------------------------------------------------------------------
             tfRegular = ResourcesCompat.getFont(this.applicationContext, R.font.robotoregular)

@@ -1,29 +1,23 @@
 package com.example.newevent2.MVP
 
-import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.newevent2.FirebaseSuccessListenerLogWelcome
+import com.example.newevent2.DashboardActivity
 import com.example.newevent2.Functions.FirebaseGetLogSuccess
-import com.example.newevent2.LoginView
 import com.example.newevent2.Functions.Loginfo
 import com.example.newevent2.Functions.getLog
 import com.example.newevent2.Functions.removeLog
-import com.example.newevent2.WelcomeView
-import java.text.SimpleDateFormat
-import java.time.Duration
-import java.time.Instant.now
+import com.example.newevent2.DashboardView
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
 import kotlin.collections.ArrayList
 
 class LogPresenter(
-    view: WelcomeView,
+    view: DashboardActivity,
     userid: String,
     eventid: String
 ) {
-    var viewWelcome: WelcomeView = view
+    var viewDashboardActivity: DashboardActivity = view
 
     @RequiresApi(Build.VERSION_CODES.O)
     val dtf = DateTimeFormatter.ofPattern("yyyyMMdd")
@@ -44,15 +38,15 @@ class LogPresenter(
                     }
                     if (loglist.isNotEmpty()){
                         //Log has enough elements to be shown
-                        viewWelcome.onViewLogSuccess(loglist)
+                        viewDashboardActivity.onViewLogSuccess(loglist)
                     } else {
                         //Log has old elements and those will not be shown
-                        viewWelcome.onViewLogError("OLD_LOG")
+                        viewDashboardActivity.onViewLogError("OLD_LOG")
                     }
 
                 } else {
                     //Log has no elements at all. Probably they were removed and user left and came back
-                    viewWelcome.onViewLogError("EMPTY_LOG")
+                    viewDashboardActivity.onViewLogError("EMPTY_LOG")
                 }
             }
         })

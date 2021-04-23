@@ -2,7 +2,6 @@ package com.example.newevent2
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +9,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
+import com.example.newevent2.Functions.Loginfo
 
-    class Rv_LogAdapter(val logList: MutableList<Loginfo>) :
+class Rv_LogAdapter(val logList: ArrayList<Loginfo>) :
         RecyclerView.Adapter<Rv_LogAdapter.ViewHolder>() {
         // ViewGroup - Views container
 

@@ -131,11 +131,23 @@ class User(
             activity.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
 
         val sessionEditor = usersession!!.edit()
-        sessionEditor.putString("UID", key)
-        sessionEditor.putString("Email", email)
-        sessionEditor.putString("Autentication", authtype)
-        sessionEditor.putString("Eventid", eventid)
-        sessionEditor.putString("Shortname", shortname)
+        sessionEditor.putString("key", key)
+        sessionEditor.putString("email", email)
+        sessionEditor.putString("authtype", authtype)
+        sessionEditor.putString("eventid", eventid)
+        sessionEditor.putString("shortname", shortname)
+        //----------------------------------------------//
+        sessionEditor.putString("country", country)
+        sessionEditor.putString("language", language)
+        sessionEditor.putString("createdatetime", createdatetime)
+        sessionEditor.putString("status", status)
+        sessionEditor.putString("imageurl", imageurl)
+        sessionEditor.putString("role", role)
+        sessionEditor.putString("hasevent", hasevent)
+        sessionEditor.putString("hastask", hastask)
+        sessionEditor.putString("haspayment", haspayment)
+        sessionEditor.putString("hasguest", hasguest)
+        sessionEditor.putString("hasvendor", hasvendor)
         sessionEditor.apply()
     }
 

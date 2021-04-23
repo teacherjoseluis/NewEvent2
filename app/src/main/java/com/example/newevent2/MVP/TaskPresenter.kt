@@ -1,42 +1,26 @@
 package com.example.newevent2.MVP
 
-import android.app.Activity
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.example.newevent2.FirebaseSuccessListenerLogWelcome
-import com.example.newevent2.Functions.FirebaseGetLogSuccess
-import com.example.newevent2.LoginView
-import com.example.newevent2.Functions.Loginfo
-import com.example.newevent2.Functions.getLog
-import com.example.newevent2.Functions.removeLog
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskModel
-import com.example.newevent2.WelcomeView
-import java.text.SimpleDateFormat
-import java.time.Duration
-import java.time.Instant.now
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
+import com.example.newevent2.DashboardView
 
 class TaskPresenter(
-    view: WelcomeView,
+    view: DashboardView,
     val userid: String,
     val eventid: String
 ) {
-    var viewWelcome: WelcomeView = view
+    var viewDashboard: DashboardView = view
 
-    fun getTaskStats(category: String) {
+    fun getTaskStats(category: String = "") {
         val task = TaskModel()
         task.getTaskStats(userid, eventid, category, object : TaskModel.FirebaseSuccessStatsTask {
             override fun onTasksStats(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
                 if (taskpending == 0 && taskcompleted == 0) {
                     //There are no tasks created
-                    viewWelcome.onViewTaskError("BLANK_STATS")
+                    viewDashboard.onViewTaskError("BLANK_STATS")
                 } else {
                     //Show the stats
-                    viewWelcome.onViewTaskStatsSuccess(taskpending, taskcompleted, sumbudget)
+                    viewDashboard.onViewTaskStatsSuccess(taskpending, taskcompleted, sumbudget)
                 }
             }
         })
@@ -47,9 +31,9 @@ class TaskPresenter(
         task.getDueNextTask(userid, eventid, object : TaskModel.FirebaseSuccessTask {
             override fun onTask(task: Task) {
                 if (task.key == "") {
-                    viewWelcome.onViewTaskError("BLANK_TASK")
+                    viewDashboard.onViewTaskError("BLANK_TASK")
                 } else {
-                    viewWelcome.onViewNextTaskSuccess(task)
+                    viewDashboard.onViewNextTaskSuccess(task)
                 }
             }
         })

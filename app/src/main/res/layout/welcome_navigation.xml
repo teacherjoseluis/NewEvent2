@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     tools:context=".Welcome">
 
-    <include layout="@layout/welcome" />
+    <include layout="@layout/welcome0" />
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navview"

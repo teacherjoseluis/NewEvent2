@@ -17,10 +17,11 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.example.newevent2.Functions.Blog
 import com.google.firebase.storage.FirebaseStorage
 
 
-class Rv_BlogAdapter(val blogList: MutableList<Blog>) :
+class Rv_BlogAdapter(val blogList: ArrayList<Blog>) :
         RecyclerView.Adapter<Rv_BlogAdapter.ViewHolder>() {
 
         lateinit var context: Context

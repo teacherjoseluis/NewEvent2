@@ -1,29 +1,24 @@
 package com.example.newevent2.MVP
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import com.example.newevent2.DashboardBlog
 import com.example.newevent2.Functions.*
-import com.example.newevent2.Functions.getLog
-import com.example.newevent2.Functions.removeLog
-import com.example.newevent2.WelcomeView
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.example.newevent2.DashboardView
 
 class BlogPresenter(
-    view: WelcomeView,
+    view: DashboardBlog,
     language: String
 ) {
-    var viewWelcome: WelcomeView = view
+    var viewDashboardBlog: DashboardBlog = view
 
     init {
         getBlog(language, object : FirebaseGetBlogSuccess {
             override fun onGetBlogSuccess(bloglist: java.util.ArrayList<Blog>) {
                 if (bloglist.isNotEmpty()) {
                     //Blog has elements to be shown
-                    viewWelcome.onViewBlogSuccess(bloglist)
+                    viewDashboardBlog.onViewBlogSuccess(bloglist)
                 } else {
                     //No Blog entries for the language
-                    viewWelcome.onViewBlogError("EMPTY_BLOG")
+                    viewDashboardBlog.onViewBlogError("EMPTY_BLOG")
                 }
             }
         })

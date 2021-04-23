@@ -52,7 +52,7 @@ class MyContacts : AppCompatActivity() {
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = "Contacts"
 
-
+//56 to 116 tab logic
         if (viewPager != null) {
             val adapter =
                 Contacts_PagerAdapter(
