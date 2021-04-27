@@ -40,7 +40,7 @@ class OnboardingPresenter(
         userModel.addUser(user, object : UserModel.FirebaseSaveSuccess {
             override fun onSaveSuccess(flag: Boolean) {
                 if (flag) {
-                    val eventModel = EventModel(activity)
+                    val eventModel = EventModel()
                     eventModel.userid = user.key
                     eventModel.addEvent(event, null, object : EventModel.FirebaseSaveSuccess {
                         override fun onSaveSuccess(eventid: String) {

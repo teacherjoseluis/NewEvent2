@@ -7,12 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".DashboardActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/emptycharts"
+            style="@style/Heading6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:text="There are no tasks to show"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/chartlayout"
@@ -29,19 +34,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/emptytaskchart"
-                style="@style/Heading7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginRight="12dp"
-                android:text="There are no tasks to show"
-                app:layout_constraintBottom_toBottomOf="@+id/charttask"
-                app:layout_constraintEnd_toEndOf="@+id/charttask"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"></TextView>
-
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/chartpayment"
                 android:layout_width="200dp"
@@ -50,20 +42,6 @@
                 app:layout_constraintStart_toEndOf="@+id/charttask"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/emptypaymentchart"
-                style="@style/Heading7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginRight="12dp"
-                android:text="There are no payments to show"
-                app:layout_constraintBottom_toBottomOf="@+id/chartpayment"
-                app:layout_constraintEnd_toEndOf="@+id/chartpayment"
-                app:layout_constraintTop_toTopOf="@+id/chartpayment"></TextView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

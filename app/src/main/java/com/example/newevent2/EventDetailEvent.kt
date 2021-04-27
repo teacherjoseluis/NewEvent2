@@ -125,20 +125,20 @@ class EventDetailEvent : Fragment() {
         }
 
 //-------------------------------------------------------------------------------------
-        val guestentity = GuestEntity()
-//        guestentity.eventid = eventkey!!
-        guestentity.getGuestsEvent(activity!!.applicationContext, object : FirebaseSuccessListenerGuest {
-            override fun onGuestList(list: ArrayList<Guest>) {
-                TODO("Not yet implemented")
-            }
+//        val guestentity = GuestEntity()
+////        guestentity.eventid = eventkey!!
+//        guestentity.getGuestsEvent(activity!!.applicationContext, object : FirebaseSuccessListenerGuest {
+//            override fun onGuestList(list: ArrayList<Guest>) {
+//                TODO("Not yet implemented")
+//            }
 
-            override fun onGuestConfirmation(confirmed: Int, rejected: Int, pending: Int) {
-                totaltext.text = (confirmed + rejected + pending).toString()
-                acceptedtext.text = confirmed.toString()
-                rejectedtext.text = rejected.toString()
-                pendingtext.text = pending.toString()
-            }
-        })
+//            override fun onGuestConfirmation(confirmed: Int, rejected: Int, pending: Int) {
+//                totaltext.text = (confirmed + rejected + pending).toString()
+//                acceptedtext.text = confirmed.toString()
+//                rejectedtext.text = rejected.toString()
+//                pendingtext.text = pending.toString()
+//            }
+        //})
 //-------------------------------------------------------------------------------------
         return inf
     }

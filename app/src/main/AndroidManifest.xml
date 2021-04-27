@@ -77,7 +77,8 @@
         <activity android:name=".MyNotes" />
         <activity android:name=".NewNote" />
         <activity android:name=".Settings" />
-        <activity android:name=".Welcome">
+        <activity android:name=".MainEventView" />
+        <activity android:name=".DashboardView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

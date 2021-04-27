@@ -17,63 +17,82 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/azulOscuro</item>
     </style>
+
     <style name="Heading6">
         <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/azulOscuro</item>
     </style>
+
     <style name="Heading7">
-        <item name="android:fontFamily">@font/elsie</item>
+        <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
     <style name="Heading8">
-        <item name="android:fontFamily">@font/elsie</item>
+        <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
-    <style name="BodySmall"  parent="TextAppearance.AppCompat.Body1">
+
+    <style name="Heading9">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="BodySmall" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>
         <item name="android:textSize">14dp</item>
     </style>
-    <style name="BodyXSmall"  parent="TextAppearance.AppCompat.Body1">
+
+    <style name="BodyXSmall" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>
         <item name="android:textSize">12dp</item>
     </style>
-    <style name="Body1"  parent="TextAppearance.AppCompat.Body1">
+
+    <style name="Body1" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>
         <item name="android:textSize">18dp</item>
     </style>
-    <style name="Body2"  parent="TextAppearance.AppCompat.Body1">
+
+    <style name="Body2" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>
         <item name="android:textSize">20dp</item>
     </style>
 
-    <style name="BodyBold"  parent="TextAppearance.AppCompat.Body1">
+    <style name="BodyBold" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotomedium</item>
         <item name="android:textSize">18dp</item>
     </style>
-    <style name="BodyItalic"  parent="TextAppearance.AppCompat.Body1">
+
+    <style name="BodyItalic" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolightitalic</item>
         <item name="android:textSize">18dp</item>
     </style>
-    <style name="BodyItalic2"  parent="TextAppearance.AppCompat.Body1">
+
+    <style name="BodyItalic2" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolightitalic</item>
         <item name="android:textSize">14dp</item>
     </style>
-    <style name="Caption"  parent="TextAppearance.AppCompat.Caption">
+
+    <style name="Caption" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotolight</item>
         <item name="android:textSize">16dp</item>
     </style>
-    <style name="CaptionBold"  parent="TextAppearance.AppCompat.Caption">
+
+    <style name="CaptionBold" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotobold</item>
         <item name="android:textSize">16dp</item>
     </style>
-    <style name="Legal"  parent="TextAppearance.AppCompat.Caption">
+
+    <style name="Legal" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotolightitalic</item>
         <item name="android:textSize">11dp</item>
     </style>
-    <style name="Overline"  parent="TextAppearance.AppCompat.Caption">
+
+    <style name="Overline" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotomedium</item>
         <item name="android:textSize">16dp</item>
     </style>

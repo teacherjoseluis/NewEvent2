@@ -38,7 +38,11 @@ import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.dashboardcharts.*
 import kotlinx.android.synthetic.main.welcome.*
+import kotlinx.android.synthetic.main.welcome.duenextdate
+import kotlinx.android.synthetic.main.welcome.duenexttask
+import kotlinx.android.synthetic.main.welcome0.*
 import java.text.DecimalFormat
 
 class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity {
@@ -50,13 +54,6 @@ class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.welcome_navigation)
-
-        usersession = com.example.newevent2.Functions.getUserSession(this)
-        if (usersession.key == "") {
-            val loginactivity =
-                Intent(this, LoginView::class.java)
-            startActivity(loginactivity)
-        }
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -86,7 +83,7 @@ class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity
                 ).show()
                 R.id.menu_seccion_2 -> {
                     val events =
-                        Intent(this, EventDetail::class.java)
+                        Intent(this, MainEventView::class.java)
                     Log.d("Activity Starts", "EventDetail")
                     events.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(events)
@@ -123,12 +120,21 @@ class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity
             drawerLayout.closeDrawers()
             true
         }
-
         navView.menu.getItem(0).isChecked = true
+    }
 
-//--------------------------------------------------------------------------------------------------
-        val tablayout = findViewById<TabLayout>(R.id.tabLayout)
-        val viewPager = findViewById<View>(R.id.pager) as ViewPager
+    override fun onStart() {
+        super.onStart()
+        usersession = com.example.newevent2.Functions.getUserSession(this)
+        if (usersession.key == "") {
+            val loginactivity =
+                Intent(this, LoginView::class.java)
+            startActivity(loginactivity)
+        }
+
+        //--------------------------------------------------------------------------------------------------
+        val tablayout = findViewById<TabLayout>(R.id.dashboard_tabLayout)
+        val viewPager = findViewById<View>(R.id.dashboardpager) as ViewPager
         if (viewPager != null) {
             val adapter =
                 Dashboard_PagerAdapter(
@@ -145,10 +151,35 @@ class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity
                 )
             )
         }
+
+        tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(p0: TabLayout.Tab?) {
+                viewPager.currentItem = p0!!.position
+//                if (p0.position == 0) {
+//                    findViewById<FloatingActionButton>(R.id.NewTaskPaymentActionButton).isVisible =
+//                        true
+//                } else if (p0.position == 1) {
+//                    findViewById<FloatingActionButton>(R.id.NewTaskPaymentActionButton).isVisible =
+//                        false
+//
+//                    findViewById<ConstraintLayout>(R.id.TaskLayout).isVisible = false
+//                    findViewById<ConstraintLayout>(R.id.PaymentLayout).isVisible = false
+//                }
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+            }
+        })
 //--------------------------------------------------------------------------------------------------
         presentertask = TaskPresenter(this, usersession.key, usersession.eventid)
         presentertask.getDueNextTask()
 //--------------------------------------------------------------------------------------------------
+        usershortname0.text = usersession.shortname
+//--------------------------------------------------------------------------------------------------
+        progress0.text = "Your profile has a ${getProfileprogress()}% progress"
     }
 
     override fun onBackPressed() {
@@ -171,17 +202,17 @@ class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity
     }
 
     override fun onViewNextTaskSuccess(task: com.example.newevent2.Model.Task) {
+        duenextempty.visibility = View.GONE
         duenextdate.text = task.date
         duenexttask.text = task.name
     }
 
     override fun onViewTaskStatsSuccess(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-        TODO("Not yet implemented")
+        //This interface will not be implemented here. As it's already been taken care of in the corresponding fragment
     }
 
     override fun onViewTaskError(errcode: String) {
-        // Need to handle what to show when there is nothing coming
-        TODO("Not yet implemented")
+        //This interface will not be implemented here
+        duenextfilled.visibility = ConstraintLayout.GONE
     }
-
 }

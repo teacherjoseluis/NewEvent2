@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent"></TextView>
 
         <TextView
-            android:id="@+id/usershortname"
+            android:id="@+id/usershortname0"
             style="@style/Heading6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             app:layout_constraintTop_toTopOf="parent"></TextView>
 
         <TextView
-            android:id="@+id/progress"
+            android:id="@+id/progress0"
             style="@style/BodyItalic2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,30 +59,32 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/duenextlabel"
+        style="@style/Heading6"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Due next"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userprofile"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/duenextlayout"
+        android:id="@+id/duenextlayout0"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:padding="5dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userprofile">
-
-        <TextView
-            android:id="@+id/duenextlabel"
-            style="@style/Heading6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Due next"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/duenextlabel">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/duenextfilled"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/duenextlabel">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/duenexticon"
@@ -122,19 +124,33 @@
 
             </TextView>
         </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/duenextempty"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="There is not a due next task to show"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/dashboard_tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/duenextlayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/duenextlayout0"
         app:tabIndicatorColor="@color/rosaChillon"
         app:tabSelectedTextColor="@color/rosaChillon"
-        app:tabTextColor="@color/rosaChillon"
-        tools:layout_editor_absoluteX="0dp">
+        app:tabTextColor="@color/rosaChillon">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

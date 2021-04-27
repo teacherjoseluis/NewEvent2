@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -151,7 +152,7 @@ class DashboardEvent(private val view: DashboardView) : Fragment(),
     }
 
     override fun onViewTaskStatsSuccess(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-        emptytaskchart.visibility = View.GONE
+        emptycharts.visibility = View.GONE
         val taskentries = ArrayList<PieEntry>()
         taskentries.add(PieEntry(taskpending.toFloat(), " To Do "))
         taskentries.add(PieEntry(taskcompleted.toFloat(), " Done "))
@@ -184,11 +185,11 @@ class DashboardEvent(private val view: DashboardView) : Fragment(),
     }
 
     override fun onViewTaskError(errcode: String) {
-        charttask.visibility = View.GONE
+        chartlayout.visibility = ConstraintLayout.GONE
     }
 
     override fun onViewPaymentStatsSuccess(countpayment: Int, sumpayment: Float, sumbudget: Float) {
-        emptypaymentchart.visibility = View.GONE
+        emptycharts.visibility = View.GONE
         val paymententries = ArrayList<PieEntry>()
         paymententries.add(PieEntry(sumpayment, "Spent"))
         paymententries.add(PieEntry(sumbudget - sumpayment, "Available"))
@@ -218,6 +219,6 @@ class DashboardEvent(private val view: DashboardView) : Fragment(),
     }
 
     override fun onViewPaymentError(errcode: String) {
-        chartpayment.visibility = View.GONE
+        chartlayout.visibility = ConstraintLayout.GONE
     }
 }

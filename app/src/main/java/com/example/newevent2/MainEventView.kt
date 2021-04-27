@@ -5,75 +5,71 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.newevent2.Model.User
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.navbottom.*
 
-class EventDetail : AppCompatActivity() {
+class MainEventView : AppCompatActivity() {
+
+    val userid = ""
+    val eventid = ""
+    var usersession = User()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.event_detail)
+
+        usersession = com.example.newevent2.Functions.getUserSession(this)
+        if (usersession.key == "") {
+            val loginactivity =
+                Intent(this, LoginView::class.java)
+            startActivity(loginactivity)
+        }
+
         val tablayout = findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = findViewById<View>(R.id.pager) as ViewPager
-        // Toolbar and Title
-        //---------------------------------------------------------------------
-//        setSupportActionBar(findViewById(R.id.toolbar))
-////        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-////        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = "Event Detail"
 
         if (viewPager != null) {
-                    val adapter = EventPagerAdapter(
-                        supportFragmentManager,
-                        tablayout.tabCount
-//                        event.key,
-//                        event.imageurl,
-//                        event.name,
-//                        event.placeid,
-//                        event.date,
-//                        event.time,
-//                        event.about,
-//                        event.location,
-//                        event.address,
-//                        event.latitude,
-//                        event.longitude
-                    )
-                    viewPager.adapter = adapter
-                    viewPager.addOnPageChangeListener(
-                        TabLayout.TabLayoutOnPageChangeListener(
-                            tablayout
-                        )
-                    )
+            val adapter = MainEventPagerAdapter(
+                supportFragmentManager,
+                usersession.key,
+                usersession.eventid,
+                tablayout.tabCount
+            )
+            viewPager.adapter = adapter
+            viewPager.addOnPageChangeListener(
+                TabLayout.TabLayoutOnPageChangeListener(
+                    tablayout
+                )
+            )
 
-                    tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                        override fun onTabSelected(p0: TabLayout.Tab?) {
-                            viewPager.currentItem = p0!!.position
+            tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(p0: TabLayout.Tab?) {
+                    viewPager.currentItem = p0!!.position
 
-                            if (p0.position == 0) {
+                    if (p0.position == 0) {
 //                                findViewById<FloatingActionButton>(R.id.NewTaskPaymentActionButton).isVisible =
 //                                    true
-                            } else if (p0.position == 1) {
+                    } else if (p0.position == 1) {
 //                                findViewById<FloatingActionButton>(R.id.NewTaskPaymentActionButton).isVisible =
 //                                    false
 //
 //                                findViewById<ConstraintLayout>(R.id.TaskLayout).isVisible = false
 //                                findViewById<ConstraintLayout>(R.id.PaymentLayout).isVisible = false
-                            }
-                        }
-
-                        override fun onTabUnselected(p0: TabLayout.Tab?) {
-                        }
-
-                        override fun onTabReselected(p0: TabLayout.Tab?) {
-                        }
-                    })
+                    }
                 }
+
+                override fun onTabUnselected(p0: TabLayout.Tab?) {
+                }
+
+                override fun onTabReselected(p0: TabLayout.Tab?) {
+                }
+            })
+        }
 //            }
 //
 //        })

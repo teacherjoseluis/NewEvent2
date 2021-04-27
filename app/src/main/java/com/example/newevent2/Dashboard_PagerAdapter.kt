@@ -27,6 +27,8 @@ class Dashboard_PagerAdapter(
             1 -> {
                 val bundle = Bundle()
                 val fragInfo = DashboardEvent(view)
+                bundle.putString("userid", userid)
+                bundle.putString("eventid", eventid)
                 fragInfo.arguments = bundle
                 return fragInfo
             }
