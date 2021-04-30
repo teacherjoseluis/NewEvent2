@@ -1,9 +1,12 @@
 package com.example.newevent2.Model
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,7 +58,99 @@ class PaymentModel {
         postRef.addValueEventListener(paymentListenerActive)
     }
 
+    fun getPaymentsList(
+        userid: String,
+        eventid: String,
+        category: String,
+        dataFetched: FirebaseSuccessPaymentList
+    ) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Payment")
+
+        var paymentlist = ArrayList<Payment>()
+
+        val paymentlListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                paymentlist.clear()
+
+                for (snapshot in p0.children) {
+                    val paymentitem = snapshot.getValue(Payment::class.java)
+
+                    if (paymentitem!!.category == category) {
+                        paymentitem!!.key = snapshot.key.toString()
+                        paymentlist.add(paymentitem!!)
+                    }
+                }
+                dataFetched.onPaymentList(paymentlist)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(paymentlListenerActive)
+    }
+
+    fun addPayment(userid: String, eventid: String, payment: Payment) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Payment").push()
+
+        //---------------------------------------
+        // Getting the time and date to record in the recently created payment
+        val timestamp = Time(System.currentTimeMillis())
+        val paymentdatetime = Date(timestamp.time)
+        val sdf = SimpleDateFormat("MM/dd/yyyy h:mm:ss a")
+        //---------------------------------------
+
+        val paymentadd = hashMapOf(
+            "name" to payment.name,
+            "amount" to payment.amount,
+            "date" to payment.date,
+            "category" to payment.category,
+            "createdatetime" to sdf.format(paymentdatetime)
+        )
+
+        postRef.setValue(payment as Map<String, Any>)
+            .addOnFailureListener {
+            }
+            .addOnSuccessListener {
+            }
+    }
+
+    fun editPayment(userid: String, eventid: String, payment: Payment) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Payment").child(payment.key)
+
+        val paymentedit = hashMapOf(
+            "name" to payment.name,
+            "amount" to payment.amount,
+            "date" to payment.date,
+            "category" to payment.category
+        )
+
+        postRef.setValue(payment as Map<String, Any>)
+            .addOnFailureListener {
+            }
+            .addOnSuccessListener {
+            }
+    }
+
+    fun deletePayment(userid: String, eventid: String, payment: Payment) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Payment").child(payment.key)
+                .removeValue()
+    }
+
     interface FirebaseSuccessStatsPayment {
         fun onPaymentStats(countpayment: Int, sumpayment: Float)
+    }
+
+    interface FirebaseSuccessPaymentList {
+        fun onPaymentList(list: ArrayList<Payment>)
     }
 }

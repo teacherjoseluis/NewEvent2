@@ -4,99 +4,79 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.newevent2.Model.PaymentModel
+import com.example.newevent2.Model.Task
+import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.payment_editdetail.*
 import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.android.synthetic.main.task_editdetail.button2
 import kotlinx.android.synthetic.main.task_editdetail.groupedit
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Payment_EditDetail : AppCompatActivity() {
 
-    lateinit var paymentitem: Payment
+    var payment = com.example.newevent2.Model.Payment()
+    var userid = ""
+    var eventid = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.payment_editdetail)
-        paymentitem = Payment()
 
-        val intent = intent
-        val paymentkey = intent.getStringExtra("paymentkey").toString()
-        //val eventid = intent.getStringExtra("eventid").toString()
-        val paymentnameextra = intent.getStringExtra("name").toString()
-        val paymentdateextra = intent.getStringExtra("date").toString()
-        val paymentcategory = intent.getStringExtra("category").toString()
-        val paymentamountextra = intent.getStringExtra("amount").toString()
+        payment = intent.getParcelableExtra("payment")!!
+        userid = intent.getStringExtra("userid").toString()
+        eventid = intent.getStringExtra("eventid").toString()
 
-        if (paymentkey != "" ) {
+        val chipgroupedit = findViewById<ChipGroup>(R.id.groupedit)
+        chipgroupedit.isSingleSelection = true
 
+        // Create chips and select the one matching the category
+        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        for (category in list) {
+            val chip = Chip(this)
+            chip.text = category.en_name
+            chipgroupedit.addView(chip)
+            if (payment.category == category.code) {
+                chip.isSelected = true
+                chipgroupedit.check(chip.id)
+            }
+        }
             val paymentname = findViewById<TextView>(R.id.pyname)
-            paymentname.text = paymentnameextra
+            paymentname.text = payment.name
 
             val paymentdate = findViewById<TextView>(R.id.pydate)
-            paymentdate.text = paymentdateextra
-
-            var selectedchip: TextView
-            selectedchip = findViewById<TextView>(R.id.chip)
-
-            if (paymentcategory == "flowers") {
-                selectedchip = findViewById<TextView>(R.id.chip)
-            }
-
-            if (paymentcategory == "venue") {
-                selectedchip = findViewById<TextView>(R.id.chip2)
-            }
-
-            if (paymentcategory == "photo") {
-                selectedchip = findViewById<TextView>(R.id.chip3)
-            }
-
-            if (paymentcategory == "entertainment") {
-                selectedchip = findViewById<TextView>(R.id.chip4)
-            }
-
-            if (paymentcategory == "transport") {
-                selectedchip = findViewById<TextView>(R.id.chip5)
-            }
-
-            if (paymentcategory == "ceremony") {
-                selectedchip = findViewById<TextView>(R.id.chip6)
-            }
-
-            if (paymentcategory == "accesories") {
-                selectedchip = findViewById<TextView>(R.id.chip7)
-            }
-
-            if (paymentcategory == "beauty") {
-                selectedchip = findViewById<TextView>(R.id.chip8)
-            }
-
-            if (paymentcategory == "food") {
-                selectedchip = findViewById<TextView>(R.id.chip9)
-            }
-
-            if (paymentcategory == "guests") {
-                selectedchip = findViewById<TextView>(R.id.chip10)
-            }
-
-            if (paymentcategory == "none") {
-            }
-
-            groupedit.check(selectedchip.id)
-            selectedchip.isSelected = true
+            paymentdate.text = payment.date
 
             val paymentamount = findViewById<TextView>(R.id.pyamount)
-            paymentamount.text = paymentamountextra
+            paymentamount.text = payment.amount
 
+        paymentname.setOnClickListener {
+            paymentname.error = null
+        }
+
+        paymentdate.setOnClickListener {
+            paymentdate.error = null
+            paymentdate.text = com.example.newevent2.ui.Functions.showDatePickerDialog(
+                supportFragmentManager
+            )
+        }
+
+        paymentamount.setOnClickListener {
+            paymentamount.error = null
         }
 
         //---------------------------------------------------------------------------------//
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        setSupportActionBar(findViewById(R.id.toolbar))
+//        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = "Payment Detail"
@@ -104,66 +84,51 @@ class Payment_EditDetail : AppCompatActivity() {
 
         groupedit.isSingleSelection = true
 
-        pydate.setOnClickListener()
-        {
-            showDatePickerDialog()
-        }
-
         button2.setOnClickListener()
         {
-            savePayment(paymentkey)
-        }
-
-    }
-
-    private fun showDatePickerDialog() {
-        val newFragment =
-            DatePickerFragment.newInstance(DatePickerDialog.OnDateSetListener { _, year, month, day ->
-                // +1 because January is zero
-                val selectedDate = day.toString() + " / " + (month + 1) + " / " + year
-                tkdate.setText(selectedDate)
-            })
-
-        newFragment.show(supportFragmentManager, "datePicker")
-    }
-
-    private fun savePayment(paymentkey: String) {
-//        val database = FirebaseDatabase.getInstance()
-//        val myRef = database.reference
-//        val postRef = myRef.child("User").child("Event").child(eventid).child("Payment").child(paymentkey)
-        var category = ""
-
-        if (groupedit.checkedChipId != null) {
-            val id = groupedit.checkedChipId
-            val chipselected = groupedit.findViewById<Chip>(id)
-            val chiptextvalue = chipselected.text.toString()
-            category = when (chiptextvalue) {
-                "Flowers & Deco" -> "flowers"
-                "Venue" -> "venue"
-                "Photo & Video" -> "photo"
-                "Entertainment" -> "entertainment"
-                "Transportation" -> "transport"
-                "Ceremony" -> "ceremony"
-                "Attire & Accessories" -> "accesories"
-                "Health & Beauty" -> "beauty"
-                "Food & Drink" -> "food"
-                "Guests" -> "guests"
-                else -> "none"
+            var inputvalflag = true
+            if (paymentname.text.toString().isEmpty()) {
+                paymentname.error = "Payment name is required!"
+                inputvalflag = false
+            }
+            if (paymentdate.text.toString().isEmpty()) {
+                paymentdate.error = "Payment date is required!"
+                inputvalflag = false
+            }
+            if (paymentamount.text.toString().isEmpty()) {
+                paymentamount.error = "Payment amount is required!"
+                inputvalflag = false
+            }
+            if (groupedit.checkedChipId == -1) {
+                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
+                inputvalflag = false
+            }
+            if (inputvalflag) {
+                savePayment()
+                onBackPressed()
             }
         }
 
-        val paymententity = PaymentEntity().apply {
-            key= paymentkey
-            name = pyname.text.toString()
-            amount = pyamount.text.toString()
-            date = pydate.text.toString()
-            this.category = category
+    }
+
+
+    private fun savePayment() {
+
+        payment.name = tkname.text.toString()
+        payment.date = tkdate.text.toString()
+        payment.amount = tkbudget.text.toString()
+
+        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
+        val chiptextvalue = chipselected.text.toString()
+
+        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        for (category in list) {
+            if(chiptextvalue == category.en_name){
+                payment.category = category.code
+            }
         }
 
-        paymententity.editPayment(this)
-//        postRef.child("name").setValue(pyname.text.toString())
-//        postRef.child("amount").setValue(pyamount.text.toString())
-//        postRef.child("date").setValue(pydate.text.toString())
-//        postRef.child("category").setValue(category)
+        val paymentmodel = PaymentModel()
+        paymentmodel.editPayment(userid, eventid, payment)
     }
 }

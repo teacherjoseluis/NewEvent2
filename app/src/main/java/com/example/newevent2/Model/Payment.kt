@@ -1,6 +1,9 @@
 package com.example.newevent2.Model
 
-open class Payment {
+import android.os.Parcel
+import android.os.Parcelable
+
+open class Payment() : Parcelable {
     var key: String = ""
     var name: String = ""
     var date: String = ""
@@ -8,5 +11,38 @@ open class Payment {
     var amount: String = ""
     var eventid: String = ""
     var createdatetime: String = ""
+
+    constructor(parcel: Parcel) : this() {
+        key = parcel.readString().toString()
+        name = parcel.readString().toString()
+        date = parcel.readString().toString()
+        category = parcel.readString().toString()
+        amount = parcel.readString().toString()
+        eventid = parcel.readString().toString()
+        createdatetime = parcel.readString().toString()
+    }
     //At some point I will be adding the updatedatetime
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(key)
+        parcel.writeString(name)
+        parcel.writeString(date)
+        parcel.writeString(category)
+        parcel.writeString(amount)
+        parcel.writeString(eventid)
+        parcel.writeString(createdatetime)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Payment> {
+        override fun createFromParcel(parcel: Parcel): Payment {
+            return Payment(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Payment?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

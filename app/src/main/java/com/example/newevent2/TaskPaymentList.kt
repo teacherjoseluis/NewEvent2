@@ -1,24 +1,33 @@
 package com.example.newevent2
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.example.newevent2.Model.User
 import com.google.android.material.tabs.TabLayout
 
 class TaskPaymentList : AppCompatActivity() {
 
-    //lateinit var eventkey: String
-    lateinit var category: String
+    val userid = ""
+    val eventid = ""
+    var usersession = User()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.taskpayment_list)
 
+        usersession = com.example.newevent2.Functions.getUserSession(this)
+        if (usersession.key == "") {
+            val loginactivity =
+                Intent(this, LoginView::class.java)
+            startActivity(loginactivity)
+        }
+
         val intent = intent
-        //eventkey = intent.getStringExtra("eventkey").toString()
-        category = intent.getStringExtra("category").toString()
+        val category = intent.getStringExtra("category").toString()
 
         val tablayout = findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = findViewById<View>(R.id.pager) as ViewPager
@@ -32,9 +41,10 @@ class TaskPaymentList : AppCompatActivity() {
             val adapter = TaskPayment_PagerAdapter(
                 this,
                 supportFragmentManager,
-                tablayout.tabCount,
-                //eventkey,
-                category
+                usersession.key,
+                usersession.eventid,
+                category,
+                tablayout.tabCount
             )
             viewPager.adapter = adapter
             viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tablayout))

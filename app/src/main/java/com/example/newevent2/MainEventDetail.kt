@@ -44,7 +44,7 @@ class MainEventDetail : Fragment(), EventPresenter.ViewEventActivity {
         savedInstanceState: Bundle?
     ): View? {
 
-        val inf = inflater.inflate(R.layout.eventdetail_event, container, false)
+        val inf = inflater.inflate(R.layout.mainevent_detail, container, false)
 
         // Get Event details -----------------------------------------------------------------------
         presenterevent = EventPresenter(this, inf, userid, eventid)

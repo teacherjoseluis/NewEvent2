@@ -16,6 +16,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newevent2.Model.Payment
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
@@ -408,7 +409,7 @@ class Welcome : AppCompatActivity() {
                     chartpayment.invalidate()
                 }
 
-                override fun onPaymentList(list: ArrayList<Payment>) {
+                override fun onPaymentList(list: java.util.ArrayList<Payment>) {
                     TODO("Not yet implemented")
                 }
 

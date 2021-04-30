@@ -268,26 +268,7 @@ class TaskEntity : Task() {
             }
     }
 
-    fun editTask(context: Context, action: String) {
-        val usersessionlist = getUserSession(context)
-        //val postRef = myRef.child("User").child("Event").child(this.eventid).child("Task")
-        val postRef =
-            myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
-                .child("Task").child(this.key)
 
-        if (action == "complete") {
-            postRef.child("status").setValue("C")
-                .addOnSuccessListener {
-                    //saveLog(context, "UPDATE", "task", key, name)
-                }
-        }
-        if (action == "active") {
-            postRef.child("status").setValue("A")
-                .addOnSuccessListener {
-                    //saveLog(context, "UPDATE", "task", key, name)
-                }
-        }
-    }
 
     fun deleteTask(context: Context) {
         val usersessionlist = getUserSession(context)

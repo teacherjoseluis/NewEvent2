@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -127,6 +128,95 @@ class TaskModel {
         postRef.addValueEventListener(taskListenerActive)
     }
 
+    fun getTasksList(
+        userid: String,
+        eventid: String,
+        category: String,
+        status: String,
+        dataFetched: FirebaseSuccessTaskList
+    ) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task")
+        var tasklist = ArrayList<Task>()
+
+        val tasklListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                tasklist.clear()
+
+                for (snapshot in p0.children) {
+                    val taskitem = snapshot.getValue(Task::class.java)
+
+                    if (taskitem!!.category == category && taskitem!!.status == status) {
+                        taskitem!!.key = snapshot.key.toString()
+                        tasklist.add(taskitem!!)
+                    }
+                }
+                dataFetched.onTaskList(tasklist)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(tasklListenerActive)
+    }
+
+    fun addTask(userid: String, eventid: String, task: Task) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task").push()
+
+        //---------------------------------------
+        // Getting the time and date to record in the recently created task
+        val timestamp = Time(System.currentTimeMillis())
+        val taskdatetime = Date(timestamp.time)
+        val sdf = SimpleDateFormat("MM/dd/yyyy h:mm:ss a")
+        //---------------------------------------
+
+        val taskadd = hashMapOf(
+            "name" to task.name,
+            "budget" to task.budget,
+            "date" to task.date,
+            "category" to task.category,
+            "status" to task.status,
+            "createdatetime" to sdf.format(taskdatetime)
+        )
+
+        postRef.setValue(taskadd as Map<String, Any>)
+            .addOnFailureListener {
+            }
+            .addOnSuccessListener {
+            }
+    }
+
+    fun editTask(userid: String, eventid: String, task: Task) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task").child(task.key)
+
+        val taskedit = hashMapOf(
+            "name" to task.name,
+            "budget" to task.budget,
+            "date" to task.date,
+            "category" to task.category,
+            "status" to task.status,
+            "createdatetime" to task.createdatetime
+        )
+
+        postRef.updateChildren(taskedit as Map<String, Any>)
+            .addOnSuccessListener {
+            }
+    }
+
+    fun deleteTask(userid: String, eventid: String, task: Task) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task").child(task.key)
+                .removeValue()
+    }
+
     interface FirebaseSuccessStatsTask {
         fun onTasksStats(taskpending: Int, taskcompleted: Int, sumbudget: Float)
     }
@@ -137,5 +227,9 @@ class TaskModel {
 
     interface FirebaseSuccessTask {
         fun onTask(task: Task)
+    }
+
+    interface FirebaseSuccessTaskList {
+        fun onTaskList(list: ArrayList<Task>)
     }
 }

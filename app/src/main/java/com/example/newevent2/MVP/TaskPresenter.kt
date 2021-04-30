@@ -1,10 +1,14 @@
 package com.example.newevent2.MVP
 
+import android.os.Build
 import android.view.View
+import androidx.annotation.RequiresApi
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.DashboardView
 import com.example.newevent2.MainEventSummary
+import com.example.newevent2.TaskPayment_Tasks
+import java.util.ArrayList
 
 class TaskPresenter {
 
@@ -13,6 +17,7 @@ class TaskPresenter {
     lateinit var inflatedView: View
     lateinit var viewDashboard: DashboardView
     lateinit var fragmentEventSummary: MainEventSummary
+    lateinit var fragmentTaskPaymentTask: TaskPayment_Tasks
 
     constructor(view: DashboardView, userid: String, eventid: String) {
         this.userid = userid
@@ -27,32 +32,85 @@ class TaskPresenter {
         inflatedView = view
     }
 
+    constructor(fragment: TaskPayment_Tasks, view: View, userid: String, eventid: String) {
+        this.userid = userid
+        this.eventid = eventid
+        fragmentTaskPaymentTask = fragment
+        inflatedView = view
+    }
+
     fun getTaskStats(category: String = "") {
         val task = TaskModel()
         task.getTaskStats(userid, eventid, category, object : TaskModel.FirebaseSuccessStatsTask {
             override fun onTasksStats(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
                 if (taskpending == 0 && taskcompleted == 0) {
                     //There are no tasks created
-                    if (::viewDashboard.isInitialized) {
-                        viewDashboard.onViewTaskError("BLANK_STATS")
-                    } else if (::fragmentEventSummary.isInitialized) {
-                        fragmentEventSummary.onViewTaskErrorFragment(inflatedView,"BLANK_STATS")
+                    when {
+                        ::viewDashboard.isInitialized -> {
+                            viewDashboard.onViewTaskError("BLANK_STATS")
+                        }
+                        ::fragmentEventSummary.isInitialized -> {
+                            fragmentEventSummary.onViewTaskErrorFragment(inflatedView, "BLANK_STATS")
+                        }
+                        ::fragmentTaskPaymentTask.isInitialized -> {
+                            fragmentTaskPaymentTask.onViewTaskErrorFragment(inflatedView, "BLANK_STATS")
+                        }
                     }
                 } else {
                     //Show the stats
-                    if (::viewDashboard.isInitialized) {
-                        viewDashboard.onViewTaskStatsSuccess(taskpending, taskcompleted, sumbudget)
-                    } else if (::fragmentEventSummary.isInitialized) {
-                        fragmentEventSummary.onViewTaskStatsSuccessFragment(
-                            inflatedView,
-                            taskpending,
-                            taskcompleted,
-                            sumbudget
-                        )
+                    when {
+                        ::viewDashboard.isInitialized -> {
+                            viewDashboard.onViewTaskStatsSuccess(taskpending, taskcompleted, sumbudget)
+                        }
+                        ::fragmentEventSummary.isInitialized -> {
+                            fragmentEventSummary.onViewTaskStatsSuccessFragment(
+                                inflatedView,
+                                taskpending,
+                                taskcompleted,
+                                sumbudget
+                            )
+                        }
+                        ::fragmentTaskPaymentTask.isInitialized -> {
+                            fragmentTaskPaymentTask.onViewTaskStatsSuccessFragment(
+                                inflatedView,
+                                taskpending,
+                                taskcompleted,
+                                sumbudget
+                            )
+                        }
                     }
                 }
             }
         })
+    }
+
+    fun getTasksList(category: String, status: String) {
+        val task = TaskModel()
+        task.getTasksList(
+            userid,
+            eventid,
+            category,
+            status,
+            object : TaskModel.FirebaseSuccessTaskList {
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                override fun onTaskList(list: ArrayList<Task>) {
+                    if (list.isNotEmpty()) {
+                        fragmentTaskPaymentTask.onViewTaskListFragment(
+                            inflatedView,
+                            category,
+                            status,
+                            list
+                        )
+                    } else {
+                        fragmentTaskPaymentTask.onViewTaskListErrorFragment(
+                            inflatedView,
+                            category,
+                            status,
+                            "NO_TASKS"
+                        )
+                    }
+                }
+            })
     }
 
     fun getDueNextTask() {
@@ -81,6 +139,23 @@ class TaskPresenter {
             taskcompleted: Int,
             sumbudget: Float
         )
+
         fun onViewTaskErrorFragment(inflatedView: View, errcode: String)
+    }
+
+    interface ViewTaskList {
+        fun onViewTaskListFragment(
+            inflatedView: View,
+            category: String,
+            status: String,
+            list: ArrayList<Task>
+        )
+
+        fun onViewTaskListErrorFragment(
+            inflatedView: View,
+            category: String,
+            status: String,
+            errcode: String
+        )
     }
 }

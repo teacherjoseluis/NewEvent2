@@ -1,11 +1,12 @@
 package com.example.newevent2.MVP
 
+import android.os.Build
 import android.view.View
-import com.example.newevent2.DashboardEvent
+import androidx.annotation.RequiresApi
+import com.example.newevent2.*
 import com.example.newevent2.Model.PaymentModel
 import com.example.newevent2.Model.TaskModel
-import com.example.newevent2.DashboardView
-import com.example.newevent2.MainEventSummary
+import java.util.ArrayList
 
 class PaymentPresenter {
 
@@ -14,6 +15,7 @@ class PaymentPresenter {
     lateinit var inflatedView: View
     lateinit var viewDashboardEvent: DashboardEvent
     lateinit var fragmentEventSummary: MainEventSummary
+    lateinit var fragmentTaskPaymentPayment: TaskPayment_Payments
 
     constructor(view: DashboardEvent, userid: String, eventid: String) {
         this.userid = userid
@@ -26,6 +28,13 @@ class PaymentPresenter {
         this.eventid = eventid
         inflatedView = view
         fragmentEventSummary = fragment
+    }
+
+    constructor(fragment: TaskPayment_Payments, view: View, userid: String, eventid: String) {
+        this.userid = userid
+        this.eventid = eventid
+        fragmentTaskPaymentPayment = fragment
+        inflatedView = view
     }
 
     fun getPaymentStats(category: String = "") {
@@ -42,6 +51,8 @@ class PaymentPresenter {
                             viewDashboardEvent.onViewPaymentError("BLANK_STATS")
                         } else if (::fragmentEventSummary.isInitialized) {
                             fragmentEventSummary.onViewPaymentErrorFragment(inflatedView, "BLANK_STATS")
+                        } else if(::fragmentTaskPaymentPayment.isInitialized){
+                            fragmentTaskPaymentPayment.onViewPaymentErrorFragment(inflatedView, "BLANK_STATS")
                         }
                     } else {
                         // Get the total Task Budget
@@ -64,9 +75,41 @@ class PaymentPresenter {
                                             sumpayment,
                                             sumbudget
                                         )
+                                    } else if (::fragmentTaskPaymentPayment.isInitialized) {
+                                        fragmentTaskPaymentPayment.onViewPaymentStatsSuccessFragment(inflatedView,
+                                            countpayment,
+                                            sumpayment,
+                                            sumbudget
+                                        )
                                     }
                                 }
                             })
+                    }
+                }
+            })
+    }
+
+    fun getPaymentList(category: String) {
+        val payment = PaymentModel()
+        payment.getPaymentsList(
+            userid,
+            eventid,
+            category,
+            object : PaymentModel.FirebaseSuccessPaymentList {
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                override fun onPaymentList(list: ArrayList<com.example.newevent2.Model.Payment>) {
+                    if (list.isNotEmpty()) {
+                        fragmentTaskPaymentPayment.onViewPaymentListFragment(
+                            inflatedView,
+                            category,
+                            list
+                        )
+                    } else {
+                        fragmentTaskPaymentPayment.onViewPaymentListErrorFragment(
+                            inflatedView,
+                            category,
+                            "NO_TASKS"
+                        )
                     }
                 }
             })
@@ -84,5 +127,19 @@ class PaymentPresenter {
         )
 
         fun onViewPaymentErrorFragment(inflatedView: View, errcode: String)
+    }
+
+    interface ViewPaymentList {
+        fun onViewPaymentListFragment(
+            inflatedView: View,
+            category: String,
+            list: ArrayList<com.example.newevent2.Model.Payment>
+        )
+
+        fun onViewPaymentListErrorFragment(
+            inflatedView: View,
+            category: String,
+            errcode: String
+        )
     }
 }

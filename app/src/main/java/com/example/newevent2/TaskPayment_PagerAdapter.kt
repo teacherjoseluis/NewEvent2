@@ -9,15 +9,16 @@ import androidx.fragment.app.FragmentPagerAdapter
 class TaskPayment_PagerAdapter(
     private val myContext: Context,
     fm: FragmentManager,
-    internal var totalTabs: Int,
-    //val eventkey: String,
-    val category: String
-
+    private val userid: String,
+    private val eventid: String,
+    private val category: String,
+    private var totalTabs: Int
 ) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         val bundle = Bundle()
-        //bundle.putString("eventkey", eventkey)
+        bundle.putString("userid", userid)
+        bundle.putString("eventid", eventid)
         bundle.putString("category", category)
 
         return when (position) {
@@ -42,5 +43,4 @@ class TaskPayment_PagerAdapter(
     override fun getCount(): Int {
         return totalTabs
     }
-
 }

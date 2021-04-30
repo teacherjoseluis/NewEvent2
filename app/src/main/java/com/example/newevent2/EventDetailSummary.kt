@@ -6,12 +6,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.newevent2.Model.Payment
 import com.example.newevent2.ui.ViewAnimation
 import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.eventdetail_summary.view.*
-import kotlinx.android.synthetic.main.my_events.*
 import java.text.DecimalFormat
 
 
@@ -65,7 +64,7 @@ class EventDetailSummary : Fragment() {
                     inf.paymentpaid.text = formatter.format(sumpayment)
                 }
 
-                override fun onPaymentList(list: ArrayList<Payment>) {
+                override fun onPaymentList(list: java.util.ArrayList<Payment>) {
                     TODO("Not yet implemented")
                 }
 

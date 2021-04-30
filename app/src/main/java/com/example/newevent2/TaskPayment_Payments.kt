@@ -9,21 +9,25 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.example.newevent2.MVP.PaymentPresenter
+import com.example.newevent2.Model.Payment
 import kotlinx.android.synthetic.main.taskpayment_payments.view.*
-import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 import java.text.DecimalFormat
+import java.util.ArrayList
 
-class TaskPayment_Payments : Fragment() {
-    //private var eventkey: String = ""
+class TaskPayment_Payments : Fragment(), PaymentPresenter.ViewPaymentList,
+    PaymentPresenter.ViewPaymentFragment {
+
+    private var userid: String = ""
+    private var eventid: String = ""
     private var category: String = ""
+
+    private lateinit var presenterpayment: PaymentPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //eventkey = this.arguments!!.get("eventkey").toString()
+        userid = this.arguments!!.get("userid").toString()
+        eventid = this.arguments!!.get("eventid").toString()
         category = this.arguments!!.get("category").toString()
     }
 
@@ -34,61 +38,69 @@ class TaskPayment_Payments : Fragment() {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.taskpayment_payments, container, false)
 
-        val recyclerView = inf.PaymentsRecyclerView
+        presenterpayment = PaymentPresenter(this, inf, userid, eventid)
+        presenterpayment.getPaymentStats(category)
+        presenterpayment.getPaymentList(category)
+
+        return inf
+    }
+
+    override fun onViewPaymentStatsSuccessFragment(
+        inflatedView: View,
+        countpayment: Int,
+        sumpayment: Float,
+        sumbudget: Float
+    ) {
+        val formatter = DecimalFormat("$#,###.00")
+        inflatedView.totalpaid.text = formatter.format(sumpayment)
+        inflatedView.payments.text = countpayment.toString()
+    }
+
+    override fun onViewPaymentErrorFragment(inflatedView: View, errcode: String) {
+        TODO("Not yet implemented")
+        // What to show when the consulted category has no payments?
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onViewPaymentListFragment(
+        inflatedView: View,
+        category: String,
+        list: ArrayList<Payment>
+    ) {
+        val recyclerView = inflatedView.PaymentsRecyclerView
 
         recyclerView.apply {
-            layoutManager = LinearLayoutManager(inf.context).apply {
+            layoutManager = LinearLayoutManager(inflatedView.context).apply {
                 stackFromEnd = true
                 reverseLayout = true
             }
         }
 
-        val paymententity = PaymentEntity()
-        //paymententity.eventid = eventkey
-        paymententity.category = category
+        val rvAdapter = Rv_PaymentAdapter(userid, eventid, list)
+        recyclerView.adapter = rvAdapter
 
-        paymententity.getPaymentsList(activity!!.applicationContext, object : FirebaseSuccessListenerPayment {
-            override fun onPaymentEvent(sumpayment: Float) {
-                TODO("Not yet implemented")
-            }
-
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onPaymentList(list: ArrayList<Payment>) {
-                val rvAdapter = Rv_PaymentAdapter(list)
-                recyclerView.adapter = rvAdapter
-
-                val swipeController = SwipeControllerTasks(
-                    inf.context,
-                    rvAdapter,
-                    recyclerView,
-                    null,
-                    "delete"
-                )
-                val itemTouchHelper = ItemTouchHelper(swipeController)
-                itemTouchHelper.attachToRecyclerView(recyclerView)
-            }
-
-            override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
-                TODO("Not yet implemented")
-            }
-        })
-
-        paymententity.getPaymentStats(activity!!.applicationContext, object: FirebaseSuccessListenerPayment {
-            override fun onPaymentEvent(sumpayment: Float) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onPaymentList(list: ArrayList<Payment>) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
-                val formatter = DecimalFormat("$#,###.00")
-                inf.totalpaid.text = formatter.format(sumpayment)
-                inf.payments.text = countpayment.toString()
-            }
-        })
-        return inf
+        val swipeController = SwipeControllerTasks(
+            inflatedView.context,
+            rvAdapter,
+            recyclerView,
+            LEFTACTION,
+            RIGHTACTION
+        )
+        val itemTouchHelper = ItemTouchHelper(swipeController)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
+    override fun onViewPaymentListErrorFragment(
+        inflatedView: View,
+        category: String,
+        errcode: String
+    ) {
+        TODO("Not yet implemented")
+        // What to show when the consulted category has no payments?
+    }
+
+    companion object {
+        const val LEFTACTION = ""
+        const val RIGHTACTION = "delete"
+    }
 }
