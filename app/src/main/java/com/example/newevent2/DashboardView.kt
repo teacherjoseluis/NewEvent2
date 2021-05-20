@@ -10,9 +10,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
@@ -45,21 +48,24 @@ import kotlinx.android.synthetic.main.welcome.duenexttask
 import kotlinx.android.synthetic.main.welcome0.*
 import java.text.DecimalFormat
 
-class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity {
+class DashboardView : AppCompatActivity() {
 
     private var usersession = User()
     lateinit var drawerLayout: DrawerLayout
-    private lateinit var presentertask: TaskPresenter
+//    private lateinit var presentertask: TaskPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.welcome_navigation)
 
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-//        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_google)
-//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_google)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = "Event Detail"
 
         drawerLayout = findViewById(R.id.drawer_layout)
 
@@ -138,7 +144,6 @@ class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity
         if (viewPager != null) {
             val adapter =
                 Dashboard_PagerAdapter(
-                    this,
                     usersession.key,
                     usersession.eventid,
                     supportFragmentManager,
@@ -174,12 +179,12 @@ class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity
             }
         })
 //--------------------------------------------------------------------------------------------------
-        presentertask = TaskPresenter(this, usersession.key, usersession.eventid)
-        presentertask.getDueNextTask()
+        //presentertask = TaskPresenter(this, usersession.key, usersession.eventid)
+        //presentertask.getDueNextTask()
 //--------------------------------------------------------------------------------------------------
-        usershortname0.text = usersession.shortname
+//        usershortname0.text = usersession.shortname
 //--------------------------------------------------------------------------------------------------
-        progress0.text = "Your profile has a ${getProfileprogress()}% progress"
+//        progress0.text = "Your profile has a ${getProfileprogress()}% progress"
     }
 
     override fun onBackPressed() {
@@ -201,18 +206,4 @@ class DashboardView : AppCompatActivity(), TaskPresenter.ViewTaskWelcomeActivity
         return profileprogress
     }
 
-    override fun onViewNextTaskSuccess(task: com.example.newevent2.Model.Task) {
-        duenextempty.visibility = View.GONE
-        duenextdate.text = task.date
-        duenexttask.text = task.name
-    }
-
-    override fun onViewTaskStatsSuccess(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-        //This interface will not be implemented here. As it's already been taken care of in the corresponding fragment
-    }
-
-    override fun onViewTaskError(errcode: String) {
-        //This interface will not be implemented here
-        duenextfilled.visibility = ConstraintLayout.GONE
-    }
 }

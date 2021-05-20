@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.taskpayment_payments.view.*
 import java.text.DecimalFormat
 import java.util.ArrayList
 
-class TaskPayment_Payments : Fragment(), PaymentPresenter.ViewPaymentList,
-    PaymentPresenter.ViewPaymentFragment {
+class TaskPayment_Payments : Fragment(), PaymentPresenter.PaymentList,
+    PaymentPresenter.PaymentStats {
 
     private var userid: String = ""
     private var eventid: String = ""
@@ -45,7 +45,7 @@ class TaskPayment_Payments : Fragment(), PaymentPresenter.ViewPaymentList,
         return inf
     }
 
-    override fun onViewPaymentStatsSuccessFragment(
+    override fun onPaymentStats(
         inflatedView: View,
         countpayment: Int,
         sumpayment: Float,
@@ -56,13 +56,13 @@ class TaskPayment_Payments : Fragment(), PaymentPresenter.ViewPaymentList,
         inflatedView.payments.text = countpayment.toString()
     }
 
-    override fun onViewPaymentErrorFragment(inflatedView: View, errcode: String) {
+    override fun onPaymentStatsError(inflatedView: View, errcode: String) {
         TODO("Not yet implemented")
         // What to show when the consulted category has no payments?
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onViewPaymentListFragment(
+    override fun onPaymentList(
         inflatedView: View,
         category: String,
         list: ArrayList<Payment>
@@ -90,7 +90,7 @@ class TaskPayment_Payments : Fragment(), PaymentPresenter.ViewPaymentList,
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    override fun onViewPaymentListErrorFragment(
+    override fun onPaymentListError(
         inflatedView: View,
         category: String,
         errcode: String

@@ -7,7 +7,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.example.newevent2.Model.User
+import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TaskPaymentList : AppCompatActivity() {
 
@@ -27,7 +30,7 @@ class TaskPaymentList : AppCompatActivity() {
         }
 
         val intent = intent
-        val category = intent.getStringExtra("category").toString()
+        val passedcategory = intent.getStringExtra("category").toString()
 
         val tablayout = findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = findViewById<View>(R.id.pager) as ViewPager
@@ -43,7 +46,7 @@ class TaskPaymentList : AppCompatActivity() {
                 supportFragmentManager,
                 usersession.key,
                 usersession.eventid,
-                category,
+                passedcategory,
                 tablayout.tabCount
             )
             viewPager.adapter = adapter
@@ -55,28 +58,20 @@ class TaskPaymentList : AppCompatActivity() {
                 }
 
                 override fun onTabUnselected(p0: TabLayout.Tab?) {
-
                 }
 
                 override fun onTabReselected(p0: TabLayout.Tab?) {
-
                 }
             })
         }
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
-        when (category) {
-            "venue" -> apptitle.text = "Venue"
-            "photo" -> apptitle.text = "Photo & Video"
-            "entertainment" -> apptitle.text = "Entertainment"
-            "flowers" -> apptitle.text = "Flowers & Decor"
-            "transportation" -> apptitle.text = "Transportation"
-            "ceremony" -> apptitle.text = "Ceremony"
-            "attire" -> apptitle.text = "Attire & Accessories"
-            "beauty" -> apptitle.text = "Health & Beauty"
-            "food" -> apptitle.text = "Food & Drink"
-            "guests" -> apptitle.text = "Guests"
-            else -> apptitle.text = "No Category"
+
+        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        for (category in list) {
+            if (category.code == passedcategory) {
+                apptitle.text = category.en_name
+            }
         }
     }
 

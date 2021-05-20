@@ -113,6 +113,7 @@ class TaskModel {
                     val taskitem = snapshot.getValue(Task::class.java)!!
                     if (taskitem.status == "A") {
                         if (todaydate.before(SimpleDateFormat("dd/MM/yyyy").parse(taskitem.date))) {
+                            taskitem!!.key = snapshot.key.toString()
                             duenexttask = taskitem
                             break
                         }
@@ -137,7 +138,7 @@ class TaskModel {
     ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Task")
+                .child("Task").orderByChild("date")
         var tasklist = ArrayList<Task>()
 
         val tasklListenerActive = object : ValueEventListener {
@@ -148,10 +149,49 @@ class TaskModel {
                 for (snapshot in p0.children) {
                     val taskitem = snapshot.getValue(Task::class.java)
 
-                    if (taskitem!!.category == category && taskitem!!.status == status) {
-                        taskitem!!.key = snapshot.key.toString()
-                        tasklist.add(taskitem!!)
+                    if (taskitem!!.status == status) {
+                        if (category != "") {
+                            if (taskitem!!.category == category) {
+                                taskitem!!.key = snapshot.key.toString()
+                                tasklist.add(taskitem!!)
+                            }
+                        } else {
+                            taskitem!!.key = snapshot.key.toString()
+                            tasklist.add(taskitem!!)
+                        }
                     }
+                }
+                dataFetched.onTaskList(tasklist)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(tasklListenerActive)
+    }
+
+    fun getAllTasksList(
+        userid: String,
+        eventid: String,
+        //category: String,
+        //status: String,
+        dataFetched: FirebaseSuccessTaskList
+    ) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task").orderByChild("date")
+        var tasklist = ArrayList<Task>()
+
+        val tasklListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                tasklist.clear()
+
+                for (snapshot in p0.children) {
+                    val taskitem = snapshot.getValue(Task::class.java)
+                    taskitem!!.key = snapshot.key.toString()
+                    tasklist.add(taskitem!!)
                 }
                 dataFetched.onTaskList(tasklist)
             }

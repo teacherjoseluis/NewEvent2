@@ -8,159 +8,29 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/main_toolbar"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="34dp"></include>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/userprofile"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <TextView
-            android:id="@+id/hellouser"
-            style="@style/Heading6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:text="Hello,"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></TextView>
-
-        <TextView
-            android:id="@+id/usershortname0"
-            style="@style/Heading6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:text="User"
-            app:layout_constraintStart_toEndOf="@+id/hellouser"
-            app:layout_constraintTop_toTopOf="parent"></TextView>
-
-        <TextView
-            android:id="@+id/progress0"
-            style="@style/BodyItalic2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="2dp"
-            android:text="Progress"
-            android:textColor="@color/secondaryText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hellouser" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/duenextlabel"
-        style="@style/Heading6"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Due next"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userprofile"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/duenextlayout0"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/duenextlabel">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/duenextfilled"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/duenexticon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icons8_task_completed_24"></ImageView>
-
-            <TextView
-                android:id="@+id/duenextdate"
-                style="@style/BodyItalic2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="date"
-                app:layout_constraintStart_toEndOf="@id/duenexticon"
-                app:layout_constraintTop_toTopOf="parent"></TextView>
-
-            <TextView
-                android:id="@+id/hyphen3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="3dp"
-                android:text="-"
-                app:layout_constraintStart_toEndOf="@id/duenextdate"
-                app:layout_constraintTop_toTopOf="parent"></TextView>
-
-            <TextView
-                android:id="@+id/duenexttask"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="3dp"
-                android:text="task"
-                app:layout_constraintStart_toEndOf="@id/hyphen3"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </TextView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-            <TextView
-                android:id="@+id/duenextempty"
-                style="@style/Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="There is not a due next task to show"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+        layout="@layout/main_toolbar"></include>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/dashboard_tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
+        android:background="@color/rosaChillon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/duenextlayout0"
-        app:tabIndicatorColor="@color/rosaChillon"
-        app:tabSelectedTextColor="@color/rosaChillon"
-        app:tabTextColor="@color/rosaChillon">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="activity" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:tabIndicatorColor="@color/azulmasClaro"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/white">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="my event" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="activity" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

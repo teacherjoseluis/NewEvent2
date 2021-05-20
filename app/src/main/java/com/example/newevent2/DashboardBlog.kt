@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.dashboardblog.view.*
 import kotlinx.android.synthetic.main.welcome.*
 import kotlinx.android.synthetic.main.welcome.recentactivityrv
 
-class DashboardBlog(private val view: DashboardView) : Fragment(), BlogPresenter.ViewBlogActivity {
+class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
 
     lateinit var recyclerViewBlog: RecyclerView
     private lateinit var presenter: BlogPresenter
@@ -48,7 +48,7 @@ class DashboardBlog(private val view: DashboardView) : Fragment(), BlogPresenter
     }
 
     override fun onViewBlogSuccess(bloglist: ArrayList<Blog>) {
-        emptyrecyclerview.visibility = View.GONE
+        //emptyrecyclerview.visibility = View.GONE
         val rvAdapter = Rv_BlogAdapter(bloglist)
         blogrv.adapter = rvAdapter
     }

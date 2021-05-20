@@ -53,7 +53,7 @@ class PaymentEntity() : Payment() {
         val postRef =
             myRef.child("User").child(usersessionlist[0]).child("Event").child(usersessionlist[3])
                 .child("Payment")
-        var paymentlist = ArrayList<Payment>()
+        var paymentlist = ArrayList<com.example.newevent2.Model.Payment>()
 
         val paymentlListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -61,7 +61,7 @@ class PaymentEntity() : Payment() {
                 paymentlist.clear()
 
                 for (snapshot in p0.children) {
-                    val paymentitem = snapshot.getValue(Payment::class.java)
+                    val paymentitem = snapshot.getValue(com.example.newevent2.Model.Payment::class.java)
 
                     if (paymentitem!!.category == category) {
                         paymentitem!!.key = snapshot.key.toString()

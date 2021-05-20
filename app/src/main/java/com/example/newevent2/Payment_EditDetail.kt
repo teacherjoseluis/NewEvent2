@@ -113,7 +113,6 @@ class Payment_EditDetail : AppCompatActivity() {
 
 
     private fun savePayment() {
-
         payment.name = tkname.text.toString()
         payment.date = tkdate.text.toString()
         payment.amount = tkbudget.text.toString()

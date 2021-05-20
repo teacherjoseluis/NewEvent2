@@ -1,22 +1,24 @@
 package com.example.newevent2
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.newevent2.Functions.Loginfo
-import com.example.newevent2.MVP.LogPresenter
 import com.example.newevent2.MVP.PaymentPresenter
 import com.example.newevent2.MVP.TaskPresenter
 import com.example.newevent2.Model.Task
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
@@ -25,23 +27,25 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.utils.MPPointF
-import kotlinx.android.synthetic.main.dashboardactivity.*
-import kotlinx.android.synthetic.main.dashboardactivity.view.*
 import kotlinx.android.synthetic.main.dashboardcharts.*
-import kotlinx.android.synthetic.main.welcome.recentactivityrv
+import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import java.text.DecimalFormat
 
-class DashboardEvent(private val view: DashboardView) : Fragment(),
-    TaskPresenter.ViewTaskWelcomeActivity,
-    PaymentPresenter.ViewPaymentWelcomeActivity {
+class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.TaskItem,
+    PaymentPresenter.PaymentStats {
 
     private lateinit var presentertask: TaskPresenter
     private lateinit var presenterpayment: PaymentPresenter
 
+    private lateinit var BandG_Colors: ArrayList<Int>
+    private lateinit var BandG_Colors2: ArrayList<Int>
+    private var tfLarge: Typeface? = null
     private var tfRegular: Typeface? = null
     private var tfLight: Typeface? = null
     private lateinit var charttask: PieChart
     private lateinit var chartpayment: PieChart
+
+    private lateinit var mShimmerViewContainer: ShimmerFrameLayout
 
     var userid = ""
     var eventid = ""
@@ -50,19 +54,25 @@ class DashboardEvent(private val view: DashboardView) : Fragment(),
         super.onCreate(savedInstanceState)
         userid = arguments!!.get("userid").toString()
         eventid = arguments!!.get("eventid").toString()
+
+        val rosaPalido = context!!.resources.getColor(R.color.rosapalido)
+        val azulmasClaro = context!!.resources.getColor(R.color.azulmasClaro)
+        val palodeRosa = context!!.resources.getColor(R.color.azulmasClaro)
+
+        @SuppressLint("ResourceType")
+        BandG_Colors = arrayListOf(
+            rosaPalido,
+            azulmasClaro
+        )
+
+        BandG_Colors2 = arrayListOf(
+            azulmasClaro,
+            palodeRosa
+        )
     }
 
-    @SuppressLint("ResourceType")
-    var BandG_Colors = arrayListOf<Int>(
-        Color.parseColor("#F8BBD0"),
-        Color.parseColor("#C2185B")
-    )
 
-    var BandG_Colors2 = arrayListOf<Int>(
-        Color.parseColor("#C2185B"),
-        Color.parseColor("#9E9E9E")
-    )
-
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,98 +80,167 @@ class DashboardEvent(private val view: DashboardView) : Fragment(),
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.dashboardcharts, container, false)
 
+        // mShimmerViewContainer = ShimmerFrameLayout(context)
+
+//        mShimmerViewContainer = inf.findViewById(R.id.shimmer_view_container)
+//        mShimmerViewContainer.startShimmerAnimation()
+//        mShimmerViewContainer.duration = 1000
+
         //---------------------------------------------------------------------------------------------------------------
-        tfRegular = ResourcesCompat.getFont(context!!, R.font.raleway_thin)
         tfLight = ResourcesCompat.getFont(context!!, R.font.raleway_thin)
+        tfRegular = ResourcesCompat.getFont(context!!, R.font.raleway_medium)
+        tfLarge = ResourcesCompat.getFont(context!!, R.font.raleway_medium)
 
         charttask = inf.findViewById(R.id.charttask)
         charttask.apply {
             setUsePercentValues(false)
             description.isEnabled = false
-            setExtraOffsets(5f, 10f, 5f, 5f)
+            setExtraOffsets(5f, 5f, 5f, 5f) //apparently this is padding
             dragDecelerationFrictionCoef = 0.95f
-            setCenterTextTypeface(tfLight)
+            setCenterTextTypeface(tfRegular)
+            setCenterTextColor(context!!.resources.getColor(R.color.rosaChillon))
+            setCenterTextSize(30f)
             isDrawHoleEnabled = true
             setHoleColor(Color.WHITE)
+//            Don't really care too much about having a transparent circle
             setTransparentCircleColor(Color.WHITE)
             setTransparentCircleAlpha(110)
-            holeRadius = 58f
-            transparentCircleRadius = 61f
+            holeRadius = 50f
+//            transparentCircleRadius = 61f
             setDrawCenterText(true)
             rotationAngle = 0f
-            isRotationEnabled = true
+            isRotationEnabled = false
             isHighlightPerTapEnabled = true
             animateY(1400, Easing.EaseInOutQuad)
-            setEntryLabelColor(Color.BLACK)
+            setEntryLabelColor(context!!.resources.getColor(R.color.Cream))
             setEntryLabelTypeface(tfRegular)
-            setEntryLabelTextSize(12f)
+            setEntryLabelTextSize(14f)
         }
 
-        val l: Legend = charttask.legend
-        l.apply {
+        charttask.legend.apply {
+            //formSize = 12.0f
+            form = Legend.LegendForm.CIRCLE
+            horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
             verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-            orientation = Legend.LegendOrientation.HORIZONTAL
+            textSize = 12.0f
+            textColor = (context!!.resources.getColor(R.color.Cream))
+            typeface = tfRegular
             setDrawInside(false)
-            xEntrySpace = 0f
-            yEntrySpace = 0f
-            yOffset = 0f
+            xEntrySpace = 10f
+            yEntrySpace = 4f
+            yOffset = 5f
         }
+
 
 //----------------------------------------------------------------------------------------------------//
         chartpayment = inf.findViewById(R.id.chartpayment)
         chartpayment.apply {
             setUsePercentValues(false)
             description.isEnabled = false
-            setExtraOffsets(5f, 10f, 5f, 5f)
+            setExtraOffsets(5f, 5f, 5f, 5f) //apparently this is padding
             dragDecelerationFrictionCoef = 0.95f
-            setCenterTextTypeface(tfLight)
+            setCenterTextTypeface(tfRegular)
             isDrawHoleEnabled = true
             setHoleColor(Color.WHITE)
-            setTransparentCircleColor(Color.WHITE)
-            setTransparentCircleAlpha(110)
-            holeRadius = 58f
-            transparentCircleRadius = 61f
+//            Don't really care too much about having a transparent circle
+//            setTransparentCircleColor(Color.WHITE)
+//            setTransparentCircleAlpha(110)
+            holeRadius = 40f
+//            transparentCircleRadius = 61f
             setDrawCenterText(true)
             rotationAngle = 0f
-            isRotationEnabled = true
+            isRotationEnabled = false
             isHighlightPerTapEnabled = true
             animateY(1400, Easing.EaseInOutQuad)
-            setEntryLabelColor(Color.BLACK)
+            setEntryLabelColor(context!!.resources.getColor(R.color.secondaryText))
             setEntryLabelTypeface(tfRegular)
-            setEntryLabelTextSize(12f)
+            setEntryLabelTextSize(14f)
         }
 
-        val g: Legend = charttask.legend
-        g.apply {
+        chartpayment.legend.apply {
+            Legend.LegendForm.SQUARE
+            formSize = 12.0f
             verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+            horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
             orientation = Legend.LegendOrientation.HORIZONTAL
             setDrawInside(false)
-            xEntrySpace = 0f
-            yEntrySpace = 0f
+            xEntrySpace = 4f
+            yEntrySpace = 4f
             yOffset = 0f
         }
         //----------------------------------------------------------------------------------------------------//
-        presentertask = TaskPresenter(view, userid, eventid)
+        presentertask = TaskPresenter(context!!,this, inf)
+        presentertask.userid=userid
+        presentertask.eventid=eventid
+        presentertask.getDueNextTask()
         presentertask.getTaskStats()
 
-        presenterpayment = PaymentPresenter(this, userid, eventid)
+        presenterpayment = PaymentPresenter(this, inf, userid, eventid)
         presenterpayment.getPaymentStats()
         return inf
     }
 
-    override fun onViewTaskStatsSuccess(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-        emptycharts.visibility = View.GONE
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onTask(inflatedView: View, task: Task) {
+        //Thread.sleep(300)
+//        mShimmerViewContainer.stopShimmerAnimation()
+//        mShimmerViewContainer.visibility = View.GONE
+        //splashlayout.visibility = ConstraintLayout.GONE
+        inflatedView.withdata.visibility = ConstraintLayout.VISIBLE
+
+        val cardlayout = inflatedView.findViewById<View>(R.id.duenextcard)
+        val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
+        val cardsecondarytext = cardlayout.findViewById<TextView>(R.id.secondarytext)
+        val action1Button = cardlayout.findViewById<Button>(R.id.action1)
+        val action2Button = cardlayout.findViewById<Button>(R.id.action2)
+
+        cardtitle.setText("Due next task")
+        cardsecondarytext.setText("${task.name} due by ${task.date}")
+        action1Button.setText("mark complete")
+        action2Button.visibility = View.INVISIBLE
+    }
+
+
+    override fun onTaskError(inflatedView: View, errcode: String) {
+//        Thread.sleep(300)
+//        splashlayout.visibility = ConstraintLayout.GONE
+        withdata.visibility = ConstraintLayout.GONE
+        withnodata.visibility = ConstraintLayout.VISIBLE
+
+        newtaskbutton.setOnClickListener {
+            val newtask = Intent(activity, NewTask_TaskDetail::class.java)
+            newtask.putExtra("userid", userid)
+            newtask.putExtra("eventid", eventid)
+            startActivity(newtask)
+        }
+    }
+
+    override fun onTasksStats(
+        inflatedView: View,
+        taskpending: Int,
+        taskcompleted: Int,
+        sumbudget: Float
+    ) {
+        val cardlayout = inflatedView.findViewById<View>(R.id.taskchart)
+        val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
+        val cardsecondarytext = cardlayout.findViewById<TextView>(R.id.secondarytext)
+        val action1Button = cardlayout.findViewById<Button>(R.id.action1)
+        val action2Button = cardlayout.findViewById<Button>(R.id.action2)
+
+        cardtitle.setText("Tasks")
+        cardsecondarytext.setText("Summary of pending and done tasks")
+        action1Button.setText("add more")
+        action2Button.visibility = View.INVISIBLE
+
         val taskentries = ArrayList<PieEntry>()
-        taskentries.add(PieEntry(taskpending.toFloat(), " To Do "))
-        taskentries.add(PieEntry(taskcompleted.toFloat(), " Done "))
+        taskentries.add(PieEntry(taskpending.toFloat(), "Pending"))
+        taskentries.add(PieEntry(taskcompleted.toFloat(), "Done"))
 
         val dataSettask = PieDataSet(taskentries, "").apply {
             setDrawIcons(false)
-            sliceSpace = 3f
-            iconsOffset = MPPointF(0f, 40f)
-            selectionShift = 5f
+            sliceSpace = 3f //separation between slices
+            iconsOffset = MPPointF(0f, 20f) //position of labels to slices. 40f seems too much
+            //selectionShift = 5f // Think is the padding
         }
 
         val colors = ArrayList<Int>()
@@ -170,35 +249,49 @@ class DashboardEvent(private val view: DashboardView) : Fragment(),
 
         val datatask = PieData(dataSettask).apply {
             setValueFormatter(DefaultValueFormatter(0))
-            setValueTextSize(11f)
-            setValueTextColor(Color.BLACK)
-            setValueTypeface(tfLight)
+            setValueTextSize(14f)
+            setValueTextColor(Color.WHITE)
+            setValueTypeface(tfRegular)
         }
-        charttask.centerText = "${taskcompleted + taskpending}\ntasks"
+        val tasklayout = inflatedView.findViewById<View>(R.id.taskchart)
+        val charttask = tasklayout.findViewById<PieChart>(R.id.charttask)
+
+        charttask.centerText = "${taskcompleted + taskpending}"
         charttask.data = datatask
         charttask.highlightValues(null)
         charttask.invalidate()
     }
 
-    override fun onViewNextTaskSuccess(task: Task) {
+    override fun onTaskStatsError(inflatedView: View, errcode: String) {
         TODO("Not yet implemented")
     }
 
-    override fun onViewTaskError(errcode: String) {
-        chartlayout.visibility = ConstraintLayout.GONE
-    }
+    override fun onPaymentStats(
+        inflatedView: View,
+        countpayment: Int,
+        sumpayment: Float,
+        sumbudget: Float
+    ) {
+        val cardlayout = inflatedView.findViewById<View>(R.id.paymentchart)
+        val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
+        val cardsecondarytext = cardlayout.findViewById<TextView>(R.id.secondarytext)
+        val action1Button = cardlayout.findViewById<Button>(R.id.action1)
+        val action2Button = cardlayout.findViewById<Button>(R.id.action2)
 
-    override fun onViewPaymentStatsSuccess(countpayment: Int, sumpayment: Float, sumbudget: Float) {
-        emptycharts.visibility = View.GONE
+        cardtitle.setText("Payments")
+        cardsecondarytext.setText("Summary of payments")
+        action1Button.setText("add more")
+        action2Button.visibility = View.INVISIBLE
+
         val paymententries = ArrayList<PieEntry>()
         paymententries.add(PieEntry(sumpayment, "Spent"))
         paymententries.add(PieEntry(sumbudget - sumpayment, "Available"))
 
         val dataSetpayment = PieDataSet(paymententries, "").apply {
             setDrawIcons(false)
-            sliceSpace = 3f
-            iconsOffset = MPPointF(0f, 40f)
-            selectionShift = 5f
+            sliceSpace = 3f //separation between slices
+            iconsOffset = MPPointF(0f, 20f) //position of labels to slices. 40f seems too much
+            //selectionShift = 5f // Think is the padding
         }
 
         val colors = ArrayList<Int>()
@@ -218,7 +311,31 @@ class DashboardEvent(private val view: DashboardView) : Fragment(),
         chartpayment.invalidate()
     }
 
-    override fun onViewPaymentError(errcode: String) {
-        chartlayout.visibility = ConstraintLayout.GONE
+    override fun onPaymentStatsError(inflatedView: View, errcode: String) {
+        //withdata.visibility = ConstraintLayout.GONE
+        //withnodata.visibility = ConstraintLayout.VISIBLE
+        val paymentlayout = inflatedView.findViewById<View>(R.id.paymentchart)
+        paymentlayout.findViewById<View>(R.id.paymentchartcardlayout).visibility = View.INVISIBLE
+
+        val emptypayments = paymentlayout.findViewById<View>(R.id.emptypayments)
+        emptypayments.visibility = View.VISIBLE
+
+        val cardtitle = emptypayments.findViewById<TextView>(R.id.cardtitleempty)
+        val cardsecondarytext = emptypayments.findViewById<TextView>(R.id.secondarytextempty)
+        val emptycardmessage = emptypayments.findViewById<TextView>(R.id.emptycardmessage)
+        val action1Button = emptypayments.findViewById<Button>(R.id.newpayment)
+
+        cardtitle.setText("Payments")
+        cardsecondarytext.setText("There are currently no payments made")
+        emptycardmessage.setText("You also can keep track of the payments you made so you can control how much you are spending")
+        action1Button.setText("add payment")
+
+        action1Button.setOnClickListener {
+            val newpayment = Intent(activity, NewTask_PaymentDetail::class.java)
+            newpayment.putExtra("userid", userid)
+            newpayment.putExtra("eventid", eventid)
+            startActivity(newpayment)
+        }
     }
+
 }

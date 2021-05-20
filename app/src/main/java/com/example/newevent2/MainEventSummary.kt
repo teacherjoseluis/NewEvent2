@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.PaymentPresenter
 import com.example.newevent2.MVP.TaskPresenter
+import com.example.newevent2.Model.Task
 import com.example.newevent2.ui.ViewAnimation
 import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.mainevent_summary.*
@@ -23,8 +24,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MainEventSummary : Fragment(), TaskPresenter.ViewTaskFragment,
-    PaymentPresenter.ViewPaymentFragment {
+class MainEventSummary : Fragment(), TaskPresenter.TaskStats,
+    PaymentPresenter.PaymentStats {
 
     var isRotate = false
     var userid = ""
@@ -51,7 +52,9 @@ class MainEventSummary : Fragment(), TaskPresenter.ViewTaskFragment,
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.mainevent_summary, container, false)
 
-        presentertask = TaskPresenter(this, inf, userid, eventid)
+        presentertask = TaskPresenter(this, inf)
+        presentertask.userid=userid
+        presentertask.eventid=eventid
         presentertask.getTaskStats()
 
         presenterpayment = PaymentPresenter(this, inf, userid, eventid)
@@ -84,17 +87,21 @@ class MainEventSummary : Fragment(), TaskPresenter.ViewTaskFragment,
 
         activity!!.fabTask.setOnClickListener {
             val newtask = Intent(activity, NewTask_TaskDetail::class.java)
+            newtask.putExtra("userid", userid)
+            newtask.putExtra("eventid", eventid)
             startActivity(newtask)
         }
 
         activity!!.fabPayment.setOnClickListener {
             val newpayment = Intent(activity, NewTask_PaymentDetail::class.java)
+            newpayment.putExtra("userid", userid)
+            newpayment.putExtra("eventid", eventid)
             startActivity(newpayment)
         }
         return inf
     }
 
-    override fun onViewTaskStatsSuccessFragment(
+    override fun onTasksStats (
         inflatedView: View,
         taskpending: Int,
         taskcompleted: Int,
@@ -107,11 +114,11 @@ class MainEventSummary : Fragment(), TaskPresenter.ViewTaskFragment,
         inflatedView.taskbudget.text = formatter.format(sumbudget)
     }
 
-    override fun onViewTaskErrorFragment(inflatedView: View, errcode: String) {
+    override fun onTaskStatsError(inflatedView: View, errcode: String) {
         visiblelayout.visibility = ConstraintLayout.GONE
     }
 
-    override fun onViewPaymentStatsSuccessFragment(
+    override fun onPaymentStats(
         inflatedView: View,
         countpayment: Int,
         sumpayment: Float,
@@ -121,7 +128,7 @@ class MainEventSummary : Fragment(), TaskPresenter.ViewTaskFragment,
         inflatedView.paymentpaid0.text = formatter.format(sumpayment)
     }
 
-    override fun onViewPaymentErrorFragment(inflatedView: View, errcode: String) {
+    override fun onPaymentStatsError(inflatedView: View, errcode: String) {
         //eventsummarylayoutempty.visibility = ConstraintLayout.GONE
         inflatedView.paymentpaid0.text = "$0.00"
     }

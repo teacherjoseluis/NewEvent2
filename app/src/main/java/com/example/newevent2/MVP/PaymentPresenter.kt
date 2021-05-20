@@ -13,14 +13,15 @@ class PaymentPresenter {
     var userid = ""
     var eventid = ""
     lateinit var inflatedView: View
-    lateinit var viewDashboardEvent: DashboardEvent
+    lateinit var fragmentDashboard: DashboardEvent
     lateinit var fragmentEventSummary: MainEventSummary
     lateinit var fragmentTaskPaymentPayment: TaskPayment_Payments
 
-    constructor(view: DashboardEvent, userid: String, eventid: String) {
+    constructor(fragment: DashboardEvent, view: View, userid: String, eventid: String) {
         this.userid = userid
         this.eventid = eventid
-        viewDashboardEvent = view
+        inflatedView = view
+        fragmentDashboard = fragment
     }
 
     constructor(fragment: MainEventSummary, view: View, userid: String, eventid: String) {
@@ -47,12 +48,25 @@ class PaymentPresenter {
                 override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
                     if (countpayment == 0) {
                         //There are no payments made
-                        if (::viewDashboardEvent.isInitialized) {
-                            viewDashboardEvent.onViewPaymentError("BLANK_STATS")
-                        } else if (::fragmentEventSummary.isInitialized) {
-                            fragmentEventSummary.onViewPaymentErrorFragment(inflatedView, "BLANK_STATS")
-                        } else if(::fragmentTaskPaymentPayment.isInitialized){
-                            fragmentTaskPaymentPayment.onViewPaymentErrorFragment(inflatedView, "BLANK_STATS")
+                        when {
+                            ::fragmentDashboard.isInitialized -> {
+                                fragmentDashboard.onPaymentStatsError(
+                                    inflatedView,
+                                    "BLANK_STATS"
+                                )
+                            }
+                            ::fragmentEventSummary.isInitialized -> {
+                                fragmentEventSummary.onPaymentStatsError(
+                                    inflatedView,
+                                    "BLANK_STATS"
+                                )
+                            }
+                            ::fragmentTaskPaymentPayment.isInitialized -> {
+                                fragmentTaskPaymentPayment.onPaymentStatsError(
+                                    inflatedView,
+                                    "BLANK_STATS"
+                                )
+                            }
                         }
                     } else {
                         // Get the total Task Budget
@@ -63,24 +77,31 @@ class PaymentPresenter {
                             object : TaskModel.FirebaseSuccessTaskBudget {
                                 override fun onTasksBudget(sumbudget: Float) {
                                     //Show the stats
-                                    if (::viewDashboardEvent.isInitialized) {
-                                        viewDashboardEvent.onViewPaymentStatsSuccess(
-                                            countpayment,
-                                            sumpayment,
-                                            sumbudget
-                                        )
-                                    } else if (::fragmentEventSummary.isInitialized) {
-                                        fragmentEventSummary.onViewPaymentStatsSuccessFragment(inflatedView,
-                                            countpayment,
-                                            sumpayment,
-                                            sumbudget
-                                        )
-                                    } else if (::fragmentTaskPaymentPayment.isInitialized) {
-                                        fragmentTaskPaymentPayment.onViewPaymentStatsSuccessFragment(inflatedView,
-                                            countpayment,
-                                            sumpayment,
-                                            sumbudget
-                                        )
+                                    when {
+                                        ::fragmentDashboard.isInitialized -> {
+                                            fragmentDashboard.onPaymentStats(
+                                                inflatedView,
+                                                countpayment,
+                                                sumpayment,
+                                                sumbudget
+                                            )
+                                        }
+                                        ::fragmentEventSummary.isInitialized -> {
+                                            fragmentEventSummary.onPaymentStats(
+                                                inflatedView,
+                                                countpayment,
+                                                sumpayment,
+                                                sumbudget
+                                            )
+                                        }
+                                        ::fragmentTaskPaymentPayment.isInitialized -> {
+                                            fragmentTaskPaymentPayment.onPaymentStats(
+                                                inflatedView,
+                                                countpayment,
+                                                sumpayment,
+                                                sumbudget
+                                            )
+                                        }
                                     }
                                 }
                             })
@@ -99,13 +120,13 @@ class PaymentPresenter {
                 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
                 override fun onPaymentList(list: ArrayList<com.example.newevent2.Model.Payment>) {
                     if (list.isNotEmpty()) {
-                        fragmentTaskPaymentPayment.onViewPaymentListFragment(
+                        fragmentTaskPaymentPayment.onPaymentList(
                             inflatedView,
                             category,
                             list
                         )
                     } else {
-                        fragmentTaskPaymentPayment.onViewPaymentListErrorFragment(
+                        fragmentTaskPaymentPayment.onPaymentListError(
                             inflatedView,
                             category,
                             "NO_TASKS"
@@ -115,28 +136,23 @@ class PaymentPresenter {
             })
     }
 
-    interface ViewPaymentWelcomeActivity {
-        fun onViewPaymentStatsSuccess(countpayment: Int, sumpayment: Float, sumbudget: Float)
-        fun onViewPaymentError(errcode: String)
-    }
-
-    interface ViewPaymentFragment {
-        fun onViewPaymentStatsSuccessFragment(
+    interface PaymentStats {
+        fun onPaymentStats(
             inflatedView: View,
             countpayment: Int, sumpayment: Float, sumbudget: Float
         )
 
-        fun onViewPaymentErrorFragment(inflatedView: View, errcode: String)
+        fun onPaymentStatsError(inflatedView: View, errcode: String)
     }
 
-    interface ViewPaymentList {
-        fun onViewPaymentListFragment(
+    interface PaymentList {
+        fun onPaymentList(
             inflatedView: View,
             category: String,
             list: ArrayList<com.example.newevent2.Model.Payment>
         )
 
-        fun onViewPaymentListErrorFragment(
+        fun onPaymentListError(
             inflatedView: View,
             category: String,
             errcode: String

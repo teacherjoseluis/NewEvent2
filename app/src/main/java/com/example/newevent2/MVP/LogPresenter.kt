@@ -38,15 +38,15 @@ class LogPresenter(
                     }
                     if (loglist.isNotEmpty()){
                         //Log has enough elements to be shown
-                        viewDashboardActivity.onViewLogSuccess(loglist)
+                        //viewDashboardActivity.onViewLogSuccess(loglist)
                     } else {
                         //Log has old elements and those will not be shown
-                        viewDashboardActivity.onViewLogError("OLD_LOG")
+                        //viewDashboardActivity.onViewLogError("OLD_LOG")
                     }
 
                 } else {
                     //Log has no elements at all. Probably they were removed and user left and came back
-                    viewDashboardActivity.onViewLogError("EMPTY_LOG")
+                    //viewDashboardActivity.onViewLogError("EMPTY_LOG")
                 }
             }
         })

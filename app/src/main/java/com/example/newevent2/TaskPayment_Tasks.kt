@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newevent2.MVP.PaymentPresenter
 import com.example.newevent2.MVP.TaskPresenter
+import com.example.newevent2.Model.Task
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 import java.text.DecimalFormat
 
-class TaskPayment_Tasks : Fragment(), TaskPresenter.ViewTaskList, TaskPresenter.ViewTaskFragment {
+class TaskPayment_Tasks : Fragment(), TaskPresenter.TaskList, TaskPresenter.TaskStats {
 
     private var userid: String = ""
     private var eventid: String = ""
@@ -30,13 +31,16 @@ class TaskPayment_Tasks : Fragment(), TaskPresenter.ViewTaskList, TaskPresenter.
         category = this.arguments!!.get("category").toString()
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
 
-        presentertask = TaskPresenter(this, inf, userid, eventid)
+        presentertask = TaskPresenter(this, inf)
+        presentertask.userid=userid
+        presentertask.eventid=eventid
         presentertask.getTaskStats(category)
         presentertask.getTasksList(category, ACTIVETASK) // Active
         presentertask.getTasksList(category, COMPLETETASK) // Completed
@@ -45,9 +49,9 @@ class TaskPayment_Tasks : Fragment(), TaskPresenter.ViewTaskList, TaskPresenter.
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onViewTaskListFragment(
+    override fun onTaskList(
         inflatedView: View,
-        category: String,
+//        category: String,
         status: String,
         list: java.util.ArrayList<com.example.newevent2.Model.Task>
     ) {
@@ -96,17 +100,15 @@ class TaskPayment_Tasks : Fragment(), TaskPresenter.ViewTaskList, TaskPresenter.
         }
     }
 
-    override fun onViewTaskListErrorFragment(
+    override fun onTaskListError(
         inflatedView: View,
-        category: String,
-        status: String,
         errcode: String
     ) {
         TODO("Not yet implemented")
         // What to show when the consulted category has no tasks?
     }
 
-    override fun onViewTaskStatsSuccessFragment(
+    override fun onTasksStats(
         inflatedView: View,
         taskpending: Int,
         taskcompleted: Int,
@@ -118,9 +120,8 @@ class TaskPayment_Tasks : Fragment(), TaskPresenter.ViewTaskList, TaskPresenter.
         inflatedView.budgettasks.text = formatter.format(sumbudget)
     }
 
-    override fun onViewTaskErrorFragment(inflatedView: View, errcode: String) {
+    override fun onTaskStatsError(inflatedView: View, errcode: String) {
         TODO("Not yet implemented")
-        // What to show when the consulted category has no tasks?
     }
 
     companion object {

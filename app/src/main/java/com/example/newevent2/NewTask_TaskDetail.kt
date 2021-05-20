@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.newevent2.Model.Task
+import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.new_task_taskdetail.button2
@@ -12,17 +14,19 @@ import kotlinx.android.synthetic.main.new_task_taskdetail.tkbudget
 import kotlinx.android.synthetic.main.new_task_taskdetail.tkdate
 import kotlinx.android.synthetic.main.new_task_taskdetail.tkname
 import kotlinx.android.synthetic.main.task_editdetail.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class NewTask_TaskDetail : AppCompatActivity() {
-    //private var eventkey: String = ""
-    private var taskcategory: String = ""
-
-    private var chiptextvalue: String? = null
+    var userid = ""
+    var eventid = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.task_editdetail)
+        userid = intent.getStringExtra("userid").toString()
+        eventid = intent.getStringExtra("eventid").toString()
 
         // Toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -32,8 +36,6 @@ class NewTask_TaskDetail : AppCompatActivity() {
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = "New Task"
 
-        //eventkey = intent.getStringExtra("eventkey").toString()
-
         groupedit.isSingleSelection = true
 
         tkname.setOnClickListener {
@@ -42,7 +44,11 @@ class NewTask_TaskDetail : AppCompatActivity() {
 
         tkdate.setOnClickListener {
             tkdate.error = null
-            showDatePickerDialog()
+            tkdate.setText(
+                com.example.newevent2.ui.Functions.showDatePickerDialog(
+                    supportFragmentManager
+                ).replace(" ","")
+            )
         }
 
         button2.setOnClickListener {
@@ -66,48 +72,32 @@ class NewTask_TaskDetail : AppCompatActivity() {
         }
     }
 
-
-    private fun showDatePickerDialog() {
-        val newFragment =
-            DatePickerFragment.newInstance(DatePickerDialog.OnDateSetListener { _, year, month, day ->
-                // +1 because January is zero
-                val selectedDate = day.toString() + "/" + (month + 1) + "/" + year
-                tkdate.setText(selectedDate)
-            })
-
-        newFragment.show(supportFragmentManager, "datePicker")
-    }
-
     private fun saveTask() {
-            val id = groupedit.checkedChipId
-            val chipselected = groupedit.findViewById<Chip>(id)
-            chiptextvalue = chipselected.text.toString()
-            taskcategory = when (chiptextvalue) {
-                "Flowers & Deco" -> "flowers"
-                "Venue" -> "venue"
-                "Photo & Video" -> "photo"
-                "Entertainment" -> "entertainment"
-                "Transportation" -> "transport"
-                "Ceremony" -> "ceremony"
-                "Attire & Accessories" -> "accesories"
-                "Health & Beauty" -> "beauty"
-                "Food & Drink" -> "food"
-                "Guests" -> "guests"
-                else -> "none"
-            }
+        val task = Task()
+        task.name = tkname.text.toString()
+        task.date = tkdate.text.toString()
+        task.budget = tkbudget.text.toString()
+        task.status = ACTIVESTATUS
 
-        val taskentity = TaskEntity().apply {
-            name = tkname.text.toString()
-            budget = tkbudget.text.toString()
-            date = tkdate.text.toString()
-            category = taskcategory
-            //eventid = eventkey
+        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
+        val chiptextvalue = chipselected.text.toString()
+
+        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        for (category in list) {
+            if (chiptextvalue == category.en_name) {task.key
+                task.category = category.code
+            }
         }
-        taskentity.addTask(this)
+        val taskmodel = TaskModel()
+        taskmodel.addTask(userid, eventid, task)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    companion object {
+        const val ACTIVESTATUS = "A"
     }
 }

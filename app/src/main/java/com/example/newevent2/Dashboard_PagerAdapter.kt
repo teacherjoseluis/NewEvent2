@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
 class Dashboard_PagerAdapter(
-    private val view: DashboardView,
     private val userid: String,
     private val eventid: String,
     fm: FragmentManager,
@@ -18,7 +17,7 @@ class Dashboard_PagerAdapter(
         return when (position) {
             0 -> {
                 val bundle = Bundle()
-                val fragInfo = DashboardActivity(view)
+                val fragInfo = DashboardEvent()
                 bundle.putString("userid", userid)
                 bundle.putString("eventid", eventid)
                 fragInfo.arguments = bundle
@@ -26,7 +25,7 @@ class Dashboard_PagerAdapter(
             }
             1 -> {
                 val bundle = Bundle()
-                val fragInfo = DashboardEvent(view)
+                val fragInfo = DashboardActivity()
                 bundle.putString("userid", userid)
                 bundle.putString("eventid", eventid)
                 fragInfo.arguments = bundle
@@ -34,14 +33,14 @@ class Dashboard_PagerAdapter(
             }
             2 -> {
                 val bundle = Bundle()
-                val fragInfo = DashboardBlog(view)
+                val fragInfo = DashboardBlog()
                 //bundle.putString("eventkey", eventkey)
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             else -> {
                 val bundle = Bundle()
-                val fragInfo = DashboardActivity(view)
+                val fragInfo = DashboardActivity()
                 bundle.putString("userid", userid)
                 bundle.putString("eventid", eventid)
                 fragInfo.arguments = bundle
