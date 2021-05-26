@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
@@ -38,6 +39,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.MPPointF
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
@@ -61,6 +63,26 @@ class DashboardView : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+//        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottomnavigation)
+//        bottomNavigation.setOnNavigationItemSelectedListener {
+//            when (it.itemId) {
+//                R.id.home -> {
+//                    toolbar.title = "Home"
+//                    val songsFragment = SongsFragment.newInstance()
+//                    openFragment(songsFragment)
+//                    return@OnNavigationItemSelectedListener true
+//                }
+//                R.id.events -> {
+//                }
+//                R.id.tasks -> {
+//                }
+//                R.id.contacts -> {
+//                }
+//                R.id.notes -> {
+//                }
+//            }
+//        }
+
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_google)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -79,7 +101,7 @@ class DashboardView : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        val navView = findViewById<NavigationView>(R.id.navview)
+        val navView = findViewById<NavigationView>(R.id.navbottom)
         navView.setNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.menu_seccion_1 -> Toast.makeText(
@@ -146,6 +168,7 @@ class DashboardView : AppCompatActivity() {
                 Dashboard_PagerAdapter(
                     usersession.key,
                     usersession.eventid,
+                    usersession.language,
                     supportFragmentManager,
                     tablayout.tabCount
                 )

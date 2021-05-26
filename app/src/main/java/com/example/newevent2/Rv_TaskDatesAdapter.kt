@@ -13,12 +13,14 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newevent2.Functions.converttoString
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskJournal
 import com.example.newevent2.Model.TaskModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.dashboardactivity.*
 import kotlinx.android.synthetic.main.dashboardactivity.view.*
+import java.text.DateFormat
 
 class Rv_TaskDatesAdapter(
     val userid: String,
@@ -45,7 +47,7 @@ class Rv_TaskDatesAdapter(
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        p0.journaldate?.text = taskjournalList[p1].date
+        p0.journaldate?.text = converttoString(taskjournalList[p1].date, DateFormat.FULL)
         p0.recyclerView?.apply {
             layoutManager = LinearLayoutManager(p0.recyclerView.context).apply {
                 stackFromEnd = true
@@ -53,7 +55,7 @@ class Rv_TaskDatesAdapter(
                 setRecycledViewPool(viewPool)
             }
         }
-        val rvAdapter = Rv_TaskAdapter(userid, eventid, taskjournalList[p1].taskjournallist)
+        val rvAdapter = Rv_TaskJournalAdapter(userid, eventid, taskjournalList[p1].taskjournallist)
         p0.recyclerView!!.adapter = rvAdapter
     }
 

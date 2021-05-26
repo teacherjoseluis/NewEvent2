@@ -61,7 +61,6 @@ class PaymentModel {
     fun getPaymentsList(
         userid: String,
         eventid: String,
-        category: String,
         dataFetched: FirebaseSuccessPaymentList
     ) {
         val postRef =
@@ -77,11 +76,8 @@ class PaymentModel {
 
                 for (snapshot in p0.children) {
                     val paymentitem = snapshot.getValue(Payment::class.java)
-
-                    if (paymentitem!!.category == category) {
-                        paymentitem!!.key = snapshot.key.toString()
-                        paymentlist.add(paymentitem!!)
-                    }
+                    paymentitem!!.key = snapshot.key.toString()
+                    paymentlist.add(paymentitem!!)
                 }
                 dataFetched.onPaymentList(paymentlist)
             }
@@ -113,7 +109,7 @@ class PaymentModel {
             "createdatetime" to sdf.format(paymentdatetime)
         )
 
-        postRef.setValue(payment as Map<String, Any>)
+        postRef.setValue(paymentadd as Map<String, Any>)
             .addOnFailureListener {
             }
             .addOnSuccessListener {
@@ -132,7 +128,7 @@ class PaymentModel {
             "category" to payment.category
         )
 
-        postRef.setValue(payment as Map<String, Any>)
+        postRef.setValue(paymentedit as Map<String, Any>)
             .addOnFailureListener {
             }
             .addOnSuccessListener {

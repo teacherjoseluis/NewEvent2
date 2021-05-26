@@ -60,6 +60,9 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent">
 
+
+
+
             <include
                 android:id="@+id/duenextcard"
                 layout="@layout/actioncard_layout"
@@ -69,6 +72,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+<!--
+            <com.example.newevent2.ui.JetpackCompose.TaskChart
+                android:id="@+id/taskchart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/duenextcard"/>
+-->
 
             <include
                 android:id="@+id/taskchart"

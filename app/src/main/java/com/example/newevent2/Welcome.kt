@@ -94,57 +94,57 @@ class Welcome : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        val navView = findViewById<NavigationView>(R.id.navview)
+        //val navView = findViewById<NavigationView>(R.id.navview)
 
 
-        navView.setNavigationItemSelectedListener { p0 ->
-            when (p0.itemId) {
-                R.id.menu_seccion_1 -> Toast.makeText(
-                    applicationContext,
-                    "Seccion 1",
-                    Toast.LENGTH_SHORT
-                ).show()
-                R.id.menu_seccion_2 -> {
-                    val events =
-                        Intent(this, EventDetail::class.java)
-                    Log.d("Activity Starts", "EventDetail")
-                    events.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(events)
-                }
-                R.id.menu_seccion_3 -> {
-                    val calendar =
-                        Intent(this, MyCalendar::class.java)
-                    Log.d("Activity Starts", "Calendar")
-                    calendar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(calendar)
-                }
-                R.id.menu_seccion_4 -> {
-                    val contacts =
-                        Intent(this, MyContacts::class.java)
-                    Log.d("Activity Starts", "Contacts")
-                    contacts.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(contacts)
-                }
-                R.id.menu_seccion_5 -> {
-                    val notes =
-                        Intent(this, MyNotes::class.java)
-                    Log.d("Activity Starts", "Notes")
-                    notes.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(notes)
-                }
-                R.id.menu_opcion_1 -> {
-                    val settings =
-                        Intent(this, Settings::class.java)
-                    Log.d("Activity Starts", "Settings")
-                    settings.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(settings)
-                }
-            }
-            drawerLayout.closeDrawers()
-            true
-        }
-
-        navView.menu.getItem(0).isChecked = true
+//        navView.setNavigationItemSelectedListener { p0 ->
+//            when (p0.itemId) {
+//                R.id.menu_seccion_1 -> Toast.makeText(
+//                    applicationContext,
+//                    "Seccion 1",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//                R.id.menu_seccion_2 -> {
+//                    val events =
+//                        Intent(this, EventDetail::class.java)
+//                    Log.d("Activity Starts", "EventDetail")
+//                    events.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    startActivity(events)
+//                }
+//                R.id.menu_seccion_3 -> {
+//                    val calendar =
+//                        Intent(this, MyCalendar::class.java)
+//                    Log.d("Activity Starts", "Calendar")
+//                    calendar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    startActivity(calendar)
+//                }
+//                R.id.menu_seccion_4 -> {
+//                    val contacts =
+//                        Intent(this, MyContacts::class.java)
+//                    Log.d("Activity Starts", "Contacts")
+//                    contacts.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    startActivity(contacts)
+//                }
+//                R.id.menu_seccion_5 -> {
+//                    val notes =
+//                        Intent(this, MyNotes::class.java)
+//                    Log.d("Activity Starts", "Notes")
+//                    notes.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    startActivity(notes)
+//                }
+//                R.id.menu_opcion_1 -> {
+//                    val settings =
+//                        Intent(this, Settings::class.java)
+//                    Log.d("Activity Starts", "Settings")
+//                    settings.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    startActivity(settings)
+//                }
+//            }
+//            drawerLayout.closeDrawers()
+//            true
+//        }
+//
+//        navView.menu.getItem(0).isChecked = true
 
             //---------------------------------------------------------------------------------------------------------------------
 

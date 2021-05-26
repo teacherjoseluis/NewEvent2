@@ -42,10 +42,8 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
     private var tfLarge: Typeface? = null
     private var tfRegular: Typeface? = null
     private var tfLight: Typeface? = null
-    private lateinit var charttask: PieChart
-    private lateinit var chartpayment: PieChart
 
-    private lateinit var mShimmerViewContainer: ShimmerFrameLayout
+    //private lateinit var mShimmerViewContainer: ShimmerFrameLayout
 
     var userid = ""
     var eventid = ""
@@ -57,7 +55,7 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
 
         val rosaPalido = context!!.resources.getColor(R.color.rosapalido)
         val azulmasClaro = context!!.resources.getColor(R.color.azulmasClaro)
-        val palodeRosa = context!!.resources.getColor(R.color.azulmasClaro)
+        val palodeRosa = context!!.resources.getColor(R.color.paloderosa)
 
         @SuppressLint("ResourceType")
         BandG_Colors = arrayListOf(
@@ -71,7 +69,6 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
         )
     }
 
-
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +78,6 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
         val inf = inflater.inflate(R.layout.dashboardcharts, container, false)
 
         // mShimmerViewContainer = ShimmerFrameLayout(context)
-
 //        mShimmerViewContainer = inf.findViewById(R.id.shimmer_view_container)
 //        mShimmerViewContainer.startShimmerAnimation()
 //        mShimmerViewContainer.duration = 1000
@@ -91,91 +87,13 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
         tfRegular = ResourcesCompat.getFont(context!!, R.font.raleway_medium)
         tfLarge = ResourcesCompat.getFont(context!!, R.font.raleway_medium)
 
-        charttask = inf.findViewById(R.id.charttask)
-        charttask.apply {
-            setUsePercentValues(false)
-            description.isEnabled = false
-            setExtraOffsets(5f, 5f, 5f, 5f) //apparently this is padding
-            dragDecelerationFrictionCoef = 0.95f
-            setCenterTextTypeface(tfRegular)
-            setCenterTextColor(context!!.resources.getColor(R.color.rosaChillon))
-            setCenterTextSize(30f)
-            isDrawHoleEnabled = true
-            setHoleColor(Color.WHITE)
-//            Don't really care too much about having a transparent circle
-            setTransparentCircleColor(Color.WHITE)
-            setTransparentCircleAlpha(110)
-            holeRadius = 50f
-//            transparentCircleRadius = 61f
-            setDrawCenterText(true)
-            rotationAngle = 0f
-            isRotationEnabled = false
-            isHighlightPerTapEnabled = true
-            animateY(1400, Easing.EaseInOutQuad)
-            setEntryLabelColor(context!!.resources.getColor(R.color.Cream))
-            setEntryLabelTypeface(tfRegular)
-            setEntryLabelTextSize(14f)
-        }
-
-        charttask.legend.apply {
-            //formSize = 12.0f
-            form = Legend.LegendForm.CIRCLE
-            horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            textSize = 12.0f
-            textColor = (context!!.resources.getColor(R.color.Cream))
-            typeface = tfRegular
-            setDrawInside(false)
-            xEntrySpace = 10f
-            yEntrySpace = 4f
-            yOffset = 5f
-        }
-
-
-//----------------------------------------------------------------------------------------------------//
-        chartpayment = inf.findViewById(R.id.chartpayment)
-        chartpayment.apply {
-            setUsePercentValues(false)
-            description.isEnabled = false
-            setExtraOffsets(5f, 5f, 5f, 5f) //apparently this is padding
-            dragDecelerationFrictionCoef = 0.95f
-            setCenterTextTypeface(tfRegular)
-            isDrawHoleEnabled = true
-            setHoleColor(Color.WHITE)
-//            Don't really care too much about having a transparent circle
-//            setTransparentCircleColor(Color.WHITE)
-//            setTransparentCircleAlpha(110)
-            holeRadius = 40f
-//            transparentCircleRadius = 61f
-            setDrawCenterText(true)
-            rotationAngle = 0f
-            isRotationEnabled = false
-            isHighlightPerTapEnabled = true
-            animateY(1400, Easing.EaseInOutQuad)
-            setEntryLabelColor(context!!.resources.getColor(R.color.secondaryText))
-            setEntryLabelTypeface(tfRegular)
-            setEntryLabelTextSize(14f)
-        }
-
-        chartpayment.legend.apply {
-            Legend.LegendForm.SQUARE
-            formSize = 12.0f
-            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-            orientation = Legend.LegendOrientation.HORIZONTAL
-            setDrawInside(false)
-            xEntrySpace = 4f
-            yEntrySpace = 4f
-            yOffset = 0f
-        }
-        //----------------------------------------------------------------------------------------------------//
-        presentertask = TaskPresenter(context!!,this, inf)
-        presentertask.userid=userid
-        presentertask.eventid=eventid
+        presentertask = TaskPresenter(context!!, this, inf)
+        presentertask.userid = userid
+        presentertask.eventid = eventid
         presentertask.getDueNextTask()
         presentertask.getTaskStats()
 
-        presenterpayment = PaymentPresenter(this, inf, userid, eventid)
+        presenterpayment = PaymentPresenter(context!!, this, inf)
         presenterpayment.getPaymentStats()
         return inf
     }
@@ -200,7 +118,6 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
         action2Button.visibility = View.INVISIBLE
     }
 
-
     override fun onTaskError(inflatedView: View, errcode: String) {
 //        Thread.sleep(300)
 //        splashlayout.visibility = ConstraintLayout.GONE
@@ -224,8 +141,12 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
         val cardlayout = inflatedView.findViewById<View>(R.id.taskchart)
         val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
         val cardsecondarytext = cardlayout.findViewById<TextView>(R.id.secondarytext)
+        val charttask = cardlayout.findViewById<PieChart>(R.id.charttask)
         val action1Button = cardlayout.findViewById<Button>(R.id.action1)
         val action2Button = cardlayout.findViewById<Button>(R.id.action2)
+
+        val chartcolors = ArrayList<Int>()
+        for (c in BandG_Colors) chartcolors.add(c)
 
         cardtitle.setText("Tasks")
         cardsecondarytext.setText("Summary of pending and done tasks")
@@ -241,11 +162,8 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
             sliceSpace = 3f //separation between slices
             iconsOffset = MPPointF(0f, 20f) //position of labels to slices. 40f seems too much
             //selectionShift = 5f // Think is the padding
+            colors = chartcolors
         }
-
-        val colors = ArrayList<Int>()
-        for (c in BandG_Colors) colors.add(c)
-        dataSettask.colors = colors
 
         val datatask = PieData(dataSettask).apply {
             setValueFormatter(DefaultValueFormatter(0))
@@ -253,13 +171,49 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
             setValueTextColor(Color.WHITE)
             setValueTypeface(tfRegular)
         }
-        val tasklayout = inflatedView.findViewById<View>(R.id.taskchart)
-        val charttask = tasklayout.findViewById<PieChart>(R.id.charttask)
 
-        charttask.centerText = "${taskcompleted + taskpending}"
-        charttask.data = datatask
-        charttask.highlightValues(null)
-        charttask.invalidate()
+        charttask.legend.apply {
+            //formSize = 12.0f
+            form = Legend.LegendForm.CIRCLE
+            horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+            textSize = 12.0f
+            textColor = (context!!.resources.getColor(R.color.secondaryText))
+            typeface = tfRegular
+            setDrawInside(false)
+            xEntrySpace = 10f
+            yEntrySpace = 4f
+            yOffset = 5f
+        }
+
+        charttask.apply {
+            setUsePercentValues(false)
+            description.isEnabled = false
+            setExtraOffsets(5f, 5f, 5f, 5f) //apparently this is padding
+            dragDecelerationFrictionCoef = 0.95f
+            setCenterTextTypeface(tfRegular)
+            setCenterTextColor(context!!.resources.getColor(R.color.rosaChillon))
+            setCenterTextSize(30f)
+            isDrawHoleEnabled = true
+            setHoleColor(Color.WHITE)
+//            Don't really care too much about having a transparent circle
+            setTransparentCircleColor(Color.WHITE)
+            setTransparentCircleAlpha(110)
+            holeRadius = 50f
+//            transparentCircleRadius = 61f
+            setDrawCenterText(true)
+            rotationAngle = 0f
+            isRotationEnabled = false
+            isHighlightPerTapEnabled = true
+            animateY(1400, Easing.EaseInOutQuad)
+            setEntryLabelColor(context!!.resources.getColor(R.color.Cream))
+            setEntryLabelTypeface(tfRegular)
+            setEntryLabelTextSize(14f)
+            centerText = "${taskcompleted + taskpending}"
+            data = datatask
+            highlightValues(null)
+            invalidate()
+        }
     }
 
     override fun onTaskStatsError(inflatedView: View, errcode: String) {
@@ -275,8 +229,13 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
         val cardlayout = inflatedView.findViewById<View>(R.id.paymentchart)
         val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
         val cardsecondarytext = cardlayout.findViewById<TextView>(R.id.secondarytext)
+        val chartpayment = cardlayout.findViewById<PieChart>(R.id.chartpayment)
         val action1Button = cardlayout.findViewById<Button>(R.id.action1)
         val action2Button = cardlayout.findViewById<Button>(R.id.action2)
+
+        val chartcolors = ArrayList<Int>()
+        for (c in BandG_Colors2) chartcolors.add(c)
+        val formatter = DecimalFormat("$#,###.00")
 
         cardtitle.setText("Payments")
         cardsecondarytext.setText("Summary of payments")
@@ -292,11 +251,8 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
             sliceSpace = 3f //separation between slices
             iconsOffset = MPPointF(0f, 20f) //position of labels to slices. 40f seems too much
             //selectionShift = 5f // Think is the padding
+            colors = chartcolors
         }
-
-        val colors = ArrayList<Int>()
-        for (c in BandG_Colors2) colors.add(c)
-        dataSetpayment.colors = colors
 
         val datapayment = PieData(dataSetpayment).apply {
             setValueFormatter(Welcome.CurrencyFormatter())
@@ -304,11 +260,44 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
             setValueTextColor(Color.BLACK)
             setValueTypeface(tfLight)
         }
-        val formatter = DecimalFormat("$#,###.00")
-        chartpayment.centerText = "Budget\n${formatter.format(sumbudget)}"
-        chartpayment.data = datapayment
-        chartpayment.highlightValues(null)
-        chartpayment.invalidate()
+
+        chartpayment.apply {
+            setUsePercentValues(false)
+            description.isEnabled = false
+            setExtraOffsets(5f, 5f, 5f, 5f) //apparently this is padding
+            dragDecelerationFrictionCoef = 0.95f
+            setCenterTextTypeface(tfRegular)
+            isDrawHoleEnabled = true
+            setHoleColor(Color.WHITE)
+//            Don't really care too much about having a transparent circle
+//            setTransparentCircleColor(Color.WHITE)
+//            setTransparentCircleAlpha(110)
+            holeRadius = 40f
+//            transparentCircleRadius = 61f
+            setDrawCenterText(true)
+            rotationAngle = 0f
+            isRotationEnabled = false
+            isHighlightPerTapEnabled = true
+            animateY(1400, Easing.EaseInOutQuad)
+            setEntryLabelColor(context!!.resources.getColor(R.color.secondaryText))
+            setEntryLabelTypeface(tfRegular)
+            setEntryLabelTextSize(14f)
+            centerText = "Budget\n${formatter.format(sumbudget)}"
+            data = datapayment
+            highlightValues(null)
+            invalidate()
+        }
+        chartpayment.legend.apply {
+            Legend.LegendForm.SQUARE
+            formSize = 12.0f
+            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+            horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+            orientation = Legend.LegendOrientation.HORIZONTAL
+            setDrawInside(false)
+            xEntrySpace = 4f
+            yEntrySpace = 4f
+            yOffset = 0f
+        }
     }
 
     override fun onPaymentStatsError(inflatedView: View, errcode: String) {
@@ -337,5 +326,4 @@ class DashboardEvent() : Fragment(), TaskPresenter.TaskStats, TaskPresenter.Task
             startActivity(newpayment)
         }
     }
-
 }

@@ -57,7 +57,7 @@ class MainEventSummary : Fragment(), TaskPresenter.TaskStats,
         presentertask.eventid=eventid
         presentertask.getTaskStats()
 
-        presenterpayment = PaymentPresenter(this, inf, userid, eventid)
+        presenterpayment = PaymentPresenter(context!!,this, inf)
         presenterpayment.getPaymentStats()
         //----------------------------------------------------------------------------------------------------
 

@@ -43,12 +43,11 @@ class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
                 reverseLayout = true
             }
         }
-        presenter = BlogPresenter(this,language)
+        presenter = BlogPresenter(context!!, this, inf, language)
         return inf
     }
-
-    override fun onViewBlogSuccess(bloglist: ArrayList<Blog>) {
-        //emptyrecyclerview.visibility = View.GONE
+    override fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<Blog>) {
+        inflatedView.emptyrecyclerview.visibility = View.GONE
         val rvAdapter = Rv_BlogAdapter(bloglist)
         blogrv.adapter = rvAdapter
     }

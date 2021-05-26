@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.example.newevent2.DashboardActivity
 import com.example.newevent2.DashboardEvent
+import com.example.newevent2.Functions.converttoDate
 import com.example.newevent2.MainEventSummary
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskJournal
@@ -188,8 +189,15 @@ class TaskPresenter : ViewModel, Cache.ArrayListCacheData, Cache.SingleItemCache
                                 }
                                 val newtasklist: ArrayList<Task> = ArrayList(taskjournallist.size)
                                 for (tasklist in taskjournallist) newtasklist.add(tasklist)
-                                taskjournal.add(TaskJournal(taskdates, newtasklist))
+                                taskjournal.add(TaskJournal(converttoDate(taskdates), newtasklist))
                             }
+                            // This is supposed to sort TaskJournal based on the date
+                            Collections.sort(taskjournal,
+                                Comparator { o1, o2 ->
+                                    if (o1.date == null || o2.date == null) 0 else o1.date
+                                        .compareTo(o2.date)
+                                })
+
                             // Saving my TaskJournal list into the cache
                             cachetaskjournal.save(CacheCategory.TaskJournal, taskjournal)
 

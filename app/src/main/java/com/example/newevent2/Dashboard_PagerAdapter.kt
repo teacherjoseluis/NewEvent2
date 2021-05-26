@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 class Dashboard_PagerAdapter(
     private val userid: String,
     private val eventid: String,
+    private val language: String,
     fm: FragmentManager,
     private var totalTabs: Int
 ) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -34,7 +35,7 @@ class Dashboard_PagerAdapter(
             2 -> {
                 val bundle = Bundle()
                 val fragInfo = DashboardBlog()
-                //bundle.putString("eventkey", eventkey)
+                bundle.putString("language", language)
                 fragInfo.arguments = bundle
                 return fragInfo
             }

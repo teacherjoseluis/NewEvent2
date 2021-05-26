@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.newevent2"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -22,6 +22,11 @@ android {
 
         //multiDexEnabled true
     }
+
+//    buildFeatures {
+//        // Enables Jetpack Compose for this module
+//        compose = true
+//    }
 
     buildTypes {
         release {
@@ -37,6 +42,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+ //       useIR = true
     }
 
     dataBinding {
@@ -95,5 +101,20 @@ dependencies {
     //implementation 'com.google.firebase:firebase-admin:7.0.1'
     implementation 'androidx.core:core:1.3.2'
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
-
+//    implementation("androidx.compose.ui:ui:1.0.0-beta07")
+//    // Tooling support (Previews, etc.)
+//    implementation("androidx.compose.ui:ui-tooling:1.0.0-beta07")
+//    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+//    implementation("androidx.compose.foundation:foundation:1.0.0-beta07")
+//    // Material Design
+//    implementation("androidx.compose.material:material:1.0.0-beta07")
+//    // Material design icons
+//    implementation("androidx.compose.material:material-icons-core:1.0.0-beta07")
+//    implementation("androidx.compose.material:material-icons-extended:1.0.0-beta07")
+//    // Integration with observables
+//    implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta07")
+//    implementation("androidx.compose.runtime:runtime-rxjava2:1.0.0-beta07")
+//
+//    // UI Tests
+//    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta07")
 }

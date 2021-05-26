@@ -38,7 +38,7 @@ class TaskPayment_Payments : Fragment(), PaymentPresenter.PaymentList,
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.taskpayment_payments, container, false)
 
-        presenterpayment = PaymentPresenter(this, inf, userid, eventid)
+        presenterpayment = PaymentPresenter(context!!,this, inf)
         presenterpayment.getPaymentStats(category)
         presenterpayment.getPaymentList(category)
 

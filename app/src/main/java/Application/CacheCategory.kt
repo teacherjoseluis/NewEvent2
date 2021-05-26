@@ -9,4 +9,5 @@ enum class CacheCategory(
     TaskJournal("taskjournal", 60,"Task", "TaskJournal.Class"),
     SingleTask("singletask", 60,"Task", "Task.Class"),
     ArrayTask("arrayalltask", 60,"Task", "Task.Class"),
+    SinglePayment("singlepayment", 60, "Payment", "Payment.Class")
 }
