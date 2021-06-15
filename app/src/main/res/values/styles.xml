@@ -43,7 +43,7 @@
     </style>
 
     <style name="BodySmall" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:fontFamily">@font/robotolight</item>
+        <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:textSize">14dp</item>
     </style>
 
@@ -64,6 +64,11 @@
 
     <style name="BodyBold" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotomedium</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
+    <style name="JournalDate" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textSize">18dp</item>
     </style>
 

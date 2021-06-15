@@ -31,7 +31,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.new_guest.*
 import kotlinx.android.synthetic.main.new_guest.phoneimage
 import kotlinx.android.synthetic.main.new_guest.phoneinputedit

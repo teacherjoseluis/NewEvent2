@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newevent2.ui.dialog.DatePickerFragment
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.event_edit.*
 import kotlinx.android.synthetic.main.event_edit.button
 import kotlinx.android.synthetic.main.event_edit.etPlannedDate
@@ -165,7 +164,7 @@ class OnboardingView() : AppCompatActivity(),
     }
 
     private fun showTimePickerDialog() {
-        val newFragment = TimePickerFragment()
+        val newFragment = TimePickerFragment(etPlannedTime)
         newFragment.show(supportFragmentManager, "Time Picker")
 
     }

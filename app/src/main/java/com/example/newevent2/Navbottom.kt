@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseApp
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navbottom.*
 
 class Navbottom : AppCompatActivity() {

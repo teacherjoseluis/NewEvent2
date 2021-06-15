@@ -78,7 +78,8 @@
         <activity android:name=".NewNote" />
         <activity android:name=".Settings" />
         <activity android:name=".MainEventView" />
-        <activity android:name=".DashboardView">
+        <activity android:name=".DashboardView"/>
+        <activity android:name=".ActivityContainer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -92,6 +93,7 @@
         <activity android:name=".LoginView" />
         <activity android:name=".LoginEmailView" />
         <activity android:name=".OnboardingView" />
+        <activity android:name=".TaskCreateEdit" />
 
 
         <meta-data

@@ -123,27 +123,27 @@ internal class MyCalendar : AppCompatActivity() {
             }
         })
 
-        imageButton1.setOnClickListener {
-            val home = Intent(this, Welcome::class.java)
-            startActivity(home)
-        }
-        imageButton.setOnClickListener {
-            val events = Intent(this, EventDetail::class.java)
-            //calendar.putExtra("eventkey", eventkey)
-            startActivity(events)
-        }
-
-        imageButton3.setOnClickListener {
-            val contacts = Intent(this, MyContacts::class.java)
-            //contacts.putExtra("eventkey", eventkey)
-            startActivity(contacts)
-        }
-
-        imageButton4.setOnClickListener {
-            val notes = Intent(this, MyNotes::class.java)
-            //notes.putExtra("eventkey", eventkey)
-            startActivity(notes)
-        }
+//        imageButton1.setOnClickListener {
+//            val home = Intent(this, Welcome::class.java)
+//            startActivity(home)
+//        }
+//        imageButton.setOnClickListener {
+//            val events = Intent(this, EventDetail::class.java)
+//            //calendar.putExtra("eventkey", eventkey)
+//            startActivity(events)
+//        }
+//
+//        imageButton3.setOnClickListener {
+//            val contacts = Intent(this, MyContacts::class.java)
+//            //contacts.putExtra("eventkey", eventkey)
+//            startActivity(contacts)
+//        }
+//
+//        imageButton4.setOnClickListener {
+//            val notes = Intent(this, MyNotes::class.java)
+//            //notes.putExtra("eventkey", eventkey)
+//            startActivity(notes)
+//        }
     }
 
     private fun loadcalendar(calendar: Calendar?) {

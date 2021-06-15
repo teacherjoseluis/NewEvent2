@@ -3,27 +3,27 @@
 
     <item
         android:id="@+id/home"
-        android:icon="@drawable/home"
+        android:icon="@drawable/icons8_home"
         android:title="Home"/>
 
     <item
         android:id="@+id/events"
-        android:icon="@drawable/events"
+        android:icon="@drawable/balloons_1"
         android:title="Events"/>
 
     <item
         android:id="@+id/tasks"
-        android:icon="@drawable/tasks"
+        android:icon="@drawable/organizer"
         android:title="Task"/>
 
     <item
         android:id="@+id/contacts"
-        android:icon="@drawable/contacts"
+        android:icon="@drawable/guests2"
         android:title="Contacts"/>
 
     <item
         android:id="@+id/notes"
-        android:icon="@drawable/notes1"
+        android:icon="@drawable/icons8_edit"
         android:title="Notes"/>
 
 </menu>

@@ -6,21 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EventDetail">
-
+<!--
     <include
         android:id="@+id/toolbar"
         layout="@layout/main_toolbar"
         style="@style/Heading6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-
+-->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:layout_editor_absoluteX="0dp"
         android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@color/rosaChillon"
         app:tabSelectedTextColor="@color/rosaChillon"
         app:tabTextColor="@color/rosaChillon">
@@ -28,12 +28,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Summary" />
+            android:text="Event" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event" />
+            android:text="Categories" />
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -51,17 +51,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
         android:clickable="true"
-        android:tint="#FFFFFF"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:tint="@color/white"
+        app:backgroundTint="@color/azulmasClaro"
         app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@id/include2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="24dp"
-        app:srcCompat="@drawable/ic_icons8_plus" />
+        app:srcCompat="@drawable/ic_icons8_plus_white" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/TaskLayout"
@@ -72,23 +70,24 @@
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/PaymentLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabTask"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/icons8_task_completed_24"
-            android:tint="@color/black"
-            app:backgroundTint="@color/colorPrimaryLight"
+            android:src="@drawable/task_done_outline"
+            app:tint="@color/white"
+            app:backgroundTint="@color/rosaChillon"
             app:fabSize="mini"
+            android:outlineAmbientShadowColor="@color/secondaryText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:maxImageSize="24dp"
             app:rippleColor="@color/white"
-            android:elevation="0dp"
-            app:elevation="0dp"/>
+            android:elevation="2dp"
+            app:elevation="2dp"/>
 
         <TextView
             style="@style/Overline"
@@ -96,15 +95,15 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:layout_marginRight="2dp"
-            android:background="@color/secondaryText"
+            android:background="@color/white"
             android:padding="5dp"
             android:text="Task"
-            android:textColor="@color/white"
+            android:textColor="@color/rosaChillon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/fabTask"
             app:layout_constraintTop_toTopOf="parent"
-            android:elevation="0dp"
-            app:elevation="0dp"/>
+            android:elevation="2dp"
+            app:elevation="2dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -117,23 +116,24 @@
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/NewTaskPaymentActionButton"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabPayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/icons8_invoice_paid_32"
-            android:tint="@color/black"
-            app:backgroundTint="@color/colorPrimaryLight"
+            android:src="@drawable/invoice"
+            app:tint="@color/white"
+            app:backgroundTint="@color/rosaChillon"
             app:fabSize="mini"
+            android:outlineAmbientShadowColor="@color/secondaryText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:maxImageSize="24dp"
             app:rippleColor="@color/white"
-            android:elevation="0dp"
-            app:elevation="0dp"/>
+            android:elevation="2dp"
+            app:elevation="2dp"/>
 
         <TextView
             style="@style/Overline"
@@ -141,22 +141,22 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:layout_marginRight="2dp"
-            android:background="@color/secondaryText"
+            android:background="@color/white"
             android:padding="5dp"
             android:text="Payment"
-            android:textColor="@color/white"
+            android:textColor="@color/rosaChillon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/fabPayment"
             app:layout_constraintTop_toTopOf="parent"
-            android:elevation="0dp"
-            app:elevation="0dp"/>
+            android:elevation="2dp"
+            app:elevation="2dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
+<!--
     <include
         android:id="@+id/include2"
         layout="@layout/navbottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"></include>
-
+-->
 </androidx.constraintlayout.widget.ConstraintLayout>

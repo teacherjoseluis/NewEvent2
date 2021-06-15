@@ -10,7 +10,7 @@ import android.widget.Toast
 import com.example.newevent2.R
 
 
-class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class TimePickerFragment(val tv: TextView) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
     private lateinit var calendar:Calendar
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -49,7 +49,7 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         // Do something with the returned time
-        val tv:TextView = activity?.findViewById(R.id.etPlannedTime) as TextView
+        //val tv:TextView = activity?.findViewById(R.id.etPlannedTime) as TextView
         val minutestring = String.format("%02d",minute)
         tv.text = "${getHourAMPM(hourOfDay)}:"+ minutestring +"${getAMPM(hourOfDay)}"
         //val timeValue = String.format("%02d",hour) + ":" + String.format("%02d",minute)

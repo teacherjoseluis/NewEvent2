@@ -9,27 +9,25 @@ import androidx.annotation.RequiresApi
 import com.example.newevent2.*
 import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Payment
-import com.example.newevent2.Model.Task
 import kotlin.collections.ArrayList
 
-class PaymentPresenter : Cache.ArrayListCacheData {
+class PaymentPresenter : Cache.ArrayListCacheData, Cache.SingleItemCacheData {
 
     private var activefragment = ""
     private var inflatedView: View
+    private var mContext: Context
 
-    private lateinit var mContext: Context
+    private var paymentcategory = ""
 
-    //private lateinit var cachetaskjournal: Cache<TaskJournal>
     private lateinit var cachepayment: Cache<Payment>
+    private lateinit var cachepaymenttoken: Cache<PaymentStatsToken>
 
     private lateinit var fragmentDE: DashboardEvent
-    private lateinit var fragmentME: MainEventSummary
+    private lateinit var fragmentME: EventCategories
     private lateinit var fragmentTP: TaskPayment_Payments
 
     var userid = ""
     var eventid = ""
-
-    private var paymentcategory = ""
 
     constructor(context: Context, fragment: DashboardEvent, view: View) {
         fragmentDE = fragment
@@ -38,13 +36,14 @@ class PaymentPresenter : Cache.ArrayListCacheData {
         activefragment = "DE"
     }
 
-    constructor(context: Context, fragment: MainEventSummary, view: View) {
+    constructor(context: Context, fragment: EventCategories, view: View) {
         fragmentME = fragment
         inflatedView = view
         mContext = context
-        activefragment = "DE"
+        activefragment = "ME"
     }
 
+    // I might as well be removing the call to the presenter from this fragment
     constructor(context: Context, fragment: TaskPayment_Payments, view: View) {
         fragmentTP = fragment
         inflatedView = view
@@ -53,67 +52,76 @@ class PaymentPresenter : Cache.ArrayListCacheData {
     }
 
     fun getPaymentStats(category: String = "") {
-        val payment = PaymentModel()
-        payment.getPaymentStats(
-            userid,
-            eventid,
-            category,
-            object : PaymentModel.FirebaseSuccessStatsPayment {
-                override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
-                    if (countpayment == 0) {
-                        //There are no payments made
-                        when (activefragment) {
-                            "DE" -> fragmentDE.onPaymentStatsError(inflatedView, "BLANK_STATS")
-                            "ME" -> fragmentME.onPaymentStatsError(inflatedView, "BLANK_STATS")
-                            "TP" -> fragmentTP.onPaymentStatsError(inflatedView, "BLANK_STATS")
-                        }
-                    } else {
-                        // Get the total Task Budget
-                        val task = TaskModel()
-                        task.getTasksBudget(
-                            userid,
-                            eventid,
-                            object : TaskModel.FirebaseSuccessTaskBudget {
-                                override fun onTasksBudget(sumbudget: Float) {
-                                    //Show the stats
-                                    when (activefragment) {
-                                        "DE" -> {
-                                            fragmentDE.onPaymentStats(
-                                                inflatedView,
-                                                countpayment,
-                                                sumpayment,
-                                                sumbudget
-                                            )
-                                        }
-                                        "ME" -> {
-                                            fragmentME.onPaymentStats(
-                                                inflatedView,
-                                                countpayment,
-                                                sumpayment,
-                                                sumbudget
-                                            )
-                                        }
-                                        "TP" -> {
-                                            fragmentTP.onPaymentStats(
-                                                inflatedView,
-                                                countpayment,
-                                                sumpayment,
-                                                sumbudget
-                                            )
+        if (category != "") {
+            val payment = PaymentModel()
+            payment.getPaymentStats(
+                userid,
+                eventid,
+                category,
+                object : PaymentModel.FirebaseSuccessStatsPayment {
+                    override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
+                        if (countpayment == 0) {
+                            //There are no payments made
+                            when (activefragment) {
+                                "DE" -> fragmentDE.onPaymentStatsError(inflatedView, "BLANK_STATS")
+                                //"ME" -> fragmentME.onPaymentStatsError(inflatedView, "BLANK_STATS")
+                                "TP" -> fragmentTP.onPaymentStatsError(inflatedView, "BLANK_STATS")
+                            }
+                        } else {
+                            // Get the total Task Budget
+                            val task = TaskModel()
+                            task.getTasksBudget(
+                                userid,
+                                eventid,
+                                object : TaskModel.FirebaseSuccessTaskBudget {
+                                    override fun onTasksBudget(sumbudget: Float) {
+                                        //Show the stats
+                                        when (activefragment) {
+                                            "DE" -> {
+                                                fragmentDE.onPaymentStats(
+                                                    inflatedView,
+                                                    countpayment,
+                                                    sumpayment,
+                                                    sumbudget
+                                                )
+                                            }
+//                                        "ME" -> {
+//                                            fragmentME.onPaymentStats(
+//                                                inflatedView,
+//                                                countpayment,
+//                                                sumpayment,
+//                                                sumbudget
+//                                            )
+//                                        }
+                                            "TP" -> {
+                                                fragmentTP.onPaymentStats(
+                                                    inflatedView,
+                                                    countpayment,
+                                                    sumpayment,
+                                                    sumbudget
+                                                )
+                                            }
                                         }
                                     }
-                                }
-                            })
+                                })
+                        }
                     }
-                }
-            })
+                })
+
+        } else {
+            paymentcategory = category
+            cachepaymenttoken = Cache(mContext, this)
+            cachepaymenttoken.loadsingleitem(
+                CacheCategory.PaymentStatsAll,
+                PaymentStatsToken::class
+            )
+        }
     }
 
     fun getPaymentList(category: String) {
         paymentcategory = category
         cachepayment = Cache(mContext, this)
         cachepayment.loadarraylist(CacheCategory.ArrayTask, Payment::class)
-
     }
 
     private fun filterpaymentlist(arrayList: ArrayList<Payment>): java.util.ArrayList<Payment> {
@@ -153,22 +161,20 @@ class PaymentPresenter : Cache.ArrayListCacheData {
                 eventid,
                 object : PaymentModel.FirebaseSuccessPaymentList {
                     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-                    override fun onPaymentList(arrayList: ArrayList<com.example.newevent2.Model.Payment>) {
+                    override fun onPaymentList(arrayList: ArrayList<Payment>) {
                         if (arrayList.isNotEmpty()) {
                             cachepayment.save(CacheCategory.ArrayTask, arrayList)
 
                             var paymentlist = filterpaymentlist(arrayList)
                             when (activefragment) {
-
                                 "TP" -> fragmentTP.onPaymentList(
                                     inflatedView,
                                     paymentcategory,
-                                    arrayList
+                                    paymentlist
                                 )
                             }
                         } else {
                             when (activefragment) {
-
                                 "TP" -> fragmentTP.onPaymentListError(
                                     inflatedView,
                                     paymentcategory,
@@ -179,6 +185,84 @@ class PaymentPresenter : Cache.ArrayListCacheData {
                     }
                 })
         }
+    }
+
+
+    override fun onSingleItem(item: Any) {
+        if (item is PaymentStatsToken) {
+            when (activefragment) {
+                "DE" -> fragmentDE.onPaymentStats(
+                    inflatedView,
+                    item.countpayment,
+                    item.sumpayment,
+                    item.sumbudget
+                )
+            }
+        }
+    }
+
+    override fun onEmptyItem(classtype: String) {
+        val payment = PaymentModel()
+        payment.getPaymentStats(
+            userid,
+            eventid,
+            paymentcategory,
+            object : PaymentModel.FirebaseSuccessStatsPayment {
+                override fun onPaymentStats(countpayment: Int, sumpayment: Float) {
+                    if (countpayment == 0) {
+                        //There are no payments made
+                        when (activefragment) {
+                            "DE" -> fragmentDE.onPaymentStatsError(inflatedView, "BLANK_STATS")
+                            //"ME" -> fragmentME.onPaymentStatsError(inflatedView, "BLANK_STATS")
+                            "TP" -> fragmentTP.onPaymentStatsError(inflatedView, "BLANK_STATS")
+                        }
+                    } else {
+                        // Get the total Task Budget
+                        val task = TaskModel()
+                        task.getTasksBudget(
+                            userid,
+                            eventid,
+                            object : TaskModel.FirebaseSuccessTaskBudget {
+                                override fun onTasksBudget(sumbudget: Float) {
+                                    //Show the stats
+                                    cachepaymenttoken.save(
+                                        CacheCategory.PaymentStatsAll,
+                                        countpayment,
+                                        sumpayment,
+                                        sumbudget
+                                    )
+                                    when (activefragment) {
+                                        "DE" -> {
+                                            fragmentDE.onPaymentStats(
+                                                inflatedView,
+                                                countpayment,
+                                                sumpayment,
+                                                sumbudget
+                                            )
+                                        }
+//                                        "ME" -> {
+//                                            fragmentME.onPaymentStats(
+//                                                inflatedView,
+//                                                countpayment,
+//                                                sumpayment,
+//                                                sumbudget
+//                                            )
+//                                        }
+                                        "TP" -> {
+                                            fragmentTP.onPaymentStats(
+                                                inflatedView,
+                                                countpayment,
+                                                sumpayment,
+                                                sumbudget
+                                            )
+                                        }
+                                    }
+                                }
+                            })
+                    }
+                }
+            })
+
     }
 
     interface PaymentStats {
@@ -194,7 +278,7 @@ class PaymentPresenter : Cache.ArrayListCacheData {
         fun onPaymentList(
             inflatedView: View,
             category: String,
-            list: ArrayList<com.example.newevent2.Model.Payment>
+            list: ArrayList<Payment>
         )
 
         fun onPaymentListError(
@@ -203,4 +287,5 @@ class PaymentPresenter : Cache.ArrayListCacheData {
             errcode: String
         )
     }
+
 }

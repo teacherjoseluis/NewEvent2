@@ -22,7 +22,6 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.custom_vendor_contents.*
 import kotlinx.android.synthetic.main.custom_vendor_contents.view.*
-import kotlinx.android.synthetic.main.eventdetail_event.*
 import kotlinx.android.synthetic.main.new_guest.*
 import kotlinx.android.synthetic.main.new_vendor.*
 import java.util.*

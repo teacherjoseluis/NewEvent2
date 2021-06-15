@@ -1,23 +1,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/menu_seccion_1"
+            android:id="@+id/home_fragment"
             android:icon="@drawable/icons8_home"
             android:title="Home"/>
         <item
-            android:id="@+id/menu_seccion_2"
+            android:id="@+id/event_fragment"
             android:icon="@drawable/balloons_1"
             android:title="Events"/>
         <item
-            android:id="@+id/menu_seccion_3"
+            android:id="@+id/task_fragment"
             android:icon="@drawable/organizer"
             android:title="Tasks"/>
         <item
-            android:id="@+id/menu_seccion_4"
+            android:id="@+id/contact_fragment"
             android:icon="@drawable/guests2"
             android:title="Contacts"/>
         <item
-            android:id="@+id/menu_seccion_5"
+            android:id="@+id/notes_fragment"
             android:icon="@drawable/icons8_edit"
             android:title="Notes"/>
     </group>
@@ -27,11 +27,11 @@
         android:title="More Options">
         <menu>
             <item
-                android:id="@+id/menu_opcion_1"
+                android:id="@+id/settings_fragment"
                 android:icon="@drawable/vector"
                 android:title="Settings"/>
             <item
-                android:id="@+id/menu_opcion_2"
+                android:id="@+id/account_fragment"
                 android:icon="@drawable/person"
                 android:title="Account"/>
         </menu>

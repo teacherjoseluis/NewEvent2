@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/taskname" />
 
     <TextView
-        android:id="@+id/taskbudget"
+        android:id="@+id/taskbudgets"
         style="@style/BodyItalic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
         android:layout_marginRight="5dp"
         android:paddingBottom="5dp"
         android:text="Budget"
-        app:layout_constraintEnd_toStartOf="@+id/taskbudget"
+        app:layout_constraintEnd_toStartOf="@+id/taskbudgets"
         app:layout_constraintTop_toBottomOf="@+id/taskname" />
 
     <View

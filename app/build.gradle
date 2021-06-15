@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.newevent2"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -117,4 +117,6 @@ dependencies {
 //
 //    // UI Tests
 //    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta07")
+    implementation 'com.github.baoyachi:StepView:1.9'
+    implementation 'com.github.sakshampruthi:custom-loading-screen:1.0.2'
 }

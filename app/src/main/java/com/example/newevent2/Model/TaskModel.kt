@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -129,6 +130,31 @@ class TaskModel {
         postRef.addValueEventListener(taskListenerActive)
     }
 
+    fun getTaskdetail(
+        userid: String,
+        eventid: String,
+        taskid: String,
+        dataFetched: FirebaseSuccessTask
+    ) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task").child(taskid)
+
+        val taskListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                val taskitem = p0.getValue(Task::class.java)!!
+                taskitem!!.key = p0.key.toString()
+                dataFetched.onTask(taskitem)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(taskListenerActive)
+    }
+
     fun getTasksList(
         userid: String,
         eventid: String,
@@ -203,7 +229,13 @@ class TaskModel {
         postRef.addValueEventListener(tasklListenerActive)
     }
 
-    fun addTask(userid: String, eventid: String, task: Task) {
+    fun addTask(
+        userid: String,
+        eventid: String,
+        task: Task,
+        tasksactive: Int,
+        taskaddedflag: FirebaseAddEditTaskSuccess
+    ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Task").push()
@@ -220,18 +252,28 @@ class TaskModel {
             "budget" to task.budget,
             "date" to task.date,
             "category" to task.category,
-            "status" to task.status,
+            "status" to ACTIVESTATUS,
             "createdatetime" to sdf.format(taskdatetime)
         )
 
         postRef.setValue(taskadd as Map<String, Any>)
             .addOnFailureListener {
+                taskaddedflag.onTaskAddedEdited(false)
             }
             .addOnSuccessListener {
+                    val usermodel = UserModel(userid)
+                    usermodel.editUserTaskflag(ACTIVEFLAG)
+                    usermodel.editUserAddTask(tasksactive + 1)
+                    taskaddedflag.onTaskAddedEdited(true)
             }
     }
 
-    fun editTask(userid: String, eventid: String, task: Task) {
+    fun editTask(
+        userid: String,
+        eventid: String,
+        task: Task,
+        taskeditedflag: FirebaseAddEditTaskSuccess
+    ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Task").child(task.key)
@@ -247,6 +289,7 @@ class TaskModel {
 
         postRef.updateChildren(taskedit as Map<String, Any>)
             .addOnSuccessListener {
+                taskeditedflag.onTaskAddedEdited(true)
             }
     }
 
@@ -255,6 +298,7 @@ class TaskModel {
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Task").child(task.key)
                 .removeValue()
+        //todo ("Need to implement a callback that will check if the user has no longer tasks associated. In such a case the associated flag in the User Profile will be set as "N"")
     }
 
     interface FirebaseSuccessStatsTask {
@@ -271,5 +315,14 @@ class TaskModel {
 
     interface FirebaseSuccessTaskList {
         fun onTaskList(list: ArrayList<Task>)
+    }
+
+    interface FirebaseAddEditTaskSuccess {
+        fun onTaskAddedEdited(flag: Boolean)
+    }
+
+    companion object {
+        const val ACTIVESTATUS = "A"
+        const val ACTIVEFLAG = "Y"
     }
 }

@@ -1,6 +1,5 @@
 package com.example.newevent2.Functions
 
-import com.example.newevent2.FirebaseSuccessListenerBlogWelcome
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase

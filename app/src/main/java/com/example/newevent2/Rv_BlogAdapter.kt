@@ -41,7 +41,6 @@ class Rv_BlogAdapter(val blogList: ArrayList<Blog>) :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.blogtitle?.text = texttrimming(context, blogList[p1].blogtitle, BLOGTITLEWIDTH)
-        //p0.blogtitle?.text = blogList[p1].blogtitle
         p0.author?.text = blogList[p1].author
         p0.date?.text = blogList[p1].blogdate
         p0.time?.text = blogList[p1].readingtime
@@ -66,7 +65,6 @@ class Rv_BlogAdapter(val blogList: ArrayList<Blog>) :
             context.startActivity(intents)
         }
     }
-
 
     // A ViewHolder describes an item view and metadata about its place within the RecyclerView.
     //class ViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {

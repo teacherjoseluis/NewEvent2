@@ -6,7 +6,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.example.newevent2.Functions.getCurrentDateTime
+import com.example.newevent2.Functions.currentDateTime
 import com.example.newevent2.R
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -14,6 +14,8 @@ import com.google.firebase.auth.*
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.lang.Exception
+import java.lang.reflect.Executable
 
 class UserModel(
     //This user creates and edits Users into Firebase
@@ -78,6 +80,22 @@ class UserModel(
         //postRef.child("hasvendor").setValue(user.hasvendor)
     }
 
+    fun editUserAddTask(value: Int) {
+        postRef.child("tasksactive").setValue(value)
+    }
+
+    fun editUserAddPayment(value: Int) {
+        postRef.child("payments").setValue(value)
+    }
+
+    fun editUserTaskflag(flag: String) {
+        postRef.child("hastask").setValue(flag)
+    }
+
+    fun editUserPaymentflag(flag: String) {
+        postRef.child("haspayment").setValue(flag)
+    }
+
     fun editUserImage(uri: Uri, imageurl: String) {
 
         postRef.child("imageurl").setValue(imageurl)
@@ -100,7 +118,7 @@ class UserModel(
             "email" to user.email,
             "country" to user.country,
             "language" to user.language,
-            "createdatetime" to getCurrentDateTime(),
+            "createdatetime" to currentDateTime,
             "authtype" to user.authtype,
             "imageurl" to "",
             "role" to user.role,
@@ -131,4 +149,5 @@ class UserModel(
     interface FirebaseSaveSuccess {
         fun onSaveSuccess(flag: Boolean)
     }
+
 }

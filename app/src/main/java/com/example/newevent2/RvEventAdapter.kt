@@ -113,21 +113,21 @@ class RvEventAdapter(private val eventList: MutableList<Event>) :
             .centerCrop()
             .into(p0.imageView)
 
-        p0.itemView.setOnClickListener {
-            val eventdetail = Intent(context, EventDetail::class.java)
-            eventdetail.putExtra("eventkey", eventList[p1].key)
-            eventdetail.putExtra("placeid", eventList[p1].placeid)
-            eventdetail.putExtra("name", eventList[p1].name)
-            eventdetail.putExtra("date", eventList[p1].date)
-            eventdetail.putExtra("time", eventList[p1].time)
-            eventdetail.putExtra("about", eventList[p1].about)
-            eventdetail.putExtra("location", eventList[p1].location)
-            eventdetail.putExtra("latitude", eventList[p1].latitude)
-            eventdetail.putExtra("longitude", eventList[p1].longitude)
-            eventdetail.putExtra("imageurl", eventList[p1].imageurl)
-            eventdetail.putExtra("address", eventList[p1].address)
-            context.startActivity(eventdetail)
-        }
+//        p0.itemView.setOnClickListener {
+//            val eventdetail = Intent(context, EventDetail::class.java)
+//            eventdetail.putExtra("eventkey", eventList[p1].key)
+//            eventdetail.putExtra("placeid", eventList[p1].placeid)
+//            eventdetail.putExtra("name", eventList[p1].name)
+//            eventdetail.putExtra("date", eventList[p1].date)
+//            eventdetail.putExtra("time", eventList[p1].time)
+//            eventdetail.putExtra("about", eventList[p1].about)
+//            eventdetail.putExtra("location", eventList[p1].location)
+//            eventdetail.putExtra("latitude", eventList[p1].latitude)
+//            eventdetail.putExtra("longitude", eventList[p1].longitude)
+//            eventdetail.putExtra("imageurl", eventList[p1].imageurl)
+//            eventdetail.putExtra("address", eventList[p1].address)
+//            context.startActivity(eventdetail)
+//        }
     }
 
 

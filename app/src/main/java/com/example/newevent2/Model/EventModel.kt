@@ -1,13 +1,10 @@
 package com.example.newevent2.Model
 
-import android.content.Context
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.newevent2.FirebaseSuccessListenerEvent
-import com.example.newevent2.Functions.getCurrentDateTime
-import com.example.newevent2.Functions.getUserSession
-import com.example.newevent2.saveLog
+import com.example.newevent2.Functions.saveImgtoStorage
+import com.example.newevent2.MainActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -22,10 +19,14 @@ class EventModel() {
     private val storage = Firebase.storage
     private val storageRef = storage.reference
 
-    var userid = ""
+    //var userid = ""
 
-    fun addEvent(event: Event, uri: Uri?, savesuccessflag: EventModel.FirebaseSaveSuccess) {
-
+    fun addEvent(
+        userid: String,
+        event: Event,
+        uri: Uri?,
+        savesuccessflag: EventModel.FirebaseSaveSuccess
+    ) {
         val postRef = myRef.child("User").child(userid).child("Event").push()
         val eventmap = hashMapOf(
             "imageurl" to event.imageurl,
@@ -49,25 +50,47 @@ class EventModel() {
             } else {
 //                // Saving in the log the new creation of the event
                 val eventid = postRef.key.toString()
-//                saveLog(context, "INSERT", "event", eventid, event.name, userid, eventid)
                 //Save Event image in Storage
                 if (uri != null) {
-                    val imageRef =
-                        storageRef.child("User/$userid/Event/${eventid}/images/${uri.lastPathSegment}")
-                    val uploadTask = imageRef.putFile(uri)
-
-                    uploadTask.addOnFailureListener {
-                        return@addOnFailureListener
-                    }.addOnSuccessListener {
-                        return@addOnSuccessListener
-                    }
+                    saveImgtoStorage("eventimage", userid, eventid, uri)
+                    savesuccessflag.onSaveSuccess(postRef.key.toString())
                 }
-                savesuccessflag.onSaveSuccess(postRef.key.toString())
             }
         }
     }
 
-    fun getEventdetail(userid: String, eventid: String, dataFetched: FirebaseSuccessListenerEventDetail) {
+    fun editEvent(
+        userid: String,
+        event: Event,
+        uri: Uri?,
+        savesuccessflag: FirebaseSaveImage
+    ) {
+
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(event.key)
+
+        postRef.child("name").setValue(event.name)
+        postRef.child("date").setValue(event.date)
+        postRef.child("time").setValue(event.time)
+        postRef.child("location").setValue(event.location)
+        postRef.child("placeid").setValue(event.placeid)
+        postRef.child("latitude").setValue(event.latitude)
+        postRef.child("longitude").setValue(event.longitude)
+        postRef.child("address").setValue(event.address)
+
+        if (uri != null) {
+            // There is an image to be saved in Storage
+            savesuccessflag.onImagetoSave(uri)
+        }
+
+    }
+
+
+    fun getEventdetail(
+        userid: String,
+        eventid: String,
+        dataFetched: FirebaseSuccessListenerEventDetail
+    ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
 
@@ -88,6 +111,10 @@ class EventModel() {
 
     interface FirebaseSaveSuccess {
         fun onSaveSuccess(eventid: String)
+    }
+
+    interface FirebaseSaveImage {
+        fun onImagetoSave(uri: Uri)
     }
 
     interface FirebaseSuccessListenerEventDetail {

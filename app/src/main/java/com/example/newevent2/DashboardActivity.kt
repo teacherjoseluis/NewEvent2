@@ -32,6 +32,7 @@ class DashboardActivity() : Fragment(), TaskPresenter.TaskDateList {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
         userid = arguments!!.get("userid").toString()
         eventid = arguments!!.get("eventid").toString()
     }
@@ -67,9 +68,10 @@ class DashboardActivity() : Fragment(), TaskPresenter.TaskDateList {
     }
 
     override fun onTaskJournalError(inflatedView: View, errcode: String) {
+        //Consider adding a try catch in case there is no data coming from Firebase
         journalparentrv.visibility = View.GONE
+        noactivity.visibility = View.VISIBLE
     }
-
 }
 
 

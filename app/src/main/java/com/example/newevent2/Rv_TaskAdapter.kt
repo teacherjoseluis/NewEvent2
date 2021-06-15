@@ -38,7 +38,7 @@ class Rv_TaskAdapter(val userid: String, val eventid: String, val taskList: Muta
         p0.taskbudget?.text = taskList[p1].budget
 
         p0.itemView.setOnClickListener {
-            val taskdetail = Intent(context, Task_EditDetail::class.java)
+            val taskdetail = Intent(context, TaskCreateEdit::class.java)
             taskdetail.putExtra("task", taskList[p1])
             taskdetail.putExtra("userid", userid)
             taskdetail.putExtra("eventid", eventid)
@@ -61,14 +61,24 @@ class Rv_TaskAdapter(val userid: String, val eventid: String, val taskList: Muta
         if (action == CHECKACTION) {
             val taskmodel = TaskModel()
             taskswift.status = COMPLETETASK
-            taskmodel.editTask(userid, eventid, taskswift)
+            taskmodel.editTask(userid, eventid, taskswift, object : TaskModel.FirebaseAddEditTaskSuccess {
+                override fun onTaskAddedEdited(flag: Boolean) {
+                    TODO("Not yet implemented")
+                }
+
+            })
 
             Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
                     taskList.add(taskswift)
                     notifyItemInserted(taskList.lastIndex)
                     taskswift.status = ACTIVETASK
-                    taskmodel.editTask(userid, eventid, taskswift)
+                    taskmodel.editTask(userid, eventid, taskswift, object: TaskModel.FirebaseAddEditTaskSuccess {
+                        override fun onTaskAddedEdited(flag: Boolean) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
                 }.show()
         }
     }
@@ -90,16 +100,33 @@ class Rv_TaskAdapter(val userid: String, val eventid: String, val taskList: Muta
             val taskmodel = TaskModel()
             taskmodel.deleteTask(userid, eventid, taskswift)
 
+            val usersession =
+                context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+            val tasksactive = usersession.getInt("tasksactive", 0)
+            val sessionEditor = usersession!!.edit()
+            sessionEditor.putInt("tasksactive", tasksactive + 1)
+            sessionEditor.apply()
+
             Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
                     taskList.add(taskbackup)
                     notifyItemInserted(taskList.lastIndex)
-                    taskmodel.addTask(userid, eventid, taskbackup)
+                    taskmodel.addTask(userid, eventid, taskbackup, tasksactive, object : TaskModel.FirebaseAddEditTaskSuccess {
+                        override fun onTaskAddedEdited(flag: Boolean) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
                 }.show()
         } else if (action == UNDOACTION) {
             taskswift.status = ACTIVETASK
             val taskmodel = TaskModel()
-            taskmodel.editTask(userid, eventid, taskswift)
+            taskmodel.editTask(userid, eventid, taskswift, object : TaskModel.FirebaseAddEditTaskSuccess {
+                override fun onTaskAddedEdited(flag: Boolean) {
+                    TODO("Not yet implemented")
+                }
+
+            })
         }
     }
 

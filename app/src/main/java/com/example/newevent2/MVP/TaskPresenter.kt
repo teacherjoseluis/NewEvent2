@@ -2,35 +2,40 @@ package com.example.newevent2.MVP
 
 import Application.Cache
 import Application.CacheCategory
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModel
 import com.example.newevent2.DashboardActivity
 import com.example.newevent2.DashboardEvent
 import com.example.newevent2.Functions.converttoDate
-import com.example.newevent2.MainEventSummary
+import com.example.newevent2.EventCategories
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskJournal
 import com.example.newevent2.Model.TaskModel
+import com.example.newevent2.Model.TaskStatsToken
 import com.example.newevent2.TaskPayment_Tasks
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TaskPresenter : ViewModel, Cache.ArrayListCacheData, Cache.SingleItemCacheData {
+class TaskPresenter : Cache.ArrayListCacheData, Cache.SingleItemCacheData {
 
     private var activefragment = ""
+
+    @SuppressLint("StaticFieldLeak")
     private var inflatedView: View
 
+    @SuppressLint("StaticFieldLeak")
     private lateinit var mContext: Context
     private lateinit var cachetaskjournal: Cache<TaskJournal>
     private lateinit var cachetask: Cache<Task>
+    private lateinit var cachetasktoken: Cache<TaskStatsToken>
 
     private lateinit var fragmentDE: DashboardEvent
     private lateinit var fragmentDA: DashboardActivity
     private lateinit var fragmentTT: TaskPayment_Tasks
-    private lateinit var fragmentME: MainEventSummary
+    private lateinit var fragmentME: EventCategories
 
     var userid = ""
     var eventid = ""
@@ -52,48 +57,57 @@ class TaskPresenter : ViewModel, Cache.ArrayListCacheData, Cache.SingleItemCache
         activefragment = "DA"
     }
 
-    constructor(fragment: TaskPayment_Tasks, view: View) {
+    constructor(context: Context, fragment: TaskPayment_Tasks, view: View) {
         fragmentTT = fragment
         inflatedView = view
+        mContext = context
         activefragment = "TT"
-    }
-
-    constructor(fragment: MainEventSummary, view: View) {
-        fragmentME = fragment
-        inflatedView = view
-        activefragment = "ME"
     }
 
     fun getTaskStats(category: String = "") {
         // It may need to be added to the cache layer, for the moment is directly being consumed from Firebase
         // Let's consider it to be included in the cache in a later phase
-        val task = TaskModel()
-        task.getTaskStats(userid, eventid, category, object : TaskModel.FirebaseSuccessStatsTask {
-            override fun onTasksStats(taskpending: Int, taskcompleted: Int, sumbudget: Float) {
-                if (taskpending == 0 && taskcompleted == 0) {
-                    //There are no tasks created
-                    when (activefragment) {
-                        "DE" -> fragmentDE.onTaskStatsError(inflatedView, "BLANK_STATS")
-                        "TT" -> fragmentTT.onTaskStatsError(inflatedView, "BLANK_STATS")
+        if (category != "") {
+            val task = TaskModel()
+            task.getTaskStats(
+                userid,
+                eventid,
+                category,
+                object : TaskModel.FirebaseSuccessStatsTask {
+                    override fun onTasksStats(
+                        taskpending: Int,
+                        taskcompleted: Int,
+                        sumbudget: Float
+                    ) {
+                        if (taskpending == 0 && taskcompleted == 0) {
+                            //There are no tasks created
+                            when (activefragment) {
+                                "DE" -> fragmentDE.onTaskStatsError(inflatedView, "BLANK_STATS")
+//                                "TT" -> fragmentTT.onTaskStatsError(inflatedView, "BLANK_STATS")
+                            }
+                        } else {
+                            when (activefragment) {
+                                "DE" -> fragmentDE.onTasksStats(
+                                    inflatedView,
+                                    taskpending,
+                                    taskcompleted,
+                                    sumbudget
+                                )
+//                                "TT" -> fragmentTT.onTasksStats(
+//                                    inflatedView,
+//                                    taskpending,
+//                                    taskcompleted,
+//                                    sumbudget
+//                                )
+                            }
+                        }
                     }
-                } else {
-                    when (activefragment) {
-                        "DE" -> fragmentDE.onTasksStats(
-                            inflatedView,
-                            taskpending,
-                            taskcompleted,
-                            sumbudget
-                        )
-                        "TT" -> fragmentTT.onTasksStats(
-                            inflatedView,
-                            taskpending,
-                            taskcompleted,
-                            sumbudget
-                        )
-                    }
-                }
-            }
-        })
+                })
+        } else {
+            taskcategory = category
+            cachetasktoken = Cache(mContext, this)
+            cachetasktoken.loadsingleitem(CacheCategory.TaskStatsAll, TaskStatsToken::class)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -264,6 +278,15 @@ class TaskPresenter : ViewModel, Cache.ArrayListCacheData, Cache.SingleItemCache
                     item
                 )
             }
+        } else if (item is TaskStatsToken) {
+            when (activefragment) {
+                "DE" -> fragmentDE.onTasksStats(
+                    inflatedView,
+                    item.taskpending,
+                    item.taskcompleted,
+                    item.sumbudget
+                )
+            }
         }
     }
 
@@ -275,21 +298,111 @@ class TaskPresenter : ViewModel, Cache.ArrayListCacheData, Cache.SingleItemCache
             task.getDueNextTask(userid, eventid, object : TaskModel.FirebaseSuccessTask {
                 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
                 override fun onTask(task: Task) {
-                    cachetask.save(CacheCategory.SingleTask, task)
                     if (task.key == "") {
                         when (activefragment) {
                             "DE" -> fragmentDE.onTaskError(inflatedView, "BLANK_TASK")
                         }
                     } else {
+                        cachetask.save(CacheCategory.SingleTask, task)
                         when (activefragment) {
                             "DE" -> fragmentDE.onTask(inflatedView, task)
                         }
                     }
                 }
             })
+        } else if (classtype == CacheCategory.TaskStatsAll.classtype){
+            val task = TaskModel()
+            task.getTaskStats(
+                userid,
+                eventid,
+                taskcategory,
+                object : TaskModel.FirebaseSuccessStatsTask {
+                    override fun onTasksStats(
+                        taskpending: Int,
+                        taskcompleted: Int,
+                        sumbudget: Float
+                    ) {
+                        if (taskpending == 0 && taskcompleted == 0) {
+                            //There are no tasks created
+                            when (activefragment) {
+                                "DE" -> fragmentDE.onTaskStatsError(inflatedView, "BLANK_STATS")
+//                                "TT" -> fragmentTT.onTaskStatsError(inflatedView, "BLANK_STATS")
+                            }
+                        } else {
+                            cachetasktoken.save(CacheCategory.TaskStatsAll,taskpending,taskcompleted,sumbudget)
+                            when (activefragment) {
+                                "DE" -> fragmentDE.onTasksStats(
+                                    inflatedView,
+                                    taskpending,
+                                    taskcompleted,
+                                    sumbudget
+                                )
+//                                "TT" -> fragmentTT.onTasksStats(
+//                                    inflatedView,
+//                                    taskpending,
+//                                    taskcompleted,
+//                                    sumbudget
+//                                )
+                            }
+                        }
+                    }
+                })
         }
     }
+/*
+    override fun onEmptyStats() {
+        val task = TaskModel()
+        task.getTaskStats(
+            userid,
+            eventid,
+            taskcategory,
+            object : TaskModel.FirebaseSuccessStatsTask {
+                override fun onTasksStats(
+                    taskpending: Int,
+                    taskcompleted: Int,
+                    sumbudget: Float
+                ) {
+                    if (taskpending == 0 && taskcompleted == 0) {
+                        //There are no tasks created
+                        when (activefragment) {
+                            "DE" -> fragmentDE.onTaskStatsError(inflatedView, "BLANK_STATS")
+                            "TT" -> fragmentTT.onTaskStatsError(inflatedView, "BLANK_STATS")
+                        }
+                    } else {
+                        when (activefragment) {
+                            "DE" -> fragmentDE.onTasksStats(
+                                inflatedView,
+                                taskpending,
+                                taskcompleted,
+                                sumbudget
+                            )
+                            "TT" -> fragmentTT.onTasksStats(
+                                inflatedView,
+                                taskpending,
+                                taskcompleted,
+                                sumbudget
+                            )
+                        }
+                    }
+                }
+            })
+    }
 
+    override fun onTaskStats(taskStats: TaskStatsToken) {
+        val taskpending = taskStats.taskpending
+        val taskcompleted = taskStats.taskcompleted
+        val sumbudget = taskStats.sumbudget
+
+        when (activefragment) {
+            "DE" -> fragmentDE.onTasksStats(
+                inflatedView,
+                taskpending,
+                taskcompleted,
+                sumbudget
+            )
+        }
+    }
+*/
     interface TaskStats {
         fun onTasksStats(
             inflatedView: View,

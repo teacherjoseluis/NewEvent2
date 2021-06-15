@@ -16,7 +16,7 @@ import com.example.newevent2.Model.Task
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 import java.text.DecimalFormat
 
-class TaskPayment_Tasks : Fragment(), TaskPresenter.TaskList, TaskPresenter.TaskStats {
+class TaskPayment_Tasks : Fragment(), TaskPresenter.TaskList {
 
     private var userid: String = ""
     private var eventid: String = ""
@@ -38,10 +38,10 @@ class TaskPayment_Tasks : Fragment(), TaskPresenter.TaskList, TaskPresenter.Task
     ): View? {
         val inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
 
-        presentertask = TaskPresenter(this, inf)
+        presentertask = TaskPresenter(context!!,this, inf)
         presentertask.userid=userid
         presentertask.eventid=eventid
-        presentertask.getTaskStats(category)
+        //presentertask.getTaskStats(category)
         presentertask.getTasksList(category, ACTIVETASK) // Active
         presentertask.getTasksList(category, COMPLETETASK) // Completed
 
@@ -108,21 +108,21 @@ class TaskPayment_Tasks : Fragment(), TaskPresenter.TaskList, TaskPresenter.Task
         // What to show when the consulted category has no tasks?
     }
 
-    override fun onTasksStats(
-        inflatedView: View,
-        taskpending: Int,
-        taskcompleted: Int,
-        sumbudget: Float
-    ) {
-        inflatedView.activetasks.text = taskpending.toString()
-        inflatedView.completedtasks.text = taskcompleted.toString()
-        val formatter = DecimalFormat("$#,###.00")
-        inflatedView.budgettasks.text = formatter.format(sumbudget)
-    }
+//    override fun onTasksStats(
+//        inflatedView: View,
+//        taskpending: Int,
+//        taskcompleted: Int,
+//        sumbudget: Float
+//    ) {
+//        inflatedView.activetasks.text = taskpending.toString()
+//        inflatedView.completedtasks.text = taskcompleted.toString()
+//        val formatter = DecimalFormat("$#,###.00")
+//        inflatedView.budgettasks.text = formatter.format(sumbudget)
+//    }
 
-    override fun onTaskStatsError(inflatedView: View, errcode: String) {
-        TODO("Not yet implemented")
-    }
+//    override fun onTaskStatsError(inflatedView: View, errcode: String) {
+//        TODO("Not yet implemented")
+//    }
 
     companion object {
         const val ACTIVETASK = "A"

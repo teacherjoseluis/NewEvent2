@@ -15,9 +15,6 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.payment_editdetail.*
-import kotlinx.android.synthetic.main.task_editdetail.*
-import kotlinx.android.synthetic.main.task_editdetail.button2
-import kotlinx.android.synthetic.main.task_editdetail.groupedit
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -35,7 +32,7 @@ class Payment_EditDetail : AppCompatActivity() {
         userid = intent.getStringExtra("userid").toString()
         eventid = intent.getStringExtra("eventid").toString()
 
-        val chipgroupedit = findViewById<ChipGroup>(R.id.groupedit)
+        val chipgroupedit = findViewById<ChipGroup>(R.id.groupeditpayment)
         chipgroupedit.isSingleSelection = true
 
         // Create chips and select the one matching the category
@@ -49,13 +46,13 @@ class Payment_EditDetail : AppCompatActivity() {
                 chipgroupedit.check(chip.id)
             }
         }
-            val paymentname = findViewById<TextView>(R.id.pyname)
+            val paymentname = findViewById<TextView>(R.id.paymentname)
             paymentname.text = payment.name
 
-            val paymentdate = findViewById<TextView>(R.id.pydate)
+            val paymentdate = findViewById<TextView>(R.id.paymentdate)
             paymentdate.text = payment.date
 
-            val paymentamount = findViewById<TextView>(R.id.pyamount)
+            val paymentamount = findViewById<TextView>(R.id.paymentamount)
             paymentamount.text = payment.amount
 
         paymentname.setOnClickListener {
@@ -82,9 +79,9 @@ class Payment_EditDetail : AppCompatActivity() {
         apptitle.text = "Payment Detail"
         //-------------------------------------------------------------------------------//
 
-        groupedit.isSingleSelection = true
+        groupeditpayment.isSingleSelection = true
 
-        button2.setOnClickListener()
+        savebuttonpayment.setOnClickListener()
         {
             var inputvalflag = true
             if (paymentname.text.toString().isEmpty()) {
@@ -99,10 +96,10 @@ class Payment_EditDetail : AppCompatActivity() {
                 paymentamount.error = "Payment amount is required!"
                 inputvalflag = false
             }
-            if (groupedit.checkedChipId == -1) {
-                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
-                inputvalflag = false
-            }
+//            if (groupedit.checkedChipId == -1) {
+//                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
+//                inputvalflag = false
+//            }
             if (inputvalflag) {
                 savePayment()
                 onBackPressed()
@@ -111,23 +108,25 @@ class Payment_EditDetail : AppCompatActivity() {
 
     }
 
-
     private fun savePayment() {
-        payment.name = tkname.text.toString()
-        payment.date = tkdate.text.toString()
-        payment.amount = tkbudget.text.toString()
+        payment.name = paymentname.text.toString()
+        payment.date = paymentdate.text.toString()
+        payment.amount = paymentamount.text.toString()
 
-        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
-        val chiptextvalue = chipselected.text.toString()
-
-        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
-        for (category in list) {
-            if(chiptextvalue == category.en_name){
-                payment.category = category.code
-            }
-        }
-
+//        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
+//        val chiptextvalue = chipselected.text.toString()
+//
+//        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+//        for (category in list) {
+//            if(chiptextvalue == category.en_name){
+//                payment.category = category.code
+//            }
+//        }
         val paymentmodel = PaymentModel()
-        paymentmodel.editPayment(userid, eventid, payment)
+        paymentmodel.editPayment(userid, eventid, payment, object: PaymentModel.FirebaseAddEditPaymentSuccess {
+            override fun onPaymentAddedEdited(flag: Boolean) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 }

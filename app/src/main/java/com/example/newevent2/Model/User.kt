@@ -2,16 +2,12 @@ package com.example.newevent2.Model
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
-import android.view.View
 import android.widget.Toast
-import com.example.newevent2.LoginEmailView
+import com.baoyachi.stepview.bean.StepBean
 import com.example.newevent2.LoginView
 import com.example.newevent2.R
 import com.facebook.login.LoginManager
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.FirebaseError.ERROR_USER_NOT_FOUND
 import com.google.firebase.auth.*
 
 class User(
@@ -30,7 +26,10 @@ class User(
     var hastask: String = "",
     var haspayment: String = "",
     var hasguest: String = "",
-    var hasvendor: String = ""
+    var hasvendor: String = "",
+    var tasksactive: Int = 0,
+    var taskscompleted: Int = 0,
+    var payments: Int = 0
 ) {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -148,6 +147,8 @@ class User(
         sessionEditor.putString("haspayment", haspayment)
         sessionEditor.putString("hasguest", hasguest)
         sessionEditor.putString("hasvendor", hasvendor)
+        sessionEditor.putInt("tasksactive", tasksactive)
+        sessionEditor.putInt("taskscompleted", taskscompleted)
         sessionEditor.apply()
     }
 
@@ -255,6 +256,23 @@ class User(
                     }
                 }
             }
+    }
+
+    fun onboardingprogress(): ArrayList<StepBean> {
+        val stepsBeanList = arrayListOf<StepBean>()
+        val stepBean0 = StepBean("event", if (this.hasevent == "Y") 1 else -1)
+        val stepBean1 = StepBean("task", if (this.hastask == "Y") 1 else -1)
+        val stepBean2 = StepBean("payment", if (this.haspayment == "Y") 1 else -1)
+        val stepBean3 = StepBean("guest", if (this.hasguest == "Y") 1 else -1)
+        val stepBean4 = StepBean("vendor", if (this.hasvendor == "Y") 1 else -1)
+
+        stepsBeanList.add(stepBean0)
+        stepsBeanList.add(stepBean1)
+        stepsBeanList.add(stepBean2)
+        stepsBeanList.add(stepBean3)
+        stepsBeanList.add(stepBean4)
+
+        return stepsBeanList
     }
 
     interface FirebaseUserId {

@@ -1,6 +1,7 @@
 package com.example.newevent2
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
@@ -36,7 +37,7 @@ class NewTask_TaskDetail : AppCompatActivity() {
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = "New Task"
 
-        groupedit.isSingleSelection = true
+        //groupedit.isSingleSelection = true
 
         tkname.setOnClickListener {
             tkname.error = null
@@ -61,10 +62,10 @@ class NewTask_TaskDetail : AppCompatActivity() {
                 tkdate.error = "Task due date is required!"
                 inputvalflag = false
             }
-            if (groupedit.checkedChipId == -1) {
-                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
-                inputvalflag = false
-            }
+//            if (groupedit.checkedChipId == -1) {
+//                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
+//                inputvalflag = false
+//            }
             if (inputvalflag) {
                 saveTask()
                 onBackPressed()
@@ -79,17 +80,29 @@ class NewTask_TaskDetail : AppCompatActivity() {
         task.budget = tkbudget.text.toString()
         task.status = ACTIVESTATUS
 
-        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
-        val chiptextvalue = chipselected.text.toString()
+        val usersession =
+            application.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+        val tasksactive = usersession.getInt("tasksactive", 0)
+        val sessionEditor = usersession!!.edit()
+        sessionEditor.putInt("tasksactive", tasksactive + 1)
+        sessionEditor.apply()
 
-        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
-        for (category in list) {
-            if (chiptextvalue == category.en_name) {task.key
-                task.category = category.code
-            }
-        }
+        //val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
+        //val chiptextvalue = chipselected.text.toString()
+
+//        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+//        for (category in list) {
+//            if (chiptextvalue == category.en_name) {task.key
+//                task.category = category.code
+//            }
+//        }
         val taskmodel = TaskModel()
-        taskmodel.addTask(userid, eventid, task)
+        taskmodel.addTask(userid, eventid, task, tasksactive, object: TaskModel.FirebaseAddEditTaskSuccess{
+            override fun onTaskAddedEdited(flag: Boolean) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -8,7 +8,6 @@ import com.example.newevent2.Model.EventModel
 import com.example.newevent2.Model.User
 import com.example.newevent2.Model.UserModel
 import com.example.newevent2.OnboardingView
-import com.example.newevent2.saveLog
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.AuthCredential
 import kotlinx.android.synthetic.main.event_edit.*
@@ -41,8 +40,7 @@ class OnboardingPresenter(
             override fun onSaveSuccess(flag: Boolean) {
                 if (flag) {
                     val eventModel = EventModel()
-                    eventModel.userid = user.key
-                    eventModel.addEvent(event, null, object : EventModel.FirebaseSaveSuccess {
+                    eventModel.addEvent(user.key, event, null, object : EventModel.FirebaseSaveSuccess {
                         override fun onSaveSuccess(eventid: String) {
                             if (eventid != "") {
                                 // Event was saved successfully and will be passed to the user so the session can be saved

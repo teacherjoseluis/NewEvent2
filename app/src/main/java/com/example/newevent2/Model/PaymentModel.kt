@@ -6,6 +6,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -89,7 +90,38 @@ class PaymentModel {
         postRef.addValueEventListener(paymentlListenerActive)
     }
 
-    fun addPayment(userid: String, eventid: String, payment: Payment) {
+    fun getPaymentdetail(
+        userid: String,
+        eventid: String,
+        paymentid: String,
+        dataFetched: PaymentModel.FirebaseSuccessPayment
+    ) {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Payment").child(paymentid)
+
+        val paymentListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                val paymentitem = p0.getValue(Payment::class.java)!!
+                paymentitem!!.key = p0.key.toString()
+                dataFetched.onPayment(paymentitem)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(paymentListenerActive)
+    }
+
+    fun addPayment(
+        userid: String,
+        eventid: String,
+        payment: Payment,
+        payments: Int,
+        paymentaddedflag: FirebaseAddEditPaymentSuccess
+    ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Payment").push()
@@ -111,12 +143,22 @@ class PaymentModel {
 
         postRef.setValue(paymentadd as Map<String, Any>)
             .addOnFailureListener {
+                paymentaddedflag.onPaymentAddedEdited(false)
             }
             .addOnSuccessListener {
+                val usermodel = UserModel(userid)
+                usermodel.editUserPaymentflag(ACTIVEFLAG)
+                paymentaddedflag.onPaymentAddedEdited(true)
+                usermodel.editUserAddPayment(payments + 1)
             }
     }
 
-    fun editPayment(userid: String, eventid: String, payment: Payment) {
+    fun editPayment(
+        userid: String,
+        eventid: String,
+        payment: Payment,
+        paymenteditedflag: FirebaseAddEditPaymentSuccess
+    ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Payment").child(payment.key)
@@ -130,8 +172,10 @@ class PaymentModel {
 
         postRef.setValue(paymentedit as Map<String, Any>)
             .addOnFailureListener {
+                paymenteditedflag.onPaymentAddedEdited(false)
             }
             .addOnSuccessListener {
+                paymenteditedflag.onPaymentAddedEdited(true)
             }
     }
 
@@ -140,13 +184,27 @@ class PaymentModel {
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Payment").child(payment.key)
                 .removeValue()
+        //todo ("Need to implement a callback that will check if the user has no longer payments associated. In such a case the associated flag in the User Profile will be set as "N"")
+
     }
 
     interface FirebaseSuccessStatsPayment {
         fun onPaymentStats(countpayment: Int, sumpayment: Float)
     }
 
+    interface FirebaseSuccessPayment {
+        fun onPayment(payment: Payment)
+    }
+
     interface FirebaseSuccessPaymentList {
         fun onPaymentList(list: ArrayList<Payment>)
+    }
+
+    interface FirebaseAddEditPaymentSuccess {
+        fun onPaymentAddedEdited(flag: Boolean)
+    }
+
+    companion object {
+        const val ACTIVEFLAG = "Y"
     }
 }

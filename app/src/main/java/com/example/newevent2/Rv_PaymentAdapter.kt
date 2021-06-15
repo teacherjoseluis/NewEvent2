@@ -75,6 +75,13 @@ class Rv_PaymentAdapter(
         notifyItemRemoved(position)
 
         if (action == "delete") {
+            val usersession =
+                context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+            val payments = usersession.getInt("payments", 0)
+            val sessionEditor = usersession!!.edit()
+            sessionEditor.putInt("payments", payments + 1)
+            sessionEditor.apply()
+
             val paymentmodel = PaymentModel()
             paymentmodel.deletePayment(userid, eventid, paymentswift)
 
@@ -82,7 +89,12 @@ class Rv_PaymentAdapter(
                 .setAction("UNDO") {
                     paymentList.add(paymentbackup)
                     notifyItemInserted(paymentList.lastIndex)
-                    paymentmodel.addPayment(userid, eventid, paymentbackup)
+                    paymentmodel.addPayment(userid, eventid, paymentbackup, payments, object: PaymentModel.FirebaseAddEditPaymentSuccess{
+                        override fun onPaymentAddedEdited(flag: Boolean) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
                 }.show()
         }
     }

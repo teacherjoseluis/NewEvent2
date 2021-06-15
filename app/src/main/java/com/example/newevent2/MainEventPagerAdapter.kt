@@ -3,14 +3,15 @@ package com.example.newevent2
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 
 class MainEventPagerAdapter(
-    fm: FragmentManager,
     private val userid: String,
     private val eventid: String,
+    private val language: String,
+    fm: FragmentManager?,
     private var totalTabs: Int
-) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         val bundle = Bundle()
@@ -19,17 +20,17 @@ class MainEventPagerAdapter(
 
         return when (position) {
             0 -> {
-                val fragInfo = MainEventSummary()
+                val fragInfo = EventSummary()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             1 -> {
-                val fragInfo = MainEventDetail()
+                val fragInfo = EventCategories()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             else -> {
-                val fragInfo = MainEventSummary()
+                val fragInfo = EventSummary()
                 fragInfo.arguments = bundle
                 return fragInfo
             }

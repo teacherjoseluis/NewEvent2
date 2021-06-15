@@ -40,7 +40,7 @@ class TaskPaymentList : AppCompatActivity() {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        if (viewPager != null) {0
+        if (viewPager != null) {
             val adapter = TaskPayment_PagerAdapter(
                 this,
                 supportFragmentManager,

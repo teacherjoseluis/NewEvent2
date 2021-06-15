@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_main.saveImageActionButton
 import kotlinx.android.synthetic.main.settings.*
 
 class Settings : AppCompatActivity() {

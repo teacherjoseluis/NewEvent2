@@ -4,82 +4,129 @@ import TimePickerFragment
 import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.DatePicker
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
+import com.example.newevent2.Functions.*
+import com.example.newevent2.Functions.validateOldDate
+import com.example.newevent2.MVP.ImagePresenter
+import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.EventModel
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.button
+import kotlinx.android.synthetic.main.eventform_layout.*
+import java.util.*
 
-class MainActivity() : AppCompatActivity() {
+class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage {
 
     private val autocompletePlaceCode = 1
 
-    private var event_placeid: String? = null
+    private var event_key = ""
+
+    //private var event_imageurl = ""
+    private var event_placeid = ""
     private var event_latitude = 0.0
     private var event_longitude = 0.0
-    private var event_address: String? = null
+    private var event_address = ""
     private var uri: Uri? = null
     //private lateinit var storage: FirebaseStorage
 
+    private var userid = ""
+    private var eventid = ""
+
+    private lateinit var imagePresenter: ImagePresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //FirebaseApp.initializeApp(applicationContext)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.eventform_layout)
 
-        etname.setOnClickListener {
-            etname.error = null
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        userid = intent.getStringExtra("userid").toString()
+        eventid = intent.getStringExtra("eventid").toString()
+
+        val eventmodel = EventModel()
+        eventmodel.getEventdetail(userid, eventid, object :
+            EventModel.FirebaseSuccessListenerEventDetail {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onEvent(event: Event) {
+                eventname.setText(event.name)
+                eventdate.setText(event.date)
+                eventtime.setText(event.time)
+                eventlocation.setText(event.location)
+                event_placeid = event.placeid
+                event_latitude = event.latitude
+                event_longitude = event.longitude
+                event_address = event.address
+                //event_imageurl = event.imageurl
+                event_key = event.key
+
+                imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
+                imagePresenter.userid = userid
+                imagePresenter.eventid = eventid
+                imagePresenter.getEventImage()
+            }
+        })
+
+        eventname.setOnClickListener {
+            eventname.error = null
         }
 
-        etPlannedDate.setOnClickListener {
-            etPlannedDate.error = null
+        eventdate.setOnClickListener {
+            eventdate.error = null
             showDatePickerDialog()
         }
 
-        etPlannedTime.setOnClickListener {
-            etPlannedTime.error = null
+        eventtime.setOnClickListener {
+            eventtime.error = null
             showTimePickerDialog()
         }
 
-        etlocation.setOnClickListener {
-            etlocation.error = null
+        eventlocation.setOnClickListener {
+            eventlocation.error = null
             val locationmap = Intent(this, MapsActivity::class.java)
             startActivityForResult(locationmap, autocompletePlaceCode)
         }
 
-        etabout.setOnClickListener {
-            etabout.error = null
-        }
-
-        saveImageActionButton.setOnClickListener {
+        editImageActionButton.setOnClickListener {
             showImagePickerDialog()
         }
 
-        button.setOnClickListener {
+        savebutton.setOnClickListener {
             var inputvalflag = true
-            if (etname.text.toString().isEmpty()) {
-                etname.error = "Event name is required!"
+            if (eventname.text.toString().isEmpty()) {
+                eventname.error = "Event name is required!"
                 inputvalflag = false
             }
-            if (etPlannedDate.text.toString().isEmpty()) {
-                etPlannedDate.error = "Event date is required!"
+            if (eventdate.text.toString().isEmpty()) {
+                eventdate.error = "Event date is required!"
                 inputvalflag = false
             }
-            if (etPlannedTime.text.toString().isEmpty()) {
-                etPlannedTime.error = "Event time is required!"
+            if (eventtime.text.toString().isEmpty()) {
+                eventtime.error = "Event time is required!"
                 inputvalflag = false
             }
-            if (etlocation.text.toString().isEmpty()) {
-                etlocation.error = "Event location is required!"
-                inputvalflag = false
-            }
-            if (etabout.text.toString().isEmpty()) {
-                etabout.error = "Enter description about Event!"
+            if (eventlocation.text.toString().isEmpty()) {
+                eventlocation.error = "Event location is required!"
                 inputvalflag = false
             }
             if (inputvalflag) {
@@ -89,18 +136,31 @@ class MainActivity() : AppCompatActivity() {
     }
 
     private fun showDatePickerDialog() {
+//        val newFragment =
+//            DatePickerFragment.newInstance(DatePickerDialog.OnDateSetListener { _, year, month, day ->
+//                // +1 because January is zero
+//                val selectedDate = day.toString() + "/" + (month + 1) + "/" + year
+//                etPlannedDate.setText(selectedDate)
+//            })
+//
+//        newFragment.show(supportFragmentManager, "datePicker")
         val newFragment =
-            DatePickerFragment.newInstance(DatePickerDialog.OnDateSetListener { _, year, month, day ->
-                // +1 because January is zero
-                val selectedDate = day.toString() + "/" + (month + 1) + "/" + year
-                etPlannedDate.setText(selectedDate)
-            })
-
+            DatePickerFragment.newInstance((object : DatePickerDialog.OnDateSetListener {
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
+                    if (validateOldDate(p1, p2 + 1, p3)) {
+                        val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
+                        eventdate.setText(selectedDate)
+                    } else {
+                        eventdate.error = "Event date is invalid!"
+                    }
+                }
+            }))
         newFragment.show(supportFragmentManager, "datePicker")
     }
 
     private fun showTimePickerDialog() {
-        val newFragment = TimePickerFragment()
+        val newFragment = TimePickerFragment(eventtime)
         newFragment.show(supportFragmentManager, "Time Picker")
     }
 
@@ -158,21 +218,28 @@ class MainActivity() : AppCompatActivity() {
     }
 
     private fun saveEvent() {
-
-        val evententity = EventEntity().apply {
-            name = etname.text.toString()
-            date = etPlannedDate.text.toString()
-            time = etPlannedTime.text.toString()
-            location = etlocation.text.toString()
-            placeid = event_placeid.toString()
+        val event = Event().apply {
+            key = event_key
+            placeid = event_placeid
             latitude = event_latitude
             longitude = event_longitude
-            address = event_address.toString()
-            about = etabout.text.toString()
-            imageurl = uri?.lastPathSegment.toString()
+            address = event_address
+            name = eventname.text.toString()
+            date = eventdate.text.toString()
+            time = eventtime.text.toString()
+            location = eventlocation.text.toString()
         }
-        evententity.addEvent(uri)
-        onBackPressed()
+        val eventmodel = EventModel()
+        eventmodel.editEvent(userid, event, uri, object : EventModel.FirebaseSaveImage {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onImagetoSave(uri: Uri) {
+                replaceImage(applicationContext, "eventimage", userid, eventid, uri)
+            }
+        })
+        val resultIntent = Intent()
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
+        //onBackPressed()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -184,7 +251,7 @@ class MainActivity() : AppCompatActivity() {
             event_latitude = data!!.getDoubleExtra("place_latitude", 0.0)
             event_longitude = data!!.getDoubleExtra("place_longitude", 0.0)
             event_address = data!!.getStringExtra("place_address").toString()
-            etlocation.setText(placenameString)
+            eventlocation.setText(placenameString)
         } else {
             //Toast.makeText(this, "Error in autocomplete location", Toast.LENGTH_SHORT).show()
         }
@@ -201,11 +268,50 @@ class MainActivity() : AppCompatActivity() {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
                 uri = result.uri
-                imageView.setImageURI(uri)
+                //delImgfromSD("eventimage", this@MainActivity)
+                //eventimage.setImageURI(uri)
+                // event_imageurl = uri.lastPathSegment.toString()
+                Glide.with(this@MainActivity)
+                    .load(uri)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(eventimage)
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
+    override fun onEventImage(mContext: Context, inflatedView: View?, packet: Any) {
+        Glide.with(mContext)
+            .load(packet)
+            .apply(RequestOptions.circleCropTransform())
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+            }).placeholder(R.drawable.avatar2)
+            .into(eventimage)
     }
 }
 

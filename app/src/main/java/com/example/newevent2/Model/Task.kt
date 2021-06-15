@@ -3,15 +3,15 @@ package com.example.newevent2.Model
 import android.os.Parcel
 import android.os.Parcelable
 
-open class Task() : Parcelable {
-    var key: String = ""
-    var name: String = ""
-    var date: String = ""
-    var category: String = ""
-    var budget: String = ""
-    var status: String = ""
-    var eventid: String = ""
-    var createdatetime: String = ""
+open class Task(
+    var key: String = "",
+    var name: String = "",
+    var date: String = "",
+    var category: String = "",
+    var budget: String = "",
+    var status: String = "",
+    var eventid: String = "",
+    var createdatetime: String = "") : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         key = parcel.readString().toString()

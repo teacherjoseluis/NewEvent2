@@ -5,45 +5,40 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 
-class Dashboard_PagerAdapter(
+class DashboardPagerAdapter(
     private val userid: String,
     private val eventid: String,
     private val language: String,
-    fm: FragmentManager,
+    fm: FragmentManager?,
     private var totalTabs: Int
-) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
+        val bundle = Bundle()
+        bundle.putString("userid", userid)
+        bundle.putString("eventid", eventid)
+
         return when (position) {
             0 -> {
-                val bundle = Bundle()
                 val fragInfo = DashboardEvent()
-                bundle.putString("userid", userid)
-                bundle.putString("eventid", eventid)
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             1 -> {
-                val bundle = Bundle()
                 val fragInfo = DashboardActivity()
-                bundle.putString("userid", userid)
-                bundle.putString("eventid", eventid)
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             2 -> {
-                val bundle = Bundle()
                 val fragInfo = DashboardBlog()
                 bundle.putString("language", language)
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             else -> {
-                val bundle = Bundle()
                 val fragInfo = DashboardActivity()
-                bundle.putString("userid", userid)
-                bundle.putString("eventid", eventid)
                 fragInfo.arguments = bundle
                 return fragInfo
             }

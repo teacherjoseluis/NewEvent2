@@ -25,6 +25,7 @@ class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
     var language = "en"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
         language = arguments!!.get("language").toString()
     }
 
@@ -47,6 +48,7 @@ class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
         return inf
     }
     override fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<Blog>) {
+        //Consider adding a try catch in case there is no data coming from Firebase
         inflatedView.emptyrecyclerview.visibility = View.GONE
         val rvAdapter = Rv_BlogAdapter(bloglist)
         blogrv.adapter = rvAdapter

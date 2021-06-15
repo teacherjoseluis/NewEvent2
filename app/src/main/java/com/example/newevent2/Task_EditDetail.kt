@@ -14,10 +14,6 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.new_task_taskdetail.*
 import kotlinx.android.synthetic.main.new_task_taskdetail.view.*
 import kotlinx.android.synthetic.main.task_editdetail.*
-import kotlinx.android.synthetic.main.task_editdetail.button2
-import kotlinx.android.synthetic.main.task_editdetail.tkbudget
-import kotlinx.android.synthetic.main.task_editdetail.tkdate
-import kotlinx.android.synthetic.main.task_editdetail.tkname
 import java.util.*
 import kotlin.collections.ArrayList
 import com.example.newevent2.ui.Functions.showDatePickerDialog
@@ -36,20 +32,20 @@ class Task_EditDetail : AppCompatActivity() {
         userid = intent.getStringExtra("userid").toString()
         eventid = intent.getStringExtra("eventid").toString()
 
-        val chipgroupedit = findViewById<ChipGroup>(R.id.groupedit)
-        chipgroupedit.isSingleSelection = true
-
-        // Create chips and select the one matching the category
-        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
-        for (category in list) {
-            val chip = Chip(this)
-            chip.text = category.en_name
-            chipgroupedit.addView(chip)
-            if (task.category == category.code) {
-                chip.isSelected = true
-                chipgroupedit.check(chip.id)
-            }
-        }
+//        val chipgroupedit = findViewById<ChipGroup>(R.id.groupedit)
+//        chipgroupedit.isSingleSelection = true
+//
+//        // Create chips and select the one matching the category
+//        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+//        for (category in list) {
+//            val chip = Chip(this)
+//            chip.text = category.en_name
+//            chipgroupedit.addView(chip)
+//            if (task.category == category.code) {
+//                chip.isSelected = true
+//                chipgroupedit.check(chip.id)
+//            }
+//        }
 
         //---------------------------------------------------------------------------------//
         //setSupportActionBar(findViewById(R.id.toolbar))
@@ -107,10 +103,10 @@ class Task_EditDetail : AppCompatActivity() {
                 tkdate.error = "Task due date is required!"
                 inputvalflag = false
             }
-            if (groupedit.checkedChipId == -1) {
-                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
-                inputvalflag = false
-            }
+//            if (groupedit.checkedChipId == -1) {
+//                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
+//                inputvalflag = false
+//            }
             if (inputvalflag) {
                 saveTask()
                 onBackPressed()
@@ -120,21 +116,20 @@ class Task_EditDetail : AppCompatActivity() {
 
 
     private fun saveTask() {
-
         task.name = tkname.text.toString()
         task.date = tkdate.text.toString()
         task.budget = tkbudget.text.toString()
 
-        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
-        val chiptextvalue = chipselected.text.toString()
-
-        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
-        for (category in list) {
-            if(chiptextvalue == category.en_name){
-                task.category = category.code
-            }
-        }
+//        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
+//        val chiptextvalue = chipselected.text.toString()
 //
+//        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+//        for (category in list) {
+//            if(chiptextvalue == category.en_name){
+//                task.category = category.code
+//            }
+//        }
+////
 //        taskcategory = when (chiptextvalue) {
 //            "Flowers & Deco" -> "flowers"
 //            "Venue" -> "venue"
@@ -150,6 +145,10 @@ class Task_EditDetail : AppCompatActivity() {
 //        }
 
         val taskmodel = TaskModel()
-        taskmodel.editTask(userid, eventid, task)
+        taskmodel.editTask(userid, eventid, task, object: TaskModel.FirebaseAddEditTaskSuccess {
+            override fun onTaskAddedEdited(flag: Boolean) {
+                TODO("Not yet implemented")
+            }
+        })
         }
     }

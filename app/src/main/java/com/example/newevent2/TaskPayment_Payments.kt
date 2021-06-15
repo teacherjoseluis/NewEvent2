@@ -57,7 +57,7 @@ class TaskPayment_Payments : Fragment(), PaymentPresenter.PaymentList,
     }
 
     override fun onPaymentStatsError(inflatedView: View, errcode: String) {
-        TODO("Not yet implemented")
+        // por hacer ("Not yet implemented")
         // What to show when the consulted category has no payments?
     }
 

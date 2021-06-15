@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".TaskPayment_Tasks">
 
+    <!--
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/TaskSummaryLayout"
         android:layout_width="match_parent"
@@ -95,7 +96,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
+-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -103,7 +104,7 @@
         android:paddingBottom="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TaskSummaryLayout">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/taskslayout"

@@ -62,33 +62,33 @@ class MyNotes : AppCompatActivity() {
         })
 //----------------------------------------------------------------------------------------------
 
-        floatingNewNote.setOnClickListener {
-            val newnote = Intent(this, NewNote::class.java)
-            //newnote.putExtra("eventkey", eventkey)
-            startActivity(newnote)
-        }
-
-        imageButton1.setOnClickListener {
-            val home = Intent(this, Welcome::class.java)
-            startActivity(home)
-        }
-        imageButton2.setOnClickListener {
-            val calendar = Intent(this, MyCalendar::class.java)
-            //calendar.putExtra("eventkey", eventkey)
-            startActivity(calendar)
-        }
-
-        imageButton3.setOnClickListener {
-            val contacts = Intent(this, MyContacts::class.java)
-            //contacts.putExtra("eventkey", eventkey)
-            startActivity(contacts)
-        }
-
-        imageButton.setOnClickListener {
-            val events = Intent(this, EventDetail::class.java)
-            //notes.putExtra("eventkey", eventkey)
-            startActivity(events)
-        }
+//        floatingNewNote.setOnClickListener {
+//            val newnote = Intent(this, NewNote::class.java)
+//            //newnote.putExtra("eventkey", eventkey)
+//            startActivity(newnote)
+//        }
+//
+//        imageButton1.setOnClickListener {
+//            val home = Intent(this, Welcome::class.java)
+//            startActivity(home)
+//        }
+//        imageButton2.setOnClickListener {
+//            val calendar = Intent(this, MyCalendar::class.java)
+//            //calendar.putExtra("eventkey", eventkey)
+//            startActivity(calendar)
+//        }
+//
+//        imageButton3.setOnClickListener {
+//            val contacts = Intent(this, MyContacts::class.java)
+//            //contacts.putExtra("eventkey", eventkey)
+//            startActivity(contacts)
+//        }
+//
+//        imageButton.setOnClickListener {
+//            val events = Intent(this, EventDetail::class.java)
+//            //notes.putExtra("eventkey", eventkey)
+//            startActivity(events)
+//        }
 
     }
 }

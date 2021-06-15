@@ -1,5 +1,5 @@
-package com.example.newevent2
-
-interface FirebaseSuccessListenerSingleValue {
-    fun onDatafound(key: String)
-}
+//package com.example.newevent2
+//
+//interface FirebaseSuccessListenerSingleValue {
+//    fun onDatafound(key: String)
+//}

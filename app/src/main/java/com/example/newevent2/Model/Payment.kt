@@ -3,14 +3,14 @@ package com.example.newevent2.Model
 import android.os.Parcel
 import android.os.Parcelable
 
-open class Payment() : Parcelable {
-    var key: String = ""
-    var name: String = ""
-    var date: String = ""
-    var category: String = ""
-    var amount: String = ""
-    var eventid: String = ""
-    var createdatetime: String = ""
+open class Payment(
+    var key: String = "",
+    var name: String = "",
+    var date: String = "",
+    var category: String = "",
+    var amount: String = "",
+    var eventid: String = "",
+    var createdatetime: String = "") : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         key = parcel.readString().toString()

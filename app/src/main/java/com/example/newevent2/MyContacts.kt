@@ -115,27 +115,28 @@ class MyContacts : AppCompatActivity() {
             })
         }
 
-        imageButton1.setOnClickListener {
-            val home = Intent(this, Welcome::class.java)
-            startActivity(home)
-        }
-        imageButton2.setOnClickListener {
-            val calendar = Intent(this, MyCalendar::class.java)
-            //calendar.putExtra("eventkey", eventkey)
-            startActivity(calendar)
-        }
 
-        imageButton.setOnClickListener {
-            val events = Intent(this, EventDetail::class.java)
-            //contacts.putExtra("eventkey", eventkey)
-            startActivity(events)
-        }
-
-        imageButton4.setOnClickListener {
-            val notes = Intent(this, MyNotes::class.java)
-            //notes.putExtra("eventkey", eventkey)
-            startActivity(notes)
-        }
+//        imageButton1.setOnClickListener {
+//            val home = Intent(this, Welcome::class.java)
+//            startActivity(home)
+//        }
+//        imageButton2.setOnClickListener {
+//            val calendar = Intent(this, MyCalendar::class.java)
+//            //calendar.putExtra("eventkey", eventkey)
+//            startActivity(calendar)
+//        }
+//
+//        imageButton.setOnClickListener {
+//            val events = Intent(this, EventDetail::class.java)
+//            //contacts.putExtra("eventkey", eventkey)
+//            startActivity(events)
+//        }
+//
+//        imageButton4.setOnClickListener {
+//            val notes = Intent(this, MyNotes::class.java)
+//            //notes.putExtra("eventkey", eventkey)
+//            startActivity(notes)
+//        }
     }
 }
 
