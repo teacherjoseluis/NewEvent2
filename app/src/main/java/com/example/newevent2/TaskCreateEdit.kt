@@ -1,53 +1,37 @@
 package com.example.newevent2
 
 import Application.Cache
-import TimePickerFragment
-import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
-import com.example.newevent2.Functions.*
+import com.example.newevent2.Functions.Utility
 import com.example.newevent2.Functions.validateOldDate
-import com.example.newevent2.MVP.ImagePresenter
-import com.example.newevent2.Model.Event
-import com.example.newevent2.Model.EventModel
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskModel
+import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.eventform_layout.*
-import kotlinx.android.synthetic.main.eventform_layout.savebutton
-import kotlinx.android.synthetic.main.new_task_taskdetail.*
 import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.android.synthetic.main.task_editdetail.taskdate
 import kotlinx.android.synthetic.main.task_editdetail.taskname
-import kotlinx.android.synthetic.main.task_item_layout.*
 import java.util.*
 
 class TaskCreateEdit() : AppCompatActivity() {
 
     private var userid = ""
     private var eventid = ""
+
     //private var taskid = ""
     private lateinit var taskitem: Task
 
@@ -60,7 +44,13 @@ class TaskCreateEdit() : AppCompatActivity() {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        taskitem = intent.getParcelableExtra("task")!!
+        val extras = intent.extras
+        taskitem = if (extras!!.containsKey("task")) {
+            intent.getParcelableExtra("task")!!
+        } else {
+            Task()
+        }
+
         userid = intent.getStringExtra("userid").toString()
         eventid = intent.getStringExtra("eventid").toString()
         val taskid = taskitem.key
@@ -86,8 +76,13 @@ class TaskCreateEdit() : AppCompatActivity() {
             })
         }
 
-        taskname.setOnClickListener {
-            taskname.error = null
+        taskname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+            if (!p1) {
+                val validationmessage = TextValidate(taskname).namefieldValidate()
+                if (validationmessage != "") {
+                    taskname.error = "Error in Task name: $validationmessage"
+                }
+            }
         }
 
         taskdate.setOnClickListener {
@@ -95,18 +90,20 @@ class TaskCreateEdit() : AppCompatActivity() {
             showDatePickerDialog()
         }
 
-        taskbudget.setOnClickListener {
-            taskbudget.error = null
-        }
+//        taskbudget.setOnClickListener {
+//            taskbudget.error = null
+//        }
 
         val chipgroupedit = findViewById<ChipGroup>(R.id.groupedittask)
-        chipgroupedit.isSingleSelection = true
+        //chipgroupedit.isSingleSelection = true
 
         // Create chips and select the one matching the category
         val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
         for (category in list) {
             val chip = Chip(this)
             chip.text = category.en_name
+            chip.isClickable = true
+            chip.isCheckable = true
             chipgroupedit.addView(chip)
             if (taskitem.category == category.code) {
                 chip.isSelected = true
@@ -116,10 +113,19 @@ class TaskCreateEdit() : AppCompatActivity() {
 
         savebuttontask.setOnClickListener {
             var inputvalflag = true
+            //Utility.hideSoftKeyboard(this)
+
             if (taskname.text.toString().isEmpty()) {
-                taskname.error = "Task name is required!"
+                taskname.error = "Error in Task name: Task name is required!"
                 inputvalflag = false
+            } else {
+                val validationmessage = TextValidate(taskname).namefieldValidate()
+                if (validationmessage != "") {
+                    taskname.error = "Error in Task name: $validationmessage"
+                    inputvalflag = false
+                }
             }
+
             if (taskdate.text.toString().isEmpty()) {
                 taskdate.error = "Task date is required!"
                 inputvalflag = false
@@ -138,18 +144,18 @@ class TaskCreateEdit() : AppCompatActivity() {
         }
     }
 
-//    private fun getCategory(): String {
-//        var mycategory = ""
-//        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
-//        val chiptextvalue = chipselected.text.toString()
-//        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
-//        for (category in list) {
-//            if (chiptextvalue == category.en_name) {
-//                mycategory = category.code
-//            }
-//        }
-//        return mycategory
-//    }
+    private fun getCategory(): String {
+        var mycategorycode = ""
+        val categoryname = groupedittask.findViewById<Chip>(groupedittask.checkedChipId).text
+
+        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        for (category in list) {
+            if (categoryname == category.en_name) {
+                mycategorycode = category.code
+            }
+        }
+        return mycategorycode
+    }
 
     private fun showDatePickerDialog() {
         val newFragment =
@@ -158,9 +164,9 @@ class TaskCreateEdit() : AppCompatActivity() {
                 override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
                     if (validateOldDate(p1, p2 + 1, p3)) {
                         val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                        eventdate.setText(selectedDate)
+                        taskdate.setText(selectedDate)
                     } else {
-                        eventdate.error = "Task date is invalid!"
+                        taskdate.error = "Task date is invalid!"
                     }
                 }
             }))
@@ -171,7 +177,7 @@ class TaskCreateEdit() : AppCompatActivity() {
         taskitem.name = taskname.text.toString()
         taskitem.date = taskdate.text.toString()
         taskitem.budget = taskbudget.text.toString()
-        taskitem.category = groupedittask.findViewById<Chip>(groupedittask.checkedChipId).toString()
+        taskitem.category = getCategory()
 
         val taskmodel = TaskModel()
         if (taskitem.key != "") {
@@ -183,18 +189,16 @@ class TaskCreateEdit() : AppCompatActivity() {
                     override fun onTaskAddedEdited(flag: Boolean) {
                         if (flag) {
                             //Deleting all instances of Task from cache
+                            Log.i(TAG, "Task ${taskitem.key} successfully edited")
                             Cache.deletefromStorage(TASKENTITY, applicationContext)
                         }
                     }
-
                 })
         } else {
             val usersession =
                 application.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
             val tasksactive = usersession.getInt("tasksactive", 0)
             val sessionEditor = usersession!!.edit()
-            sessionEditor.putInt("tasksactive", tasksactive + 1)
-            sessionEditor.apply()
 
             taskmodel.addTask(
                 userid,
@@ -205,12 +209,14 @@ class TaskCreateEdit() : AppCompatActivity() {
                     override fun onTaskAddedEdited(flag: Boolean) {
                         if (flag) {
                             //Deleting all instances of Task from cache
+                            Log.i(TAG, "Task successfully added")
+                            sessionEditor.putInt("tasksactive", tasksactive + 1)
+                            sessionEditor.apply()
                             Cache.deletefromStorage(TASKENTITY, applicationContext)
                         }
                     }
                 })
         }
-
         val resultIntent = Intent()
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
@@ -223,6 +229,7 @@ class TaskCreateEdit() : AppCompatActivity() {
 
     companion object {
         const val TASKENTITY = "Task"
+        const val TAG = "TaskCreateEdit"
     }
 }
 

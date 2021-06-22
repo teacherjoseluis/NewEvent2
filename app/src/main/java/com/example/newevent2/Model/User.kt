@@ -2,6 +2,7 @@ package com.example.newevent2.Model
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.baoyachi.stepview.bean.StepBean
 import com.example.newevent2.LoginView
@@ -272,6 +273,7 @@ class User(
         stepsBeanList.add(stepBean3)
         stepsBeanList.add(stepBean4)
 
+        Log.i(TAG, "User hasevent(${this.hasevent}), hastask(${this.hastask }), haspayment(${this.haspayment}), hasguest(${this.hasguest}), hasvendor(${this.hasvendor})")
         return stepsBeanList
     }
 
@@ -282,6 +284,10 @@ class User(
     interface SignUpActivity {
         fun onSignUpSuccess()
         fun onSignUpError()
+    }
+
+    companion object{
+        const val TAG = "User"
     }
 }
 

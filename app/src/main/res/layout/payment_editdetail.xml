@@ -67,7 +67,7 @@
                 <com.blackcat.currencyedittext.CurrencyEditText
                     android:id="@+id/paymentamount"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="70dp"
                     android:hint="Payment Amount"
                     android:maxLength="10"
                     android:textAppearance="@style/Body2" />
@@ -136,87 +136,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:singleSelection="true">
-<!--
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Flowers &amp; Deco"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Venue"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Photo &amp; Video"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Entertainment"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Transportation"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Ceremony"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Attire &amp; Accessories"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Health &amp; Beauty"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Food &amp; Drink"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Guests"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
--->
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

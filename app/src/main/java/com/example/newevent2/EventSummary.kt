@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,8 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.baoyachi.stepview.HorizontalStepView
 import com.bumptech.glide.Glide
@@ -26,31 +29,32 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.example.newevent2.Functions.*
 import com.example.newevent2.MVP.EventPresenter
+import com.example.newevent2.MVP.EventSummaryPresenter
 import com.example.newevent2.MVP.GuestPresenter
 import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
 import com.google.android.gms.maps.MapView
+import kotlinx.android.synthetic.main.dashboardcharts.view.*
+import kotlinx.android.synthetic.main.dashboardcharts.view.scrollview
+import kotlinx.android.synthetic.main.event_summary.view.*
 import kotlinx.android.synthetic.main.summary_weddingguests.view.*
 
 
-class EventSummary : Fragment(), EventPresenter.ViewEventActivity, GuestPresenter.GuestStats,
+class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
+    EventSummaryPresenter.GuestStats,
     ImagePresenter.EventImage {
 
-    var userid = ""
-    var eventid = ""
 
-    private lateinit var presenterevent: EventPresenter
-    private lateinit var presenterguest: GuestPresenter
+    private lateinit var presenterevent: EventSummaryPresenter
     private lateinit var mapview: MapView
     private lateinit var imagePresenter: ImagePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        userid = this.arguments!!.get("userid").toString()
-        eventid = this.arguments!!.get("eventid").toString()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,21 +65,15 @@ class EventSummary : Fragment(), EventPresenter.ViewEventActivity, GuestPresente
         val editeventbutton = inf.findViewById<ImageView>(R.id.editEventButton)
         editeventbutton.setOnClickListener {
             val editevent = Intent(context, MainActivity::class.java)
-            editevent.putExtra("userid", userid)
-            editevent.putExtra("eventid", eventid)
+//            editevent.putExtra("userid", userid)
+//            editevent.putExtra("eventid", eventid)
             startActivityForResult(editevent, SUCCESS_RETURN)
             //startActivity(editevent)
         }
 
         // Get Event details -----------------------------------------------------------------------
-        presenterevent = EventPresenter(this.context!!,this, inf, userid, eventid)
-        presenterevent.getEventDetail()
+        presenterevent = EventSummaryPresenter(context!!, this, inf)
         //------------------------------------------------------------------------------------------
-        presenterguest = GuestPresenter(this.context!!,this, inf)
-        presenterguest.getGuestsEvent()
-        presenterguest.userid = userid
-        presenterguest.eventid = eventid
-
         //------------------------------------------------------------------------------------------
 //        mapview = inf.findViewById<MapView>(R.id.mapView)
 //        mapview.onCreate(savedInstanceState)
@@ -99,7 +97,7 @@ class EventSummary : Fragment(), EventPresenter.ViewEventActivity, GuestPresente
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewEventSuccessFragment(context: Context, inflatedView: View, event: Event) {
+    override fun onEvent(context: Context, inflatedView: View, event: Event) {
         inflatedView.findViewById<TextView>(R.id.eventname).text = event.name
         inflatedView.findViewById<TextView>(R.id.eventdate).text = event.date
         //inflatedView.findViewById<TextView>(R.id.textView4).text = event.time
@@ -114,8 +112,6 @@ class EventSummary : Fragment(), EventPresenter.ViewEventActivity, GuestPresente
 
         // Load thumbnail
         imagePresenter = ImagePresenter(context, this, inflatedView)
-        imagePresenter.userid = userid
-        imagePresenter.eventid = eventid
         imagePresenter.getEventImage()
 
 //        val eventLocationLnLg = LatLng(event.latitude, event.longitude)
@@ -154,12 +150,13 @@ class EventSummary : Fragment(), EventPresenter.ViewEventActivity, GuestPresente
 //        }
     }
 
-    override fun onViewEventErrorFragment(inflatedView: View, errcode: String) {
+    override fun onEventError(inflatedView: View, errcode: String) {
         Toast.makeText(
             context,
             "There was an error trying to get Event data",
             Toast.LENGTH_SHORT
         ).show()
+        Log.i(TAG, "No data was obtained from the Event")
     }
 
     override fun onGuestConfirmation(
@@ -172,12 +169,16 @@ class EventSummary : Fragment(), EventPresenter.ViewEventActivity, GuestPresente
         inflatedView.acceptednumber.text = confirmed.toString()
         inflatedView.rejectednumber.text = rejected.toString()
         inflatedView.pendingnumber.text = pending.toString()
+
+        val loadingscreen = activity!!.findViewById<ConstraintLayout>(R.id.loadingscreen)
+        val drawerlayout = activity!!.findViewById<DrawerLayout>(R.id.drawerlayout)
+        loadingscreen.visibility = ConstraintLayout.GONE
+        drawerlayout.visibility = ConstraintLayout.VISIBLE
+        Log.i(TAG, "Guest confirmed (${confirmed}), rejected (${rejected}), pending (${pending})")
     }
 
-    companion object {
-        const val WRITE_EXTERNAL_STORAGE = 0
-        const val REQUEST_PERMISSION = 0
-        const val SUCCESS_RETURN = 1
+    override fun onGuestConfirmationError(inflatedView: View, errcode: String) {
+        inflatedView.guestlayout.visibility = ConstraintLayout.INVISIBLE
     }
 
     override fun onEventImage(mContext: Context, inflatedView: View?, packet: Any) {
@@ -207,6 +208,7 @@ class EventSummary : Fragment(), EventPresenter.ViewEventActivity, GuestPresente
                 }
             }).placeholder(R.drawable.avatar2)
             .into(wedavater)
+        Log.i(TAG, "Image for the event is loaded")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -217,13 +219,20 @@ class EventSummary : Fragment(), EventPresenter.ViewEventActivity, GuestPresente
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed(Runnable {
                 val user = com.example.newevent2.Functions.getUserSession(context!!)
-                val newfragment =  MainEventView_clone(user)
+                val newfragment = MainEventView_clone(user)
                 fm!!.beginTransaction()
                     .replace(R.id.fragment_container, newfragment)
                     // .addToBackStack(null)
                     .commit()
             }, 2000) //1 seconds
         }
+    }
+
+    companion object {
+        const val WRITE_EXTERNAL_STORAGE = 0
+        const val REQUEST_PERMISSION = 0
+        const val SUCCESS_RETURN = 1
+        const val TAG = "EventSummary"
     }
 }
 

@@ -10,7 +10,8 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newevent2.MVP.TaskPresenter
+import com.example.newevent2.MVP.DashboardActivityPresenter
+//import com.example.newevent2.MVP.TaskPresenter
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskJournal
 import kotlinx.android.synthetic.main.dashboardactivity.*
@@ -22,19 +23,14 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DashboardActivity() : Fragment(), TaskPresenter.TaskDateList {
+class DashboardActivity() : Fragment(), DashboardActivityPresenter.TaskJournalInterface {
 
     lateinit var recyclerViewActivity: RecyclerView
-    private lateinit var presentertask: TaskPresenter
-
-    var userid = ""
-    var eventid = ""
+    private lateinit var presentertask: DashboardActivityPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        userid = arguments!!.get("userid").toString()
-        eventid = arguments!!.get("eventid").toString()
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -54,16 +50,13 @@ class DashboardActivity() : Fragment(), TaskPresenter.TaskDateList {
             }
         }
 
-        presentertask = TaskPresenter(context!!,this, inf)
-        presentertask.userid = userid
-        presentertask.eventid = eventid
-        presentertask.getTasksJournal()
+        presentertask = DashboardActivityPresenter(context!!, this, inf)
         return inf
     }
 
     override fun onTaskJournal(inflatedView: View, list: ArrayList<TaskJournal>) {
         //emptyrecyclerview.visibility = View.GONE
-        val rvAdapter = Rv_TaskDatesAdapter(userid, eventid, list)
+        val rvAdapter = Rv_TaskDatesAdapter(list)
         recyclerViewActivity.adapter = rvAdapter
     }
 

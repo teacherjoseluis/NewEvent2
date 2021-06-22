@@ -1,9 +1,11 @@
 package com.example.newevent2
 
+import Application.Cache
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +21,7 @@ class Rv_PaymentAdapter(
     val userid: String,
     val eventid: String,
     val paymentList: MutableList<Payment>
-) :
-    RecyclerView.Adapter<Rv_PaymentAdapter.ViewHolder>(), ItemTouchAdapterAction {
+) : RecyclerView.Adapter<Rv_PaymentAdapter.ViewHolder>(), ItemTouchAdapterAction {
 
     lateinit var context: Context
 
@@ -43,7 +44,7 @@ class Rv_PaymentAdapter(
         p0.paymentamount?.text = paymentList[p1].amount
 
         p0.itemView.setOnClickListener {
-            val paymentdetail = Intent(context, Payment_EditDetail::class.java)
+            val paymentdetail = Intent(context, PaymentCreateEdit::class.java)
             paymentdetail.putExtra("payment", paymentList[p1])
             paymentdetail.putExtra("userid", userid)
             paymentdetail.putExtra("eventid", eventid)
@@ -70,32 +71,70 @@ class Rv_PaymentAdapter(
             category = paymentswift.category
             createdatetime = paymentswift.createdatetime
         }
-
         paymentList.removeAt(position)
         notifyItemRemoved(position)
 
-        if (action == "delete") {
-            val usersession =
-                context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
-            val payments = usersession.getInt("payments", 0)
-            val sessionEditor = usersession!!.edit()
-            sessionEditor.putInt("payments", payments + 1)
-            sessionEditor.apply()
+        val usersession =
+            context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+        val paymentactive = usersession.getInt("payments", 0)
+        val sessionEditor = usersession!!.edit()
 
+        if (action == DELETEACTION) {
             val paymentmodel = PaymentModel()
-            paymentmodel.deletePayment(userid, eventid, paymentswift)
+            paymentmodel.deletePayment(
+                userid,
+                eventid,
+                paymentswift,
+                paymentactive,
+                object : PaymentModel.FirebaseDeletePaymentSuccess {
+                    override fun onPaymentDeleted(flag: Boolean) {
+                        if (flag) {
+                            //Deleting all instances of Payment from cache
+                            Log.i(TAG, "Payment ${paymentswift.key} was Deleted")
+                            sessionEditor.putInt("payments", paymentactive - 1)
+                            sessionEditor.apply()
+                            Log.d(TAG, "User has currently ${paymentactive - 1} active payments")
+                            Cache.deletefromStorage(TaskCreateEdit.TASKENTITY, context)
+                        }
+                    }
+
+                })
 
             Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
                     paymentList.add(paymentbackup)
                     notifyItemInserted(paymentList.lastIndex)
-                    paymentmodel.addPayment(userid, eventid, paymentbackup, payments, object: PaymentModel.FirebaseAddEditPaymentSuccess{
-                        override fun onPaymentAddedEdited(flag: Boolean) {
-                            TODO("Not yet implemented")
-                        }
+                    paymentmodel.addPayment(
+                        userid,
+                        eventid,
+                        paymentbackup,
+                        paymentactive,
+                        object : PaymentModel.FirebaseAddEditPaymentSuccess {
+                            override fun onPaymentAddedEdited(flag: Boolean) {
+                                if (flag) {
+                                    Log.i(
+                                        TAG,
+                                        "Undo action and Payment ${paymentswift.key} was added back"
+                                    )
+                                    sessionEditor.putInt("payments", paymentactive + 1)
+                                    sessionEditor.apply()
+                                    Log.d(
+                                        TAG,
+                                        "User has currently ${paymentactive + 1} active payments"
+                                    )
+                                    //Deleting all instances of Payment from cache
+                                    Cache.deletefromStorage(PAYMENTENTITY, context)
+                                }
+                            }
 
-                    })
+                        })
                 }.show()
         }
+    }
+    
+    companion object {
+        const val TAG = "Rv_PaymentAdapter"
+        const val PAYMENTENTITY = "Payment"
+        const val DELETEACTION = "delete"
     }
 }

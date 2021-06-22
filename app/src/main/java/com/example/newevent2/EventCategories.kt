@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.PaymentPresenter
-import com.example.newevent2.MVP.TaskPresenter
 import com.example.newevent2.Model.Task
 import com.example.newevent2.ui.ViewAnimation
 import kotlinx.android.synthetic.main.event_detail.*

@@ -49,6 +49,7 @@ class UserModel(
                         haspayment = p0.child("haspayment").getValue(String::class.java)!!
                         hasguest = p0.child("hasguest").getValue(String::class.java)!!
                         hasvendor = p0.child("hasvendor").getValue(String::class.java)!!
+                        Log.d(TAG, "Data associated to User $key ($email) has been retrieved from Firebase")
                     }
                 }
                 dataFetched.onUserexists(firebaseUser)
@@ -78,22 +79,27 @@ class UserModel(
         //postRef.child("haspayment").setValue(user.haspayment)
         //postRef.child("hasguest").setValue(user.hasguest)
         //postRef.child("hasvendor").setValue(user.hasvendor)
+        Log.d(TAG, "Data associated to User ${user.key} has just been saved")
     }
 
     fun editUserAddTask(value: Int) {
         postRef.child("tasksactive").setValue(value)
+        Log.d(TAG, "There are currently $value active tasks associated to the User")
     }
 
     fun editUserAddPayment(value: Int) {
         postRef.child("payments").setValue(value)
+        Log.d(TAG, "There are currently $value payments associated to the User")
     }
 
     fun editUserTaskflag(flag: String) {
         postRef.child("hastask").setValue(flag)
+        Log.d(TAG, "Flag hastask for the User has been set to $flag")
     }
 
     fun editUserPaymentflag(flag: String) {
         postRef.child("haspayment").setValue(flag)
+        Log.d(TAG, "Flag haspayment for the User has been set to $flag")
     }
 
     fun editUserImage(uri: Uri, imageurl: String) {
@@ -104,8 +110,10 @@ class UserModel(
         val uploadTask = imageRef.putFile(uri)
 
         uploadTask.addOnFailureListener {
+            Log.e(TAG, "There was an error uploading the image to Firebase Storage")
             return@addOnFailureListener
         }.addOnSuccessListener {
+            Log.e(TAG, "Image was successfully uploaded to Firebase Storage")
             return@addOnSuccessListener
         }
     }
@@ -134,9 +142,10 @@ class UserModel(
             userfb as Map<String, Any>
         ) { error, _ ->
             if (error != null) {
-                //Se loggea un error al guardar el usuario TODO databaseError.getMessage()
+                Log.e(TAG, "There was an error saving the User (${error.message})")
                 savesuccessflag.onSaveSuccess(false)
             } else {
+                Log.d(TAG, "User was saved successfully")
                 savesuccessflag.onSaveSuccess(true)
             }
         }
@@ -150,4 +159,7 @@ class UserModel(
         fun onSaveSuccess(flag: Boolean)
     }
 
+    companion object{
+        const val TAG = "UserModel"
+    }
 }

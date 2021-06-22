@@ -1,5 +1,6 @@
 package com.example.newevent2.Functions
 
+import Application.Cache
 import android.app.DownloadManager
 import android.content.ContentResolver
 import android.content.Context
@@ -12,6 +13,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.newevent2.R
 import com.google.firebase.ktx.Firebase
@@ -76,6 +78,7 @@ fun saveURLImgtoSD(category: String, uri: Uri?, context: Context) {
         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
         .setDestinationInExternalFilesDir(context, path, "$category.PNG")
     val downloadId = downloadmanager.enqueue(request)
+    Log.d("ImageFunctions", "Download $category image from Firebase to Local Storage")
 }
 
 
@@ -144,3 +147,4 @@ fun createemptyBitmap(w: Int, h: Int): Bitmap? {
     val conf = Bitmap.Config.ARGB_8888
     return Bitmap.createBitmap(w, h, conf)
 }
+

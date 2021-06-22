@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".EventDetail">
+    android:layout_height="match_parent">
 <!--
     <include
         android:id="@+id/toolbar"
@@ -14,144 +13,145 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorColor="@color/rosaChillon"
-        app:tabSelectedTextColor="@color/rosaChillon"
-        app:tabTextColor="@color/rosaChillon">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event" />
+            android:background="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabIndicatorColor="@color/rosaChillon"
+            app:tabSelectedTextColor="@color/rosaChillon"
+            app:tabTextColor="@color/rosaChillon">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categories" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Categories" />
+            app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+            tools:layout_editor_absoluteX="-25dp">
 
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
-        tools:layout_editor_absoluteX="-25dp">
-
-    </androidx.viewpager.widget.ViewPager>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/NewTaskPaymentActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        app:tint="@color/white"
-        app:backgroundTint="@color/azulmasClaro"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="24dp"
-        app:srcCompat="@drawable/ic_icons8_plus_white" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/TaskLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/PaymentLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="visible">
+        </androidx.viewpager.widget.ViewPager>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabTask"
+            android:id="@+id/NewTaskPaymentActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/task_done_outline"
-            app:tint="@color/white"
-            app:backgroundTint="@color/rosaChillon"
-            app:fabSize="mini"
-            android:outlineAmbientShadowColor="@color/secondaryText"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            app:backgroundTint="@color/azulmasClaro"
+            app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:maxImageSize="24dp"
-            app:rippleColor="@color/white"
-            android:elevation="2dp"
-            app:elevation="2dp"/>
+            app:srcCompat="@drawable/ic_icons8_plus_white"
+            app:tint="@color/white" />
 
-        <TextView
-            style="@style/Overline"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/TaskLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="2dp"
-            android:background="@color/white"
-            android:padding="5dp"
-            android:text="Task"
-            android:textColor="@color/rosaChillon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/fabTask"
-            app:layout_constraintTop_toTopOf="parent"
-            android:elevation="2dp"
-            app:elevation="2dp"/>
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/PaymentLayout"
+            app:layout_constraintEnd_toEndOf="parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:elevation="2dp"
+                android:outlineAmbientShadowColor="@color/secondaryText"
+                android:src="@drawable/task_done_outline"
+                app:backgroundTint="@color/rosaChillon"
+                app:elevation="2dp"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:maxImageSize="24dp"
+                app:rippleColor="@color/white"
+                app:tint="@color/white" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/PaymentLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/NewTaskPaymentActionButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="visible">
+            <TextView
+                style="@style/Overline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="2dp"
+                android:background="@color/white"
+                android:elevation="2dp"
+                android:padding="5dp"
+                android:text="Task"
+                android:textColor="@color/rosaChillon"
+                app:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fabTask"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabPayment"
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/PaymentLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/invoice"
-            app:tint="@color/white"
-            app:backgroundTint="@color/rosaChillon"
-            app:fabSize="mini"
-            android:outlineAmbientShadowColor="@color/secondaryText"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="24dp"
-            app:rippleColor="@color/white"
-            android:elevation="2dp"
-            app:elevation="2dp"/>
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/NewTaskPaymentActionButton"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            style="@style/Overline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="2dp"
-            android:background="@color/white"
-            android:padding="5dp"
-            android:text="Payment"
-            android:textColor="@color/rosaChillon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/fabPayment"
-            app:layout_constraintTop_toTopOf="parent"
-            android:elevation="2dp"
-            app:elevation="2dp"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-<!--
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabPayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:elevation="2dp"
+                android:outlineAmbientShadowColor="@color/secondaryText"
+                android:src="@drawable/invoice"
+                app:backgroundTint="@color/rosaChillon"
+                app:elevation="2dp"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:maxImageSize="24dp"
+                app:rippleColor="@color/white"
+                app:tint="@color/white" />
+
+            <TextView
+                style="@style/Overline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="2dp"
+                android:background="@color/white"
+                android:elevation="2dp"
+                android:padding="5dp"
+                android:text="Payment"
+                android:textColor="@color/rosaChillon"
+                app:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fabPayment"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--
     <include
         android:id="@+id/include2"
         layout="@layout/navbottom"

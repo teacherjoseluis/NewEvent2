@@ -2,6 +2,7 @@ package com.example.newevent2.Model
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.newevent2.FirebaseSuccessListenerTask
 import com.example.newevent2.getUserSession
@@ -62,6 +63,7 @@ class TaskModel {
                         }
                     }
                 }
+                Log.d(TAG, "Current task stats consists of Active($countactive), Completed($countcompleted), Budget($sumbudget)")
                 dataFetched.onTasksStats(countactive, countcompleted, sumbudget)
             }
 
@@ -87,6 +89,7 @@ class TaskModel {
                     val budgetamount = re.replace(taskitem.budget, "").dropLast(2)
                     sumbudget += budgetamount.toFloat()
                 }
+                Log.d(TAG, "Current task Budget($sumbudget)")
                 dataFetched.onTasksBudget(sumbudget)
             }
 
@@ -120,6 +123,7 @@ class TaskModel {
                         }
                     }
                 }
+                Log.d(TAG, "Next due task is ${duenexttask.key}")
                 dataFetched.onTask(duenexttask)
             }
 
@@ -145,6 +149,7 @@ class TaskModel {
             override fun onDataChange(p0: DataSnapshot) {
                 val taskitem = p0.getValue(Task::class.java)!!
                 taskitem!!.key = p0.key.toString()
+                Log.d(TAG, "Detail retrieved for task ${taskitem.key}")
                 dataFetched.onTask(taskitem)
             }
 
@@ -187,6 +192,7 @@ class TaskModel {
                         }
                     }
                 }
+                Log.d(TAG, "Number of tasks retrieved ${tasklist.count()}")
                 dataFetched.onTaskList(tasklist)
             }
 
@@ -219,6 +225,7 @@ class TaskModel {
                     taskitem!!.key = snapshot.key.toString()
                     tasklist.add(taskitem!!)
                 }
+                Log.d(TAG, "Number of tasks retrieved ${tasklist.count()}")
                 dataFetched.onTaskList(tasklist)
             }
 
@@ -259,12 +266,15 @@ class TaskModel {
         postRef.setValue(taskadd as Map<String, Any>)
             .addOnFailureListener {
                 taskaddedflag.onTaskAddedEdited(false)
+                Log.e(TAG, "Task ${task.name} failed to be added")
+
             }
             .addOnSuccessListener {
-                    val usermodel = UserModel(userid)
-                    usermodel.editUserTaskflag(ACTIVEFLAG)
-                    usermodel.editUserAddTask(tasksactive + 1)
-                    taskaddedflag.onTaskAddedEdited(true)
+                val usermodel = UserModel(userid)
+                usermodel.editUserTaskflag(ACTIVEFLAG)
+                usermodel.editUserAddTask(tasksactive + 1)
+                taskaddedflag.onTaskAddedEdited(true)
+                Log.d(TAG, "Task ${task.name} successfully added on ${sdf.format(taskdatetime)}")
             }
     }
 
@@ -290,15 +300,36 @@ class TaskModel {
         postRef.updateChildren(taskedit as Map<String, Any>)
             .addOnSuccessListener {
                 taskeditedflag.onTaskAddedEdited(true)
+                Log.d(TAG, "Task ${task.name} successfully edited")
+            }
+            .addOnFailureListener {
+                taskeditedflag.onTaskAddedEdited(false)
+                Log.e(TAG, "Task ${task.name} failed to be edited")
             }
     }
 
-    fun deleteTask(userid: String, eventid: String, task: Task) {
+    fun deleteTask(
+        userid: String,
+        eventid: String,
+        task: Task,
+        tasksactive: Int,
+        taskdeletedflag: FirebaseDeleteTaskSuccess
+    ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Task").child(task.key)
                 .removeValue()
-        //todo ("Need to implement a callback that will check if the user has no longer tasks associated. In such a case the associated flag in the User Profile will be set as "N"")
+                .addOnSuccessListener {
+                    val usermodel = UserModel(userid)
+                    usermodel.editUserAddTask(tasksactive - 1)
+                    if ((tasksactive - 1) == 0) usermodel.editUserTaskflag(INACTIVEFLAG)
+                    taskdeletedflag.onTaskDeleted(true)
+                    Log.d(TAG, "Task ${task.name} successfully deleted")
+                }
+                .addOnFailureListener {
+                    taskdeletedflag.onTaskDeleted(false)
+                    Log.e(TAG, "Task ${task.name} failed to be deleted")
+                }
     }
 
     interface FirebaseSuccessStatsTask {
@@ -321,8 +352,15 @@ class TaskModel {
         fun onTaskAddedEdited(flag: Boolean)
     }
 
+    interface FirebaseDeleteTaskSuccess {
+        fun onTaskDeleted(flag: Boolean)
+    }
+
     companion object {
         const val ACTIVESTATUS = "A"
+        const val COMPLETESTATUS = "C"
         const val ACTIVEFLAG = "Y"
+        const val INACTIVEFLAG = "N"
+        const val TAG = "TaskModel"
     }
 }

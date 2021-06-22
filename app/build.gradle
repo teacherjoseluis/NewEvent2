@@ -119,4 +119,5 @@ dependencies {
 //    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta07")
     implementation 'com.github.baoyachi:StepView:1.9'
     implementation 'com.github.sakshampruthi:custom-loading-screen:1.0.2'
+    implementation 'com.airbnb.android:lottie:3.4.0'
 }

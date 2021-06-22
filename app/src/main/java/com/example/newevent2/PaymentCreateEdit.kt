@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -19,16 +20,19 @@ import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import kotlinx.android.synthetic.main.eventform_layout.*
 import kotlinx.android.synthetic.main.payment_editdetail.*
 import kotlinx.android.synthetic.main.task_editdetail.*
 import java.util.*
 
-class PaymentCreateEdit(var paymentitem: Payment) : AppCompatActivity() {
+class PaymentCreateEdit() : AppCompatActivity() {
 
     private var userid = ""
     private var eventid = ""
-    private var paymentid = ""
+
+
+    private lateinit var paymentitem: Payment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +43,16 @@ class PaymentCreateEdit(var paymentitem: Payment) : AppCompatActivity() {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        val extras = intent.extras
+        paymentitem = if (extras!!.containsKey("payment")) {
+            intent.getParcelableExtra("payment")!!
+        } else {
+            Payment()
+        }
+
         userid = intent.getStringExtra("userid").toString()
         eventid = intent.getStringExtra("eventid").toString()
-        paymentid = intent.getStringExtra("paymentid").toString()
+        val paymentid = paymentitem.key
 
         if (paymentid != "") {
             val paymentmodel = PaymentModel()
@@ -76,6 +87,23 @@ class PaymentCreateEdit(var paymentitem: Payment) : AppCompatActivity() {
             paymentamount.error = null
         }
 
+        val chipgroupedit = findViewById<ChipGroup>(R.id.groupeditpayment)
+        //chipgroupedit.isSingleSelection = true
+
+        // Create chips and select the one matching the category
+        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        for (category in list) {
+            val chip = Chip(this)
+            chip.text = category.en_name
+            chip.isClickable = true
+            chip.isCheckable = true
+            chipgroupedit.addView(chip)
+            if (paymentitem.category == category.code) {
+                chip.isSelected = true
+                chipgroupedit.check(chip.id)
+            }
+        }
+
         savebuttonpayment.setOnClickListener {
             var inputvalflag = true
             if (paymentname.text.toString().isEmpty()) {
@@ -100,18 +128,18 @@ class PaymentCreateEdit(var paymentitem: Payment) : AppCompatActivity() {
         }
     }
 
-//    private fun getCategory(): String {
-//        var mycategory = ""
-//        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
-//        val chiptextvalue = chipselected.text.toString()
-//        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
-//        for (category in list) {
-//            if (chiptextvalue == category.en_name) {
-//                mycategory = category.code
-//            }
-//        }
-//        return mycategory
-//    }
+    private fun getCategory(): String {
+        var mycategorycode = ""
+        val categoryname = groupeditpayment.findViewById<Chip>(groupeditpayment.checkedChipId).text
+
+        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        for (category in list) {
+            if (categoryname == category.en_name) {
+                mycategorycode = category.code
+            }
+        }
+        return mycategorycode
+    }
 
     private fun showDatePickerDialog() {
         val newFragment =
@@ -133,7 +161,7 @@ class PaymentCreateEdit(var paymentitem: Payment) : AppCompatActivity() {
         paymentitem.name = paymentname.text.toString()
         paymentitem.date = paymentdate.text.toString()
         paymentitem.amount = paymentamount.text.toString()
-        //paymentitem.category = getCategory()
+        paymentitem.category = getCategory()
 
         val paymentmodel = PaymentModel()
         if (paymentitem.key != "") {
@@ -145,18 +173,16 @@ class PaymentCreateEdit(var paymentitem: Payment) : AppCompatActivity() {
                     override fun onPaymentAddedEdited(flag: Boolean) {
                         if (flag) {
                             //Deleting all instances of Payment from cache
+                            Log.i(TAG, "Payment ${paymentitem.key} successfully edited")
                             Cache.deletefromStorage(PAYENTITY, applicationContext)
                         }
                     }
-
                 })
         } else {
             val usersession =
                 application.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
             val payments = usersession.getInt("payments", 0)
             val sessionEditor = usersession!!.edit()
-            sessionEditor.putInt("payments", payments + 1)
-            sessionEditor.apply()
 
             paymentmodel.addPayment(
                 userid,
@@ -166,14 +192,15 @@ class PaymentCreateEdit(var paymentitem: Payment) : AppCompatActivity() {
                 object : PaymentModel.FirebaseAddEditPaymentSuccess {
                     override fun onPaymentAddedEdited(flag: Boolean) {
                         if (flag) {
+                            Log.i(TAG, "Payment successfully added")
+                            sessionEditor.putInt("payments", payments + 1)
+                            sessionEditor.apply()
                             //Deleting all instances of Payment from cache
                             Cache.deletefromStorage(PAYENTITY, applicationContext)
                         }
                     }
-
                 })
         }
-
         val resultIntent = Intent()
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
@@ -186,5 +213,6 @@ class PaymentCreateEdit(var paymentitem: Payment) : AppCompatActivity() {
 
     companion object {
         const val PAYENTITY = "Payment"
+        const val TAG = "PaymentCreateEdit"
     }
 }

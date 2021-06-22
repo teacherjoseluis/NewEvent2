@@ -79,7 +79,7 @@
 
     <style name="BodyItalic2" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolightitalic</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">16dp</item>
     </style>
 
     <style name="Caption" parent="TextAppearance.AppCompat.Caption">

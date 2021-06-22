@@ -1,4 +1,4 @@
-package com.example.newevent2
+//package com.example.newevent2
 //
 //import android.os.Bundle
 //import android.view.View

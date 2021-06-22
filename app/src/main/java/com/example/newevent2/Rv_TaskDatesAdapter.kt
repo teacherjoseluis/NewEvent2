@@ -23,14 +23,11 @@ import kotlinx.android.synthetic.main.dashboardactivity.view.*
 import java.text.DateFormat
 
 class Rv_TaskDatesAdapter(
-    val userid: String,
-    val eventid: String,
-    private val taskjournalList: ArrayList<TaskJournal>
+    val taskjournalList: ArrayList<TaskJournal>
 ) :
     RecyclerView.Adapter<Rv_TaskDatesAdapter.ViewHolder>() {
 
     lateinit var context: Context
-    lateinit var recyclerViewActivity: RecyclerView
 
     private val viewPool = RecyclerView.RecycledViewPool()
 
@@ -55,7 +52,7 @@ class Rv_TaskDatesAdapter(
                 setRecycledViewPool(viewPool)
             }
         }
-        val rvAdapter = Rv_TaskJournalAdapter(userid, eventid, taskjournalList[p1].taskjournallist)
+        val rvAdapter = Rv_TaskJournalAdapter(taskjournalList[p1].taskjournallist)
         p0.recyclerView!!.adapter = rvAdapter
     }
 

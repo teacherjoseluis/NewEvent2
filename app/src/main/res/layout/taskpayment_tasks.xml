@@ -7,97 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".TaskPayment_Tasks">
 
-    <!--
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/TaskSummaryLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@drawable/layout_border"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/activetaskslabel"
-            style="@style/Heading6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Active:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/completedtaskslabel"
-            style="@style/Heading6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Completed:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activetaskslabel" />
-
-        <TextView
-            android:id="@+id/budgettaskslabel"
-            style="@style/Heading6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:text="Budget:"
-            app:layout_constraintEnd_toStartOf="@+id/budgettasks"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/activetasks"
-            style="@style/Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/activetaskslabel"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/completedtasks"
-            style="@style/Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/completedtaskslabel"
-            app:layout_constraintTop_toBottomOf="@+id/activetasks" />
-
-        <TextView
-            android:id="@+id/budgettasks"
-            style="@style/Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
--->
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
@@ -118,15 +29,16 @@
                 android:orientation="vertical"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="20dp">
-
+<!--
                 <TextView
                     android:id="@+id/textView19"
-                    style="@style/Overline"
+                    style="@style/Caption"
+                    android:textColor="@color/rosaChillon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:text="Active Tasks" />
-
+-->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ActiveTasksRecyclerView"
                     android:layout_width="match_parent"
@@ -142,10 +54,11 @@
                     app:stackFromEnd="true">
 
                 </androidx.recyclerview.widget.RecyclerView>
-
+<!--
                 <TextView
                     android:id="@+id/textView18"
-                    style="@style/Overline"
+                    style="@style/Caption"
+                    android:textColor="@color/rosaChillon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -164,10 +77,20 @@
                     android:paddingBottom="100dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:stackFromEnd="true" />
-
+-->
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <include
+        android:id="@+id/withnodatataskpayment"
+        layout="@layout/empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

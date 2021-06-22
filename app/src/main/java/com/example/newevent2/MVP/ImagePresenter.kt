@@ -22,17 +22,14 @@ class ImagePresenter : Cache.EventImageCacheData {
     private lateinit var mContext: Context
 
     private lateinit var cacheimage: Cache<Bitmap>
-    private lateinit var fragmentMED: EventSummary
+    private lateinit var fragmentES: EventSummary
     private lateinit var fragmentMA: MainActivity
 
-    var userid = ""
-    var eventid = ""
-
     constructor(context: Context, fragment: EventSummary, view: View) {
-        fragmentMED = fragment
+        fragmentES = fragment
         inflatedView = view
         mContext = context
-        activefragment = "MED"
+        activefragment = "ES"
     }
 
     constructor(context: Context, fragment: MainActivity) {
@@ -50,7 +47,7 @@ class ImagePresenter : Cache.EventImageCacheData {
 
     override fun onEventImage(image: Bitmap) {
         when (activefragment) {
-            "MED" -> fragmentMED.onEventImage(
+            "ES" -> fragmentES.onEventImage(
                 mContext,
                 inflatedView,
                 image
@@ -64,12 +61,13 @@ class ImagePresenter : Cache.EventImageCacheData {
     }
 
     override fun onEmptyEventImage(errorcode: String) {
+        val user = com.example.newevent2.Functions.getUserSession(mContext!!)
         val storageRef =
-            getImgfromStorage("eventimage", userid, eventid)
+            getImgfromStorage("eventimage", user.key, user.eventid)
         if (storageRef != null) {
             cacheimage.save("eventimage", storageRef)
             when (activefragment) {
-                "MED" -> fragmentMED.onEventImage(
+                "ES" -> fragmentES.onEventImage(
                     mContext,
                     inflatedView,
                     storageRef

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -22,7 +23,9 @@ class ActivityContainer : AppCompatActivity() {
 
     private var usersession = User()
 
-    private lateinit var drawerLayout: DrawerLayout
+     private lateinit var drawerLayout: DrawerLayout
+     private lateinit var loadingscreen: ConstraintLayout
+
     private val fm = supportFragmentManager
     private var clickNavItem = 0
     private lateinit var newfragment: Fragment
@@ -31,7 +34,8 @@ class ActivityContainer : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activitycontainer)
 
-        drawerLayout = findViewById<DrawerLayout>(R.id.drawerlayout)
+        drawerLayout = findViewById(R.id.drawerlayout)
+        loadingscreen = findViewById(R.id.loadingscreen)
 
         usersession = com.example.newevent2.Functions.getUserSession(this)
         if (usersession.key == "") {

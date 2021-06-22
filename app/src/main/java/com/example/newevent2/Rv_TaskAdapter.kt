@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import Application.Cache
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -61,24 +62,41 @@ class Rv_TaskAdapter(val userid: String, val eventid: String, val taskList: Muta
         if (action == CHECKACTION) {
             val taskmodel = TaskModel()
             taskswift.status = COMPLETETASK
-            taskmodel.editTask(userid, eventid, taskswift, object : TaskModel.FirebaseAddEditTaskSuccess {
-                override fun onTaskAddedEdited(flag: Boolean) {
-                    TODO("Not yet implemented")
-                }
-
-            })
+            taskmodel.editTask(
+                userid,
+                eventid,
+                taskswift,
+                object : TaskModel.FirebaseAddEditTaskSuccess {
+                    override fun onTaskAddedEdited(flag: Boolean) {
+                        if (flag) {
+                            //Deleting all instances of Task from cache
+                            Log.i(TAG, "Task ${taskswift.key} was marked as Completed")
+                            Cache.deletefromStorage(TaskCreateEdit.TASKENTITY, context)
+                        }
+                    }
+                })
 
             Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
                     taskList.add(taskswift)
                     notifyItemInserted(taskList.lastIndex)
                     taskswift.status = ACTIVETASK
-                    taskmodel.editTask(userid, eventid, taskswift, object: TaskModel.FirebaseAddEditTaskSuccess {
-                        override fun onTaskAddedEdited(flag: Boolean) {
-                            TODO("Not yet implemented")
-                        }
-
-                    })
+                    taskmodel.editTask(
+                        userid,
+                        eventid,
+                        taskswift,
+                        object : TaskModel.FirebaseAddEditTaskSuccess {
+                            override fun onTaskAddedEdited(flag: Boolean) {
+                                if (flag) {
+                                    //Deleting all instances of Task from cache
+                                    Log.i(
+                                        TAG,
+                                        "Undo action and Task ${taskswift.key} was marked back as Active"
+                                    )
+                                    Cache.deletefromStorage(TaskCreateEdit.TASKENTITY, context)
+                                }
+                            }
+                        })
                 }.show()
         }
     }
@@ -96,38 +114,74 @@ class Rv_TaskAdapter(val userid: String, val eventid: String, val taskList: Muta
         taskList.removeAt(position)
         notifyItemRemoved(position)
 
+        val usersession =
+            context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+        val tasksactive = usersession.getInt("tasksactive", 0)
+        val sessionEditor = usersession!!.edit()
+
         if (action == DELETEACTION) {
             val taskmodel = TaskModel()
-            taskmodel.deleteTask(userid, eventid, taskswift)
+            taskmodel.deleteTask(
+                userid,
+                eventid,
+                taskswift,
+                tasksactive,
+                object : TaskModel.FirebaseDeleteTaskSuccess {
+                    override fun onTaskDeleted(flag: Boolean) {
+                        if (flag) {
+                            //Deleting all instances of Task from cache
+                            Log.i(TAG, "Task ${taskswift.key} was Deleted")
+                            sessionEditor.putInt("tasksactive", tasksactive - 1)
+                            sessionEditor.apply()
+                            Log.d(TAG, "User has currently ${tasksactive - 1} active tasks")
+                            Cache.deletefromStorage(TaskCreateEdit.TASKENTITY, context)
+                        }
+                    }
+                })
 
-            val usersession =
-                context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
-            val tasksactive = usersession.getInt("tasksactive", 0)
-            val sessionEditor = usersession!!.edit()
-            sessionEditor.putInt("tasksactive", tasksactive + 1)
-            sessionEditor.apply()
 
             Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
                     taskList.add(taskbackup)
                     notifyItemInserted(taskList.lastIndex)
-                    taskmodel.addTask(userid, eventid, taskbackup, tasksactive, object : TaskModel.FirebaseAddEditTaskSuccess {
-                        override fun onTaskAddedEdited(flag: Boolean) {
-                            TODO("Not yet implemented")
-                        }
-
-                    })
+                    taskmodel.addTask(
+                        userid,
+                        eventid,
+                        taskbackup,
+                        tasksactive,
+                        object : TaskModel.FirebaseAddEditTaskSuccess {
+                            override fun onTaskAddedEdited(flag: Boolean) {
+                                if (flag) {
+                                    Log.i(
+                                        TAG,
+                                        "Undo action and Task ${taskswift.key} was added back"
+                                    )
+                                    sessionEditor.putInt("tasksactive", tasksactive + 1)
+                                    sessionEditor.apply()
+                                    Log.d(TAG, "User has currently ${tasksactive + 1} active tasks")
+                                    //Deleting all instances of Task from cache
+                                    Cache.deletefromStorage(TASKENTITY, context)
+                                }
+                            }
+                        })
                 }.show()
-        } else if (action == UNDOACTION) {
-            taskswift.status = ACTIVETASK
-            val taskmodel = TaskModel()
-            taskmodel.editTask(userid, eventid, taskswift, object : TaskModel.FirebaseAddEditTaskSuccess {
-                override fun onTaskAddedEdited(flag: Boolean) {
-                    TODO("Not yet implemented")
-                }
-
-            })
         }
+//        else if (action == UNDOACTION) {
+//            taskswift.status = ACTIVETASK
+//            val taskmodel = TaskModel()
+//            taskmodel.editTask(
+//                userid,
+//                eventid,
+//                taskswift,
+//                object : TaskModel.FirebaseAddEditTaskSuccess {
+//                    override fun onTaskAddedEdited(flag: Boolean) {
+//                        if (flag) {
+//                            //Deleting all instances of Task from cache
+//                            Cache.deletefromStorage(TaskCreateEdit.TASKENTITY, context)
+//                        }
+//                    }
+//                })
+//        }
     }
 
     companion object {
@@ -136,6 +190,8 @@ class Rv_TaskAdapter(val userid: String, val eventid: String, val taskList: Muta
         const val CHECKACTION = "check"
         const val DELETEACTION = "delete"
         const val UNDOACTION = "undo"
+        const val TAG = "Rv_TaskAdapter"
+        const val TASKENTITY = "Task"
     }
 }
 

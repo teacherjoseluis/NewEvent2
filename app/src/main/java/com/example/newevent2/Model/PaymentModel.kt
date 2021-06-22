@@ -1,6 +1,7 @@
 package com.example.newevent2.Model
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -49,6 +50,10 @@ class PaymentModel {
                         countpayment += 1
                     }
                 }
+                Log.d(
+                    TAG,
+                    "Current payment stats consists of Number($countpayment), Total($sumpayment)"
+                )
                 dataFetched.onPaymentStats(countpayment, sumpayment)
             }
 
@@ -80,6 +85,7 @@ class PaymentModel {
                     paymentitem!!.key = snapshot.key.toString()
                     paymentlist.add(paymentitem!!)
                 }
+                Log.d(TAG, "Number of payments retrieved ${paymentlist.count()}")
                 dataFetched.onPaymentList(paymentlist)
             }
 
@@ -105,6 +111,7 @@ class PaymentModel {
             override fun onDataChange(p0: DataSnapshot) {
                 val paymentitem = p0.getValue(Payment::class.java)!!
                 paymentitem!!.key = p0.key.toString()
+                Log.d(TAG, "Detail retrieved for payment ${paymentitem.key}")
                 dataFetched.onPayment(paymentitem)
             }
 
@@ -144,12 +151,17 @@ class PaymentModel {
         postRef.setValue(paymentadd as Map<String, Any>)
             .addOnFailureListener {
                 paymentaddedflag.onPaymentAddedEdited(false)
+                Log.e(TAG, "Payment ${payment.name} failed to be added")
             }
             .addOnSuccessListener {
                 val usermodel = UserModel(userid)
                 usermodel.editUserPaymentflag(ACTIVEFLAG)
                 paymentaddedflag.onPaymentAddedEdited(true)
                 usermodel.editUserAddPayment(payments + 1)
+                Log.d(
+                    TAG,
+                    "Payment ${payment.name} successfully added on ${sdf.format(paymentdatetime)}"
+                )
             }
     }
 
@@ -173,18 +185,36 @@ class PaymentModel {
         postRef.setValue(paymentedit as Map<String, Any>)
             .addOnFailureListener {
                 paymenteditedflag.onPaymentAddedEdited(false)
+                Log.e(TAG, "Payment ${payment.name} failed to be edited")
             }
             .addOnSuccessListener {
                 paymenteditedflag.onPaymentAddedEdited(true)
+                Log.d(TAG, "Payment ${payment.name} successfully edited")
             }
     }
 
-    fun deletePayment(userid: String, eventid: String, payment: Payment) {
+    fun deletePayment(
+        userid: String,
+        eventid: String,
+        payment: Payment,
+        paymentactive: Int,
+        paymentdeletedflag: FirebaseDeletePaymentSuccess
+    ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Payment").child(payment.key)
                 .removeValue()
-        //todo ("Need to implement a callback that will check if the user has no longer payments associated. In such a case the associated flag in the User Profile will be set as "N"")
+                .addOnSuccessListener {
+                    val usermodel = UserModel(userid)
+                    usermodel.editUserAddPayment(paymentactive - 1)
+                    if ((paymentactive - 1) == 0) usermodel.editUserPaymentflag(INACTIVEFLAG)
+                    paymentdeletedflag.onPaymentDeleted(true)
+                    Log.d(TAG, "Payment ${payment.name} successfully deleted")
+                }
+                .addOnFailureListener {
+                    paymentdeletedflag.onPaymentDeleted(false)
+                    Log.e(TAG, "Payment ${payment.name} failed to be deleted")
+                }
 
     }
 
@@ -204,7 +234,13 @@ class PaymentModel {
         fun onPaymentAddedEdited(flag: Boolean)
     }
 
+    interface FirebaseDeletePaymentSuccess {
+        fun onPaymentDeleted(flag: Boolean)
+    }
+
     companion object {
         const val ACTIVEFLAG = "Y"
+        const val INACTIVEFLAG = "N"
+        const val TAG = "PaymentModel"
     }
 }

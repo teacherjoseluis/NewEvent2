@@ -15,7 +15,7 @@ import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskModel
 import com.google.android.material.snackbar.Snackbar
 
-class Rv_TaskJournalAdapter(val userid: String, val eventid: String, val taskList: MutableList<Task>) :
+class Rv_TaskJournalAdapter(val taskList: MutableList<Task>) :
     RecyclerView.Adapter<Rv_TaskJournalAdapter.ViewHolder>() {
 
     lateinit var context: Context

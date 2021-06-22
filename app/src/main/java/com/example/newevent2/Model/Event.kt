@@ -3,19 +3,18 @@ package com.example.newevent2.Model
 import android.os.Parcel
 import android.os.Parcelable
 
-open class Event() : Parcelable {
-
-    var key: String = ""
-    var imageurl: String = ""
-    var placeid: String = ""
-    var latitude: Double = 0.0
-    var longitude: Double = 0.0
-    var address: String = ""
-    var name: String = ""
-    var date: String = ""
-    var time: String = ""
-    var about: String = ""
-    var location: String = ""
+open class Event(
+    var key: String = "",
+    var imageurl: String = "",
+    var placeid: String = "",
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0,
+    var address: String = "",
+    var name: String = "",
+    var date: String = "",
+    var time: String = "",
+    var about: String = "",
+    var location: String = "") : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         key = parcel.readString().toString()

@@ -8,21 +8,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newevent2.MVP.PaymentPresenter
-import com.example.newevent2.MVP.TaskPresenter
 import com.example.newevent2.Model.Task
+import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
+import kotlinx.android.synthetic.main.taskpayment_tasks.view.scrollview
 import java.text.DecimalFormat
 
-class TaskPayment_Tasks : Fragment(), TaskPresenter.TaskList {
+class TaskPayment_Tasks : Fragment()/*, TaskPresenter.TaskList*/ {
 
     private var userid: String = ""
     private var eventid: String = ""
     private var category: String = ""
 
-    private lateinit var presentertask: TaskPresenter
+    //private lateinit var presentertask: TaskPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,90 +40,75 @@ class TaskPayment_Tasks : Fragment(), TaskPresenter.TaskList {
     ): View? {
         val inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
 
-        presentertask = TaskPresenter(context!!,this, inf)
-        presentertask.userid=userid
-        presentertask.eventid=eventid
+        //presentertask = TaskPresenter(context!!,this, inf)
+        //presentertask.userid=userid
+        //presentertask.eventid=eventid
         //presentertask.getTaskStats(category)
-        presentertask.getTasksList(category, ACTIVETASK) // Active
-        presentertask.getTasksList(category, COMPLETETASK) // Completed
+        //presentertask.getTasksList(category, ACTIVETASK) // Active
+        //presentertask.getTasksList(category, COMPLETETASK) // Completed
 
         return inf
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onTaskList(
-        inflatedView: View,
-//        category: String,
-        status: String,
-        list: java.util.ArrayList<com.example.newevent2.Model.Task>
-    ) {
-        if (status == ACTIVETASK) {
-            val recyclerViewActive = inflatedView.ActiveTasksRecyclerView
-            recyclerViewActive.apply {
-                layoutManager = LinearLayoutManager(inflatedView.context).apply {
-                    stackFromEnd = true
-                    reverseLayout = true
-                }
-            }
-            val rvAdapter = Rv_TaskAdapter(userid, eventid, list)
-            recyclerViewActive.adapter = rvAdapter
-
-            val swipeController = SwipeControllerTasks(
-                inflatedView.context,
-                rvAdapter,
-                recyclerViewActive,
-                LEFTACTIONACTIVE,
-                RIGHTACTIONACTIVE
-            )
-            val itemTouchHelper = ItemTouchHelper(swipeController)
-            itemTouchHelper.attachToRecyclerView(recyclerViewActive)
-        } else if (status == COMPLETETASK) {
-            val recyclerViewComplete = inflatedView.CompleteTasksRecyclerView
-            recyclerViewComplete.apply {
-                layoutManager = LinearLayoutManager(inflatedView.context).apply {
-                    stackFromEnd = true
-                    reverseLayout = true
-                }
-            }
-            val rvAdapter = Rv_TaskAdapter(userid, eventid, list)
-            Log.d("Link to Task Detail", "TaskPayment_Tasks")
-            recyclerViewComplete.adapter = rvAdapter
-
-            val swipeController =
-                SwipeControllerTasks(
-                    inflatedView.context,
-                    rvAdapter,
-                    recyclerViewComplete,
-                    LEFTACTIONCOMPLETED,
-                    RIGHTACTIONCOMPLETED
-                )
-            val itemTouchHelper = ItemTouchHelper(swipeController)
-            itemTouchHelper.attachToRecyclerView(recyclerViewComplete)
-        }
-    }
-
-    override fun onTaskListError(
-        inflatedView: View,
-        errcode: String
-    ) {
-        TODO("Not yet implemented")
-        // What to show when the consulted category has no tasks?
-    }
-
-//    override fun onTasksStats(
+//    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+//    override fun onTaskList(
 //        inflatedView: View,
-//        taskpending: Int,
-//        taskcompleted: Int,
-//        sumbudget: Float
+////        category: String,
+//        status: String,
+//        list: java.util.ArrayList<com.example.newevent2.Model.Task>
 //    ) {
-//        inflatedView.activetasks.text = taskpending.toString()
-//        inflatedView.completedtasks.text = taskcompleted.toString()
-//        val formatter = DecimalFormat("$#,###.00")
-//        inflatedView.budgettasks.text = formatter.format(sumbudget)
+//        if (status == ACTIVETASK) {
+//            val recyclerViewActive = inflatedView.ActiveTasksRecyclerView
+//            recyclerViewActive.apply {
+//                layoutManager = LinearLayoutManager(inflatedView.context).apply {
+//                    stackFromEnd = true
+//                    reverseLayout = true
+//                }
+//            }
+//            val rvAdapter = Rv_TaskAdapter(userid, eventid, list)
+//            recyclerViewActive.adapter = rvAdapter
+//
+//            val swipeController = SwipeControllerTasks(
+//                inflatedView.context,
+//                rvAdapter,
+//                recyclerViewActive,
+//                LEFTACTIONACTIVE,
+//                RIGHTACTIONACTIVE
+//            )
+//            val itemTouchHelper = ItemTouchHelper(swipeController)
+//            itemTouchHelper.attachToRecyclerView(recyclerViewActive)
+//        }
+////        else if (status == COMPLETETASK) {
+////            val recyclerViewComplete = inflatedView.CompleteTasksRecyclerView
+////            recyclerViewComplete.apply {
+////                layoutManager = LinearLayoutManager(inflatedView.context).apply {
+////                    stackFromEnd = true
+////                    reverseLayout = true
+////                }
+////            }
+////            val rvAdapter = Rv_TaskAdapter(userid, eventid, list)
+////            Log.d("Link to Task Detail", "TaskPayment_Tasks")
+////            recyclerViewComplete.adapter = rvAdapter
+////
+////            val swipeController =
+////                SwipeControllerTasks(
+////                    inflatedView.context,
+////                    rvAdapter,
+////                    recyclerViewComplete,
+////                    LEFTACTIONCOMPLETED,
+////                    RIGHTACTIONCOMPLETED
+////                )
+////            val itemTouchHelper = ItemTouchHelper(swipeController)
+////            itemTouchHelper.attachToRecyclerView(recyclerViewComplete)
+////        }
 //    }
 
-//    override fun onTaskStatsError(inflatedView: View, errcode: String) {
-//        TODO("Not yet implemented")
+//    override fun onTaskListError(
+//        inflatedView: View,
+//        errcode: String
+//    ) {
+//            inflatedView.withnodatataskpayment.visibility = ConstraintLayout.VISIBLE
+//            inflatedView.scrollview.visibility = ConstraintLayout.GONE
 //    }
 
     companion object {

@@ -81,9 +81,9 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage {
                 event_key = event.key
 
                 imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
-                imagePresenter.userid = userid
-                imagePresenter.eventid = eventid
-                imagePresenter.getEventImage()
+//                imagePresenter.userid = userid
+//                imagePresenter.eventid = eventid
+                //imagePresenter.getEventImage()
             }
         })
 
