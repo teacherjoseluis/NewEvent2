@@ -6,6 +6,8 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.example.newevent2.CoRAddEditTask
+import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.Functions.currentDateTime
 import com.example.newevent2.R
 import com.facebook.login.LoginManager
@@ -20,13 +22,17 @@ import java.lang.reflect.Executable
 class UserModel(
     //This user creates and edits Users into Firebase
     val key: String
-) {
+) : CoRAddEditTask, CoRDeleteTask {
+
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     private val postRef = myRef.child("User").child(this.key)
     private val storage = Firebase.storage
     private val storageRef = storage.reference
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    var tasksactive = 0
+    var nexthandler: CoRAddEditTask? = null
+    var nexthandlerdel: CoRDeleteTask? = null
 
     fun getUser(dataFetched: FirebaseSuccessUser) {
         val firebaseUser = User(key)
@@ -64,7 +70,6 @@ class UserModel(
 
     fun editUser(user: User) {
         //Commented entries correspond to values in the User entity that are not to be edited
-
         postRef.child("eventid").setValue(user.eventid)
         postRef.child("shortname").setValue(user.shortname)
         //postRef.child("email").setValue(user.email)
@@ -103,7 +108,6 @@ class UserModel(
     }
 
     fun editUserImage(uri: Uri, imageurl: String) {
-
         postRef.child("imageurl").setValue(imageurl)
 
         val imageRef = storageRef.child("images/User/$key/${uri.lastPathSegment}")
@@ -135,9 +139,11 @@ class UserModel(
             "haspayment" to "",
             "hasguest" to "",
             "hasvendor" to "",
+            "tasksactive" to 0,
+            "taskscompleted" to 0,
+            "payments" to 0,
             "status" to "A"
         )
-
         postRef.setValue(
             userfb as Map<String, Any>
         ) { error, _ ->
@@ -149,6 +155,17 @@ class UserModel(
                 savesuccessflag.onSaveSuccess(true)
             }
         }
+    }
+
+    override fun onAddEditTask(task: Task) {
+        editUserTaskflag(TaskModel.ACTIVEFLAG)
+        editUserAddTask(tasksactive + 1)
+        nexthandler?.onAddEditTask(task)
+    }
+
+    override fun onDeleteTask(task: Task) {
+        editUserAddTask(tasksactive - 1)
+        nexthandlerdel?.onDeleteTask(task)
     }
 
     interface FirebaseSuccessUser {

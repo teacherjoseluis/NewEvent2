@@ -30,7 +30,6 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 
         val re = Regex("[^A-Za-z0-9 ]")
         for (task in list) {
-
             val budgetamount = re.replace(task.budget, "").dropLast(2)
             sumbudget += budgetamount.toFloat()
             if (task.status == "A") {

@@ -9,13 +9,13 @@ import kotlinx.android.synthetic.main.onboarding_name.*
 
 class Onboarding_Name : AppCompatActivity() {
 
-    private var userSession = User()
+    //private var userSession = User()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.onboarding_name)
 
-        userSession = intent.getParcelableExtra("usersession")!!
+        //userSession = intent.getParcelableExtra("usersession")!!
 //        useremail = intent.getStringExtra("useremail").toString()
 //        userkey = intent.getStringExtra("userkey").toString()
 

@@ -48,7 +48,7 @@ class EventModel() {
                 //Se loggea un error al guardar el usuario TODO databaseError.getMessage()
                 savesuccessflag.onSaveSuccess("")
             } else {
-//                // Saving in the log the new creation of the event
+                // Saving in the log the new creation of the event
                 val eventid = postRef.key.toString()
                 //Save Event image in Storage
                 if (uri != null) {
@@ -63,7 +63,7 @@ class EventModel() {
         userid: String,
         event: Event,
         uri: Uri?,
-        savesuccessflag: FirebaseSaveImage
+        savesuccessflag: FirebaseSaveSuccess
     ) {
 
         val postRef =
@@ -78,13 +78,8 @@ class EventModel() {
         postRef.child("longitude").setValue(event.longitude)
         postRef.child("address").setValue(event.address)
 
-        if (uri != null) {
-            // There is an image to be saved in Storage
-            savesuccessflag.onImagetoSave(uri)
-        }
-
+        savesuccessflag.onSaveSuccess(event.key)
     }
-
 
     fun getEventdetail(
         userid: String,

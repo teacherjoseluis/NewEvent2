@@ -17,6 +17,7 @@ import TimePickerFragment
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import com.example.newevent2.Model.User
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -165,8 +166,8 @@ class Onboarding_Event : AppCompatActivity() {
                             Log.e("Save Session Exception", e.toString())
                         }
                         val userentity = UserEntity()
-                        userentity.key = userSession!!.key
-                        userentity.eventid = eventkey
+//                        userentity.key = userSession!!.key
+//                        userentity.eventid = eventkey
                         userentity.editUserEvent()
                     }
             }

@@ -1,16 +1,22 @@
 package com.example.newevent2.Model
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import com.baoyachi.stepview.bean.StepBean
+import com.example.newevent2.CoRAddEditTask
+import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.LoginView
 import com.example.newevent2.R
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.*
 
+@SuppressLint("ParcelCreator")
 class User(
     var key: String = "",
     var eventid: String = "",
@@ -31,11 +37,32 @@ class User(
     var tasksactive: Int = 0,
     var taskscompleted: Int = 0,
     var payments: Int = 0
-) {
+) : Parcelable {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     lateinit var viewLogin: LoginView
 
+    constructor(parcel: Parcel) : this(
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readInt()
+    )
     fun login(
         activity: Activity,
         authtype: String,
@@ -136,7 +163,6 @@ class User(
         sessionEditor.putString("authtype", authtype)
         sessionEditor.putString("eventid", eventid)
         sessionEditor.putString("shortname", shortname)
-        //----------------------------------------------//
         sessionEditor.putString("country", country)
         sessionEditor.putString("language", language)
         sessionEditor.putString("createdatetime", createdatetime)
@@ -150,7 +176,41 @@ class User(
         sessionEditor.putString("hasvendor", hasvendor)
         sessionEditor.putInt("tasksactive", tasksactive)
         sessionEditor.putInt("taskscompleted", taskscompleted)
+        sessionEditor.putInt("payments", payments)
         sessionEditor.apply()
+        Log.d(TAG, "Session for User $key has been updated")
+    }
+
+    fun saveUserSession(context: Context) {
+        // Clearing User Session
+        context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).edit().clear().apply()
+
+        //Creating User Session
+        val usersession =
+            context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+
+        val sessionEditor = usersession!!.edit()
+        sessionEditor.putString("key", key)
+        sessionEditor.putString("email", email)
+        sessionEditor.putString("authtype", authtype)
+        sessionEditor.putString("eventid", eventid)
+        sessionEditor.putString("shortname", shortname)
+        sessionEditor.putString("country", country)
+        sessionEditor.putString("language", language)
+        sessionEditor.putString("createdatetime", createdatetime)
+        sessionEditor.putString("status", status)
+        sessionEditor.putString("imageurl", imageurl)
+        sessionEditor.putString("role", role)
+        sessionEditor.putString("hasevent", hasevent)
+        sessionEditor.putString("hastask", hastask)
+        sessionEditor.putString("haspayment", haspayment)
+        sessionEditor.putString("hasguest", hasguest)
+        sessionEditor.putString("hasvendor", hasvendor)
+        sessionEditor.putInt("tasksactive", tasksactive)
+        sessionEditor.putInt("taskscompleted", taskscompleted)
+        sessionEditor.putInt("payments", payments)
+        sessionEditor.apply()
+        Log.d(TAG, "Session for User $key has been updated")
     }
 
     fun logout(
@@ -286,8 +346,41 @@ class User(
         fun onSignUpError()
     }
 
-    companion object{
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(key)
+        parcel.writeString(eventid)
+        parcel.writeString(shortname)
+        parcel.writeString(email)
+        parcel.writeString(country)
+        parcel.writeString(language)
+        parcel.writeString(createdatetime)
+        parcel.writeString(authtype)
+        parcel.writeString(status)
+        parcel.writeString(imageurl)
+        parcel.writeString(role)
+        parcel.writeString(hasevent)
+        parcel.writeString(hastask)
+        parcel.writeString(haspayment)
+        parcel.writeString(hasguest)
+        parcel.writeString(hasvendor)
+        parcel.writeInt(tasksactive)
+        parcel.writeInt(taskscompleted)
+        parcel.writeInt(payments)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<User> {
         const val TAG = "User"
+        override fun createFromParcel(parcel: Parcel): User {
+            return User(parcel)
+        }
+
+        override fun newArray(size: Int): Array<User?> {
+            return arrayOfNulls(size)
+        }
     }
 }
 

@@ -12,6 +12,7 @@ class TaskPayment_PagerAdapter(
     private val userid: String,
     private val eventid: String,
     private val category: String,
+    private val status: String,
     private var totalTabs: Int
 ) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
@@ -20,10 +21,11 @@ class TaskPayment_PagerAdapter(
         bundle.putString("userid", userid)
         bundle.putString("eventid", eventid)
         bundle.putString("category", category)
+        bundle.putString("status", status)
 
         return when (position) {
             0 -> {
-                val fragInfo = TaskPayment_Tasks()
+                val fragInfo = TaskPaymentTasks()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
@@ -33,7 +35,7 @@ class TaskPayment_PagerAdapter(
                 return fragInfo
             }
             else -> {
-                val fragInfo = TaskPayment_Tasks()
+                val fragInfo = TaskPaymentTasks()
                 fragInfo.arguments = bundle
                 return fragInfo
             }

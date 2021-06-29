@@ -20,7 +20,7 @@ class TextValidate(val textView: TextView) {
     }
 
     private fun specialChars(text: String): Boolean {
-        val special = Pattern.compile("[^a-z0-9]")
+        val special = Pattern.compile("[^a-z0-9] ")
         val hasnotSpecial = special.matcher(text)
         return !hasnotSpecial.find()
     }

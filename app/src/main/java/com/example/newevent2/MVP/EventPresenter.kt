@@ -6,6 +6,7 @@ import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
 import com.example.newevent2.EventSummary
+import com.example.newevent2.MainActivity
 import com.example.newevent2.MainEventView_clone
 
 import com.example.newevent2.Model.Event
@@ -18,6 +19,7 @@ class EventPresenter : Cache.EventItemCacheData {
     private var mContext: Context
 
     private lateinit var fragmentES: EventSummaryPresenter
+    private lateinit var fragmentMA: MainActivity
 
     private lateinit var cacheevent: Cache<Event>
 
@@ -25,6 +27,12 @@ class EventPresenter : Cache.EventItemCacheData {
         fragmentES = fragment
         mContext = context
         activefragment = "ES"
+    }
+
+    constructor(context: Context, fragment: MainActivity) {
+        fragmentMA = fragment
+        mContext = context
+        activefragment = "MA"
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -37,6 +45,7 @@ class EventPresenter : Cache.EventItemCacheData {
     override fun onEvent(item: Event) {
         when (activefragment) {
             "ES" -> fragmentES.onEvent(item)
+            "MA" -> fragmentMA.onEvent(item)
         }
     }
 
@@ -53,6 +62,7 @@ class EventPresenter : Cache.EventItemCacheData {
                     cacheevent.save(event)
                     when (activefragment) {
                         "ES" -> fragmentES.onEvent(event)
+                        "MA" -> fragmentMA.onEvent(event)
                     }
                 }
             }
@@ -60,6 +70,7 @@ class EventPresenter : Cache.EventItemCacheData {
 
         when (activefragment) {
             "ES" -> fragmentES.onEventError(ERRCODEEVENTS)
+            "MA" -> fragmentMA.onEventError(ERRCODEEVENTS)
         }
     }
 

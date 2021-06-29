@@ -25,31 +25,31 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.example.newevent2.Functions.*
 import com.example.newevent2.Functions.validateOldDate
+import com.example.newevent2.MVP.EventPresenter
+import com.example.newevent2.MVP.EventSummaryPresenter
 import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.EventDBHelper
 import com.example.newevent2.Model.EventModel
+import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.eventform_layout.*
+import kotlinx.android.synthetic.main.task_editdetail.*
 import java.util.*
 
-class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage {
+class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPresenter.EventItem {
 
     private val autocompletePlaceCode = 1
 
     private var event_key = ""
-
-    //private var event_imageurl = ""
     private var event_placeid = ""
     private var event_latitude = 0.0
     private var event_longitude = 0.0
     private var event_address = ""
     private var uri: Uri? = null
-    //private lateinit var storage: FirebaseStorage
 
-    private var userid = ""
-    private var eventid = ""
-
+    private lateinit var presenterevent: EventPresenter
     private lateinit var imagePresenter: ImagePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,34 +61,20 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        userid = intent.getStringExtra("userid").toString()
-        eventid = intent.getStringExtra("eventid").toString()
-
-        val eventmodel = EventModel()
-        eventmodel.getEventdetail(userid, eventid, object :
-            EventModel.FirebaseSuccessListenerEventDetail {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onEvent(event: Event) {
-                eventname.setText(event.name)
-                eventdate.setText(event.date)
-                eventtime.setText(event.time)
-                eventlocation.setText(event.location)
-                event_placeid = event.placeid
-                event_latitude = event.latitude
-                event_longitude = event.longitude
-                event_address = event.address
-                //event_imageurl = event.imageurl
-                event_key = event.key
-
-                imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
-//                imagePresenter.userid = userid
-//                imagePresenter.eventid = eventid
-                //imagePresenter.getEventImage()
-            }
-        })
+        presenterevent = EventPresenter(applicationContext, this)
+        presenterevent.getEventDetail()
 
         eventname.setOnClickListener {
             eventname.error = null
+        }
+
+        eventname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+            if (!p1) {
+                val validationmessage = TextValidate(taskname).namefieldValidate()
+                if (validationmessage != "") {
+                    eventname.error = "Error in Event name: $validationmessage"
+                }
+            }
         }
 
         eventdate.setOnClickListener {
@@ -116,6 +102,12 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage {
             if (eventname.text.toString().isEmpty()) {
                 eventname.error = "Event name is required!"
                 inputvalflag = false
+            } else {
+                val validationmessage = TextValidate(eventname).namefieldValidate()
+                if (validationmessage != "") {
+                    eventname.error = "Error in Event name: $validationmessage"
+                    inputvalflag = false
+                }
             }
             if (eventdate.text.toString().isEmpty()) {
                 eventdate.error = "Event date is required!"
@@ -136,14 +128,6 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage {
     }
 
     private fun showDatePickerDialog() {
-//        val newFragment =
-//            DatePickerFragment.newInstance(DatePickerDialog.OnDateSetListener { _, year, month, day ->
-//                // +1 because January is zero
-//                val selectedDate = day.toString() + "/" + (month + 1) + "/" + year
-//                etPlannedDate.setText(selectedDate)
-//            })
-//
-//        newFragment.show(supportFragmentManager, "datePicker")
         val newFragment =
             DatePickerFragment.newInstance((object : DatePickerDialog.OnDateSetListener {
                 @RequiresApi(Build.VERSION_CODES.O)
@@ -218,6 +202,7 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage {
     }
 
     private fun saveEvent() {
+        val user = com.example.newevent2.Functions.getUserSession(applicationContext)
         val event = Event().apply {
             key = event_key
             placeid = event_placeid
@@ -230,16 +215,21 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage {
             location = eventlocation.text.toString()
         }
         val eventmodel = EventModel()
-        eventmodel.editEvent(userid, event, uri, object : EventModel.FirebaseSaveImage {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onImagetoSave(uri: Uri) {
-                replaceImage(applicationContext, "eventimage", userid, eventid, uri)
+        eventmodel.editEvent(user.key, event, uri, object : EventModel.FirebaseSaveSuccess {
+            override fun onSaveSuccess(eventid: String) {
+                //Updating local storage
+                val eventdb = EventDBHelper(applicationContext)
+                eventdb.update(event)
+
+                if(uri != null) {
+                    //There was a change in the event image
+                    replaceImage(applicationContext, "eventimage", user.key, user.eventid, uri!!)
+                }
             }
         })
         val resultIntent = Intent()
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
-        //onBackPressed()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -312,6 +302,25 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage {
                 }
             }).placeholder(R.drawable.avatar2)
             .into(eventimage)
+    }
+
+    override fun onEvent(event: Event) {
+        eventname.setText(event.name)
+        eventdate.setText(event.date)
+        eventtime.setText(event.time)
+        eventlocation.setText(event.location)
+        event_placeid = event.placeid
+        event_latitude = event.latitude
+        event_longitude = event.longitude
+        event_address = event.address
+        event_key = event.key
+
+        imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
+        imagePresenter.getEventImage()
+    }
+
+    override fun onEventError(errcode: String) {
+        //This should not be reached as there will always be an Event to be edited
     }
 }
 

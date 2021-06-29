@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.PaymentPresenter
 import com.example.newevent2.Model.Task
+import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.ui.ViewAnimation
 import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.mainevent_summary.*
@@ -24,16 +25,16 @@ import kotlin.collections.ArrayList
 
 class EventCategories : Fragment() {
 
-    var userid = ""
-    var eventid = ""
+//    var userid = ""
+//    var eventid = ""
 
     lateinit var recyclerViewCategory: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        userid = this.arguments!!.get("userid").toString()
-        eventid = this.arguments!!.get("eventid").toString()
+//        userid = this.arguments!!.get("userid").toString()
+//        eventid = this.arguments!!.get("eventid").toString()
 
         ViewAnimation.init(activity!!.TaskLayout)
         ViewAnimation.init(activity!!.PaymentLayout)
@@ -45,10 +46,11 @@ class EventCategories : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.mainevent_summary, container, false)
-
         //----------------------------------------------------------------------------------------------------
-
-        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        //val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        val taskdb = TaskDBHelper(context!!)
+        val list = taskdb.getActiveCategories()
+        //list1.addAll(list2) - Need to consider adding categories from Payments in cases were no tasks where created but Payments were
 
         recyclerViewCategory = inf.categoryrv
         recyclerViewCategory.apply {
@@ -56,7 +58,6 @@ class EventCategories : Fragment() {
                 reverseLayout = true
             }
         }
-
         val rvAdapter = rvCategoryAdapter(list)
         recyclerViewCategory.adapter = rvAdapter
         return inf

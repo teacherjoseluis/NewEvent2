@@ -20,58 +20,70 @@
     android:paddingTop="10dp"
     android:paddingRight="16dp">
 
+    <ImageView
+        android:id="@+id/categoryavatar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <TextView
         android:id="@+id/taskname"
         style="@style/BodyBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:text="Task"
         android:textColor="@color/rosaChillon"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/categoryavatar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/taskdate"
-        style="@style/BodyItalic"
+        style="@style/BodyItalic2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toEndOf="@+id/textView9"
-        app:layout_constraintTop_toBottomOf="@+id/taskname" />
+        android:text="date"
+        android:textColor="@color/azulmasClaro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/taskbudgets"
-        style="@style/BodyItalic"
+        style="@style/BodyItalic2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
+        android:text="amount"
+        android:textColor="@color/azulmasClaro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taskname" />
 
     <TextView
         android:id="@+id/textView9"
-        style="@style/BodyItalic2"
+        style="@style/BodySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
         android:paddingBottom="5dp"
         android:text="Deadline"
         android:textColor="@color/azulmasClaro"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskname" />
+        app:layout_constraintEnd_toStartOf="@+id/taskdate"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView15"
-        style="@style/BodyItalic2"
+        style="@style/BodySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
         android:paddingBottom="5dp"
         android:text="Budget"
         android:textColor="@color/azulmasClaro"
@@ -79,6 +91,7 @@
         app:layout_constraintTop_toBottomOf="@+id/taskname" />
 
     <View
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@android:color/darker_gray"

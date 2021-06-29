@@ -70,7 +70,7 @@ class EventDBHelper(val context: Context) {
         values.put("about", event.about)
         values.put("location", event.location)
 
-        val retVal = db.update("EVENT", values, "eventid = " + event.key, null)
+        val retVal = db.update("EVENT", values, "eventid = '${event.key}'", null)
         if (retVal >= 1) {
             Log.d(TAG, "Event ${event.key} updated")
         } else {
@@ -80,7 +80,7 @@ class EventDBHelper(val context: Context) {
     }
 
     fun delete(event: Event) {
-        val retVal = db.delete("EVENT", "eventid = " + event.key, null)
+        val retVal = db.delete("EVENT", "eventid = '${event.key}'", null)
         if (retVal >= 1) {
             Log.d(TAG, "Event ${event.key} deleted")
         } else {

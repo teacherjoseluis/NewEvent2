@@ -8,8 +8,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="2dp"
         android:layout_margin="5dp"
+        android:padding="4dp"
         app:cardElevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +43,108 @@
                 android:textColor="#000000"
                 app:layout_constraintStart_toStartOf="@+id/categoryimage"
                 app:layout_constraintTop_toBottomOf="@+id/categoryimage" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/categorytitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/pending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/taskpendingimage"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/rosaChillon"
+                            app:srcCompat="@drawable/task_pending_outline" />
+
+                        <TextView
+                            android:id="@+id/taskpendinglabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="4dp"
+                            style="@style/BodyXSmall"
+                            android:text="0"
+                            app:layout_constraintStart_toEndOf="@+id/taskpendingimage"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/completed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        app:layout_constraintStart_toEndOf="@+id/pending"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/taskdoneimage"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/rosaChillon"
+                            app:srcCompat="@drawable/task_done_outline" />
+
+                        <TextView
+                            android:id="@+id/taskdonelabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/BodyXSmall"
+                            android:paddingLeft="4dp"
+                            android:text="0"
+                            app:layout_constraintStart_toEndOf="@+id/taskdoneimage"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/budget"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        app:layout_constraintStart_toEndOf="@+id/completed"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/taskbudgetimage"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/rosaChillon"
+                            app:srcCompat="@drawable/icons8_invoice_paid_32" />
+
+                        <TextView
+                            android:id="@+id/taskbudgetlabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="4dp"
+                            style="@style/BodyXSmall"
+                            android:text="0"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/taskbudgetimage"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

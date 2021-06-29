@@ -11,7 +11,16 @@
         <item
             android:id="@+id/task_fragment"
             android:icon="@drawable/organizer"
-            android:title="Tasks"/>
+            android:title="Tasks">
+        <menu>
+            <item
+                android:id="@+id/activetasks"
+                android:title="Active Tasks"/>
+            <item
+                android:id="@+id/completedtasks"
+                android:title="Completed Tasks"/>
+        </menu>
+        </item>
         <item
             android:id="@+id/contact_fragment"
             android:icon="@drawable/guests2"

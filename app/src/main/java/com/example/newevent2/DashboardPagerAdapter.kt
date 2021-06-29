@@ -26,19 +26,19 @@ class DashboardPagerAdapter(
                 fragInfo.arguments = bundle
                 return fragInfo
             }
+//            1 -> {
+//                val fragInfo = DashboardActivity()
+//                fragInfo.arguments = bundle
+//                return fragInfo
+//            }
             1 -> {
-                val fragInfo = DashboardActivity()
-                fragInfo.arguments = bundle
-                return fragInfo
-            }
-            2 -> {
                 val fragInfo = DashboardBlog()
                 bundle.putString("language", language)
                 fragInfo.arguments = bundle
                 return fragInfo
             }
             else -> {
-                val fragInfo = DashboardActivity()
+                val fragInfo = DashboardEvent()
                 fragInfo.arguments = bundle
                 return fragInfo
             }

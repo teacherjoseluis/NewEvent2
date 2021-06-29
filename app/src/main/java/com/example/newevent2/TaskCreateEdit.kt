@@ -1,23 +1,24 @@
 package com.example.newevent2
 
-import Application.Cache
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.example.newevent2.Functions.Utility
+import com.example.newevent2.Functions.addTask
+import com.example.newevent2.Functions.editTask
 import com.example.newevent2.Functions.validateOldDate
 import com.example.newevent2.Model.Task
+import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.Model.TaskModel
+import com.example.newevent2.Model.User
+import com.example.newevent2.Model.UserModel
 import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
@@ -29,11 +30,12 @@ import java.util.*
 
 class TaskCreateEdit() : AppCompatActivity() {
 
-    private var userid = ""
-    private var eventid = ""
-
-    //private var taskid = ""
     private lateinit var taskitem: Task
+
+    var taskmodel = TaskModel()
+    lateinit var taskdbhelper: TaskDBHelper
+    lateinit var usermodel: UserModel
+    private lateinit var useritem: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +53,12 @@ class TaskCreateEdit() : AppCompatActivity() {
             Task()
         }
 
-        userid = intent.getStringExtra("userid").toString()
-        eventid = intent.getStringExtra("eventid").toString()
         val taskid = taskitem.key
 
         if (taskid != "") {
             val taskmodel = TaskModel()
-            taskmodel.getTaskdetail(userid, eventid, taskid, object :
+            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
+            taskmodel.getTaskdetail(user.key, user.eventid, taskid, object :
                 TaskModel.FirebaseSuccessTask {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onTask(task: Task) {
@@ -85,17 +86,16 @@ class TaskCreateEdit() : AppCompatActivity() {
             }
         }
 
+        taskbudget.setOnClickListener {
+            taskbudget.error = null
+        }
+
         taskdate.setOnClickListener {
             taskdate.error = null
             showDatePickerDialog()
         }
 
-//        taskbudget.setOnClickListener {
-//            taskbudget.error = null
-//        }
-
         val chipgroupedit = findViewById<ChipGroup>(R.id.groupedittask)
-        //chipgroupedit.isSingleSelection = true
 
         // Create chips and select the one matching the category
         val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
@@ -113,8 +113,8 @@ class TaskCreateEdit() : AppCompatActivity() {
 
         savebuttontask.setOnClickListener {
             var inputvalflag = true
-            //Utility.hideSoftKeyboard(this)
 
+            taskname.clearFocus()
             if (taskname.text.toString().isEmpty()) {
                 taskname.error = "Error in Task name: Task name is required!"
                 inputvalflag = false
@@ -126,10 +126,12 @@ class TaskCreateEdit() : AppCompatActivity() {
                 }
             }
 
+            taskdate.clearFocus()
             if (taskdate.text.toString().isEmpty()) {
                 taskdate.error = "Task date is required!"
                 inputvalflag = false
             }
+            taskbudget.clearFocus()
             if (taskbudget.text.toString().isEmpty()) {
                 taskbudget.error = "Task budget is required!"
                 inputvalflag = false
@@ -179,43 +181,10 @@ class TaskCreateEdit() : AppCompatActivity() {
         taskitem.budget = taskbudget.text.toString()
         taskitem.category = getCategory()
 
-        val taskmodel = TaskModel()
-        if (taskitem.key != "") {
-            taskmodel.editTask(
-                userid,
-                eventid,
-                taskitem,
-                object : TaskModel.FirebaseAddEditTaskSuccess {
-                    override fun onTaskAddedEdited(flag: Boolean) {
-                        if (flag) {
-                            //Deleting all instances of Task from cache
-                            Log.i(TAG, "Task ${taskitem.key} successfully edited")
-                            Cache.deletefromStorage(TASKENTITY, applicationContext)
-                        }
-                    }
-                })
-        } else {
-            val usersession =
-                application.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
-            val tasksactive = usersession.getInt("tasksactive", 0)
-            val sessionEditor = usersession!!.edit()
-
-            taskmodel.addTask(
-                userid,
-                eventid,
-                taskitem,
-                tasksactive,
-                object : TaskModel.FirebaseAddEditTaskSuccess {
-                    override fun onTaskAddedEdited(flag: Boolean) {
-                        if (flag) {
-                            //Deleting all instances of Task from cache
-                            Log.i(TAG, "Task successfully added")
-                            sessionEditor.putInt("tasksactive", tasksactive + 1)
-                            sessionEditor.apply()
-                            Cache.deletefromStorage(TASKENTITY, applicationContext)
-                        }
-                    }
-                })
+        if (taskitem.key == "") {
+            addTask(applicationContext, taskitem)
+        } else if (taskitem.key != "") {
+            editTask(applicationContext, taskitem)
         }
         val resultIntent = Intent()
         setResult(Activity.RESULT_OK, resultIntent)

@@ -179,6 +179,7 @@ class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
 
     override fun onGuestConfirmationError(inflatedView: View, errcode: String) {
         inflatedView.guestlayout.visibility = ConstraintLayout.INVISIBLE
+        inflatedView.noguestlayout.visibility = ConstraintLayout.VISIBLE
     }
 
     override fun onEventImage(mContext: Context, inflatedView: View?, packet: Any) {

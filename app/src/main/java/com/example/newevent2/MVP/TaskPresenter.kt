@@ -15,6 +15,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
 
     private lateinit var fragmentDE: DashboardEventPresenter
     private lateinit var fragmentDA: DashboardActivityPresenter
+    private lateinit var fragmentTPT: TaskPaymentTasksPresenter
 
     private lateinit var cachetask: Cache<Task>
 
@@ -28,6 +29,12 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
         fragmentDA = fragment
         mContext = context
         activefragment = "DA"
+    }
+
+    constructor(context: Context, fragment: TaskPaymentTasksPresenter) {
+        fragmentTPT = fragment
+        mContext = context
+        activefragment = "TPT"
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -44,11 +51,13 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
             when (activefragment) {
                 "DE" -> fragmentDE.onTaskListError(ERRCODETASKS)
                 "DA" -> fragmentDA.onTaskListError(ERRCODETASKS)
+                "TPT" -> fragmentTPT.onTaskListError(ERRCODETASKS)
             }
         } else {
             when (activefragment) {
                 "DE" -> fragmentDE.onTaskList(arrayList)
                 "DA" -> fragmentDA.onTaskList(arrayList)
+                "TPT" -> fragmentTPT.onTaskList(arrayList)
             }
         }
     }
@@ -70,12 +79,14 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
                         when (activefragment) {
                             "DE" -> fragmentDE.onTaskList(arrayList)
                             "DA" -> fragmentDA.onTaskList(arrayList)
+                            "TPT" -> fragmentTPT.onTaskList(arrayList)
                         }
                     } else {
                         // This is when there is no data coming from Firebase
                         when (activefragment) {
                             "DE" -> fragmentDE.onTaskListError(ERRCODETASKS)
                             "DA" -> fragmentDA.onTaskListError(ERRCODETASKS)
+                            "TPT" -> fragmentTPT.onTaskListError(ERRCODETASKS)
                         }
                     }
                 }

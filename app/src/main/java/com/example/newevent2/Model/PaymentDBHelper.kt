@@ -60,7 +60,7 @@ class PaymentDBHelper(context: Context) {
         values.put("eventid", payment.eventid)
         values.put("createdatetime", payment.createdatetime)
 
-        val retVal = db.update("PAYMENT", values, "paymentid = " + payment.key, null)
+        val retVal = db.update("PAYMENT", values, "paymentid = ${payment.key}'",  null)
         if (retVal >= 1) {
             Log.d(TAG, "Payment ${payment.key} updated")
         } else {
@@ -70,7 +70,7 @@ class PaymentDBHelper(context: Context) {
     }
 
     fun delete(payment: Payment) {
-        val retVal = db.delete("PAYMENT", "paymentid = " + payment.key, null)
+        val retVal = db.delete("PAYMENT", "paymentid = ${payment.key}'", null)
         if (retVal >= 1) {
             Log.d(TAG, "Payment ${payment.key} deleted")
         } else {

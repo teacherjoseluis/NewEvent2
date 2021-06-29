@@ -177,7 +177,7 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
 
         val duenextcard = inflatedView.findViewById<View>(R.id.duenextcard)
         if (task.key == "") {
-            cardlayout.visibility = View.GONE
+            duenextcard.visibility = View.GONE
         } else {
             val cardtitle = duenextcard.findViewById<TextView>(R.id.cardtitle)
             val cardsecondarytext = duenextcard.findViewById<TextView>(R.id.secondarytext)

@@ -20,6 +20,23 @@ enum class Category(
     Food("food", "Food & Drink", "food"),
     Guests("guests", "Guests", "guests");
 
+    companion object {
+        fun getCategory(code: String): Category {
+             return when (code) {
+                "venue" -> Venue
+                "photo" -> Photo
+                "entertainment" -> Entertainment
+                "flowers" -> Flowers
+                "transport" -> Transportation
+                "ceremony" -> Ceremony
+                "accessories" -> Accesories
+                "beauty" -> Beauty
+                "food" -> Food
+                "guests" -> Guests
+                else -> Venue
+            }
+        }
+    }
 
 //    companion object {
 //        fun getTaskCount(context: Context, category: Category, status: String): Int {
@@ -59,5 +76,5 @@ enum class Category(
 //            editor.putInt("payments_${category.code}", count)
 //        }
 //    }
-}
+    }
 

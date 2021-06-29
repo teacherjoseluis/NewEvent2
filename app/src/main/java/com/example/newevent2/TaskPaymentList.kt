@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.Model.User
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
@@ -47,6 +48,7 @@ class TaskPaymentList : AppCompatActivity() {
                 usersession.key,
                 usersession.eventid,
                 passedcategory,
+                TaskModel.ACTIVESTATUS,
                 tablayout.tabCount
             )
             viewPager.adapter = adapter

@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.settings.*
 class Settings : AppCompatActivity() {
 
     private var uri: Uri? = null
-    private var userSession = User()
+    //private var userSession = User()
     lateinit var storage: FirebaseStorage
     var userEntity = UserEntity()
 
@@ -35,7 +35,7 @@ class Settings : AppCompatActivity() {
 
         val usersessionlist = getUserSession(this)
         //val userEntity = UserEntity()
-        userEntity.key = usersessionlist[0]
+        //userEntity.key = usersessionlist[0]
 
         userEntity.getUser(object : FirebaseSuccessListenerUser {
             override fun onUserexists(user: com.example.newevent2.Model.User) {
@@ -44,10 +44,10 @@ class Settings : AppCompatActivity() {
                 // Load thumbnail
                 var storageRef: Any
                 if (user.imageurl != "") {
-                    userEntity.imageurl = user.imageurl
+                //    userEntity.imageurl = user.imageurl
                     storage = FirebaseStorage.getInstance()
-                    storageRef =
-                        storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/User/${userEntity.key}/${userEntity.imageurl}")
+  //                  storageRef =
+ //                       storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/User/${userEntity.key}/${userEntity.imageurl}")
                 } else {
                     storageRef =
                         Uri.parse(
@@ -59,9 +59,9 @@ class Settings : AppCompatActivity() {
                         ).toString()
                 }
                 Glide.with(applicationContext)
-                    .load(storageRef)
-                    .centerCrop()
-                    .into(imageView16)
+   //                 .load(storageRef)
+   //                 .centerCrop()
+    //                .into(imageView16)
 
                 textinput.setText(user.shortname)
                 val position = when(user.role) {
@@ -72,7 +72,6 @@ class Settings : AppCompatActivity() {
                 spinner.setSelection(position)
             }
         })
-
 
         saveImageActionButton.setOnClickListener()
         {
@@ -103,11 +102,11 @@ class Settings : AppCompatActivity() {
 
     private fun savesettings() {
         val edituser = UserEntity().apply {
-            shortname = textinput.text.toString()
-            role = spinner.selectedItem.toString()
+         //   shortname = textinput.text.toString()
+        //    role = spinner.selectedItem.toString()
             //country = etPlannedDate.text.toString()
             //language = etPlannedTime.text.toString()
-            imageurl = userEntity.imageurl
+        //    imageurl = userEntity.imageurl
                 //userEntity.imageurl
         }
         edituser.editUser(this, uri).also {

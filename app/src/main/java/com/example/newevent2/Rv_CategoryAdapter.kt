@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newevent2.Model.TaskDBHelper
 
 class rvCategoryAdapter(private val categorylist: List<Category>) :
     RecyclerView.Adapter<rvCategoryAdapter.ViewHolder>() {
@@ -35,6 +36,12 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
             context.packageName)
         p0.categoryimage?.setImageResource(resourceId)
 
+        val taskdb = TaskDBHelper(context)
+        val taskstats=taskdb.getCategoryStats(categorylist[p1].code)
+        p0.taskpendinglabel?.text=taskstats.taskpending.toString()
+        p0.taskdonelabel?.text=taskstats.taskcompleted.toString()
+        p0.taskbudgetlabel?.text=taskstats.sumbudget.toString()
+
         p0.itemView.setOnClickListener {
             val catdetail = Intent(context, TaskPaymentList::class.java)
             catdetail.putExtra("category", categorylist[p1].code)
@@ -45,6 +52,9 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val categorytitle: TextView? = itemView.findViewById<TextView>(R.id.categorytitle)
         val categoryimage: ImageView? = itemView.findViewById<ImageView>(R.id.categoryimage)
+        val taskpendinglabel: TextView? =itemView.findViewById<TextView>(R.id.taskpendinglabel)
+        val taskdonelabel: TextView? =itemView.findViewById<TextView>(R.id.taskdonelabel)
+        val taskbudgetlabel: TextView? =itemView.findViewById<TextView>(R.id.taskbudgetlabel)
     }
 }
 

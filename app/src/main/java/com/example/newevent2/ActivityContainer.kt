@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.Model.User
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,8 +24,8 @@ class ActivityContainer : AppCompatActivity() {
 
     private var usersession = User()
 
-     private lateinit var drawerLayout: DrawerLayout
-     private lateinit var loadingscreen: ConstraintLayout
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var loadingscreen: ConstraintLayout
 
     private val fm = supportFragmentManager
     private var clickNavItem = 0
@@ -87,6 +88,14 @@ class ActivityContainer : AppCompatActivity() {
                 }
                 R.id.task_fragment -> {
                 }
+                R.id.activetasks -> {
+                    clickNavItem = R.id.activetasks
+                    newfragment = TaskPaymentTasks()
+                }
+                R.id.completedtasks -> {
+                    clickNavItem = R.id.completedtasks
+                    newfragment = TaskPaymentTasks()
+                }
                 R.id.contact_fragment -> {
                 }
                 R.id.notes_fragment -> {
@@ -106,7 +115,7 @@ class ActivityContainer : AppCompatActivity() {
                     val newfragment = DashboardView_clone(usersession)
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
-                       // .addToBackStack(null)
+                        // .addToBackStack(null)
                         .commit()
                 }
                 R.id.events -> {
@@ -118,6 +127,12 @@ class ActivityContainer : AppCompatActivity() {
                         .commit()
                 }
                 R.id.tasks -> {
+                    val newfragment = DashboardActivity()
+                    fm.beginTransaction()
+                        .replace(R.id.fragment_container, newfragment)
+
+                        //.addToBackStack(null)
+                        .commit()
                 }
                 R.id.contacts -> {
                 }
@@ -143,6 +158,22 @@ class ActivityContainer : AppCompatActivity() {
                             .commit()
                     }
                     R.id.event_fragment -> {
+                        fm.beginTransaction()
+                            .replace(R.id.fragment_container, newfragment)
+                            .commit()
+                    }
+                    R.id.activetasks -> {
+                        val bundle = Bundle()
+                        bundle.putString("status", TaskModel.ACTIVESTATUS)
+                        newfragment.arguments = bundle
+                        fm.beginTransaction()
+                            .replace(R.id.fragment_container, newfragment)
+                            .commit()
+                    }
+                    R.id.completedtasks -> {
+                        val bundle = Bundle()
+                        bundle.putString("status", TaskModel.COMPLETESTATUS)
+                        newfragment.arguments = bundle
                         fm.beginTransaction()
                             .replace(R.id.fragment_container, newfragment)
                             .commit()
