@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.content.Intent
 import android.icu.text.DateFormat.DAY
 import android.os.Build
 import android.os.Bundle
@@ -47,9 +48,15 @@ class DashboardActivity() : Fragment(), DashboardActivityPresenter.TaskJournalIn
             layoutManager = LinearLayoutManager(inf.context).apply {
                 stackFromEnd = true
                 reverseLayout = true
+                isNestedScrollingEnabled = false
             }
         }
-
+        inf.NewTaskActionButton.setOnClickListener(){
+            val newtask = Intent(activity, TaskCreateEdit::class.java)
+            newtask.putExtra("userid", "")
+//            newtask.putExtra("eventid", userSession.eventid)
+            startActivity(newtask)
+        }
         presentertask = DashboardActivityPresenter(context!!, this, inf)
         return inf
     }

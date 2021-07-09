@@ -2,26 +2,33 @@ package com.example.newevent2.Model
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.provider.ContactsContract
 
 open class Guest(
-    var eventid: String = "",
-    var contactid: String = "",
+    var key: String = "",
+    var name: String = "",
+    var phone: String = "",
+    var email: String = "",
     var rsvp: String = "",
     var companion: String = "",
     var table: String = ""
-) : Contact(), Parcelable {
+) : Parcelable {
 
     constructor(parcel: Parcel) : this() {
-        parcel.readString().toString()
-        parcel.readString().toString()
-        parcel.readString().toString()
-        parcel.readString().toString()
-        parcel.readString().toString()
+        key = parcel.readString().toString()
+        name = parcel.readString().toString()
+        phone = parcel.readString().toString()
+        email = parcel.readString().toString()
+        rsvp = parcel.readString().toString()
+        companion = parcel.readString().toString()
+        table = parcel.readString().toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(eventid)
-        parcel.writeString(contactid)
+        parcel.writeString(key)
+        parcel.writeString(name)
+        parcel.writeString(phone)
+        parcel.writeString(email)
         parcel.writeString(rsvp)
         parcel.writeString(companion)
         parcel.writeString(table)

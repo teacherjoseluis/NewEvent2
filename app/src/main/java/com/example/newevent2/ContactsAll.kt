@@ -1,72 +1,45 @@
 package com.example.newevent2
 
 import android.Manifest
-import android.app.Activity
-import android.content.ContentResolver
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.view.*
+import android.widget.SearchView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.checkSelfPermission
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.contacts.*
+import com.example.newevent2.Functions.addGuest
+import com.example.newevent2.Functions.clone
+import com.example.newevent2.Functions.contacttoGuest
+import com.example.newevent2.MVP.ContactsAllPresenter
+import com.example.newevent2.Model.Contact
+import com.example.newevent2.Model.Guest
 import kotlinx.android.synthetic.main.contacts_all.*
 import kotlinx.android.synthetic.main.contacts_all.view.*
-import java.lang.ClassCastException
+import kotlinx.android.synthetic.main.vendors_all.view.*
 
-class ContactsAll : Fragment() {
 
-    var contactlist = ArrayList<Contact>()
-    //var eventkey: String? = null
-    lateinit var recyclerViewAllContacts: RecyclerView
-    var toolbarmenuflag = false
+class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts {
 
-    //lateinit var eventspinner: Spinner
-    lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private var contactlist = ArrayList<Contact>()
+    private lateinit var activitymenu: Menu
+    private lateinit var recyclerViewAllContacts: RecyclerView
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var presenterguest: ContactsAllPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbar =
-            activity!!.findViewById(R.id.toolbar)
-        val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
-        appbartitle.text = "Contacts"
+        setContentView(R.layout.contacts_all)
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
 
-        //eventspinner = activity!!.findViewById<Spinner>(R.id.eventspinner)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val inf = inflater.inflate(R.layout.contacts_all, container, false)
-
-        recyclerViewAllContacts = inf.recyclerViewContacts
-        recyclerViewAllContacts.apply {
-            layoutManager = LinearLayoutManager(inf.context).apply {
-                stackFromEnd = true
-                reverseLayout = true
-            }
-        }
-
-        //Request permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) ==
+            if (checkSelfPermission(Manifest.permission.READ_CONTACTS) ==
                 PackageManager.PERMISSION_DENIED
             ) {
                 //permission denied
@@ -75,18 +48,9 @@ class ContactsAll : Fragment() {
                 requestPermissions(permissions, PERMISSION_CODE)
             } else {
                 //permission already granted
-                readcontacts()
+                presenterguest = ContactsAllPresenter(this, this)
             }
         }
-        return inf
-    }
-
-    companion object {
-        //image pick code
-        private val IMAGE_PICK_CODE = 1000
-
-        //Permission code
-        private val PERMISSION_CODE = 1001
     }
 
     override fun onRequestPermissionsResult(
@@ -100,7 +64,7 @@ class ContactsAll : Fragment() {
                     PackageManager.PERMISSION_GRANTED
                 ) {
                     //permission from popup granted
-                    readcontacts()
+                    presenterguest = ContactsAllPresenter(this, this)
                 } else {
                     //permission from popup denied
                     //Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
@@ -109,104 +73,290 @@ class ContactsAll : Fragment() {
         }
     }
 
-    private fun readcontacts() {
-        val contentResolver = context!!.contentResolver
-        val cursor =
-            contentResolver.query(
-                ContactsContract.Contacts.CONTENT_URI,
-                null,
-                null,
-                null,
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " DESC"
-            )
-        contactlist.clear()
-        if (cursor!!.moveToFirst()) {
-            do {
-                val contactitem = Contact()
-                contactitem.key =
-                    (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)))
-                contactitem.name =
-                    (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
-                val image_uri =
-                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI))
-                if (image_uri != null) {
-                    contactitem.imageurl = image_uri
-                } else {
-                    contactitem.imageurl = Uri.parse(
-                        ContentResolver.SCHEME_ANDROID_RESOURCE +
-                                "://" + resources.getResourcePackageName(R.drawable.avatar2)
-                                + '/' + resources.getResourceTypeName(R.drawable.avatar2) + '/' + resources.getResourceEntryName(
-                            R.drawable.avatar2
-                        )
-                    ).toString()
-                }
-                contactlist.add(contactitem)
-            } while (cursor.moveToNext())
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.guests_menu, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.isIconified = false
+
+        searchView.setOnSearchClickListener {
+            //           eventspinner.isEnabled = false
         }
 
-        val rvAdapter = Rv_ContactAdapter(contactlist)
+        searchView.setOnCloseListener {
+            //           eventspinner.isEnabled = true
+            toolbar.collapseActionView()
+            true
+        }
 
-        rvAdapter.mOnItemClickListener = object : OnItemClickListener {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
-                val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
 
-                if (countselected.size != 0) {
-                    appbartitle.text = "${countselected.size} selected"
+            override fun onQueryTextChange(p0: String?): Boolean {
+                val filteredModelList = filter(contactlist, p0)
+                val rvAdapter = Rv_GuestAdapter(filteredModelList as ArrayList<Guest>)
+                recyclerViewAllContacts.adapter = rvAdapter
+                return true
+            }
+        })
 
-                    if (!toolbarmenuflag) {
-                        toolbar.inflateMenu(R.menu.contacts_menu)
-                        toolbarmenuflag = true
-                    }
+//        val addItem = menu.findItem(R.id.add_guest)
+//        addItem.setOnMenuItemClickListener(object: MenuItem.OnMenuItemClickListener {
+//            override fun onMenuItemClick(p0: MenuItem?): Boolean {
+//                TODO("Not yet implemented")
+//            }
+//        })
+        activitymenu = menu
+        return true
+    }
 
-                    toolbar.setOnMenuItemClickListener(androidx.appcompat.widget.Toolbar.OnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.add_guest -> {
-//                                val evententity = EventEntity()
-//                                evententity.getEventKey(
-//                                    eventspinner.selectedItem.toString(),
-//                                    object : FirebaseSuccessListenerSingleValue {
-//                                        override fun onDatafound(key: String) {
-                                            for (index in countselected) {
-                                                val guest = GuestEntity()
-                                                //guest.eventid = key
-                                                guest.contactid = contactlist[index].key
-                                                guest.addGuest(activity!!.applicationContext)
-                                            }
-                                            rvAdapter.onClearSelected()
-                                     //   }
-                                  //  }
-                                //)
-                                appbartitle.text = "Contacts"
-                                toolbarmenuflag = false
-                                toolbar.menu.clear()
-                                true
-                            }
-                            R.id.add_vendor -> {
-                                for (index in countselected) {
-                                    val vendor = VendorEntity()
-                                    //vendor.eventid = key
-                                    vendor.contactid = contactlist[index].key
-                                    vendor.addVendor()
-                                }
-                                rvAdapter.onClearSelected()
-                                appbartitle.text = "Contacts"
-                                toolbarmenuflag = false
-                                toolbar.menu.clear()
-                                true
-                            }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.add_guest -> {
+//                for (index in countselected) {
+//                    val guest = contacttoGuest(context, contactlist[index].key)
+//                    addGuest(context, guest)
+//                }
+//                rvAdapter.onClearSelected()
+//                toolbarmenuflag = false
+//                toolbar.menu.clear()
+//                true
+//            }
+//            return super.onOptionsItemSelected(item)
+//        }
+//    }
 
+    private fun filter(models: ArrayList<Contact>, query: String?): List<Contact> {
+        val lowerCaseQuery = query!!.toLowerCase()
+        val filteredModelList: ArrayList<Contact> = ArrayList()
+        for (model in models) {
+            val text: String = model.name.toLowerCase()
+            if (text.contains(lowerCaseQuery)) {
+                filteredModelList.add(model)
+            }
+        }
+        return filteredModelList
+    }
+
+    override fun onGAContacts(list: ArrayList<Contact>) {
+        var toolbarmenuflag = false
+        recyclerViewContacts.apply {
+            layoutManager = LinearLayoutManager(this@ContactsAll).apply {
+                stackFromEnd = true
+                reverseLayout = true
+            }
+            val rvAdapter = Rv_ContactAdapter(list)
+            recyclerViewAllContacts = recyclerViewContacts
+            recyclerViewAllContacts.adapter = rvAdapter
+            contactlist = clone(list)!!
+
+            rvAdapter.mOnItemClickListener = object : OnItemClickListener {
+                @SuppressLint("SetTextI18n")
+                override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
+                    val appbartitle = findViewById<TextView>(R.id.appbartitle)
+                    if (countselected.size != 0) {
+                       // appbartitle.text = "${countselected.size} selected"
+
+                        if (!toolbarmenuflag) {
+                            //menuInflater.inflate(R.menu.contacts_menu, activitymenu)
+                            //toolbar.inflateMenu(R.menu.contacts_menu)
+                            toolbarmenuflag = true
                         }
-                        false
-                    })
 
-                } else {
-                    appbartitle.text = "Contacts"
-                    toolbarmenuflag = false
-                    toolbar.menu.clear()
+                        val guestmenu = activitymenu.findItem(R.id.add_guest)
+
+                        guestmenu.setOnMenuItemClickListener {
+                            when (it.itemId) {
+                                R.id.add_guest -> {
+                                    for (index in countselected) {
+                                        val guest = contacttoGuest(context, contactlist[index].key)
+                                        addGuest(context, guest)
+                                    }
+                                    rvAdapter.onClearSelected()
+                                    toolbarmenuflag = false
+                                    //toolbar.menu.clear()
+                                    true
+                                }
+//                        toolbar.setOnMenuItemClickListener(androidx.appcompat.widget.Toolbar.OnMenuItemClickListener {
+//                            when (it.itemId) {
+//                                R.id.add_guest -> {
+//                                    for (index in countselected) {
+//                                        val guest = contacttoGuest(context, contactlist[index].key)
+//                                        addGuest(context, guest)
+//                                    }
+//                                    rvAdapter.onClearSelected()
+//                                    toolbarmenuflag = false
+//                                    toolbar.menu.clear()
+//                                    true
+//                                }
+//                                R.id.add_vendor -> {
+//                                    for (index in countselected) {
+//                                        val vendor = VendorEntity()
+//                                        //vendor.eventid = key
+//                                        vendor.contactid = contactlist[index].key
+//                                        vendor.addVendor()
+//                                    }
+//                                    rvAdapter.onClearSelected()
+//                                    appbartitle.text = "Contacts"
+//                                    toolbarmenuflag = false
+//                                    toolbar.menu.clear()
+//                                    true
+//                                }
+                            }
+                            true
+//                        })
+//                    } else {
+//                        toolbarmenuflag = false
+//                        toolbar.menu.clear()
+//                    }
+                        }
+                    }
+                    recyclerViewAllContacts.adapter = rvAdapter
                 }
             }
         }
-        recyclerViewAllContacts.adapter = rvAdapter
+    }
+
+    override fun onGAContactsError(errcode: String) {
+        TODO("Not yet implemented")
+    }
+
+    companion object{
+        internal val PERMISSION_CODE = 1001
     }
 }
+
+//
+//    companion object {
+//        //image pick code
+//        private val IMAGE_PICK_CODE = 1000
+//
+//        //Permission code
+//        private val PERMISSION_CODE = 1001
+//    }
+//
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        when (requestCode) {
+//            PERMISSION_CODE -> {
+//                if (grantResults.isNotEmpty() && grantResults[0] ==
+//                    PackageManager.PERMISSION_GRANTED
+//                ) {
+//                    //permission from popup granted
+//                    readcontacts()
+//                } else {
+//                    //permission from popup denied
+//                    //Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun readcontacts() {
+//        val contentResolver = context!!.contentResolver
+//        val cursor =
+//            contentResolver.query(
+//                ContactsContract.Contacts.CONTENT_URI,
+//                null,
+//                null,
+//                null,
+//                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " DESC"
+//            )
+//        contactlist.clear()
+//        if (cursor!!.moveToFirst()) {
+//            do {
+//                val contactitem = Contact()
+//                contactitem.key =
+//                    (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)))
+//                contactitem.name =
+//                    (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
+//                val image_uri =
+//                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI))
+//                if (image_uri != null) {
+//                    contactitem.imageurl = image_uri
+//                } else {
+//                    contactitem.imageurl = Uri.parse(
+//                        ContentResolver.SCHEME_ANDROID_RESOURCE +
+//                                "://" + resources.getResourcePackageName(R.drawable.avatar2)
+//                                + '/' + resources.getResourceTypeName(R.drawable.avatar2) + '/' + resources.getResourceEntryName(
+//                            R.drawable.avatar2
+//                        )
+//                    ).toString()
+//                }
+//                contactlist.add(contactitem)
+//            } while (cursor.moveToNext())
+//        }
+//
+//        val rvAdapter = Rv_ContactAdapter(contactlist)
+//
+//        rvAdapter.mOnItemClickListener = object : OnItemClickListener {
+//            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+//            override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
+//                val appbartitle = activity!!.findViewById<TextView>(R.id.appbartitle)
+//
+//                if (countselected.size != 0) {
+//                    appbartitle.text = "${countselected.size} selected"
+//
+//                    if (!toolbarmenuflag) {
+//                        toolbar.inflateMenu(R.menu.contacts_menu)
+//                        toolbarmenuflag = true
+//                    }
+//
+//                    toolbar.setOnMenuItemClickListener(androidx.appcompat.widget.Toolbar.OnMenuItemClickListener {
+//                        when (it.itemId) {
+//                            R.id.add_guest -> {
+////                                val evententity = EventEntity()
+////                                evententity.getEventKey(
+////                                    eventspinner.selectedItem.toString(),
+////                                    object : FirebaseSuccessListenerSingleValue {
+////                                        override fun onDatafound(key: String) {
+//                                            for (index in countselected) {
+//                                                val guest = GuestEntity()
+//                                                //guest.eventid = key
+//                                                guest.contactid = contactlist[index].key
+//                                                guest.addGuest(activity!!.applicationContext)
+//                                            }
+//                                            rvAdapter.onClearSelected()
+//                                     //   }
+//                                  //  }
+//                                //)
+//                                appbartitle.text = "Contacts"
+//                                toolbarmenuflag = false
+//                                toolbar.menu.clear()
+//                                true
+//                            }
+//                            R.id.add_vendor -> {
+//                                for (index in countselected) {
+//                                    val vendor = VendorEntity()
+//                                    //vendor.eventid = key
+//                                    vendor.contactid = contactlist[index].key
+//                                    vendor.addVendor()
+//                                }
+//                                rvAdapter.onClearSelected()
+//                                appbartitle.text = "Contacts"
+//                                toolbarmenuflag = false
+//                                toolbar.menu.clear()
+//                                true
+//                            }
+//
+//                        }
+//                        false
+//                    })
+//
+//                } else {
+//                    appbartitle.text = "Contacts"
+//                    toolbarmenuflag = false
+//                    toolbar.menu.clear()
+//                }
+//            }
+//        }
+//        recyclerViewAllContacts.adapter = rvAdapter
+//    }
+

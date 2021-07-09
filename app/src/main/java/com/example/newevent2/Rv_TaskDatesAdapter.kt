@@ -24,11 +24,9 @@ import java.text.DateFormat
 
 class Rv_TaskDatesAdapter(
     val taskjournalList: ArrayList<TaskJournal>
-) :
-    RecyclerView.Adapter<Rv_TaskDatesAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<Rv_TaskDatesAdapter.ViewHolder>() {
 
     lateinit var context: Context
-
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
@@ -49,10 +47,12 @@ class Rv_TaskDatesAdapter(
             layoutManager = LinearLayoutManager(p0.recyclerView.context).apply {
                 stackFromEnd = true
                 reverseLayout = true
+//                isNestedScrollingEnabled = false
                 setRecycledViewPool(viewPool)
             }
         }
-        val rvAdapter = Rv_TaskJournalAdapter(taskjournalList[p1].taskjournallist)
+        //val rvAdapter = Rv_TaskJournalAdapter(taskjournalList[p1].taskjournallist)
+        val rvAdapter = Rv_TaskAdapter(taskjournalList[p1].taskjournallist)
         p0.recyclerView!!.adapter = rvAdapter
     }
 

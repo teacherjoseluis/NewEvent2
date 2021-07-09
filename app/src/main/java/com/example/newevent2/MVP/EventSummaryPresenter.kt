@@ -20,43 +20,43 @@ import kotlin.collections.ArrayList
 
 @RequiresApi(Build.VERSION_CODES.O)
 class EventSummaryPresenter(val context: Context, val fragment: EventSummary, val view: View) :
-    GuestPresenter.GuestList, EventPresenter.EventItem {
+     EventPresenter.EventItem {
 
-    private var presenterguest: GuestPresenter = GuestPresenter(context!!, this)
+
     private var presenterevent: EventPresenter = EventPresenter(context!!, this)
 
     init {
         presenterevent.getEventDetail()
     }
 
-    override fun onGuestList(list: ArrayList<Guest>) {
-        var confirmed = 0
-        var rejected = 0
-        var pending = 0
+//    override fun onGuestList(list: ArrayList<Guest>) {
+//        var confirmed = 0
+//        var rejected = 0
+//        var pending = 0
+//
+//        for (guestitem in list) {
+//            when (guestitem.rsvp) {
+//                "y" -> confirmed += 1
+//                "n" -> rejected += 1
+//                "pending" -> pending += 1
+//            }
+//        }
+//        fragment.onGuestConfirmation(view, confirmed, rejected, pending)
+//    }
 
-        for (guestitem in list) {
-            when (guestitem.rsvp) {
-                "y" -> confirmed += 1
-                "n" -> rejected += 1
-                "pending" -> pending += 1
-            }
-        }
-        fragment.onGuestConfirmation(view, confirmed, rejected, pending)
-    }
-
-    override fun onGuestListError(errcode: String) {
-        fragment.onGuestConfirmationError(view, ERRCODEGUESTS)
-    }
+//    override fun onGuestListError(errcode: String) {
+//        fragment.onGuestConfirmationError(view, ERRCODEGUESTS)
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onEvent(event: Event) {
         fragment.onEvent(context, view, event)
-        presenterguest.getGuestList()
+        //presenterguest.getGuestList()
     }
 
     override fun onEventError(errcode: String) {
         fragment.onEventError(view, ERRCODEEVENTS)
-        presenterguest.getGuestList()
+        //presenterguest.getGuestList()
     }
 
     interface EventInterface {
@@ -64,18 +64,6 @@ class EventSummaryPresenter(val context: Context, val fragment: EventSummary, va
         fun onEventError(inflatedview: View, errorcode: String)
     }
 
-    interface GuestStats {
-        fun onGuestConfirmation(
-            inflatedView: View,
-            confirmed: Int,
-            rejected: Int,
-            pending: Int
-        )
-        fun onGuestConfirmationError(
-            inflatedView: View,
-            errcode: String
-        )
-    }
 }
 
 

@@ -17,7 +17,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context,
     private val createeventtable =
         "CREATE TABLE EVENT (eventid TEXT, imageurl TEXT, placeid TEXT, latitude REAL, longitude REAL, address TEXT, name TEXT, date TEXT, time TEXT, about TEXT, location TEXT)"
     private val createguesttable =
-        "CREATE TABLE GUEST (guestid TEXT, eventid TEXT, contactid TEXT, rsvp TEXT, companion TEXT, tableguest TEXT)"
+        "CREATE TABLE GUEST (guestid TEXT, name TEXT, phone TEXT, email TEXT, rsvp TEXT, companion TEXT, tableguest TEXT)"
 
     override fun onCreate(p0: SQLiteDatabase?) {
         p0!!.execSQL(createtasktable)
@@ -36,6 +36,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context,
 
     companion object {
         private const val DATABASENAME = "BDCACHE"
-        private const val DATABASEVERSION = 4
+        private const val DATABASEVERSION = 5
     }
 }

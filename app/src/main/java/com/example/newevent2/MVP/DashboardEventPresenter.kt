@@ -5,6 +5,8 @@ import android.view.View
 import com.example.newevent2.DashboardEvent
 import com.example.newevent2.MVP.PaymentPresenter.Companion.ERRCODEPAYMENTS
 import com.example.newevent2.MVP.TaskPresenter.Companion.ERRCODETASKS
+import com.example.newevent2.Model.Guest
+import com.example.newevent2.Model.GuestModel
 import com.example.newevent2.Model.Payment
 import com.example.newevent2.Model.Task
 import java.util.*
@@ -12,10 +14,11 @@ import kotlin.Comparator
 import kotlin.collections.ArrayList
 
 class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent, val view: View) :
-    TaskPresenter.TaskList, PaymentPresenter.PaymentList {
+    TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList {
 
     private var presentertask: TaskPresenter = TaskPresenter(context!!, this)
     private var presenterpayment: PaymentPresenter = PaymentPresenter(context!!, this)
+    private var presenterguest: GuestPresenter = GuestPresenter(context!!, this)
 
     private var paymentsumbudget = 0.0F
 
@@ -67,10 +70,31 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
             countpayment += 1
         }
         fragment.onPaymentsStats(view, countpayment, sumpayment, paymentsumbudget)
+        presenterguest.getGuestList()
     }
 
     override fun onPaymentListError(errcode: String) {
         fragment.onPaymentsStatsError(view, ERRCODEPAYMENTS)
+        presenterguest.getGuestList()
+    }
+
+    override fun onGuestList(list: ArrayList<Guest>) {
+        var confirmed = 0
+        var rejected = 0
+        var pending = 0
+
+        for (guestitem in list) {
+            when (guestitem.rsvp) {
+                "y" -> confirmed += 1
+                "n" -> rejected += 1
+                "pending" -> pending += 1
+            }
+        }
+        fragment.onGuestConfirmation(view, confirmed, rejected, pending)
+    }
+
+    override fun onGuestListError(errcode: String) {
+        fragment.onGuestConfirmationError(view, GuestPresenter.ERRCODEGUESTS)
     }
 
     interface TaskStats {
@@ -81,6 +105,7 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
             sumbudget: Float,
             task: Task
         )
+
         fun onTaskStatsError(inflatedView: View, errcode: String)
     }
 
@@ -91,7 +116,24 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
             sumpayment: Float,
             sumbudget: Float
         )
+
         fun onPaymentsStatsError(inflatedView: View, errcode: String)
     }
+
+    interface GuestStats {
+        fun onGuestConfirmation(
+            inflatedView: View,
+            confirmed: Int,
+            rejected: Int,
+            pending: Int
+        )
+
+        fun onGuestConfirmationError(
+            inflatedView: View,
+            errcode: String
+        )
+    }
+
+
 }
 

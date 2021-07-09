@@ -133,6 +133,10 @@ class Cache<T : Any> {
         })
     }
 
+    fun save(context: Context, category: String, bitmap: Bitmap){
+        saveBitmaptoSD(context, category, bitmap)
+    }
+
 //    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 //    fun loadsingleitem(cacheCategory: CacheCategory, kClass: KClass<T>) {
 //        val itemjson = loadfromStorage(cacheCategory)
@@ -210,7 +214,7 @@ class Cache<T : Any> {
             }
 
             Guest::class -> {
-                val arrayList = guesthelper.getGuest()
+                val arrayList = guesthelper.getAllGuests()
                 if (arrayList.size != 0) {
                     guestPresenter.onArrayListG(arrayList)
                 } else {
@@ -302,9 +306,15 @@ class Cache<T : Any> {
         val imagebitmap = getImgfromSD(cacheCategory, contextCache)
         val emptyBitmap = createemptyBitmap(250, 250)
         if (imagebitmap.sameAs(emptyBitmap)) {
-            imagePresenter.onEmptyEventImage("")
+            when (cacheCategory) {
+                ImagePresenter.EVENTIMAGE -> imagePresenter.onEmptyEventImage("")
+                ImagePresenter.PLACEIMAGE -> imagePresenter.onEmptyPlaceImage("")
+            }
         } else {
-            imagePresenter.onEventImage(imagebitmap)
+            when (cacheCategory) {
+                ImagePresenter.EVENTIMAGE -> imagePresenter.onEventImage(imagebitmap)
+                ImagePresenter.PLACEIMAGE -> imagePresenter.onPlaceImage(imagebitmap)
+            }
         }
     }
 
@@ -373,6 +383,11 @@ class Cache<T : Any> {
     interface EventImageCacheData {
         fun onEventImage(image: Bitmap)
         fun onEmptyEventImage(errorcode: String)
+    }
+
+    interface PlaceImageCacheData {
+        fun onPlaceImage(image: Bitmap)
+        fun onEmptyPlaceImage(errorcode: String)
     }
 
     /*

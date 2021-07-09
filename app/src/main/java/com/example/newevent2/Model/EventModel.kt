@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.newevent2.Functions.saveImgtoStorage
+import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.MainActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -52,7 +53,7 @@ class EventModel() {
                 val eventid = postRef.key.toString()
                 //Save Event image in Storage
                 if (uri != null) {
-                    saveImgtoStorage("eventimage", userid, eventid, uri)
+                    saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)
                     savesuccessflag.onSaveSuccess(postRef.key.toString())
                 }
             }

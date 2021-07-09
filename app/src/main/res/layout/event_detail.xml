@@ -45,7 +45,7 @@
             tools:layout_editor_absoluteX="-25dp">
 
         </androidx.viewpager.widget.ViewPager>
-
+<!--
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/NewTaskPaymentActionButton"
             android:layout_width="wrap_content"
@@ -151,7 +151,7 @@
                 app:layout_constraintEnd_toStartOf="@id/fabPayment"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <!--
+
     <include
         android:id="@+id/include2"
         layout="@layout/navbottom"

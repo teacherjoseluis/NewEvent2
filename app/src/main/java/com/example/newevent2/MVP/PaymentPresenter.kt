@@ -18,7 +18,8 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
     private var activefragment = ""
     private var mContext: Context
 
-    private var fragmentDE: DashboardEventPresenter
+    private lateinit var fragmentDE: DashboardEventPresenter
+    private lateinit var fragmentTPP: TaskPaymentPaymentsPresenter
 
     private lateinit var cachepayment: Cache<Payment>
 
@@ -26,6 +27,12 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
         fragmentDE = fragment
         mContext = context
         activefragment = "DE"
+    }
+
+    constructor(context: Context, fragment: TaskPaymentPaymentsPresenter) {
+        fragmentTPP = fragment
+        mContext = context
+        activefragment = "TPP"
     }
 
 
@@ -120,39 +127,45 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
         if (arrayList.size == 0) {
             when (activefragment) {
                 "DE" -> fragmentDE.onPaymentListError(
-                    "NO_TASKS"
+                    ERRCODEPAYMENTS
+                )
+                "TPP" -> fragmentTPP.onPaymentListError(
+                    ERRCODEPAYMENTS
                 )
             }
         } else {
             when (activefragment) {
                 "DE" -> fragmentDE.onPaymentList(arrayList)
+                "TPP" -> fragmentTPP.onPaymentList(arrayList)
             }
         }
     }
 
     override fun onEmptyListP() {
         val user = com.example.newevent2.Functions.getUserSession(mContext!!)
-            val payment = PaymentModel()
-            payment.getPaymentsList(
-                user.key,
-                user.eventid,
-                object : PaymentModel.FirebaseSuccessPaymentList {
-                    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-                    override fun onPaymentList(arrayList: ArrayList<Payment>) {
-                        if (arrayList.isNotEmpty()) {
-                            cachepayment.save(arrayList)
+        val payment = PaymentModel()
+        payment.getPaymentsList(
+            user.key,
+            user.eventid,
+            object : PaymentModel.FirebaseSuccessPaymentList {
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                override fun onPaymentList(arrayList: ArrayList<Payment>) {
+                    if (arrayList.isNotEmpty()) {
+                        cachepayment.save(arrayList)
 
-                            when (activefragment) {
-                                "DE" -> fragmentDE.onPaymentList(arrayList)
-                            }
-                        } else {
-                            when (activefragment) {
-                                "DE" -> fragmentDE.onPaymentListError(ERRCODEPAYMENTS)
-                            }
+                        when (activefragment) {
+                            "DE" -> fragmentDE.onPaymentList(arrayList)
+                            "TPP" -> fragmentTPP.onPaymentList(arrayList)
+                        }
+                    } else {
+                        when (activefragment) {
+                            "DE" -> fragmentDE.onPaymentListError(ERRCODEPAYMENTS)
+                            "TPP" -> fragmentTPP.onPaymentListError(ERRCODEPAYMENTS)
                         }
                     }
-                })
-        }
+                }
+            })
+    }
 
     interface PaymentList {
         fun onPaymentList(list: ArrayList<Payment>)
@@ -162,6 +175,4 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
     companion object {
         const val ERRCODEPAYMENTS = "NOPAYMENTS"
     }
-
-
 }

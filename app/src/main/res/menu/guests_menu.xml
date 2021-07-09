@@ -8,14 +8,21 @@
         android:icon="@drawable/icons8_conversion_24"
         android:iconifiedByDefault="false"
         android:title=""
+        android:iconTint="@color/white"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
-        android:id="@+id/action_sortguest"
-        android:gravity="right"
-        android:icon="@drawable/icons8_sort_24"
-        android:iconifiedByDefault="false"
-        android:title=""
-        app:showAsAction="ifRoom|collapseActionView" />
+        android:id="@+id/add_guest"
+        android:iconTint="@color/white"
+        android:title="Add as Guest"
+        app:showAsAction="never"/>
+
+<!--    <item-->
+<!--        android:id="@+id/action_sortguest"-->
+<!--        android:gravity="right"-->
+<!--        android:icon="@drawable/icons8_sort_24"-->
+<!--        android:iconifiedByDefault="false"-->
+<!--        android:title=""-->
+<!--        app:showAsAction="ifRoom|collapseActionView" />-->
 </menu>

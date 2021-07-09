@@ -8,7 +8,7 @@
     tools:context=".TaskPaymentTasks">
 
     <ScrollView
-        android:id="@+id/scrollview"
+        android:id="@+id/scrollviewt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="50dp"
@@ -70,9 +70,7 @@
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:stackFromEnd="true">
-
-                    </androidx.recyclerview.widget.RecyclerView>
+                        app:stackFromEnd="true"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <!--
                                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -122,15 +120,13 @@
                                 </androidx.constraintlayout.widget.ConstraintLayout>
                 -->
                 <include
-                    android:id="@+id/withnodatataskpayment"
+                    android:id="@+id/withnodatataskpaymentt"
                     layout="@layout/empty_state"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="invisible" />
 
             </LinearLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

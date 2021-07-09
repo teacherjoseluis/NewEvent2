@@ -1,23 +1,25 @@
 package com.example.newevent2
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
-import android.os.Build
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.example.newevent2.Functions.addGuest
+import com.example.newevent2.Functions.deleteGuest
+import com.example.newevent2.Model.Guest
+import com.example.newevent2.ui.LetterAvatar
 import com.google.android.material.snackbar.Snackbar
 
 class Rv_GuestAdapter(
-    val contactlist: MutableList<Guest>
+    val contactlist: ArrayList<Guest>
 ) :
     RecyclerView.Adapter<Rv_GuestAdapter.ViewHolder>(), ItemTouchAdapterAction {
 
@@ -33,33 +35,25 @@ class Rv_GuestAdapter(
     override fun getItemCount(): Int {
         return contactlist.size
     }
-
     // public abstract void onBindViewHolder (VH holder, int position)
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.contactname.text = contactlist[p1].name
-        if (contactlist[p1].imageurl.isNotEmpty()) {
-            Glide.with(p0.itemView.context)
-                .load(contactlist[p1].imageurl)
-                .circleCrop()
-                .into(p0.contactavatar)
-        }
         p0.rsvp.text = contactlist[p1].rsvp
+        p0.contactavatar.setImageDrawable(
+            LetterAvatar(
+                context,
+                context.getColor(R.color.azulmasClaro),
+                p0.contactname.text.toString().substring(0, 2),
+                10
+            )
+        )
+        p0.companions.text = contactlist[p1].companion
+        p0.table.text = contactlist[p1].table
 
         p0.itemView.setOnClickListener {
-            val guestdetail = Intent(context, Guest_EditDetail::class.java)
-            guestdetail.putExtra("contactid", contactlist[p1].contactid)
-            guestdetail.putExtra("rsvp", contactlist[p1].rsvp)
-            guestdetail.putExtra("companion", contactlist[p1].companion)
-            guestdetail.putExtra("table", contactlist[p1].table)
-            guestdetail.putExtra("key", contactlist[p1].key)
-
-            guestdetail.putExtra("name", contactlist[p1].name)
-            guestdetail.putExtra("imageurl", contactlist[p1].imageurl)
-            guestdetail.putExtra("phone", contactlist[p1].phone)
-            guestdetail.putExtra("email", contactlist[p1].email)
-
-            guestdetail.putExtra("eventid", contactlist[p1].eventid)
+            val guestdetail = Intent(context, GuestCreateEdit::class.java)
+            guestdetail.putExtra("guest", contactlist[p1])
             context.startActivity(guestdetail)
         }
     }
@@ -68,6 +62,8 @@ class Rv_GuestAdapter(
         val contactname = itemView.findViewById<TextView>(R.id.contactname)!!
         val contactavatar = itemView.findViewById<ImageView>(R.id.contactavatar)!!
         val rsvp = itemView.findViewById<TextView>(R.id.rsvp)!!
+        val companions = itemView.findViewById<TextView>(R.id.companions)!!
+        val table = itemView.findViewById<TextView>(R.id.table)!!
     }
 
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
@@ -75,16 +71,13 @@ class Rv_GuestAdapter(
     }
 
     override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
-        val guest = GuestEntity().apply {
-            eventid = contactlist[position].eventid
-            contactid = contactlist[position].contactid
+        val guestswift = contactlist[position]
+        val guestbackup = Guest().apply {
             rsvp = contactlist[position].rsvp
             companion = contactlist[position].companion
             table = contactlist[position].table
             key = contactlist[position].key
-
             name = contactlist[position].name
-            imageurl = contactlist[position].imageurl
             phone = contactlist[position].phone
             email = contactlist[position].email
         }
@@ -92,16 +85,23 @@ class Rv_GuestAdapter(
         contactlist.removeAt(position)
         notifyItemRemoved(position)
 
-        if (action == "delete") {
-            guest.deleteGuest(context)
+        if (action == DELETEACTION) {
+            contactlist.removeAt(position)
+            notifyItemRemoved(position)
+            deleteGuest(context, guestswift)
 
             Snackbar.make(recyclerView, "Guest deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
-                    contactlist.add(guest)
+                    contactlist.add(guestswift)
                     notifyItemInserted(contactlist.lastIndex)
-                    guest.addGuest(context)
+                    addGuest(context, guestbackup)
                 }.show()
         }
+    }
+
+    companion object {
+        const val DELETEACTION = "delete"
+        const val TAG = "Rv_GuestAdapter"
     }
 }
 

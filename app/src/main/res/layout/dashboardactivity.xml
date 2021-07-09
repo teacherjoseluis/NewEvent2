@@ -16,11 +16,10 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"/>
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <!--
@@ -47,7 +46,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/journalparentrv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent" />
         <!--
         <TextView
@@ -66,5 +65,19 @@
         -->
         <!--</androidx.constraintlayout.widget.ConstraintLayout>
         -->
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/NewTaskActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:backgroundTint="@color/azulmasClaro"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="24dp"
+        app:srcCompat="@drawable/ic_icons8_plus_white"
+        app:tint="@color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>

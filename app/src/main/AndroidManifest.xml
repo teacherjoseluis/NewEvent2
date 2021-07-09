@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -69,7 +70,7 @@
         <activity android:name=".Payment_EditDetail" />
         <activity android:name=".Event_EditDetail" />
         <activity android:name=".MyContacts" />
-        <activity android:name=".NewGuest" />
+        <activity android:name=".GuestCreateEdit" />
         <activity android:name=".Guest_EditDetail" />
         <activity android:name=".NewVendor" />
         <activity android:name=".Vendor_EditDetail" />
@@ -94,6 +95,8 @@
         <activity android:name=".LoginEmailView" />
         <activity android:name=".OnboardingView" />
         <activity android:name=".TaskCreateEdit" />
+        <activity android:name=".PaymentCreateEdit" />
+        <activity android:name=".ContactsAll" />
 
 
         <meta-data
@@ -121,5 +124,12 @@
         </activity>
 
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="google.navigation" />
+        </intent>
+    </queries>
 
 </manifest>

@@ -11,7 +11,7 @@ import com.example.newevent2.Model.UserModel
 
 var taskmodel = TaskModel()
 lateinit var taskdbhelper: TaskDBHelper
-lateinit var usermodel: UserModel
+private lateinit var usermodel: UserModel
 
 internal fun addTask(context: Context, taskitem: Task) {
     try {
@@ -123,7 +123,7 @@ private fun orderChainDel(
     taskDBHelper: TaskDBHelper,
     taskModel: TaskModel
 ): CoRDeleteTask {
-    userModel.nexthandlerdel = taskDBHelper
+    userModel.nexthandlerdelt = taskDBHelper
     taskDBHelper.nexthandlerdel = taskModel
     return userModel
 }

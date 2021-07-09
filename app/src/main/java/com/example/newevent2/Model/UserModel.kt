@@ -6,8 +6,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.example.newevent2.CoRAddEditTask
-import com.example.newevent2.CoRDeleteTask
+import com.example.newevent2.*
 import com.example.newevent2.Functions.currentDateTime
 import com.example.newevent2.R
 import com.facebook.login.LoginManager
@@ -22,7 +21,7 @@ import java.lang.reflect.Executable
 class UserModel(
     //This user creates and edits Users into Firebase
     val key: String
-) : CoRAddEditTask, CoRDeleteTask {
+) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest, CoRDeleteGuest {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
@@ -31,8 +30,15 @@ class UserModel(
     private val storageRef = storage.reference
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     var tasksactive = 0
-    var nexthandler: CoRAddEditTask? = null
-    var nexthandlerdel: CoRDeleteTask? = null
+    var paymentsactive = 0
+    var guestsactive = 0
+
+    var nexthandlert: CoRAddEditTask? = null
+    var nexthandlerdelt: CoRDeleteTask? = null
+    var nexthandlerp: CoRAddEditPayment? = null
+    var nexthandlerdelp: CoRDeletePayment? = null
+    var nexthandlerg: CoRAddEditGuest? = null
+    var nexthandlerdelg: CoRDeleteGuest? = null
 
     fun getUser(dataFetched: FirebaseSuccessUser) {
         val firebaseUser = User(key)
@@ -55,6 +61,11 @@ class UserModel(
                         haspayment = p0.child("haspayment").getValue(String::class.java)!!
                         hasguest = p0.child("hasguest").getValue(String::class.java)!!
                         hasvendor = p0.child("hasvendor").getValue(String::class.java)!!
+                        tasksactive = p0.child("tasksactive").getValue(Int::class.java)!!
+                        taskscompleted= p0.child("taskscompleted").getValue(Int::class.java)!!
+                        payments= p0.child("payments").getValue(Int::class.java)!!
+                        guests= p0.child("guests").getValue(Int::class.java)!!
+
                         Log.d(TAG, "Data associated to User $key ($email) has been retrieved from Firebase")
                     }
                 }
@@ -97,6 +108,11 @@ class UserModel(
         Log.d(TAG, "There are currently $value payments associated to the User")
     }
 
+    fun editUserAddGuest(value: Int) {
+        postRef.child("guests").setValue(value)
+        Log.d(TAG, "There are currently $value guests associated to the User")
+    }
+
     fun editUserTaskflag(flag: String) {
         postRef.child("hastask").setValue(flag)
         Log.d(TAG, "Flag hastask for the User has been set to $flag")
@@ -104,6 +120,11 @@ class UserModel(
 
     fun editUserPaymentflag(flag: String) {
         postRef.child("haspayment").setValue(flag)
+        Log.d(TAG, "Flag haspayment for the User has been set to $flag")
+    }
+
+    fun editUserGuestflag(flag: String) {
+        postRef.child("hasguest").setValue(flag)
         Log.d(TAG, "Flag haspayment for the User has been set to $flag")
     }
 
@@ -142,6 +163,7 @@ class UserModel(
             "tasksactive" to 0,
             "taskscompleted" to 0,
             "payments" to 0,
+            "guests" to 0,
             "status" to "A"
         )
         postRef.setValue(
@@ -160,12 +182,33 @@ class UserModel(
     override fun onAddEditTask(task: Task) {
         editUserTaskflag(TaskModel.ACTIVEFLAG)
         editUserAddTask(tasksactive + 1)
-        nexthandler?.onAddEditTask(task)
+        nexthandlert?.onAddEditTask(task)
     }
 
     override fun onDeleteTask(task: Task) {
         editUserAddTask(tasksactive - 1)
-        nexthandlerdel?.onDeleteTask(task)
+        nexthandlerdelt?.onDeleteTask(task)
+    }
+
+    override fun onAddEditPayment(payment: Payment) {
+        editUserPaymentflag(PaymentModel.ACTIVEFLAG)
+        editUserAddPayment(paymentsactive + 1)
+        nexthandlerp?.onAddEditPayment(payment)
+    }
+
+    override fun onDeletePayment(payment: Payment) {
+        editUserAddPayment(paymentsactive - 1)
+        nexthandlerdelp?.onDeletePayment(payment)
+    }
+
+    override fun onAddEditGuest(guest: Guest) {
+        editUserGuestflag(GuestModel.ACTIVEFLAG)
+        editUserAddGuest(guestsactive + 1)
+        nexthandlerg?.onAddEditGuest(guest)
+    }
+
+    override fun onDeleteGuest(guest: Guest) {
+        nexthandlerdelg?.onDeleteGuest(guest)
     }
 
     interface FirebaseSuccessUser {

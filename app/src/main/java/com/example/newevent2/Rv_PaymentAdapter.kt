@@ -9,21 +9,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newevent2.Model.Payment
-import com.example.newevent2.Model.PaymentModel
+import com.example.newevent2.Functions.addPayment
+import com.example.newevent2.Functions.addTask
+import com.example.newevent2.Functions.deletePayment
+import com.example.newevent2.Model.*
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 class Rv_PaymentAdapter(
-    val userid: String,
-    val eventid: String,
     val paymentList: MutableList<Payment>
 ) : RecyclerView.Adapter<Rv_PaymentAdapter.ViewHolder>(), ItemTouchAdapterAction {
 
     lateinit var context: Context
+    var paymentmodel = PaymentModel()
+    lateinit var paymentdbhelper: PaymentDBHelper
+    lateinit var usermodel: UserModel
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
@@ -42,12 +46,15 @@ class Rv_PaymentAdapter(
         p0.paymentname?.text = paymentList[p1].name
         p0.paymentdate?.text = paymentList[p1].date
         p0.paymentamount?.text = paymentList[p1].amount
+        val resourceId = context.resources.getIdentifier(
+            Category.getCategory(paymentList[p1].category).drawable, "drawable",
+            context.packageName
+        )
+        p0.categoryavatar?.setImageResource(resourceId)
 
         p0.itemView.setOnClickListener {
             val paymentdetail = Intent(context, PaymentCreateEdit::class.java)
             paymentdetail.putExtra("payment", paymentList[p1])
-            paymentdetail.putExtra("userid", userid)
-            paymentdetail.putExtra("eventid", eventid)
             context.startActivity(paymentdetail)
         }
     }
@@ -56,6 +63,7 @@ class Rv_PaymentAdapter(
         val paymentname: TextView? = itemView.findViewById<TextView>(R.id.paymentname)
         val paymentdate: TextView? = itemView.findViewById<TextView>(R.id.paymentdate)
         val paymentamount: TextView? = itemView.findViewById<TextView>(R.id.paymentamount)
+        val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
     }
 
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
@@ -71,67 +79,22 @@ class Rv_PaymentAdapter(
             category = paymentswift.category
             createdatetime = paymentswift.createdatetime
         }
-        paymentList.removeAt(position)
-        notifyItemRemoved(position)
-
-        val usersession =
-            context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
-        val paymentactive = usersession.getInt("payments", 0)
-        val sessionEditor = usersession!!.edit()
 
         if (action == DELETEACTION) {
-            val paymentmodel = PaymentModel()
-            paymentmodel.deletePayment(
-                userid,
-                eventid,
-                paymentswift,
-                paymentactive,
-                object : PaymentModel.FirebaseDeletePaymentSuccess {
-                    override fun onPaymentDeleted(flag: Boolean) {
-                        if (flag) {
-                            //Deleting all instances of Payment from cache
-                            Log.i(TAG, "Payment ${paymentswift.key} was Deleted")
-                            sessionEditor.putInt("payments", paymentactive - 1)
-                            sessionEditor.apply()
-                            Log.d(TAG, "User has currently ${paymentactive - 1} active payments")
-                            Cache.deletefromStorage(TaskCreateEdit.TASKENTITY, context)
-                        }
-                    }
+            paymentList.removeAt(position)
+            notifyItemRemoved(position)
+            deletePayment(context, paymentswift)
 
-                })
-
-            Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
-                    paymentList.add(paymentbackup)
+                    paymentList.add(paymentswift)
                     notifyItemInserted(paymentList.lastIndex)
-                    paymentmodel.addPayment(
-                        userid,
-                        eventid,
-                        paymentbackup,
-                        paymentactive,
-                        object : PaymentModel.FirebaseAddEditPaymentSuccess {
-                            override fun onPaymentAddedEdited(flag: Boolean) {
-                                if (flag) {
-                                    Log.i(
-                                        TAG,
-                                        "Undo action and Payment ${paymentswift.key} was added back"
-                                    )
-                                    sessionEditor.putInt("payments", paymentactive + 1)
-                                    sessionEditor.apply()
-                                    Log.d(
-                                        TAG,
-                                        "User has currently ${paymentactive + 1} active payments"
-                                    )
-                                    //Deleting all instances of Payment from cache
-                                    Cache.deletefromStorage(PAYMENTENTITY, context)
-                                }
-                            }
-
-                        })
-                }.show()
+                    addPayment(context, paymentbackup)
+                }
+            snackbar.show()
         }
     }
-    
+
     companion object {
         const val TAG = "Rv_PaymentAdapter"
         const val PAYMENTENTITY = "Payment"

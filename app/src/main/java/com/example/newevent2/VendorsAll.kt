@@ -245,18 +245,18 @@ class VendorsAll : Fragment() {
                     contactitem.name = contactname?.let { it } ?: vendor.name
                     contactitem.contactid = vendor.contactid
                     //contactitem.eventid = vendor.eventid
-                    val imageuri = contactphoto?.let { it } ?: vendor.imageurl
-                    if (imageuri.isNullOrEmpty()) {
-                        contactitem.imageurl = Uri.parse(
-                            ContentResolver.SCHEME_ANDROID_RESOURCE +
-                                    "://" + resources.getResourcePackageName(R.drawable.avatar2)
-                                    + '/' + resources.getResourceTypeName(R.drawable.avatar2) + '/' + resources.getResourceEntryName(
-                                R.drawable.avatar2
-                            )
-                        ).toString()
-                    } else {
-                        contactitem.imageurl = imageuri
-                    }
+//                    val imageuri = contactphoto?.let { it } ?: vendor.imageurl
+//                    if (imageuri.isNullOrEmpty()) {
+//                        contactitem.imageurl = Uri.parse(
+//                            ContentResolver.SCHEME_ANDROID_RESOURCE +
+//                                    "://" + resources.getResourcePackageName(R.drawable.avatar2)
+//                                    + '/' + resources.getResourceTypeName(R.drawable.avatar2) + '/' + resources.getResourceEntryName(
+//                                R.drawable.avatar2
+//                            )
+//                        ).toString()
+//                    } else {
+//                        contactitem.imageurl = imageuri
+//                    }
                     contactitem.key = vendor.key
                     contactitem.phone = vendor.phone
                     contactitem.email = vendor.email

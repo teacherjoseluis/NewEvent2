@@ -51,7 +51,7 @@ internal class MyCalendar : AppCompatActivity() {
 //        }
 
         mCalendarView = findViewById<CalendarView>(R.id.calendarView) as CalendarView
-        loadcalendar(currentCalendar)
+//        loadcalendar(currentCalendar)
 // Load all dates for Active Tasks and Payments for all of the existing Events in the active month
 
 
@@ -78,40 +78,40 @@ internal class MyCalendar : AppCompatActivity() {
 ////            addNote()
 //        }
 
-        mCalendarView!!.setOnDayClickListener(object : OnDayClickListener {
-            override fun onDayClick(eventDay: EventDay) {
-//                Load the recyclerview with the details for the selected day
-                if (events.contains(eventDay)) {
-                    TaskPaymentLabel.text = SimpleDateFormat("dd/MM/yyyy").format(eventDay.calendar.time)
-                    val taskentity = TaskEntity()
-                    taskentity.eventid = eventkey
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                        taskentity.getTasksperDay(
-                            eventDay.calendar,
-                            object : FirebaseSuccessListenerTaskCalendar {
-                                override fun onTasksDatesEvent(list: ArrayList<Date>) {
-                                    TODO("Not yet implemented")
-                                }
-
-                                override fun onTasksperDay(list: ArrayList<Task>) {
-                                    val rvAdapter = Rv_TaskCalendarAdapter(list)
-                                    recyclerViewTaskCalendar.adapter = rvAdapter
-                                }
-                            })
-                    }
-                }
-                else {
-                    TaskPaymentLabel.text = "There are no tasks for the selected date"
-                    recyclerViewTaskCalendar.adapter = null
-                }
-            }
-        })
+//        mCalendarView!!.setOnDayClickListener(object : OnDayClickListener {
+//            override fun onDayClick(eventDay: EventDay) {
+////                Load the recyclerview with the details for the selected day
+//                if (events.contains(eventDay)) {
+//                    TaskPaymentLabel.text = SimpleDateFormat("dd/MM/yyyy").format(eventDay.calendar.time)
+//                    val taskentity = TaskEntity()
+//                    taskentity.eventid = eventkey
+//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//                        taskentity.getTasksperDay(
+//                            eventDay.calendar,
+//                            object : FirebaseSuccessListenerTaskCalendar {
+//                                override fun onTasksDatesEvent(list: ArrayList<Date>) {
+//                                    TODO("Not yet implemented")
+//                                }
+//
+//                                override fun onTasksperDay(list: ArrayList<Task>) {
+//                                    val rvAdapter = Rv_TaskCalendarAdapter(list)
+//                                    recyclerViewTaskCalendar.adapter = rvAdapter
+//                                }
+//                            })
+//                    }
+//                }
+//                else {
+//                    TaskPaymentLabel.text = "There are no tasks for the selected date"
+//                    recyclerViewTaskCalendar.adapter = null
+//                }
+//            }
+//        })
 
         mCalendarView!!.setOnPreviousPageChangeListener(object : OnCalendarPageChangeListener {
             override fun onChange() {
                 // Execute the same process as in the creation of the activity just for the month - 1
                 currentCalendar.add(Calendar.MONTH, -1)
-                loadcalendar(currentCalendar)
+//                loadcalendar(currentCalendar)
             }
         })
 
@@ -119,7 +119,7 @@ internal class MyCalendar : AppCompatActivity() {
             override fun onChange() {
                 // Execute the same process as in the creation of the activity just for the month + 1
                 currentCalendar.add(Calendar.MONTH, +1)
-                loadcalendar(currentCalendar)
+//                loadcalendar(currentCalendar)
             }
         })
 
@@ -146,48 +146,48 @@ internal class MyCalendar : AppCompatActivity() {
 //        }
     }
 
-    private fun loadcalendar(calendar: Calendar?) {
-        val taskentity = TaskEntity()
-        taskentity.eventid = eventkey
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            taskentity.getTasksDatesEvent(
-                calendar!!.get(Calendar.MONTH),
-                object : FirebaseSuccessListenerTaskCalendar {
-                    override fun onTasksDatesEvent(list: ArrayList<Date>) {
-                        for (date in list) {
-                            val calendar = Calendar.getInstance()
-                            calendar.time = date
-                            events.add(EventDay(calendar, R.drawable.three_dots_more_indicator_primarycolor))
-                        }
-                        mCalendarView!!.setEvents(events)
-                    }
-
-                    override fun onTasksperDay(list: ArrayList<Task>) {
-                        TODO("Not yet implemented")
-                    }
-                })
-        }
-//        val paymententity = PaymentEntity()
-//        paymententity.eventid = eventkey
+//    private fun loadcalendar(calendar: Calendar?) {
+//        val taskentity = TaskEntity()
+//        taskentity.eventid = eventkey
 //        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//            paymententity.getPaymentsDatesEvent(
+//            taskentity.getTasksDatesEvent(
 //                calendar!!.get(Calendar.MONTH),
-//                object : FirebaseSuccessListenerPaymentCalendar {
-//                    override fun onPaymentsDatesEvent(list: ArrayList<Date>) {
+//                object : FirebaseSuccessListenerTaskCalendar {
+//                    override fun onTasksDatesEvent(list: ArrayList<Date>) {
 //                        for (date in list) {
 //                            val calendar = Calendar.getInstance()
 //                            calendar.time = date
-//                            events.add(EventDay(calendar, R.drawable.three_dots_more_indicator_graycolor))
+//                            events.add(EventDay(calendar, R.drawable.three_dots_more_indicator_primarycolor))
 //                        }
-//                        //mCalendarView!!.setEvents(eventspayment)
+//                        mCalendarView!!.setEvents(events)
 //                    }
 //
-//                    override fun onPaymentsperDay(list: ArrayList<Payment>) {
+//                    override fun onTasksperDay(list: ArrayList<Task>) {
 //                        TODO("Not yet implemented")
 //                    }
 //                })
 //        }
-    }
+////        val paymententity = PaymentEntity()
+////        paymententity.eventid = eventkey
+////        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+////            paymententity.getPaymentsDatesEvent(
+////                calendar!!.get(Calendar.MONTH),
+////                object : FirebaseSuccessListenerPaymentCalendar {
+////                    override fun onPaymentsDatesEvent(list: ArrayList<Date>) {
+////                        for (date in list) {
+////                            val calendar = Calendar.getInstance()
+////                            calendar.time = date
+////                            events.add(EventDay(calendar, R.drawable.three_dots_more_indicator_graycolor))
+////                        }
+////                        //mCalendarView!!.setEvents(eventspayment)
+////                    }
+////
+////                    override fun onPaymentsperDay(list: ArrayList<Payment>) {
+////                        TODO("Not yet implemented")
+////                    }
+////                })
+////        }
+//    }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 //        super.onActivityResult(requestCode, resultCode, data)

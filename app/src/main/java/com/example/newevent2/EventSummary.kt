@@ -3,7 +3,10 @@ package com.example.newevent2
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -28,26 +31,34 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.example.newevent2.Functions.*
-import com.example.newevent2.MVP.EventPresenter
 import com.example.newevent2.MVP.EventSummaryPresenter
-import com.example.newevent2.MVP.GuestPresenter
 import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.maps.MapView
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPhotoRequest
+import com.google.android.libraries.places.api.net.FetchPhotoResponse
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FetchPlaceResponse
 import kotlinx.android.synthetic.main.dashboardcharts.view.*
-import kotlinx.android.synthetic.main.dashboardcharts.view.scrollview
 import kotlinx.android.synthetic.main.event_summary.view.*
 import kotlinx.android.synthetic.main.summary_weddingguests.view.*
+import kotlinx.android.synthetic.main.summary_weddinglocation.*
+import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
+import java.util.*
 
 
 class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
-    EventSummaryPresenter.GuestStats,
-    ImagePresenter.EventImage {
+    ImagePresenter.EventImage, ImagePresenter.PlaceImage {
 
 
     private lateinit var presenterevent: EventSummaryPresenter
     private lateinit var mapview: MapView
     private lateinit var imagePresenter: ImagePresenter
+
+    private var placeid = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +81,6 @@ class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
             startActivityForResult(editevent, SUCCESS_RETURN)
             //startActivity(editevent)
         }
-
         // Get Event details -----------------------------------------------------------------------
         presenterevent = EventSummaryPresenter(context!!, this, inf)
         //------------------------------------------------------------------------------------------
@@ -98,12 +108,15 @@ class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onEvent(context: Context, inflatedView: View, event: Event) {
+        placeid = event.placeid
+
         inflatedView.findViewById<TextView>(R.id.eventname).text = event.name
         inflatedView.findViewById<TextView>(R.id.eventdate).text = event.date
         //inflatedView.findViewById<TextView>(R.id.textView4).text = event.time
         //inflatedView.findViewById<TextView>(R.id.eventabout).text = event.about
         //inflatedView.findViewById<TextView>(R.id.MyLocation).text = event.location
         inflatedView.findViewById<TextView>(R.id.eventaddress).text = event.location
+        inflatedView.findViewById<TextView>(R.id.eventfulladdress).text = event.address
 
         val wedavater = inflatedView.findViewById<ImageView>(R.id.weddingavatar)
 
@@ -113,7 +126,24 @@ class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
         // Load thumbnail
         imagePresenter = ImagePresenter(context, this, inflatedView)
         imagePresenter.getEventImage()
+        imagePresenter.ApiKey = getString(R.string.google_api_key)
+        imagePresenter.getPlaceImage()
 
+        inflatedView.weddinglocation.setOnClickListener {
+            val gmmIntentUri = Uri.parse("geo:${event.latitude},${event.longitude}?z=10&q=${event.location}")
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            mapIntent.resolveActivity(context!!.packageManager)?.let {
+                startActivity(mapIntent)
+            }
+            val loadingscreen = activity!!.findViewById<ConstraintLayout>(R.id.loadingscreen)
+            val drawerlayout = activity!!.findViewById<DrawerLayout>(R.id.drawerlayout)
+            loadingscreen.visibility = ConstraintLayout.GONE
+            drawerlayout.visibility = ConstraintLayout.VISIBLE
+        }
+
+// ----------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 //        val eventLocationLnLg = LatLng(event.latitude, event.longitude)
 //        val latLng = LatLngBounds(
 //            LatLng(event.latitude - 5, event.longitude - 5),
@@ -157,29 +187,10 @@ class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
             Toast.LENGTH_SHORT
         ).show()
         Log.i(TAG, "No data was obtained from the Event")
-    }
-
-    override fun onGuestConfirmation(
-        inflatedView: View,
-        confirmed: Int,
-        rejected: Int,
-        pending: Int
-    ) {
-        //inflatedView.totalnumber.text = (confirmed + rejected + pending).toString()
-        inflatedView.acceptednumber.text = confirmed.toString()
-        inflatedView.rejectednumber.text = rejected.toString()
-        inflatedView.pendingnumber.text = pending.toString()
-
         val loadingscreen = activity!!.findViewById<ConstraintLayout>(R.id.loadingscreen)
         val drawerlayout = activity!!.findViewById<DrawerLayout>(R.id.drawerlayout)
         loadingscreen.visibility = ConstraintLayout.GONE
         drawerlayout.visibility = ConstraintLayout.VISIBLE
-        Log.i(TAG, "Guest confirmed (${confirmed}), rejected (${rejected}), pending (${pending})")
-    }
-
-    override fun onGuestConfirmationError(inflatedView: View, errcode: String) {
-        inflatedView.guestlayout.visibility = ConstraintLayout.INVISIBLE
-        inflatedView.noguestlayout.visibility = ConstraintLayout.VISIBLE
     }
 
     override fun onEventImage(mContext: Context, inflatedView: View?, packet: Any) {
@@ -210,6 +221,20 @@ class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
             }).placeholder(R.drawable.avatar2)
             .into(wedavater)
         Log.i(TAG, "Image for the event is loaded")
+    }
+
+    override fun onPlaceImage(context: Context, inflatedView: View?, bitmap: Bitmap) {
+        inflatedView!!.placesimage.setImageBitmap(bitmap)
+    }
+
+    override fun onEmptyPlaceImageSD(inflatedView: View?) {
+        getImgfromPlaces(
+            context!!,
+            placeid,
+            getString(R.string.google_api_key),
+            ImagePresenter.PLACEIMAGE,
+            inflatedView!!.placesimage
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

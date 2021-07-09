@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.navbottom.*
 
 class MainEventView_clone(val userSession: User) : Fragment() {
 
-    var isRotate = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,32 +61,6 @@ class MainEventView_clone(val userSession: User) : Fragment() {
             override fun onTabReselected(p0: TabLayout.Tab?) {
             }
         })
-
-        inf.NewTaskPaymentActionButton.setOnClickListener()
-        {
-            isRotate = ViewAnimation.rotateFab(activity!!.NewTaskPaymentActionButton, !isRotate)
-            if (isRotate) {
-                ViewAnimation.showIn(activity!!.TaskLayout);
-                ViewAnimation.showIn(activity!!.PaymentLayout);
-            } else {
-                ViewAnimation.showOut(activity!!.TaskLayout);
-                ViewAnimation.showOut(activity!!.PaymentLayout);
-            }
-        }
-
-        inf.fabTask.setOnClickListener {
-            val newtask = Intent(activity, TaskCreateEdit::class.java)
-            newtask.putExtra("userid", userSession.key)
-            newtask.putExtra("eventid", userSession.eventid)
-            startActivity(newtask)
-        }
-
-        inf.fabPayment.setOnClickListener {
-            val newpayment = Intent(activity, NewTask_PaymentDetail::class.java)
-            newpayment.putExtra("userid", userSession.key)
-            newpayment.putExtra("eventid", userSession.eventid)
-            startActivity(newpayment)
-        }
         return inf
     }
 }

@@ -31,12 +31,12 @@ class Rv_VendorAdapter(val contactlist: MutableList<Vendor>) :
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.contactname.text = contactlist[p1].name
-        if (contactlist[p1].imageurl.isNotEmpty()) {
-            Glide.with(p0.itemView.context)
-                .load(contactlist[p1].imageurl)
-                .circleCrop()
-                .into(p0.contactavatar)
-        }
+//        if (contactlist[p1].imageurl.isNotEmpty()) {
+//            Glide.with(p0.itemView.context)
+//                .load(contactlist[p1].imageurl)
+//                .circleCrop()
+//                .into(p0.contactavatar)
+//        }
 
         p0.itemView.setOnClickListener {
             val vendordetail = Intent(context, Vendor_EditDetail::class.java)
@@ -46,7 +46,7 @@ class Rv_VendorAdapter(val contactlist: MutableList<Vendor>) :
             vendordetail.putExtra("longitude", contactlist[p1].longitude)
 
             vendordetail.putExtra("name", contactlist[p1].name)
-            vendordetail.putExtra("imageurl", contactlist[p1].imageurl)
+           // vendordetail.putExtra("imageurl", contactlist[p1].imageurl)
             vendordetail.putExtra("phone", contactlist[p1].phone)
             vendordetail.putExtra("email", contactlist[p1].email)
 

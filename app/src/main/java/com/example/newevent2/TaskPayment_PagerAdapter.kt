@@ -30,7 +30,7 @@ class TaskPayment_PagerAdapter(
                 return fragInfo
             }
             1 -> {
-                val fragInfo = TaskPayment_Payments()
+                val fragInfo = TaskPaymentPayments()
                 fragInfo.arguments = bundle
                 return fragInfo
             }

@@ -225,6 +225,11 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
                     //There was a change in the event image
                     replaceImage(applicationContext, "eventimage", user.key, user.eventid, uri!!)
                 }
+
+                if(event_placeid != "") {
+                    //There was a change in the event location
+                    delImgfromSD(ImagePresenter.PLACEIMAGE, this@MainActivity)
+                }
             }
         })
         val resultIntent = Intent()

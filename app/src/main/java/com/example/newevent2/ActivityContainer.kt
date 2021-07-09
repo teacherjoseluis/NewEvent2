@@ -134,7 +134,13 @@ class ActivityContainer : AppCompatActivity() {
                         //.addToBackStack(null)
                         .commit()
                 }
-                R.id.contacts -> {
+                R.id.guests -> {
+                    val newfragment = GuestsAll()
+                    fm.beginTransaction()
+                        .replace(R.id.fragment_container, newfragment)
+
+                        //.addToBackStack(null)
+                        .commit()
                 }
                 R.id.notes -> {
                 }

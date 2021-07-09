@@ -21,6 +21,7 @@ class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
 
     lateinit var recyclerViewBlog: RecyclerView
     private lateinit var presenter: BlogPresenter
+    private lateinit var inf:View
 
     var language = "en"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +36,7 @@ class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
     ): View? {
 
         // Inflate the layout for this fragment
-        val inf = inflater.inflate(R.layout.dashboardblog, container, false)
+        inf = inflater.inflate(R.layout.dashboardblog, container, false)
 
         recyclerViewBlog = inf.blogrv
         recyclerViewBlog.apply {
@@ -44,9 +45,14 @@ class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
                 reverseLayout = true
             }
         }
-        presenter = BlogPresenter(context!!, this, inf, language)
         return inf
     }
+
+    override fun onResume() {
+        super.onResume()
+        presenter = BlogPresenter(context!!, this, inf, language)
+    }
+
     override fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<Blog>) {
         //Consider adding a try catch in case there is no data coming from Firebase
         inflatedView.emptyrecyclerview.visibility = View.GONE

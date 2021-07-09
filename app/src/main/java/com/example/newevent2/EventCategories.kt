@@ -19,6 +19,7 @@ import com.example.newevent2.ui.ViewAnimation
 import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.mainevent_summary.*
 import kotlinx.android.synthetic.main.mainevent_summary.view.*
+import kotlinx.android.synthetic.main.taskpayment_list.*
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -27,8 +28,8 @@ class EventCategories : Fragment() {
 
 //    var userid = ""
 //    var eventid = ""
-
     lateinit var recyclerViewCategory: RecyclerView
+    private var isRotate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +37,7 @@ class EventCategories : Fragment() {
 //        userid = this.arguments!!.get("userid").toString()
 //        eventid = this.arguments!!.get("eventid").toString()
 
-        ViewAnimation.init(activity!!.TaskLayout)
-        ViewAnimation.init(activity!!.PaymentLayout)
+
     }
 
     override fun onCreateView(
@@ -60,6 +60,34 @@ class EventCategories : Fragment() {
         }
         val rvAdapter = rvCategoryAdapter(list)
         recyclerViewCategory.adapter = rvAdapter
+
+        ViewAnimation.init(inf.TaskLayout)
+        ViewAnimation.init(inf.PaymentLayout)
+
+        inf.NewTaskPaymentActionButton.setOnClickListener()
+        {
+            isRotate = ViewAnimation.rotateFab(inf.NewTaskPaymentActionButton, !isRotate)
+            if (isRotate) {
+                ViewAnimation.showIn(TaskLayout)
+                ViewAnimation.showIn(PaymentLayout)
+            } else {
+                ViewAnimation.showOut(TaskLayout)
+                ViewAnimation.showOut(PaymentLayout)
+            }
+        }
+
+        inf.fabTask.setOnClickListener {
+            val newtask = Intent(context, TaskCreateEdit::class.java)
+            newtask.putExtra("userid", "")
+            startActivity(newtask)
+        }
+
+        inf.fabPayment.setOnClickListener {
+            val newpayment = Intent(context, PaymentCreateEdit::class.java)
+            newpayment.putExtra("userid", "")
+            startActivity(newpayment)
+        }
+
         return inf
     }
 }

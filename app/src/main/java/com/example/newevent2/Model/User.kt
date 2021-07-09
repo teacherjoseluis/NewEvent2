@@ -36,7 +36,8 @@ class User(
     var hasvendor: String = "",
     var tasksactive: Int = 0,
     var taskscompleted: Int = 0,
-    var payments: Int = 0
+    var payments: Int = 0,
+    var guests: Int = 0
 ) : Parcelable {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -61,8 +62,10 @@ class User(
         parcel.readString().toString(),
         parcel.readInt(),
         parcel.readInt(),
+        parcel.readInt(),
         parcel.readInt()
     )
+
     fun login(
         activity: Activity,
         authtype: String,
@@ -333,7 +336,10 @@ class User(
         stepsBeanList.add(stepBean3)
         stepsBeanList.add(stepBean4)
 
-        Log.i(TAG, "User hasevent(${this.hasevent}), hastask(${this.hastask }), haspayment(${this.haspayment}), hasguest(${this.hasguest}), hasvendor(${this.hasvendor})")
+        Log.i(
+            TAG,
+            "User hasevent(${this.hasevent}), hastask(${this.hastask}), haspayment(${this.haspayment}), hasguest(${this.hasguest}), hasvendor(${this.hasvendor})"
+        )
         return stepsBeanList
     }
 

@@ -17,9 +17,9 @@
         android:title="Task"/>
 
     <item
-        android:id="@+id/contacts"
+        android:id="@+id/guests"
         android:icon="@drawable/guests2"
-        android:title="Contacts"/>
+        android:title="Guests"/>
 
     <item
         android:id="@+id/notes"

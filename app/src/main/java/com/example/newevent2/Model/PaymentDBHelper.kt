@@ -6,12 +6,17 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.newevent2.rvCategoryAdapter
+import com.example.newevent2.*
 import java.lang.Exception
+import java.text.DecimalFormat
 
-class PaymentDBHelper(context: Context) {
+class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
 
     private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+    lateinit var payment: Payment
+    var key = ""
+    var nexthandler: CoRAddEditPayment? = null
+    var nexthandlerdel: CoRDeletePayment? = null
 
     fun insert(payment: Payment) {
         var values = ContentValues()
@@ -24,6 +29,17 @@ class PaymentDBHelper(context: Context) {
         values.put("createdatetime", payment.createdatetime)
         db.insert("PAYMENT", null, values)
         Log.d(TAG, "Payment record inserted")
+    }
+
+    fun getPaymentexists(key: String): Boolean {
+        var existsflag = false
+        val cursor: Cursor = db.rawQuery("SELECT * FROM PAYMENT WHERE paymentid = '$key'", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                existsflag = true
+            }
+        }
+        return existsflag
     }
 
     fun getPayments(): ArrayList<Payment> {
@@ -48,6 +64,56 @@ class PaymentDBHelper(context: Context) {
             }
         }
         return list
+    }
+
+    fun getActiveCategories(): ArrayList<Category> {
+        val list = ArrayList<Category>()
+        val cursor: Cursor =
+            db.rawQuery("SELECT DISTINCT category FROM PAYMENT", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    val category = cursor.getString(cursor.getColumnIndex("category"))
+                    val paymentcategory = Category.getCategory(category)
+                    list.add(paymentcategory )
+                } while (cursor.moveToNext())
+            }
+        }
+        return list
+    }
+
+    fun getCategoryStats(category: String): PaymentStatsToken {
+        var paymentstats = PaymentStatsToken()
+        var sumpayment = 0.0F
+        var cursor: Cursor = db.rawQuery(
+            "SELECT COUNT(*) as countpayment FROM PAYMENT WHERE category='$category'",
+            null
+        )
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    paymentstats.countpayment = cursor.getInt(cursor.getColumnIndex("countpayment"))
+                } while (cursor.moveToNext())
+            }
+        }
+        cursor =
+            db.rawQuery("SELECT amount FROM PAYMENT WHERE category='$category'", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                val re = Regex("[^A-Za-z0-9 ]")
+                do {
+                    val amount = cursor.getString(cursor.getColumnIndex("amount"))
+                    val paymentamount = re.replace(amount, "").dropLast(2)
+                    sumpayment += paymentamount.toFloat()
+                } while (cursor.moveToNext())
+                val formatter = DecimalFormat("$#,###.00")
+                paymentstats.sumpayment = formatter.format(sumpayment)
+            }
+        }
+        return paymentstats
     }
 
     fun update(payment: Payment) {
@@ -77,6 +143,20 @@ class PaymentDBHelper(context: Context) {
             Log.d(TAG, "Payment ${payment.key} not deleted")
         }
         db.close()
+    }
+
+    override fun onAddEditPayment(payment: Payment) {
+        if (!getPaymentexists(payment.key)) {
+            insert(payment)
+        } else {
+            update(payment)
+        }
+        nexthandler?.onAddEditPayment(payment)
+    }
+
+    override fun onDeletePayment(payment: Payment) {
+        delete(payment)
+        nexthandlerdel?.onDeletePayment(payment)
     }
 
     companion object {

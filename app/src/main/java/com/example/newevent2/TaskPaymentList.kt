@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.Model.User
+import com.example.newevent2.ui.ViewAnimation
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.taskpayment_list.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -17,6 +19,7 @@ class TaskPaymentList : AppCompatActivity() {
 
     val userid = ""
     val eventid = ""
+    //var isRotate = false
     var usersession = User()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +78,30 @@ class TaskPaymentList : AppCompatActivity() {
                 apptitle.text = category.en_name
             }
         }
+
+//        NewTaskPaymentActionButton.setOnClickListener()
+//        {
+//            isRotate = ViewAnimation.rotateFab(NewTaskPaymentActionButton, !isRotate)
+//            if (isRotate) {
+//                ViewAnimation.showIn(TaskLayout);
+//                ViewAnimation.showIn(PaymentLayout);
+//            } else {
+//                ViewAnimation.showOut(TaskLayout);
+//                ViewAnimation.showOut(PaymentLayout);
+//            }
+//        }
+//
+//        fabTask.setOnClickListener {
+//            val newtask = Intent(this, TaskCreateEdit::class.java)
+//            newtask.putExtra("userid", "")
+//            startActivity(newtask)
+//        }
+//
+//        fabPayment.setOnClickListener {
+//            val newpayment = Intent(this, PaymentCreateEdit::class.java)
+//            newpayment.putExtra("userid", "")
+//            startActivity(newpayment)
+//        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

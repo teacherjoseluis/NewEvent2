@@ -32,10 +32,9 @@ class TaskCreateEdit() : AppCompatActivity() {
 
     private lateinit var taskitem: Task
 
-    var taskmodel = TaskModel()
-    lateinit var taskdbhelper: TaskDBHelper
-    lateinit var usermodel: UserModel
-    private lateinit var useritem: User
+    //var taskmodel = TaskModel()
+    //lateinit var taskdbhelper: TaskDBHelper
+    //lateinit var usermodel: UserModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,7 +112,6 @@ class TaskCreateEdit() : AppCompatActivity() {
 
         savebuttontask.setOnClickListener {
             var inputvalflag = true
-
             taskname.clearFocus()
             if (taskname.text.toString().isEmpty()) {
                 taskname.error = "Error in Task name: Task name is required!"

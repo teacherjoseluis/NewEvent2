@@ -13,9 +13,12 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.newevent2.Model.Contact
+import com.example.newevent2.Model.Guest
+import com.example.newevent2.ui.LetterAvatar
 
 class Rv_ContactAdapter(
-    val contactlist: MutableList<Contact>
+    val contactlist: ArrayList<Contact>
 ) :
     RecyclerView.Adapter<Rv_ContactAdapter.ViewHolder>(), ClearSelected {
 
@@ -45,44 +48,47 @@ class Rv_ContactAdapter(
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         val checkDrawable = ContextCompat.getDrawable(context, R.drawable.icons8_checkmark)!!
         checkDrawable.setTint(Color.parseColor("#C2185B"))
-        p0.contactavatar.isSelected = (selectedPos == p1)
+
         p0.contactname.text = contactlist[p1].name
-        if (!selected.contains(p1)) {
-            if (contactlist[p1].imageurl != "") {
-                Glide.with(p0.itemView.context)
-                    .load(contactlist[p1].imageurl)
-                    .circleCrop()
-                    //.override(200, 200)
-                    .into(p0.contactavatar)
-            }
-        } else {
-            p0.contactavatar.setImageDrawable(checkDrawable)
-        }
-
-        p0.contactavatar.setOnClickListener {
-
-            if (selected.contains(p1)) {
-                selected.remove(p1)
-
-                Glide.with(p0.itemView.context)
-                    .load(contactlist[p1].imageurl)
-                    .circleCrop()
-                    .into(p0.contactavatar)
+        p0.contactavatar.apply {
+            isSelected = (selectedPos == p1)
+            if (!selected.contains(p1)) {
+                setImageDrawable(
+                    LetterAvatar(
+                        context,
+                        context.getColor(R.color.azulmasClaro),
+                        p0.contactname.text.toString().substring(0, 2),
+                        10
+                    )
+                )
             } else {
-                selected.add(p1)
-                p0.contactavatar.setImageDrawable(checkDrawable)
+                setImageDrawable(checkDrawable)
             }
 
-            notifyItemChanged(selectedPos)
-            selectedPos = p0.layoutPosition
-            notifyItemChanged(selectedPos)
+            setOnClickListener {
+                if (selected.contains(p1)) {
+                    selected.remove(p1)
+                    setImageDrawable(
+                        LetterAvatar(
+                            context,
+                            context.getColor(R.color.azulmasClaro),
+                            p0.contactname.text.toString().substring(0, 2),
+                            10
+                        )
+                    )
+                } else {
+                    selected.add(p1)
+                    setImageDrawable(checkDrawable)
+                }
+                notifyItemChanged(selectedPos)
+                selectedPos = p0.layoutPosition
+                notifyItemChanged(selectedPos)
 
-            mOnItemClickListener?.onItemClick(p1, selected)
-
-            //Toast.makeText(context, "Saliendo del listener", Toast.LENGTH_SHORT).show()
+                mOnItemClickListener?.onItemClick(p1, selected)
+                //Toast.makeText(context, "Saliendo del listener", Toast.LENGTH_SHORT).show()
+            }
         }
     }
-
 
 
     // A ViewHolder describes an item view and metadata about its place within the RecyclerView.

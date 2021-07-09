@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,14 +15,13 @@ import com.example.newevent2.MVP.TaskPaymentTasksPresenter
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskModel
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
-import kotlinx.android.synthetic.main.taskpayment_tasks.view.scrollview
+import kotlinx.android.synthetic.main.taskpayment_tasks.view.scrollviewt
 
 class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
 
     private var category: String = ""
     private var status: String = ""
     private lateinit var presentertask: TaskPaymentTasksPresenter
-    lateinit var inf: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,7 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
+        val inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
         presentertask = TaskPaymentTasksPresenter(context!!, this, inf, category, status)
         return inf
     }
@@ -96,8 +96,8 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
     }
 
     override fun onTPTasksError(inflatedView: View, errcode: String) {
-        inflatedView.withnodatataskpayment.visibility = ConstraintLayout.VISIBLE
-        inflatedView.scrollview.visibility = ConstraintLayout.GONE
+        inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
+        inflatedView.scrollviewt.visibility = ConstraintLayout.GONE
     }
 
     companion object {

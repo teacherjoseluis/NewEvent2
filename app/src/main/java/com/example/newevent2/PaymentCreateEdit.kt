@@ -8,16 +8,18 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.newevent2.Functions.addPayment
+import com.example.newevent2.Functions.editPayment
 import com.example.newevent2.Functions.validateOldDate
-import com.example.newevent2.Model.Payment
-import com.example.newevent2.Model.PaymentModel
+import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Task
-import com.example.newevent2.Model.TaskModel
+import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -28,11 +30,11 @@ import java.util.*
 
 class PaymentCreateEdit() : AppCompatActivity() {
 
-    private var userid = ""
-    private var eventid = ""
-
-
     private lateinit var paymentitem: Payment
+
+    //var paymentmodel = PaymentModel()
+    lateinit var paymentdbhelpder: PaymentDBHelper
+    lateinit var userModel: UserModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,13 +52,12 @@ class PaymentCreateEdit() : AppCompatActivity() {
             Payment()
         }
 
-        userid = intent.getStringExtra("userid").toString()
-        eventid = intent.getStringExtra("eventid").toString()
         val paymentid = paymentitem.key
 
         if (paymentid != "") {
             val paymentmodel = PaymentModel()
-            paymentmodel.getPaymentdetail(userid, eventid, paymentid, object :
+            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
+            paymentmodel.getPaymentdetail(user.key, user.eventid, paymentid, object :
                 PaymentModel.FirebaseSuccessPayment {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onPayment(payment: Payment) {
@@ -74,17 +75,22 @@ class PaymentCreateEdit() : AppCompatActivity() {
             })
         }
 
-        paymentname.setOnClickListener {
-            paymentname.error = null
+        paymentname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+            if (!p1) {
+                val validationmessage = TextValidate(paymentname).namefieldValidate()
+                if (validationmessage != "") {
+                    paymentname.error = "Error in Payment name: $validationmessage"
+                }
+            }
+        }
+
+        paymentamount.setOnClickListener {
+            paymentamount.error = null
         }
 
         paymentdate.setOnClickListener {
             paymentdate.error = null
             showDatePickerDialog()
-        }
-
-        paymentamount.setOnClickListener {
-            paymentamount.error = null
         }
 
         val chipgroupedit = findViewById<ChipGroup>(R.id.groupeditpayment)
@@ -106,14 +112,23 @@ class PaymentCreateEdit() : AppCompatActivity() {
 
         savebuttonpayment.setOnClickListener {
             var inputvalflag = true
+            paymentname.clearFocus()
             if (paymentname.text.toString().isEmpty()) {
                 paymentname.error = "Payment name is required!"
                 inputvalflag = false
+            } else {
+                val validationmessage = TextValidate(paymentname).namefieldValidate()
+                if (validationmessage != "") {
+                    paymentname.error = "Error in Payment name: $validationmessage"
+                    inputvalflag = false
+                }
             }
+            paymentdate.clearFocus()
             if (paymentdate.text.toString().isEmpty()) {
                 paymentdate.error = "Payment date is required!"
                 inputvalflag = false
             }
+            paymentamount.clearFocus()
             if (paymentamount.text.toString().isEmpty()) {
                 paymentamount.error = "Payment amount is required!"
                 inputvalflag = false
@@ -148,9 +163,9 @@ class PaymentCreateEdit() : AppCompatActivity() {
                 override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
                     if (validateOldDate(p1, p2 + 1, p3)) {
                         val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                        eventdate.setText(selectedDate)
+                        paymentdate.setText(selectedDate)
                     } else {
-                        eventdate.error = "Task date is invalid!"
+                        paymentdate.error = "Payment date is invalid!"
                     }
                 }
             }))
@@ -163,43 +178,10 @@ class PaymentCreateEdit() : AppCompatActivity() {
         paymentitem.amount = paymentamount.text.toString()
         paymentitem.category = getCategory()
 
-        val paymentmodel = PaymentModel()
-        if (paymentitem.key != "") {
-            paymentmodel.editPayment(
-                userid,
-                eventid,
-                paymentitem,
-                object : PaymentModel.FirebaseAddEditPaymentSuccess {
-                    override fun onPaymentAddedEdited(flag: Boolean) {
-                        if (flag) {
-                            //Deleting all instances of Payment from cache
-                            Log.i(TAG, "Payment ${paymentitem.key} successfully edited")
-                            Cache.deletefromStorage(PAYENTITY, applicationContext)
-                        }
-                    }
-                })
-        } else {
-            val usersession =
-                application.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
-            val payments = usersession.getInt("payments", 0)
-            val sessionEditor = usersession!!.edit()
-
-            paymentmodel.addPayment(
-                userid,
-                eventid,
-                paymentitem,
-                payments,
-                object : PaymentModel.FirebaseAddEditPaymentSuccess {
-                    override fun onPaymentAddedEdited(flag: Boolean) {
-                        if (flag) {
-                            Log.i(TAG, "Payment successfully added")
-                            sessionEditor.putInt("payments", payments + 1)
-                            sessionEditor.apply()
-                            //Deleting all instances of Payment from cache
-                            Cache.deletefromStorage(PAYENTITY, applicationContext)
-                        }
-                    }
-                })
+        if (paymentitem.key == "") {
+            addPayment(applicationContext, paymentitem)
+        } else if (paymentitem.key != "") {
+            editPayment(applicationContext, paymentitem)
         }
         val resultIntent = Intent()
         setResult(Activity.RESULT_OK, resultIntent)

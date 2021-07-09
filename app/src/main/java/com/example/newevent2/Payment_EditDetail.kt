@@ -122,11 +122,11 @@ class Payment_EditDetail : AppCompatActivity() {
 //                payment.category = category.code
 //            }
 //        }
-        val paymentmodel = PaymentModel()
-        paymentmodel.editPayment(userid, eventid, payment, object: PaymentModel.FirebaseAddEditPaymentSuccess {
-            override fun onPaymentAddedEdited(flag: Boolean) {
-                TODO("Not yet implemented")
-            }
-        })
+//        val paymentmodel = PaymentModel()
+//        paymentmodel.editPayment(userid, eventid, payment, object: PaymentModel.FirebaseAddEditPaymentSuccess {
+//            override fun onPaymentAddedEdited(flag: Boolean) {
+//                TODO("Not yet implemented")
+//            }
+//        })
     }
 }

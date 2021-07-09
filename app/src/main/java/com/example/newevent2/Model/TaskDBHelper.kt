@@ -10,6 +10,7 @@ import com.example.newevent2.Category
 import com.example.newevent2.Category.Companion.getCategory
 import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeleteTask
+import com.example.newevent2.Functions.removeDuplicates
 import java.text.DecimalFormat
 
 class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {

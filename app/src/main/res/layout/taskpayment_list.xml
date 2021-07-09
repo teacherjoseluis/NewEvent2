@@ -43,6 +43,7 @@
         tools:layout_editor_absoluteX="-25dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </androidx.viewpager.widget.ViewPager>
+
 <!--
     <include
         android:id="@+id/include2"

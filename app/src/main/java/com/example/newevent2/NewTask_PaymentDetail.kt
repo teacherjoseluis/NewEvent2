@@ -102,13 +102,13 @@ class NewTask_PaymentDetail : AppCompatActivity() {
 //                payment.category = category.code
 //            }
 //        }
-        val paymentmodel = PaymentModel()
-        paymentmodel.addPayment(userid, eventid, payment, payments, object: PaymentModel.FirebaseAddEditPaymentSuccess {
-            override fun onPaymentAddedEdited(flag: Boolean) {
-                TODO("Not yet implemented")
-            }
-
-        })
+//        val paymentmodel = PaymentModel()
+//        paymentmodel.addPayment(userid, eventid, payment, payments, object: PaymentModel.FirebaseAddEditPaymentSuccess {
+//            override fun onPaymentAddedEdited(flag: Boolean) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
     }
 
     override fun onSupportNavigateUp(): Boolean {

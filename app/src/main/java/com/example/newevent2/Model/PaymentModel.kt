@@ -3,6 +3,10 @@ package com.example.newevent2.Model
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.example.newevent2.CoRAddEditPayment
+import com.example.newevent2.CoRAddEditTask
+import com.example.newevent2.CoRDeletePayment
+import com.example.newevent2.CoRDeleteTask
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -12,57 +16,62 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PaymentModel {
+class PaymentModel : CoRAddEditPayment, CoRDeletePayment{
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
+    var nexthandler: CoRAddEditPayment? = null
+    var nexthandlerdel: CoRDeletePayment? = null
 
-    fun getPaymentStats(
-        userid: String,
-        eventid: String,
-        category: String,
-        dataFetched: FirebaseSuccessStatsPayment
-    ) {
-        var sumpayment: Float
-        var countpayment: Int
+    var userid = ""
+    var eventid = ""
 
-        val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Payment")
-
-        val paymentListenerActive = object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                countpayment = 0 // Number of Payments made
-                sumpayment = 0.0f // Amount of Payments
-
-                val re = Regex("[^A-Za-z0-9 ]")
-                for (snapshot in p0.children) {
-                    val paymentitem = snapshot.getValue(Payment::class.java)!!
-                    if (category != "") {
-                        if (paymentitem.category == category) {
-                            val paidamount = re.replace(paymentitem.amount, "").dropLast(2)
-                            sumpayment += paidamount.toFloat()
-                            countpayment += 1
-                        }
-                    } else {
-                        val paidamount = re.replace(paymentitem.amount, "").dropLast(2)
-                        sumpayment += paidamount.toFloat()
-                        countpayment += 1
-                    }
-                }
-                Log.d(
-                    TAG,
-                    "Current payment stats consists of Number($countpayment), Total($sumpayment)"
-                )
-                dataFetched.onPaymentStats(countpayment, sumpayment)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
-            }
-        }
-        postRef.addValueEventListener(paymentListenerActive)
-    }
+//    fun getPaymentStats(
+//        userid: String,
+//        eventid: String,
+//        category: String,
+//        dataFetched: FirebaseSuccessStatsPayment
+//    ) {
+//        var sumpayment: Float
+//        var countpayment: Int
+//
+//        val postRef =
+//            myRef.child("User").child(userid).child("Event").child(eventid)
+//                .child("Payment")
+//
+//        val paymentListenerActive = object : ValueEventListener {
+//            override fun onDataChange(p0: DataSnapshot) {
+//                countpayment = 0 // Number of Payments made
+//                sumpayment = 0.0f // Amount of Payments
+//
+//                val re = Regex("[^A-Za-z0-9 ]")
+//                for (snapshot in p0.children) {
+//                    val paymentitem = snapshot.getValue(Payment::class.java)!!
+//                    if (category != "") {
+//                        if (paymentitem.category == category) {
+//                            val paidamount = re.replace(paymentitem.amount, "").dropLast(2)
+//                            sumpayment += paidamount.toFloat()
+//                            countpayment += 1
+//                        }
+//                    } else {
+//                        val paidamount = re.replace(paymentitem.amount, "").dropLast(2)
+//                        sumpayment += paidamount.toFloat()
+//                        countpayment += 1
+//                    }
+//                }
+//                Log.d(
+//                    TAG,
+//                    "Current payment stats consists of Number($countpayment), Total($sumpayment)"
+//                )
+//                dataFetched.onPaymentStats(countpayment, sumpayment)
+//            }
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                println("loadPost:onCancelled ${databaseError.toException()}")
+//            }
+//        }
+//        postRef.addValueEventListener(paymentListenerActive)
+//    }
 
     fun getPaymentsList(
         userid: String,
@@ -71,8 +80,7 @@ class PaymentModel {
     ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Payment")
-
+                .child("Payment").orderByChild("date")
         var paymentlist = ArrayList<Payment>()
 
         val paymentlListenerActive = object : ValueEventListener {
@@ -126,7 +134,6 @@ class PaymentModel {
         userid: String,
         eventid: String,
         payment: Payment,
-        payments: Int,
         paymentaddedflag: FirebaseAddEditPaymentSuccess
     ) {
         val postRef =
@@ -139,29 +146,28 @@ class PaymentModel {
         val paymentdatetime = Date(timestamp.time)
         val sdf = SimpleDateFormat("MM/dd/yyyy h:mm:ss a")
         //---------------------------------------
+        payment.createdatetime = sdf.format(paymentdatetime)
 
         val paymentadd = hashMapOf(
             "name" to payment.name,
             "amount" to payment.amount,
             "date" to payment.date,
             "category" to payment.category,
-            "createdatetime" to sdf.format(paymentdatetime)
+            "createdatetime" to payment.createdatetime
         )
 
         postRef.setValue(paymentadd as Map<String, Any>)
-            .addOnFailureListener {
-                paymentaddedflag.onPaymentAddedEdited(false)
-                Log.e(TAG, "Payment ${payment.name} failed to be added")
-            }
             .addOnSuccessListener {
-                val usermodel = UserModel(userid)
-                usermodel.editUserPaymentflag(ACTIVEFLAG)
-                paymentaddedflag.onPaymentAddedEdited(true)
-                usermodel.editUserAddPayment(payments + 1)
+                payment.key = postRef.key.toString()
+                paymentaddedflag.onPaymentAddedEdited(true, payment)
                 Log.d(
                     TAG,
                     "Payment ${payment.name} successfully added on ${sdf.format(paymentdatetime)}"
                 )
+            }
+            .addOnFailureListener {
+                paymentaddedflag.onPaymentAddedEdited(false, payment)
+                Log.e(TAG, "Payment ${payment.name} failed to be added")
             }
     }
 
@@ -183,13 +189,13 @@ class PaymentModel {
         )
 
         postRef.setValue(paymentedit as Map<String, Any>)
-            .addOnFailureListener {
-                paymenteditedflag.onPaymentAddedEdited(false)
-                Log.e(TAG, "Payment ${payment.name} failed to be edited")
-            }
             .addOnSuccessListener {
-                paymenteditedflag.onPaymentAddedEdited(true)
+                paymenteditedflag.onPaymentAddedEdited(true, payment)
                 Log.d(TAG, "Payment ${payment.name} successfully edited")
+            }
+            .addOnFailureListener {
+                paymenteditedflag.onPaymentAddedEdited(false, payment)
+                Log.e(TAG, "Payment ${payment.name} failed to be edited")
             }
     }
 
@@ -197,7 +203,6 @@ class PaymentModel {
         userid: String,
         eventid: String,
         payment: Payment,
-        paymentactive: Int,
         paymentdeletedflag: FirebaseDeletePaymentSuccess
     ) {
         val postRef =
@@ -205,22 +210,56 @@ class PaymentModel {
                 .child("Payment").child(payment.key)
                 .removeValue()
                 .addOnSuccessListener {
-                    val usermodel = UserModel(userid)
-                    usermodel.editUserAddPayment(paymentactive - 1)
-                    if ((paymentactive - 1) == 0) usermodel.editUserPaymentflag(INACTIVEFLAG)
-                    paymentdeletedflag.onPaymentDeleted(true)
+                    paymentdeletedflag.onPaymentDeleted(true, payment)
                     Log.d(TAG, "Payment ${payment.name} successfully deleted")
                 }
                 .addOnFailureListener {
-                    paymentdeletedflag.onPaymentDeleted(false)
+                    paymentdeletedflag.onPaymentDeleted(false, payment)
                     Log.e(TAG, "Payment ${payment.name} failed to be deleted")
                 }
-
     }
 
-    interface FirebaseSuccessStatsPayment {
-        fun onPaymentStats(countpayment: Int, sumpayment: Float)
+    override fun onAddEditPayment(payment: Payment) {
+        if (payment.key == "") {
+            addPayment(
+                userid,
+                eventid,
+                payment,
+                object : FirebaseAddEditPaymentSuccess {
+                    override fun onPaymentAddedEdited(flag: Boolean, payment: Payment) {
+                        if (flag) {
+                            nexthandler?.onAddEditPayment(payment)
+                        }
+                    }
+                })
+        } else if (payment.key != "") {
+            editPayment(
+                userid, eventid, payment, object : FirebaseAddEditPaymentSuccess {
+                    override fun onPaymentAddedEdited(flag: Boolean, payment: Payment) {
+                        if (flag) {
+                            nexthandler?.onAddEditPayment(payment)
+                        }
+                    }
+                }
+            )
+        }
     }
+
+    override fun onDeletePayment(payment: Payment) {
+        deletePayment(
+            userid,
+            eventid,
+            payment,
+            object : PaymentModel.FirebaseDeletePaymentSuccess {
+                override fun onPaymentDeleted(flag: Boolean, payment: Payment) {
+                    if (flag) {
+                        nexthandlerdel?.onDeletePayment(payment)
+                    }
+                }
+            })
+    }
+
+
 
     interface FirebaseSuccessPayment {
         fun onPayment(payment: Payment)
@@ -231,11 +270,11 @@ class PaymentModel {
     }
 
     interface FirebaseAddEditPaymentSuccess {
-        fun onPaymentAddedEdited(flag: Boolean)
+        fun onPaymentAddedEdited(flag: Boolean, payment: Payment)
     }
 
     interface FirebaseDeletePaymentSuccess {
-        fun onPaymentDeleted(flag: Boolean)
+        fun onPaymentDeleted(flag: Boolean, payment: Payment)
     }
 
     companion object {
@@ -243,4 +282,5 @@ class PaymentModel {
         const val INACTIVEFLAG = "N"
         const val TAG = "PaymentModel"
     }
+
 }

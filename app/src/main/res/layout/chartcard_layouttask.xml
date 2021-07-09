@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="@dimen/cardview_width"
-        android:layout_height="@dimen/cardview_height_large"
+        android:layout_width="200dp"
+        android:layout_height="220dp"
         app:cardElevation="2dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,12 +20,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cardcartlayout_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -38,9 +37,9 @@
                     android:textColor="@color/rosaChillon"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_conversion_absoluteHeight="18dp"
-                    tools:layout_conversion_absoluteWidth="60dp" />
-
+                    tools:layout_conversion_absoluteHeight="11dp"
+                    tools:layout_conversion_absoluteWidth="36dp" />
+                <!--
                 <TextView
                     android:id="@+id/secondarytext"
                     style="@style/Body1"
@@ -52,62 +51,69 @@
                     app:layout_constraintTop_toBottomOf="@+id/cardtitle"
                     tools:layout_conversion_absoluteHeight="18dp"
                     tools:layout_conversion_absoluteWidth="97dp" />
-
+-->
             </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--
+                      <View
+                          android:id="@+id/carddivider"
+                          android:layout_width="match_parent"
+                          android:layout_height="1dp"
+                          android:background="@color/colorDivider"
+                          app:layout_constraintTop_toBottomOf="@+id/cardcartlayout_header" />
 
-            <View
-                android:id="@+id/carddivider"
-                android:layout_width="match_parent"
-                android:layout_height="13dp"
-                android:background="@color/colorDivider"
-                app:layout_constraintTop_toBottomOf="@+id/cardcartlayout_header" />
+
+                                  <androidx.constraintlayout.widget.ConstraintLayout
+                                      android:id="@+id/cardcartlayout_footer"
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:layout_marginBottom="8dp"
+                                      app:layout_constraintBottom_toBottomOf="parent">
+
+                                      <Button
+                                          android:id="@+id/action1"
+                                          style="@style/Widget.MaterialComponents.Button.TextButton"
+                                          android:layout_width="wrap_content"
+                                          android:layout_height="wrap_content"
+                                          android:layout_marginLeft="8dp"
+                                          android:text="Action 1"
+                                          android:textColor="@color/azulOscuro"
+                                          app:layout_constraintStart_toStartOf="parent"
+                                          app:layout_constraintTop_toTopOf="parent" />
+
+                                      <Button
+                                          android:id="@+id/action2"
+                                          style="@style/Widget.MaterialComponents.Button.TextButton"
+                                          android:layout_width="wrap_content"
+                                          android:layout_height="wrap_content"
+                                          android:layout_gravity="bottom"
+                                          android:layout_marginLeft="8dp"
+                                          android:text="Action 2"
+                                          android:textColor="@color/azulOscuro"
+                                          app:layout_constraintStart_toEndOf="@+id/action1"
+                                          app:layout_constraintTop_toTopOf="parent" />
+
+                      </androidx.constraintlayout.widget.ConstraintLayout>
+           -->
+
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/charttask"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_width="220dp"
+                android:layout_height="150dp"
                 android:background="@color/white"
-                android:paddingBottom="5dp"
-                app:layout_constraintBottom_toTopOf="@+id/cardcartlayout_footer"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/carddivider" />
-
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardcartlayout_header" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cardcartlayout_footer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-                <Button
-                    android:id="@+id/action1"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:text="Action 1"
-                    android:textColor="@color/azulOscuro"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
-                    android:id="@+id/action2"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="8dp"
-                    android:text="Action 2"
-                    android:textColor="@color/azulOscuro"
-                    app:layout_constraintStart_toEndOf="@+id/action1"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </androidx.cardview.widget.CardView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
