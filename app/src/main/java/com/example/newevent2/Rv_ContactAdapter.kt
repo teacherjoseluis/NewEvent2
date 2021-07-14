@@ -80,7 +80,7 @@ class Rv_ContactAdapter(
                     selected.add(p1)
                     setImageDrawable(checkDrawable)
                 }
-                notifyItemChanged(selectedPos)
+                //notifyItemChanged(selectedPos)
                 selectedPos = p0.layoutPosition
                 notifyItemChanged(selectedPos)
 

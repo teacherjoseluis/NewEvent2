@@ -114,16 +114,6 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
 
             }
         )
-//        guest.getGuestsEvent(userid, eventid, object : GuestModel.FirebaseSuccessGuestStats {
-//            override fun onGuestConfirmation(confirmed: Int, rejected: Int, pending: Int) {
-//                fragmentMED.onGuestConfirmation(inflatedView, confirmed, rejected, pending)
-//            }
-//        })
-//    }
-
-//    interface GuestStats{
-//        fun onGuestConfirmation(inflatedView: View, confirmed: Int, rejected: Int, pending: Int)
-//    }
     }
     interface GuestList {
         fun onGuestList(list: ArrayList<Guest>)

@@ -6,14 +6,17 @@ import android.provider.ContactsContract
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.newevent2.*
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Model.*
+import kotlinx.android.synthetic.main.contacts_all.view.*
 
 var guestmodel = GuestModel()
 lateinit var guestdbhelper: GuestDBHelper
 private lateinit var usermodel: UserModel
+private lateinit var contactsAll: ContactsAll
 
 internal fun addGuest(context: Context, guestitem: Guest) {
     try {
@@ -32,7 +35,10 @@ internal fun addGuest(context: Context, guestitem: Guest) {
         usermodel = UserModel(user.key)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
-        val chainofcommand = orderChainAdd(guestmodel, guestdbhelper, usermodel)
+        contactsAll = ContactsAll()
+        contactsAll.mContext = context
+        //------------------------------------------------
+        val chainofcommand = orderChainAdd(guestmodel, guestdbhelper, usermodel, contactsAll)
         chainofcommand.onAddEditGuest(guestitem)
         //------------------------------------------------
         // Updating User information in Session
@@ -40,6 +46,7 @@ internal fun addGuest(context: Context, guestitem: Guest) {
         user.hasguest = GuestModel.ACTIVEFLAG
         user.saveUserSession(context)
         //------------------------------------------------
+        // It's fair to believe that asynchronous calls were already executed at this point
         Toast.makeText(context, "Guest was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -112,9 +119,9 @@ internal fun editGuest(context: Context, guestitem: Guest) {
 
 internal fun contacttoGuest(context: Context, contactid: String): Guest {
     var contactguest = Guest()
-    var cursor: Cursor? = null
-    var phonecursor: Cursor? = null
-    var emailcursor: Cursor? = null
+    var cursor: Cursor?
+    var phonecursor: Cursor?
+    var emailcursor: Cursor?
 
     val whereclause = StringBuffer()
     whereclause.append(ContactsContract.Contacts._ID)
@@ -159,9 +166,17 @@ internal fun contacttoGuest(context: Context, contactid: String): Guest {
     phonecursor?.moveToNext()
     emailcursor?.moveToNext()
 
-    contactguest.phone =
-        phonecursor?.getString(phonecursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+    contactguest.name =
+        cursor?.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
             .toString()
+
+    contactguest.phone =
+        try {
+            phonecursor?.getString(phonecursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                .toString()
+        } catch (e: IndexOutOfBoundsException) {
+            ""
+        }
     contactguest.email =
         try {
             emailcursor?.getString(emailcursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
@@ -187,10 +202,12 @@ internal fun contacttoGuest(context: Context, contactid: String): Guest {
 private fun orderChainAdd(
     guestModel: GuestModel,
     guestDBHelper: GuestDBHelper,
-    userModel: UserModel
+    userModel: UserModel,
+    contactsAll: ContactsAll
 ): CoRAddEditGuest {
     guestModel.nexthandler = guestDBHelper
     guestDBHelper.nexthandler = userModel
+    userModel.nexthandlerg = contactsAll
     return guestModel
 }
 

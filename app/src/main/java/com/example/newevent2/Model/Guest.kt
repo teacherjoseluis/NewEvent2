@@ -9,9 +9,9 @@ open class Guest(
     var name: String = "",
     var phone: String = "",
     var email: String = "",
-    var rsvp: String = "",
-    var companion: String = "",
-    var table: String = ""
+    var rsvp: String = "pending",
+    var companion: String = "none",
+    var table: String = "none"
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this() {

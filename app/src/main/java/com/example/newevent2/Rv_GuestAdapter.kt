@@ -17,37 +17,38 @@ import com.example.newevent2.Functions.deleteGuest
 import com.example.newevent2.Model.Guest
 import com.example.newevent2.ui.LetterAvatar
 import com.google.android.material.snackbar.Snackbar
+import java.lang.Exception
 
 class Rv_GuestAdapter(
-    val contactlist: ArrayList<Guest>
+    val contactlist: ArrayList<Guest>, val context: Context
 ) :
     RecyclerView.Adapter<Rv_GuestAdapter.ViewHolder>(), ItemTouchAdapterAction {
-
-    lateinit var context: Context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
         val v = LayoutInflater.from(p0?.context).inflate(R.layout.guest_item_layout, p0, false)
-        context = p0.context
         return ViewHolder(v)
     }
 
     override fun getItemCount(): Int {
         return contactlist.size
     }
-    // public abstract void onBindViewHolder (VH holder, int position)
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.contactname.text = contactlist[p1].name
         p0.rsvp.text = contactlist[p1].rsvp
-        p0.contactavatar.setImageDrawable(
-            LetterAvatar(
-                context,
-                context.getColor(R.color.azulmasClaro),
-                p0.contactname.text.toString().substring(0, 2),
-                10
+        try {
+            p0.contactavatar.setImageDrawable(
+                LetterAvatar(
+                    context,
+                    context.getColor(R.color.azulmasClaro),
+                    p0.contactname.text.toString().substring(0, 2),
+                    10
+                )
             )
-        )
+        } catch (e: Exception) {
+            p0.contactavatar.setImageResource(R.drawable.avatar2)
+        }
         p0.companions.text = contactlist[p1].companion
         p0.table.text = contactlist[p1].table
 
@@ -81,9 +82,6 @@ class Rv_GuestAdapter(
             phone = contactlist[position].phone
             email = contactlist[position].email
         }
-
-        contactlist.removeAt(position)
-        notifyItemRemoved(position)
 
         if (action == DELETEACTION) {
             contactlist.removeAt(position)

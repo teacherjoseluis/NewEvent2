@@ -164,7 +164,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         values.put("companion", guest.companion)
         values.put("tableguest", guest.table)
 
-        val retVal = db.update("GUEST", values, "guestid = ${guest.key}'", null)
+        val retVal = db.update("GUEST", values, "guestid = '${guest.key}'", null)
         if (retVal >= 1) {
             Log.d(TAG, "Guest ${guest.key} updated")
         } else {
@@ -174,7 +174,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
     }
 
     fun delete(guest: Guest) {
-        val retVal = db.delete("GUEST", "guestid = ${guest.key}'", null)
+        val retVal = db.delete("GUEST", "guestid = '${guest.key}'", null)
         if (retVal >= 1) {
             Log.d(TAG, "Guest ${guest.key} deleted")
         } else {
