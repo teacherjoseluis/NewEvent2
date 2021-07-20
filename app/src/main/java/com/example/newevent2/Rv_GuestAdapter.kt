@@ -36,7 +36,11 @@ class Rv_GuestAdapter(
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.contactname.text = contactlist[p1].name
-        p0.rsvp.text = contactlist[p1].rsvp
+        p0.rsvp.text = when (contactlist[p1].rsvp) {
+            "y" -> "Yes"
+            "n" -> "No"
+            else -> "Pending"
+        }
         try {
             p0.contactavatar.setImageDrawable(
                 LetterAvatar(
@@ -92,7 +96,7 @@ class Rv_GuestAdapter(
                 .setAction("UNDO") {
                     contactlist.add(guestswift)
                     notifyItemInserted(contactlist.lastIndex)
-                    addGuest(context, guestbackup)
+                    addGuest(context, guestbackup, CALLER)
                 }.show()
         }
     }
@@ -100,6 +104,7 @@ class Rv_GuestAdapter(
     companion object {
         const val DELETEACTION = "delete"
         const val TAG = "Rv_GuestAdapter"
+        const val CALLER = "none"
     }
 }
 

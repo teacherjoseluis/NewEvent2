@@ -140,7 +140,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                                 R.id.add_guest -> {
                                     for (index in countselected) {
                                         val guest = contacttoGuest(context, contactlist[index].key)
-                                        addGuest(context, guest)
+                                        addGuest(context, guest, CALLER)
                                     }
                                     apptitle.text = "Contacts"
                                     rvAdapter.onClearSelected()
@@ -166,6 +166,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
     override fun onAddEditGuest(guest: Guest) {
         (mContext as ContactsAll).loadingview.visibility = ConstraintLayout.GONE
         (mContext as ContactsAll).withdataview.visibility = ConstraintLayout.VISIBLE
+        GuestsAll.guestcreated_flag = 1
     }
 
     override fun onRequestPermissionsResult(
@@ -196,6 +197,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         internal val GUEST_ADDED = 1
         internal val GUEST_NOT_ADDED = 0
         internal val PERMISSION_CODE = 1001
+        const val CALLER = "contact"
     }
 }
 

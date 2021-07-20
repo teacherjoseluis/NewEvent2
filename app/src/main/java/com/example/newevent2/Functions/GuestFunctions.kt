@@ -17,8 +17,9 @@ var guestmodel = GuestModel()
 lateinit var guestdbhelper: GuestDBHelper
 private lateinit var usermodel: UserModel
 private lateinit var contactsAll: ContactsAll
+private lateinit var guestCreateEdit: GuestCreateEdit
 
-internal fun addGuest(context: Context, guestitem: Guest) {
+internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
     try {
         //------------------------------------------------
         // Adding a new record in Firebase
@@ -35,11 +36,25 @@ internal fun addGuest(context: Context, guestitem: Guest) {
         usermodel = UserModel(user.key)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
+        if (caller == "contact"){
         contactsAll = ContactsAll()
         contactsAll.mContext = context
+            val chainofcommand = orderChainAddContact(guestmodel, guestdbhelper, usermodel, contactsAll)
+            chainofcommand.onAddEditGuest(guestitem)
+
+        } else if (caller == "guest") {
+            guestCreateEdit = GuestCreateEdit()
+            guestCreateEdit.mContext = context
+            val chainofcommand = orderChainAddGuest(guestmodel, guestdbhelper, usermodel, guestCreateEdit)
+            chainofcommand.onAddEditGuest(guestitem)
+        } else if (caller == "none") {
+            val chainofcommand = orderChainAddNone(guestmodel, guestdbhelper, usermodel)
+            chainofcommand.onAddEditGuest(guestitem)
+        }
         //------------------------------------------------
-        val chainofcommand = orderChainAdd(guestmodel, guestdbhelper, usermodel, contactsAll)
-        chainofcommand.onAddEditGuest(guestitem)
+
+        //------------------------------------------------
+        //chainofcommand.onAddEditGuest(guestitem)
         //------------------------------------------------
         // Updating User information in Session
         user.guests = user.guests + 1
@@ -103,8 +118,10 @@ internal fun editGuest(context: Context, guestitem: Guest) {
         guestdbhelper = GuestDBHelper(context)
         //taskdbhelper.task = taskitem
         //------------------------------------------------
+        guestCreateEdit = GuestCreateEdit()
+        guestCreateEdit.mContext = context
 
-        val chainofcommand = orderChainEdit(guestmodel, guestdbhelper)
+        val chainofcommand = orderChainEdit(guestmodel, guestdbhelper, guestCreateEdit)
         chainofcommand.onAddEditGuest(guestitem)
         //------------------------------------------------
         Toast.makeText(context, "Guest was edited successully", Toast.LENGTH_LONG).show()
@@ -199,7 +216,7 @@ internal fun contacttoGuest(context: Context, contactid: String): Guest {
     return contactguest
 }
 
-private fun orderChainAdd(
+private fun orderChainAddContact(
     guestModel: GuestModel,
     guestDBHelper: GuestDBHelper,
     userModel: UserModel,
@@ -208,6 +225,29 @@ private fun orderChainAdd(
     guestModel.nexthandler = guestDBHelper
     guestDBHelper.nexthandler = userModel
     userModel.nexthandlerg = contactsAll
+    return guestModel
+}
+
+private fun orderChainAddGuest(
+    guestModel: GuestModel,
+    guestDBHelper: GuestDBHelper,
+    userModel: UserModel,
+    guestCreateEdit: GuestCreateEdit
+): CoRAddEditGuest {
+    guestModel.nexthandler = guestDBHelper
+    guestDBHelper.nexthandler = userModel
+    userModel.nexthandlerg = guestCreateEdit
+    return guestModel
+}
+
+
+private fun orderChainAddNone(
+    guestModel: GuestModel,
+    guestDBHelper: GuestDBHelper,
+    userModel: UserModel
+): CoRAddEditGuest {
+    guestModel.nexthandler = guestDBHelper
+    guestDBHelper.nexthandler = userModel
     return guestModel
 }
 
@@ -223,8 +263,10 @@ private fun orderChainDel(
 
 private fun orderChainEdit(
     guestModel: GuestModel,
-    guestDBHelper: GuestDBHelper
+    guestDBHelper: GuestDBHelper,
+    guestCreateEdit: GuestCreateEdit
 ): CoRAddEditGuest {
     guestModel.nexthandler = guestDBHelper
+    guestDBHelper.nexthandler = guestCreateEdit
     return guestModel
 }

@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.Functions.addGuest
 import com.example.newevent2.Functions.addTask
 import com.example.newevent2.Functions.editGuest
@@ -28,15 +29,17 @@ import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.new_guest.*
 import kotlinx.android.synthetic.main.new_guest.button
 
-class GuestCreateEdit : AppCompatActivity() {
+class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
 
-    //var eventkey: String = ""
     private var uri: Uri? = null
     private var chiptextvalue: String? = null
     private var categoryrsvp: String = ""
     private var categorycompanions: String = ""
 
     private lateinit var guestitem: Guest
+    private lateinit var loadingview: View
+    private lateinit var withdataview: View
+    lateinit var mContext: Context
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +53,10 @@ class GuestCreateEdit : AppCompatActivity() {
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = "New Guest"
+
+        loadingview = findViewById(R.id.loadingscreen)
+        withdataview = findViewById(R.id.withdata)
+
 
         val extras = intent.extras
         guestitem = if (extras!!.containsKey("guest")) {
@@ -115,34 +122,6 @@ class GuestCreateEdit : AppCompatActivity() {
             tableinputedit.error = null
         }
 
-//        floatingActionButton.setOnClickListener {
-//            showImagePickerDialog()
-//        }
-
-        var id = rsvpgroup.checkedChipId
-        var chipselected = rsvpgroup.findViewById<Chip>(id)
-        chiptextvalue = chipselected.text.toString()
-        categoryrsvp = when (chiptextvalue) {
-            "Yes" -> "y"
-            "No" -> "n"
-            "Pending" -> "pending"
-            else -> "pending"
-        }
-
-        id = companionsgroup.checkedChipId
-        chipselected = companionsgroup.findViewById<Chip>(id)
-        chiptextvalue = chipselected.text.toString()
-        categorycompanions = when (chiptextvalue) {
-            "Adult" -> "adult"
-            "Child" -> "child"
-            "Baby" -> "baby"
-            "None" -> "none"
-            else -> "none"
-        }
-
-        //if (uri != null) saveToInternalStorage()
-
-
         button.setOnClickListener {
             var inputvalflag = true
             if (nameinputedit.text.toString().isEmpty()) {
@@ -167,12 +146,34 @@ class GuestCreateEdit : AppCompatActivity() {
             }
             if (inputvalflag) {
                 saveguest()
-                finish()
             }
         }
     }
 
     private fun saveguest() {
+        loadingview.visibility = ConstraintLayout.VISIBLE
+        withdataview.visibility = ConstraintLayout.GONE
+
+        var id = rsvpgroup.checkedChipId
+        var chipselected = rsvpgroup.findViewById<Chip>(id)
+        chiptextvalue = chipselected.text.toString()
+        categoryrsvp = when (chiptextvalue) {
+            "Yes" -> "y"
+            "No" -> "n"
+            "Pending" -> "pending"
+            else -> "pending"
+        }
+
+        id = companionsgroup.checkedChipId
+        chipselected = companionsgroup.findViewById<Chip>(id)
+        chiptextvalue = chipselected.text.toString()
+        categorycompanions = when (chiptextvalue) {
+            "Adult" -> "adult"
+            "Child" -> "child"
+            "Baby" -> "baby"
+            "None" -> "none"
+            else -> "none"
+        }
 
         guestitem.rsvp = categoryrsvp
         guestitem.companion = categorycompanions
@@ -182,102 +183,11 @@ class GuestCreateEdit : AppCompatActivity() {
         guestitem.email = mailinputedit.text.toString()
 
         if (guestitem.key == "") {
-            addGuest(this, guestitem)
+            addGuest(this, guestitem, CALLER)
         } else if (guestitem.key != "") {
-            editGuest(applicationContext, guestitem)
+            editGuest(this, guestitem)
         }
-        val resultIntent = Intent()
-        setResult(Activity.RESULT_OK, resultIntent)
-        finish()
     }
-
-
-//    private fun saveToInternalStorage() {
-//        //Request permissions
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-//                PackageManager.PERMISSION_DENIED
-//            ) {
-//                //permission denied
-//                val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                //show popup to request runtime permission
-//                requestPermissions(permissions, GuestCreateEdit.PERMISSION_CODE)
-//            } else {
-//                //permission already granted
-//                saveImage(applicationContext, uri)
-//            }
-//        } else {
-//            //system OS is < Marshmallow
-//            saveImage(applicationContext, uri)
-//        }
-//    }
-
-//    private fun showImagePickerDialog() {
-//        //Intent to pick image
-//        val intent = Intent(Intent.ACTION_PICK)
-//        intent.type = "image/*"
-//
-//        //Request permissions
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-//                PackageManager.PERMISSION_DENIED
-//            ) {
-//                //permission denied
-//                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-//                //show popup to request runtime permission
-//                requestPermissions(permissions, NewGuest.PERMISSION_CODE)
-//            } else {
-//                //permission already granted
-//                startActivityForResult(intent, NewGuest.IMAGE_PICK_CODE)
-//            }
-//        } else {
-//            //system OS is < Marshmallow
-//            startActivityForResult(intent, NewGuest.IMAGE_PICK_CODE)
-//        }
-//    }
-
-
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<out String>,
-//        grantResults: IntArray
-//    ) {
-//        when (requestCode) {
-//            MainActivity.PERMISSION_CODE -> {
-//                if (grantResults[0] ==
-//                    PackageManager.PERMISSION_GRANTED
-//                ) {
-//                    //permission from popup granted
-//                    showImagePickerDialog()
-//                } else {
-//                    //permission from popup denied
-//                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
-//    }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if (resultCode == Activity.RESULT_OK && requestCode == GuestCreateEdit.IMAGE_PICK_CODE) {
-//            uri = data?.data!!
-//            CropImage.activity(uri)
-//                .setMinCropResultSize(80, 80)
-//                .setMaxCropResultSize(800, 800)
-//                .start(this)
-//        }
-//
-//        if (resultCode == Activity.RESULT_OK && requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-//            val result = CropImage.getActivityResult(data)
-//            if (resultCode == Activity.RESULT_OK) {
-//                uri = result.uri
-//                contactavatar.setImageURI(uri)
-//            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-//                val error = result.error
-//            }
-//        }
-//    }
 
     override fun onSupportNavigateUp(): Boolean {
         finish()
@@ -285,11 +195,15 @@ class GuestCreateEdit : AppCompatActivity() {
     }
 
     companion object {
-        //image pick code
-        private val IMAGE_PICK_CODE = 1000
-
         //Permission code
         internal val PERMISSION_CODE = 1001
+        const val CALLER = "guest"
+    }
+
+    override fun onAddEditGuest(guest: Guest) {
+        (mContext as GuestCreateEdit).loadingview.visibility = ConstraintLayout.GONE
+        (mContext as GuestCreateEdit).withdataview.visibility = ConstraintLayout.VISIBLE
+        GuestsAll.guestcreated_flag = 1
     }
 }
 

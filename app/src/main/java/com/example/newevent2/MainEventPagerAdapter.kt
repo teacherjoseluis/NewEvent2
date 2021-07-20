@@ -29,6 +29,10 @@ class MainEventPagerAdapter(
                 fragInfo.arguments = bundle
                 return fragInfo
             }
+            2 -> {
+                //fragInfo.arguments = bundle
+                return GuestsAll()
+            }
             else -> {
                 val fragInfo = EventSummary()
                 fragInfo.arguments = bundle

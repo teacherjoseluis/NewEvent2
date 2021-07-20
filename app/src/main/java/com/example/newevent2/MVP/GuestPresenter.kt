@@ -14,6 +14,7 @@ import com.example.newevent2.Model.Contact
 
 import com.example.newevent2.Model.Guest
 import com.example.newevent2.Model.GuestModel
+import com.example.newevent2.Model.TableGuests
 import com.example.newevent2.VendorsAll
 
 class GuestPresenter : Cache.GuestArrayListCacheData {
@@ -24,8 +25,10 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
     private lateinit var fragmentDE: DashboardEventPresenter
     private lateinit var fragmentGA: GuestsAllPresenter
     private lateinit var fragmentCA: ContactsAllPresenter
+    private lateinit var fragmentTG: TableGuestsActivityPresenter
 
     private lateinit var cacheguest: Cache<Guest>
+    private lateinit var cachetableguest: Cache<TableGuests>
 
     constructor(context: Context, fragment: DashboardEventPresenter) {
         fragmentDE = fragment
@@ -43,6 +46,12 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
         fragmentCA = fragment
         mContext = context
         activefragment = "CA"
+    }
+
+    constructor(context: Context, fragment: TableGuestsActivityPresenter) {
+        fragmentTG = fragment
+        mContext = context
+        activefragment = "TG"
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -82,6 +91,7 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
             when (activefragment) {
                 "GA" -> fragmentGA.onGuestList(arrayList)
                 "DE" -> fragmentDE.onGuestList(arrayList)
+                "TG" -> fragmentTG.onGuestList(arrayList)
             }
         }
     }
@@ -102,12 +112,14 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
                         when (activefragment) {
                             "GA" -> fragmentGA.onGuestList(arrayList)
                             "DE" -> fragmentDE.onGuestList(arrayList)
+                            "TG" -> fragmentTG.onGuestList(arrayList)
                         }
                     }else {
                         // This is when there is no data coming from Firebase
                         when (activefragment) {
                             "GA" -> fragmentGA.onGuestListError(ERRCODEGUESTS)
                             "DE" -> fragmentDE.onGuestListError(ERRCODEGUESTS)
+                            "TG" -> fragmentTG.onGuestListError(ERRCODEGUESTS)
                         }
                     }
                 }
@@ -115,6 +127,7 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
             }
         )
     }
+
     interface GuestList {
         fun onGuestList(list: ArrayList<Guest>)
         fun onGuestListError(errcode: String)

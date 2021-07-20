@@ -135,7 +135,7 @@ class ActivityContainer : AppCompatActivity() {
                         .commit()
                 }
                 R.id.guests -> {
-                    val newfragment = GuestsAll()
+                    val newfragment = TableGuestsActivity()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
 

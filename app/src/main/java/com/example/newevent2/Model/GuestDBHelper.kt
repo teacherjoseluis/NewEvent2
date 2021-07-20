@@ -98,62 +98,6 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         return list
     }
 
-    fun getGuestsStats(): GuestStatsToken {
-        var gueststats = GuestStatsToken()
-
-        val cursor: Cursor = db.rawQuery("SELECT * FROM GUEST ORDER BY name ASC", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                do {
-                    when (cursor.getString(cursor.getColumnIndex("rsvp"))) {
-                        "y" -> gueststats.confirmed += 1
-                        "n" -> gueststats.rejected += 1
-                        "pending" -> gueststats.pending += 1
-                    }
-                    Log.d(
-                        TAG,
-                        "Guest stats obtained from local DB. Confirmed (${gueststats.confirmed}), Rejected (${gueststats.rejected}), Pending(${gueststats.pending})"
-                    )
-                } while (cursor.moveToNext())
-            }
-        }
-        return gueststats
-    }
-
-    fun getGuestsperTable(): ArrayList<TableGuests> {
-        var tablelist: ArrayList<String> = ArrayList()
-        val cursor: Cursor = db.rawQuery("SELECT DISTINCT tableguest FROM GUEST", null)
-
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                do {
-                    tablelist.add(cursor.getString(cursor.getColumnIndex("tableguest")))
-                } while (cursor.moveToNext())
-            }
-        }
-
-        var guesttables: ArrayList<TableGuests> = ArrayList()
-        var guesttableslist: ArrayList<Guest> = ArrayList()
-
-        for (tables in tablelist) {
-            guesttableslist.clear()
-            var count = 0
-            for (guest in guesttableslist) {
-                if (guest.table == tables) {
-                    count += (guest.companion.toInt() + 1) //adding the Guest itself
-                    guesttableslist.add(guest)
-                }
-            }
-            val newguestlist: ArrayList<Guest> = ArrayList(guesttableslist.size)
-            for (guestlist in guesttableslist) newguestlist.add(guestlist)
-            guesttables.add(TableGuests(tables, count, newguestlist))
-
-        }
-        return guesttables
-    }
-
     fun update(guest: Guest) {
         var values = ContentValues()
         values.put("guestid", guest.key)

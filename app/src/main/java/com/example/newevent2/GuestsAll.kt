@@ -1,15 +1,12 @@
 package com.example.newevent2
 
 
-import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.*
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,9 +21,6 @@ import kotlinx.android.synthetic.main.guests_all.*
 import kotlinx.android.synthetic.main.guests_all.view.*
 import kotlin.collections.ArrayList
 
-// 7/14 - This module has a known bug which is that it won't refresh the list of Guests previously added as from Contacts or New Guest.
-// In order to have this list updated, the user needs to go back one more view so this one can be invalidated and the new one contains the new info.
-
 class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
     private var contactlist = ArrayList<Guest>()
@@ -37,6 +31,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
     private lateinit var presenterguest: GuestsAllPresenter
     private lateinit var inf: View
     private lateinit var rvAdapter: Rv_GuestAdapter
+    private lateinit var swipeController: SwipeControllerTasks
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,12 +79,12 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
         inf = inflater.inflate(R.layout.guests_all, container, false)
 
-        val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
+//        val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
 
-        pulltoRefresh.setOnRefreshListener {
+//        pulltoRefresh.setOnRefreshListener {
 //            presenterguest = GuestsAllPresenter(context!!, this, inf)
-            pullToRefresh.isRefreshing = false
-        }
+//            pullToRefresh.isRefreshing = false
+//        }
 
         recyclerViewAllGuests = inf.recyclerViewGuests
         recyclerViewAllGuests.apply {
@@ -142,22 +137,33 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
     override fun onResume() {
         super.onResume()
-        val guestdb = GuestDBHelper(context!!)
-        val guestlist = guestdb.getAllGuests()
-        rvAdapter = Rv_GuestAdapter(guestlist, context!!)
+////Just want to enter here after a new guest was added not every time. I don't like this.
 
-        recyclerViewAllGuests.adapter = rvAdapter
-        contactlist = clone(guestlist)!!
+        if (GuestsAll.guestcreated_flag == 1){
+//            presenterguest = GuestsAllPresenter(context!!, this, inf)
 
-        val swipeController = SwipeControllerTasks(
-            context!!,
-            rvAdapter,
-            recyclerViewAllGuests,
-            null,
-            RIGHTACTION
-        )
-        val itemTouchHelper = ItemTouchHelper(swipeController)
-        itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
+            val guestdb = GuestDBHelper(context!!)
+            val guestlist = guestdb.getAllGuests()
+
+            rvAdapter = Rv_GuestAdapter(guestlist, context!!)
+
+//            recyclerViewAllGuests.adapter = null
+            recyclerViewAllGuests.adapter = rvAdapter
+            contactlist = clone(guestlist)!!
+
+//            swipeController = SwipeControllerTasks(
+//                context!!,
+//                rvAdapter,
+//                recyclerViewAllGuests,
+//                null,
+//                RIGHTACTION
+//            )
+//            val itemTouchHelper = ItemTouchHelper(swipeController)
+//            itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
+
+            GuestsAll.guestcreated_flag = 0
+        }
+
     }
 
     private fun filter(models: ArrayList<Guest>, query: String?): List<Guest> {
@@ -188,7 +194,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         recyclerViewAllGuests.adapter = rvAdapter
         contactlist = clone(list)!!
 
-        val swipeController = SwipeControllerTasks(
+        swipeController = SwipeControllerTasks(
             inflatedView.context,
             rvAdapter,
             recyclerViewAllGuests,
@@ -204,9 +210,33 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
     }
 
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode == GUESTCREATION && resultCode == RESULT_OK) {
+//            val guestdb = GuestDBHelper(context!!)
+//            // Data is exclusively taken from the local DB
+//            val guestlist = guestdb.getAllGuests()
+//            rvAdapter = Rv_GuestAdapter(guestlist, context!!)
+//
+//            recyclerViewAllGuests.adapter = null
+//            recyclerViewAllGuests.adapter = rvAdapter
+//            contactlist = clone(guestlist)!!
+//
+//            val swipeController = SwipeControllerTasks(
+//                context!!,
+//                rvAdapter,
+//                recyclerViewAllGuests,
+//                null,
+//                RIGHTACTION
+//            )
+//            val itemTouchHelper = ItemTouchHelper(swipeController)
+//            itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
+//        }
+//    }
+
     companion object {
         const val RIGHTACTION = "delete"
-        internal val GUEST_ADDED = 1
-        internal val GUEST_NOT_ADDED = 0
+        internal val GUESTCREATION = 1
+        var guestcreated_flag = 0
     }
 }
