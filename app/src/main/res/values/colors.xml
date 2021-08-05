@@ -20,4 +20,18 @@
     <color name="azulAcqua">#40faa6</color>
     <color name="azulTiffany">#81D8D0</color>
     <color name="pewter">#FCFCFC</color>
+
+    <color name="sunny_pavement">#d8d8d8</color>
+    <color name="crystal_glass">#d8fff0</color>
+    <color name="we_peep">#ffd8d8</color>
+    <color name="crown_point_cream">#fff0c0</color>
+    <color name="transparent_blue">#d8d8ff</color>
+
+    <array name="rainbow">
+        <item>@color/sunny_pavement</item>
+        <item>@color/crystal_glass</item>
+        <item>@color/we_peep</item>
+        <item>@color/crown_point_cream</item>
+        <item>@color/transparent_blue</item>
+    </array>
 </resources>

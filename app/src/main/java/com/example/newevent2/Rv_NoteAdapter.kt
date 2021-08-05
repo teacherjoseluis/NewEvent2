@@ -3,15 +3,20 @@ package com.example.newevent2
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getColor
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newevent2.Model.Note
+import com.example.newevent2.Model.NoteDBHelper
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.new_note.*
+import java.lang.Exception
 
 // Recyclerview - Displays a scrolling list of elements based on large datasets
 // The view holder objects are managed by an adapter, which you create by extending RecyclerView.Adapter.
@@ -41,25 +46,17 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.notetitle?.text = noteList[p1].title
-        p0.notedatetime?.text = noteList[p1].datetime
-        p0.notesummary?.text = noteList[p1].summary
-//        p0.notedatetime?.text = noteList[p1].key
-//        p0.notedatetime?.text = noteList[p1].eventid
+        p0.notedatetime?.text = noteList[p1].lastupdateddatetime
+        p0.notesummary?.text = noteList[p1].title
 
-
+        try {
+            p0.itemView.background.setTint(noteList[p1].color.toColorInt())
+        } catch (e: Exception){
+            p0.itemView.background.setTint(Color.WHITE)
+        }
         p0.itemView.setOnClickListener {
-            val notedetail = Intent(context, NewNote::class.java)
-            notedetail.putExtra("notekey", noteList[p1].key)
-            notedetail.putExtra("notetitle", noteList[p1].title)
-            notedetail.putExtra("noteurl", noteList[p1].noteurl)
-            //notedetail.putExtra("eventid", noteList[p1].eventid)
-//            taskdetail.putExtra("eventid", taskList[p1].eventid)
-//            taskdetail.putExtra("name", taskList[p1].name)
-//            taskdetail.putExtra("date", taskList[p1].date)
-//            taskdetail.putExtra("category", taskList[p1].category)
-//            taskdetail.putExtra("budget", taskList[p1].budget)
-//            taskdetail.putExtra("status", taskList[p1].status)
-//
+            val notedetail = Intent(context, NoteCreateEdit::class.java)
+            notedetail.putExtra("note", noteList[p1])
             context.startActivity(notedetail)
         }
     }
@@ -73,68 +70,37 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
     }
 
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
-//        val task = TaskEntity()
-//        task.key = taskList[position].key
-//        task.eventid = taskList[position].eventid
-//        task.name = taskList[position].name
-//        task.date = taskList[position].date
-//        task.budget = taskList[position].budget
-//
-//        taskList.removeAt(position)
-//        notifyItemRemoved(position)
-//
-//        if (action == "check") {
-//            task.editTask("complete")
-//
-//            Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
-//                .setAction("UNDO") {
-//                    taskList.add(task)
-//                    notifyItemInserted(taskList.lastIndex)
-//                    task.editTask("active")
-//                }.show()
-//        }
+
     }
 
     override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
-        val note = NoteEntity().apply {
-            key = noteList[position].key
+        val noteswift = noteList[position]
+        val notebackup = Note().apply {
             title = noteList[position].title
-            datetime = noteList[position].datetime
-            noteurl = noteList[position].noteurl
-            eventid = noteList[position].eventid
-            summary = noteList[position].summary
+            body = noteList[position].body
+            color = noteList[position].color
+            lastupdateddatetime = noteList[position].lastupdateddatetime
         }
 
-        noteList.removeAt(position)
-        notifyItemRemoved(position)
+        val notedb = NoteDBHelper(context)
+        if (action == DELETEACTION) {
+            noteList.removeAt(position)
+            notifyItemRemoved(position)
+            notedb.delete(noteswift)
 
-        if (action == "delete") {
-            note.deleteNote(context)
+            Snackbar.make(recyclerView, "Note deleted", Snackbar.LENGTH_LONG)
+                .setAction("UNDO") {
+                    val notedbins = NoteDBHelper(context)
+                    noteList.add(notebackup)
+                    notifyItemInserted(noteList.lastIndex)
+                    notedbins.insert(notebackup)
+                }.show()
         }
+    }
 
-//        val task = TaskEntity()
-//        task.key = taskList[position].key
-//        task.eventid = taskList[position].eventid
-//        task.name = taskList[position].name
-//        task.date = taskList[position].date
-//        task.budget = taskList[position].budget
-//        task.category = taskList[position].category
-//
-//        taskList.removeAt(position)
-//        notifyItemRemoved(position)
-//
-//        if (action == "delete") {
-//            task.deleteTask()
-//
-//            Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
-//                .setAction("UNDO") {
-//                    taskList.add(task)
-//                    notifyItemInserted(taskList.lastIndex)
-//                    task.addTask()
-//                }.show()
-//        } else if (action == "undo") {
-//            task.editTask("active")
-//        }
+    companion object {
+        const val DELETEACTION = "delete"
+        const val TAG = "Rv_NoteAdapter"
     }
 }
 

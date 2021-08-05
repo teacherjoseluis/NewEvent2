@@ -18,11 +18,13 @@ class Cache<T : Any> {
     private lateinit var taskPresenter: TaskPresenter
     private lateinit var paymentPresenter: PaymentPresenter
     private lateinit var guestPresenter: GuestPresenter
+    private lateinit var vendorPresenter: VendorPresenter
     private lateinit var eventPresenter: EventPresenter
     private lateinit var imagePresenter: ImagePresenter
     private lateinit var taskhelper: TaskDBHelper
     private lateinit var paymenthelper: PaymentDBHelper
     private lateinit var guesthelper: GuestDBHelper
+    private lateinit var vendorhelper: VendorDBHelper
     private lateinit var eventhelper: EventDBHelper
 
     private var contextCache: Context
@@ -43,6 +45,12 @@ class Cache<T : Any> {
         contextCache = context
         guestPresenter = presenter
         guesthelper = GuestDBHelper(context)
+    }
+
+    constructor(context: Context, presenter: VendorPresenter) {
+        contextCache = context
+        vendorPresenter = presenter
+        vendorhelper = VendorDBHelper(context)
     }
 
     constructor(context: Context, presenter: EventPresenter) {
@@ -71,6 +79,11 @@ class Cache<T : Any> {
             list[0] is Guest -> {
                 for (guest in list) {
                     guesthelper.insert(guest as Guest)
+                }
+            }
+            list[0] is Vendor -> {
+                for (vendor in list) {
+                    vendorhelper.insert(vendor as Vendor)
                 }
             }
         }
@@ -122,6 +135,15 @@ class Cache<T : Any> {
                 }
             }
 
+            Vendor::class -> {
+                val arrayList = vendorhelper.getAllVendors()
+                if (arrayList.size != 0) {
+                    vendorPresenter.onArrayListV(arrayList)
+                } else {
+                    vendorPresenter.onEmptyListV()
+                }
+            }
+
             Event::class -> {
                 val event = eventhelper.getEvent()
                 if (event.key != "") {
@@ -163,6 +185,11 @@ class Cache<T : Any> {
     interface GuestArrayListCacheData {
         fun onArrayListG(arrayList: ArrayList<Guest>)
         fun onEmptyListG()
+    }
+
+    interface VendorArrayListCacheData {
+        fun onArrayListV(arrayList: ArrayList<Vendor>)
+        fun onEmptyListV()
     }
 
     interface EventItemCacheData {

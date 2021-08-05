@@ -129,7 +129,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
         inf.fabContactGuest.setOnClickListener {
             val newguest = Intent(context, ContactsAll::class.java)
-            newguest.putExtra("userid", "")
+            newguest.putExtra("guestid", "")
             startActivity(newguest)
         }
         return inf
@@ -139,7 +139,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         super.onResume()
 ////Just want to enter here after a new guest was added not every time. I don't like this.
 
-        if (GuestsAll.guestcreated_flag == 1){
+        if (guestcreated_flag == 1){
 //            presenterguest = GuestsAllPresenter(context!!, this, inf)
 
             val guestdb = GuestDBHelper(context!!)
@@ -161,7 +161,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //            val itemTouchHelper = ItemTouchHelper(swipeController)
 //            itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
 
-            GuestsAll.guestcreated_flag = 0
+            guestcreated_flag = 0
         }
 
     }

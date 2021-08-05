@@ -68,7 +68,7 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
             override fun onDataChange(p0: DataSnapshot) {
                 val guestitem = p0.getValue(Guest::class.java)!!
                 guestitem!!.key = p0.key.toString()
-                Log.d(PaymentModel.TAG, "Detail retrieved for guest ${guestitem.key}")
+                Log.d(TAG, "Detail retrieved for guest ${guestitem.key}")
                 dataFetched.onGuest(guestitem)
             }
 
@@ -132,7 +132,7 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Guest").child(guest.key)
 
-        val paymentedit = hashMapOf(
+        val guestedit = hashMapOf(
             "name" to guest.name,
             "rsvp" to guest.rsvp,
             "companion" to guest.companion,
@@ -141,14 +141,14 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
             "email" to guest.email
         )
 
-        postRef.setValue(paymentedit as Map<String, Any>)
+        postRef.setValue(guestedit as Map<String, Any>)
             .addOnSuccessListener {
                 guesteditedflag.onGuestAddedEdited(true, guest)
-                Log.d(PaymentModel.TAG, "Guest ${guest.name} successfully edited")
+                Log.d(TAG, "Guest ${guest.name} successfully edited")
             }
             .addOnFailureListener {
                 guesteditedflag.onGuestAddedEdited(false, guest)
-                Log.e(PaymentModel.TAG, "Guest ${guest.name} failed to be edited")
+                Log.e(TAG, "Guest ${guest.name} failed to be edited")
             }
     }
 
@@ -164,11 +164,11 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
                 .removeValue()
                 .addOnSuccessListener {
                     guestdeletedflag.onGuestDeleted(true, guest)
-                    Log.d(PaymentModel.TAG, "Guest ${guest.name} successfully deleted")
+                    Log.d(TAG, "Guest ${guest.name} successfully deleted")
                 }
                 .addOnFailureListener {
                     guestdeletedflag.onGuestDeleted(false, guest)
-                    Log.e(PaymentModel.TAG, "Guest ${guest.name} failed to be deleted")
+                    Log.e(TAG, "Guest ${guest.name} failed to be deleted")
                 }
     }
 

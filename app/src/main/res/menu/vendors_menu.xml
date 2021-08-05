@@ -13,11 +13,9 @@
 
 
     <item
-        android:id="@+id/action_sortvendor"
-        android:gravity="right"
-        android:icon="@drawable/icons8_sort_24"
-        android:iconifiedByDefault="false"
-        android:title=""
-        app:showAsAction="ifRoom|collapseActionView" />
+        android:id="@+id/add_vendor"
+        android:iconTint="@color/white"
+        android:title="Add as Vendor"
+        app:showAsAction="never"/>
 
 </menu>

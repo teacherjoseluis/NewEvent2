@@ -14,17 +14,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newevent2.Functions.*
 import com.example.newevent2.Functions.addGuest
-import com.example.newevent2.Functions.clone
+import com.example.newevent2.Functions.addVendor
 import com.example.newevent2.Functions.contacttoGuest
+import com.example.newevent2.Functions.contacttoVendor
 import com.example.newevent2.MVP.ContactsAllPresenter
 import com.example.newevent2.Model.Contact
 import com.example.newevent2.Model.Guest
+import com.example.newevent2.Model.Vendor
 import kotlinx.android.synthetic.main.contacts_all.*
 import kotlinx.android.synthetic.main.contacts_all.view.*
 import kotlinx.android.synthetic.main.vendors_all.view.*
 
-class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAddEditGuest {
+class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAddEditGuest,
+    CoRAddEditVendor {
 
     private var contactlist = ArrayList<Contact>()
     private lateinit var activitymenu: Menu
@@ -37,6 +41,8 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
     private lateinit var withdataview: View
     lateinit var mContext: Context
 
+    private var callerclass = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.contacts_all)
@@ -44,6 +50,13 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val extras = intent.extras
+        callerclass = if (extras!!.containsKey("guestid")) {
+            "guest"
+        } else {
+            "vendor"
+        }
 
         apptitle = findViewById(R.id.appbartitle)
         apptitle.text = "Contacts"
@@ -74,7 +87,6 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         searchView.isIconified = false
 
         searchView.setOnSearchClickListener {
-
         }
 
         searchView.setOnCloseListener {
@@ -97,6 +109,8 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         activitymenu = menu
         val guestmenu = activitymenu.findItem(R.id.add_guest)
         guestmenu.isEnabled = false
+        val vendormenu = activitymenu.findItem(R.id.add_vendor)
+        vendormenu.isEnabled = false
         return true
     }
 
@@ -125,79 +139,121 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
             //recyclerViewAllContacts.itemAnimator = null
             contactlist = clone(list)!!
 
-            rvAdapter.mOnItemClickListener = object : OnItemClickListener {
-                @SuppressLint("SetTextI18n")
-                override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
-                    //val apptitle = findViewById<TextView>(R.id.appbartitle)
-                    if (countselected.size != 0) {
-                        apptitle.text = "${countselected.size} selected"
-                        val guestmenu = activitymenu.findItem(R.id.add_guest)
-                        guestmenu.isEnabled = true
-                        guestmenu.setOnMenuItemClickListener {
-                            loadingview.visibility = ConstraintLayout.VISIBLE
-                            withdataview.visibility = ConstraintLayout.GONE
-                            when (it.itemId) {
-                                R.id.add_guest -> {
-                                    for (index in countselected) {
-                                        val guest = contacttoGuest(context, contactlist[index].key)
-                                        addGuest(context, guest, CALLER)
+            if (callerclass == "guest") {
+                rvAdapter.mOnItemClickListener = object : OnItemClickListener {
+                    @SuppressLint("SetTextI18n")
+                    override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
+                        //val apptitle = findViewById<TextView>(R.id.appbartitle)
+                        if (countselected.size != 0) {
+                            apptitle.text = "${countselected.size} selected"
+                            val guestmenu = activitymenu.findItem(R.id.add_guest)
+                            guestmenu.isEnabled = true
+                            guestmenu.setOnMenuItemClickListener {
+                                loadingview.visibility = ConstraintLayout.VISIBLE
+                                withdataview.visibility = ConstraintLayout.GONE
+                                when (it.itemId) {
+                                    R.id.add_guest -> {
+                                        for (index in countselected) {
+                                            val guest =
+                                                contacttoGuest(context, contactlist[index].key)
+                                            addGuest(context, guest, CALLER)
+                                        }
+                                        apptitle.text = "Contacts"
+                                        rvAdapter.onClearSelected()
+                                        true
                                     }
-                                    apptitle.text = "Contacts"
-                                    rvAdapter.onClearSelected()
-                                    true
                                 }
+                                true
                             }
-                            true
+                        } else {
+                            apptitle.text = "Contacts"
+                            val guestmenu = activitymenu.findItem(R.id.add_guest)
+                            guestmenu.isEnabled = false
                         }
+                    }
+                }
+            } else if (callerclass == "vendor") {
+                rvAdapter.mOnItemClickListener = object : OnItemClickListener {
+                    @SuppressLint("SetTextI18n")
+                    override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
+                        //val apptitle = findViewById<TextView>(R.id.appbartitle)
+                        if (countselected.size != 0) {
+                            apptitle.text = "${countselected.size} selected"
+                            val vendormenu = activitymenu.findItem(R.id.add_vendor)
+                            vendormenu.isEnabled = true
+                            vendormenu.setOnMenuItemClickListener {
+                                loadingview.visibility = ConstraintLayout.VISIBLE
+                                withdataview.visibility = ConstraintLayout.GONE
+                                when (it.itemId) {
+                                    R.id.add_vendor -> {
+                                        for (index in countselected) {
+                                            val vendor =
+                                                contacttoVendor(context, contactlist[index].key)
+                                            addVendor(context, vendor, CALLER)
+                                        }
+                                        apptitle.text = "Contacts"
+                                        rvAdapter.onClearSelected()
+                                        true
+                                    }
+                                }
+                                true
+                            }
+                        } else {
+                            apptitle.text = "Contacts"
+                            val vendormenu = activitymenu.findItem(R.id.add_vendor)
+                            vendormenu.isEnabled = false
+                        }
+                    }
+                }
+            }
+            }
+        }
+
+        override fun onGAContactsError(errcode: String) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onAddEditGuest(guest: Guest) {
+            (mContext as ContactsAll).loadingview.visibility = ConstraintLayout.GONE
+            (mContext as ContactsAll).withdataview.visibility = ConstraintLayout.VISIBLE
+            GuestsAll.guestcreated_flag = 1
+        }
+
+        override fun onAddEditVendor(vendor: Vendor) {
+            (mContext as ContactsAll).loadingview.visibility = ConstraintLayout.GONE
+            (mContext as ContactsAll).withdataview.visibility = ConstraintLayout.VISIBLE
+            VendorsAll.vendorcreated_flag = 1
+        }
+
+        override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
+        ) {
+            when (requestCode) {
+                PERMISSION_CODE -> {
+                    if (grantResults.isNotEmpty() && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED
+                    ) {
+                        //permission from popup granted
+                        presenterguest = ContactsAllPresenter(this, this)
                     } else {
-                        apptitle.text = "Contacts"
-                        val guestmenu = activitymenu.findItem(R.id.add_guest)
-                        guestmenu.isEnabled = false
+                        //permission from popup denied
                     }
                 }
             }
         }
-    }
 
-    override fun onGAContactsError(errcode: String) {
-        TODO("Not yet implemented")
-    }
+        override fun onSupportNavigateUp(): Boolean {
+            finish()
+            return true
+        }
 
-    override fun onAddEditGuest(guest: Guest) {
-        (mContext as ContactsAll).loadingview.visibility = ConstraintLayout.GONE
-        (mContext as ContactsAll).withdataview.visibility = ConstraintLayout.VISIBLE
-        GuestsAll.guestcreated_flag = 1
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            PERMISSION_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] ==
-                    PackageManager.PERMISSION_GRANTED
-                ) {
-                    //permission from popup granted
-                    presenterguest = ContactsAllPresenter(this, this)
-                } else {
-                    //permission from popup denied
-                }
-            }
+        companion object {
+            internal val GUEST_ADDED = 1
+            internal val GUEST_NOT_ADDED = 0
+            internal val PERMISSION_CODE = 1001
+            const val CALLER = "contact"
         }
     }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
-
-    companion object {
-        internal val GUEST_ADDED = 1
-        internal val GUEST_NOT_ADDED = 0
-        internal val PERMISSION_CODE = 1001
-        const val CALLER = "contact"
-    }
-}
 

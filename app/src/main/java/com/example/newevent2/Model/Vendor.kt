@@ -2,16 +2,16 @@ package com.example.newevent2.Model
 
 import android.os.Parcel
 import android.os.Parcelable
-import android.provider.ContactsContract
 
-open class Guest(
+open class Vendor(
     var key: String = "",
     var name: String = "",
     var phone: String = "",
     var email: String = "",
-    var rsvp: String = "pending",
-    var companion: String = "none",
-    var table: String = "none",
+    var category: String = "",
+    var eventid: String = "",
+    var placeid: String = "",
+    var location: String = "",
     var createdatetime: String = ""
 ) : Parcelable {
 
@@ -20,9 +20,10 @@ open class Guest(
         name = parcel.readString().toString()
         phone = parcel.readString().toString()
         email = parcel.readString().toString()
-        rsvp = parcel.readString().toString()
-        companion = parcel.readString().toString()
-        table = parcel.readString().toString()
+        category = parcel.readString().toString()
+        eventid = parcel.readString().toString()
+        placeid = parcel.readString().toString()
+        location = parcel.readString().toString()
         createdatetime = parcel.readString().toString()
     }
 
@@ -31,9 +32,10 @@ open class Guest(
         parcel.writeString(name)
         parcel.writeString(phone)
         parcel.writeString(email)
-        parcel.writeString(rsvp)
-        parcel.writeString(companion)
-        parcel.writeString(table)
+        parcel.writeString(category)
+        parcel.writeString(eventid)
+        parcel.writeString(placeid)
+        parcel.writeString(location)
         parcel.writeString(createdatetime)
     }
 
@@ -41,12 +43,12 @@ open class Guest(
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<Guest> {
-        override fun createFromParcel(parcel: Parcel): Guest {
-            return Guest(parcel)
+    companion object CREATOR : Parcelable.Creator<Vendor> {
+        override fun createFromParcel(parcel: Parcel): Vendor {
+            return Vendor(parcel)
         }
 
-        override fun newArray(size: Int): Array<Guest?> {
+        override fun newArray(size: Int): Array<Vendor?> {
             return arrayOfNulls(size)
         }
     }

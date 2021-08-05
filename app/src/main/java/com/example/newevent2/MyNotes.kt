@@ -1,95 +1,94 @@
 package com.example.newevent2
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.tabs.TabLayout
+import com.example.newevent2.Functions.clone
+import com.example.newevent2.MVP.NotePresenter
+import com.example.newevent2.Model.Note
+import com.example.newevent2.Model.NoteDBHelper
 import kotlinx.android.synthetic.main.my_notes.*
+import kotlinx.android.synthetic.main.my_notes.view.*
 import kotlinx.android.synthetic.main.navbottom.*
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 
-class MyNotes : AppCompatActivity() {
+class MyNotes : Fragment(), NotePresenter.NoteActivity {
 
-    //var eventkey = ""
+    private lateinit var presenternote: NotePresenter
+    private lateinit var rvAdapter: Rv_NoteAdapter
+    private var recyclerView = recyclerViewNotes
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.my_notes)
-        //val intent = intent
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val inf = inflater.inflate(R.layout.my_notes, container, false)
 
-        //eventkey = intent.getStringExtra("eventkey").toString()
-
-        val apptitle = findViewById<TextView>(R.id.appbartitle)
-        apptitle.text = "My Notes"
-
-        val recyclerView = recyclerViewNotes
+        recyclerView = inf.recyclerViewNotes
         recyclerView.apply {
-            layoutManager = LinearLayoutManager(context).apply {
+            layoutManager = LinearLayoutManager(inf.context).apply {
                 stackFromEnd = true
-                reverseLayout = true
+                reverseLayout = false
             }
         }
-//----------------------------------------------------------------------------------------------
-        val notentity = NoteEntity()
-        //notentity.eventid = eventkey
+        presenternote = NotePresenter(context!!, this, inf)
 
-        notentity.getNotesList(this, object : FirebaseSuccessListenerNote {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onNotesList(list: ArrayList<Note>) {
-                val rvAdapter = Rv_NoteAdapter(list)
-                recyclerView.adapter = rvAdapter
+        inf.floatingNewNote.setOnClickListener {
+            val newnote = Intent(context, NoteCreateEdit::class.java)
+            newnote.putExtra("userid", "")
+            startActivity(newnote)
+        }
+        return inf
+    }
 
-                val swipeController =
-                    SwipeControllerTasks(this@MyNotes, rvAdapter, recyclerView, null, "delete")
-                val itemTouchHelper = ItemTouchHelper(swipeController)
-                itemTouchHelper.attachToRecyclerView(recyclerView)
+    override fun onResume() {
+        super.onResume()
+        if (notescreated_flag== 1) {
+            val notedb = NoteDBHelper(context!!)
+            val notelist = notedb.getAllNotes()
+            if (notelist.size == 0) {
+                this.withdata.visibility = ConstraintLayout.GONE
+                this.withnodata.visibility = ConstraintLayout.VISIBLE
             }
-        })
-//----------------------------------------------------------------------------------------------
+            rvAdapter = Rv_NoteAdapter(notelist)
+            recyclerView.adapter = rvAdapter
+            notescreated_flag = 0
+        }
+    }
 
-//        floatingNewNote.setOnClickListener {
-//            val newnote = Intent(this, NewNote::class.java)
-//            //newnote.putExtra("eventkey", eventkey)
-//            startActivity(newnote)
-//        }
-//
-//        imageButton1.setOnClickListener {
-//            val home = Intent(this, Welcome::class.java)
-//            startActivity(home)
-//        }
-//        imageButton2.setOnClickListener {
-//            val calendar = Intent(this, MyCalendar::class.java)
-//            //calendar.putExtra("eventkey", eventkey)
-//            startActivity(calendar)
-//        }
-//
-//        imageButton3.setOnClickListener {
-//            val contacts = Intent(this, MyContacts::class.java)
-//            //contacts.putExtra("eventkey", eventkey)
-//            startActivity(contacts)
-//        }
-//
-//        imageButton.setOnClickListener {
-//            val events = Intent(this, EventDetail::class.java)
-//            //notes.putExtra("eventkey", eventkey)
-//            startActivity(events)
-//        }
+    override fun onNoteSuccess(inflatedView: View, notelist: ArrayList<Note>) {
+        rvAdapter = Rv_NoteAdapter(notelist)
+        recyclerView.adapter = rvAdapter
 
+        val swipeController = SwipeControllerTasks(
+            context!!,
+            rvAdapter,
+            recyclerView,
+            null,
+            RIGHTACTION
+        )
+        val itemTouchHelper = ItemTouchHelper(swipeController)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    override fun onNoteError(inflatedView: View, errcode: String) {
+        inflatedView.withdata.visibility = ConstraintLayout.GONE
+        inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
+    }
+
+    companion object {
+        const val RIGHTACTION = "delete"
+            var notescreated_flag = 0
     }
 }
 

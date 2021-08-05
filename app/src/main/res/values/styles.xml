@@ -100,4 +100,9 @@
         <item name="android:fontFamily">@font/robotomedium</item>
         <item name="android:textSize">16dp</item>
     </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/rosaChillon</item>
+    </style>
 </resources>

@@ -37,7 +37,8 @@ class User(
     var tasksactive: Int = 0,
     var taskscompleted: Int = 0,
     var payments: Int = 0,
-    var guests: Int = 0
+    var guests: Int = 0,
+    var vendors: Int = 0
 ) : Parcelable {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -60,6 +61,7 @@ class User(
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
+        parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
@@ -180,6 +182,8 @@ class User(
         sessionEditor.putInt("tasksactive", tasksactive)
         sessionEditor.putInt("taskscompleted", taskscompleted)
         sessionEditor.putInt("payments", payments)
+        sessionEditor.putInt("guests", guests)
+        sessionEditor.putInt("vendors", vendors)
         sessionEditor.apply()
         Log.d(TAG, "Session for User $key has been updated")
     }
@@ -212,6 +216,8 @@ class User(
         sessionEditor.putInt("tasksactive", tasksactive)
         sessionEditor.putInt("taskscompleted", taskscompleted)
         sessionEditor.putInt("payments", payments)
+        sessionEditor.putInt("guests", guests)
+        sessionEditor.putInt("vendors", vendors)
         sessionEditor.apply()
         Log.d(TAG, "Session for User $key has been updated")
     }
@@ -372,6 +378,8 @@ class User(
         parcel.writeInt(tasksactive)
         parcel.writeInt(taskscompleted)
         parcel.writeInt(payments)
+        parcel.writeInt(guests)
+        parcel.writeInt(vendors)
     }
 
     override fun describeContents(): Int {

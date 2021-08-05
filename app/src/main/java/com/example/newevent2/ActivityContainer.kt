@@ -143,6 +143,12 @@ class ActivityContainer : AppCompatActivity() {
                         .commit()
                 }
                 R.id.notes -> {
+                    val newfragment = MyNotes()
+                    fm.beginTransaction()
+                        .replace(R.id.fragment_container, newfragment)
+
+                        //.addToBackStack(null)
+                        .commit()
                 }
             }
             true

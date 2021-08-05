@@ -21,7 +21,7 @@ import java.lang.reflect.Executable
 class UserModel(
     //This user creates and edits Users into Firebase
     val key: String
-) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest, CoRDeleteGuest {
+) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest, CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
@@ -32,6 +32,7 @@ class UserModel(
     var tasksactive = 0
     var paymentsactive = 0
     var guestsactive = 0
+    var vendorsactive = 0
 
     var nexthandlert: CoRAddEditTask? = null
     var nexthandlerdelt: CoRDeleteTask? = null
@@ -39,6 +40,8 @@ class UserModel(
     var nexthandlerdelp: CoRDeletePayment? = null
     var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
+    var nexthandlerv: CoRAddEditVendor? = null
+    var nexthandlerdelv: CoRDeleteVendor? = null
 
     fun getUser(dataFetched: FirebaseSuccessUser) {
         val firebaseUser = User(key)
@@ -65,6 +68,7 @@ class UserModel(
                         taskscompleted= p0.child("taskscompleted").getValue(Int::class.java)!!
                         payments= p0.child("payments").getValue(Int::class.java)!!
                         guests= p0.child("guests").getValue(Int::class.java)!!
+                        vendors= p0.child("vendors").getValue(Int::class.java)!!
 
                         Log.d(TAG, "Data associated to User $key ($email) has been retrieved from Firebase")
                     }
@@ -113,6 +117,11 @@ class UserModel(
         Log.d(TAG, "There are currently $value guests associated to the User")
     }
 
+    fun editUserAddVendor(value: Int) {
+        postRef.child("vendors").setValue(value)
+        Log.d(TAG, "There are currently $value vendors associated to the User")
+    }
+
     fun editUserTaskflag(flag: String) {
         postRef.child("hastask").setValue(flag)
         Log.d(TAG, "Flag hastask for the User has been set to $flag")
@@ -125,7 +134,12 @@ class UserModel(
 
     fun editUserGuestflag(flag: String) {
         postRef.child("hasguest").setValue(flag)
-        Log.d(TAG, "Flag haspayment for the User has been set to $flag")
+        Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
+    }
+
+    fun editUserVendorflag(flag: String) {
+        postRef.child("hasvendor").setValue(flag)
+        Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
     }
 
     fun editUserImage(uri: Uri, imageurl: String) {
@@ -209,6 +223,16 @@ class UserModel(
 
     override fun onDeleteGuest(guest: Guest) {
         nexthandlerdelg?.onDeleteGuest(guest)
+    }
+
+    override fun onAddEditVendor(vendor: Vendor) {
+        editUserVendorflag(VendorModel.ACTIVEFLAG)
+        editUserAddVendor(vendorsactive + 1)
+        nexthandlerv?.onAddEditVendor(vendor)
+    }
+
+    override fun onDeleteVendor(vendor: Vendor) {
+        nexthandlerdelv?.onDeleteVendor(vendor)
     }
 
     interface FirebaseSuccessUser {

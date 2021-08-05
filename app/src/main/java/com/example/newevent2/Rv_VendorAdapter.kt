@@ -9,17 +9,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.newevent2.Functions.addGuest
+import com.example.newevent2.Functions.addVendor
+import com.example.newevent2.Functions.deleteGuest
+import com.example.newevent2.Functions.deleteVendor
+import com.example.newevent2.Model.Vendor
+import com.example.newevent2.ui.LetterAvatar
 import com.google.android.material.snackbar.Snackbar
+import com.redmadrobot.acronymavatar.AvatarView
+import java.lang.Exception
 
-class Rv_VendorAdapter(val contactlist: MutableList<Vendor>) :
+
+class Rv_VendorAdapter(val contactlist: ArrayList<Vendor>, val context: Context) :
     RecyclerView.Adapter<Rv_VendorAdapter.ViewHolder>(), ItemTouchAdapterAction {
-
-    lateinit var context: Context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
         val v = LayoutInflater.from(p0?.context).inflate(R.layout.vendor_item_layout, p0, false)
-        context = p0.context
         return ViewHolder(v)
     }
 
@@ -31,33 +37,32 @@ class Rv_VendorAdapter(val contactlist: MutableList<Vendor>) :
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.contactname.text = contactlist[p1].name
-//        if (contactlist[p1].imageurl.isNotEmpty()) {
-//            Glide.with(p0.itemView.context)
-//                .load(contactlist[p1].imageurl)
-//                .circleCrop()
-//                .into(p0.contactavatar)
-//        }
+
+        try {
+//            p0.contactavatar.setImageDrawable(
+//                LetterAvatar(
+//                    context,
+//                    context.getColor(R.color.azulmasClaro),
+//                    p0.contactname.text.toString().substring(0, 2),
+//                    10
+//                )
+//            )
+            p0.contactavatar.setText(p0.contactname.text.toString())
+
+        } catch (e: Exception) {
+            p0.contactavatar.setImageResource(R.drawable.avatar2)
+        }
 
         p0.itemView.setOnClickListener {
-            val vendordetail = Intent(context, Vendor_EditDetail::class.java)
-            vendordetail.putExtra("contactid", contactlist[p1].contactid)
-            vendordetail.putExtra("key", contactlist[p1].key)
-            vendordetail.putExtra("latitude", contactlist[p1].latitude)
-            vendordetail.putExtra("longitude", contactlist[p1].longitude)
-
-            vendordetail.putExtra("name", contactlist[p1].name)
-           // vendordetail.putExtra("imageurl", contactlist[p1].imageurl)
-            vendordetail.putExtra("phone", contactlist[p1].phone)
-            vendordetail.putExtra("email", contactlist[p1].email)
-
-            // vendordetail.putExtra("eventid", contactlist[p1].eventid)
+            val vendordetail = Intent(context, VendorCreateEdit::class.java)
+            vendordetail.putExtra("vendor", contactlist[p1])
             context.startActivity(vendordetail)
         }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val contactname = itemView.findViewById<TextView>(R.id.contactname)!!
-        val contactavatar = itemView.findViewById<ImageView>(R.id.contactavatar)!!
+        val contactavatar = itemView.findViewById<AvatarView>(R.id.contactavatar)!!
     }
 
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
@@ -65,28 +70,35 @@ class Rv_VendorAdapter(val contactlist: MutableList<Vendor>) :
     }
 
     override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
-        val vendor = VendorEntity().apply {
-            contactid = contactlist[position].contactid
+        val vendorswift = contactlist[position]
+        val vendorbackup = Vendor().apply {
             key = contactlist[position].key
             name = contactlist[position].name
             phone = contactlist[position].phone
+            email = contactlist[position].email
+            category = contactlist[position].category
+            eventid = contactlist[position].eventid
             placeid = contactlist[position].placeid
-            latitude = contactlist[position].latitude
-            longitude = contactlist[position].longitude
+            location = contactlist[position].location
         }
 
-        contactlist.removeAt(position)
-        notifyItemRemoved(position)
-
-        if (action == "delete") {
-            vendor.deleteVendor()
+        if (action == DELETEACTION) {
+            contactlist.removeAt(position)
+            notifyItemRemoved(position)
+            deleteVendor(context, vendorswift)
 
             Snackbar.make(recyclerView, "Vendor deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
-                    contactlist.add(vendor)
+                    contactlist.add(vendorbackup)
                     notifyItemInserted(contactlist.lastIndex)
-                    vendor.addVendor()
+                    addVendor(context, vendorbackup, CALLER)
                 }.show()
         }
+    }
+
+    companion object {
+        const val DELETEACTION = "delete"
+        const val TAG = "Rv_VendorAdapter"
+        const val CALLER = "none"
     }
 }

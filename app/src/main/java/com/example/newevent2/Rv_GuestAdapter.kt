@@ -17,6 +17,7 @@ import com.example.newevent2.Functions.deleteGuest
 import com.example.newevent2.Model.Guest
 import com.example.newevent2.ui.LetterAvatar
 import com.google.android.material.snackbar.Snackbar
+import com.redmadrobot.acronymavatar.AvatarView
 import java.lang.Exception
 
 class Rv_GuestAdapter(
@@ -41,15 +42,21 @@ class Rv_GuestAdapter(
             "n" -> "No"
             else -> "Pending"
         }
+//        try {
+//            p0.contactavatar.setImageDrawable(
+//                LetterAvatar(
+//                    context,
+//                    context.getColor(R.color.azulmasClaro),
+//                    p0.contactname.text.toString().substring(0, 2),
+//                    10
+//                )
+//            )
+//        } catch (e: Exception) {
+//            p0.contactavatar.setImageResource(R.drawable.avatar2)
+//        }
         try {
-            p0.contactavatar.setImageDrawable(
-                LetterAvatar(
-                    context,
-                    context.getColor(R.color.azulmasClaro),
-                    p0.contactname.text.toString().substring(0, 2),
-                    10
-                )
-            )
+            p0.contactavatar.setText(p0.contactname.text.toString())
+
         } catch (e: Exception) {
             p0.contactavatar.setImageResource(R.drawable.avatar2)
         }
@@ -65,7 +72,7 @@ class Rv_GuestAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val contactname = itemView.findViewById<TextView>(R.id.contactname)!!
-        val contactavatar = itemView.findViewById<ImageView>(R.id.contactavatar)!!
+        val contactavatar = itemView.findViewById<AvatarView>(R.id.contactavatar)!!
         val rsvp = itemView.findViewById<TextView>(R.id.rsvp)!!
         val companions = itemView.findViewById<TextView>(R.id.companions)!!
         val table = itemView.findViewById<TextView>(R.id.table)!!
@@ -94,7 +101,7 @@ class Rv_GuestAdapter(
 
             Snackbar.make(recyclerView, "Guest deleted", Snackbar.LENGTH_LONG)
                 .setAction("UNDO") {
-                    contactlist.add(guestswift)
+                    contactlist.add(guestbackup)
                     notifyItemInserted(contactlist.lastIndex)
                     addGuest(context, guestbackup, CALLER)
                 }.show()

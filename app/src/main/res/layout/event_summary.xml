@@ -72,6 +72,7 @@
                 <include
                     android:id="@+id/weddinglocation"
                     layout="@layout/summary_weddinglocation"
+                    android:layout_marginStart="4dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="parent" />
 

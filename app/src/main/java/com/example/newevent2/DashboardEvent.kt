@@ -27,6 +27,7 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.MPPointF
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import kotlinx.android.synthetic.main.dashboardcharts.view.withnodata
 import kotlinx.android.synthetic.main.empty_state.view.*
@@ -190,6 +191,7 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
         inflatedView.withdata.visibility = ConstraintLayout.GONE
         inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
 
+        inflatedView.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
         inflatedView.withnodata.newtaskbutton.setOnClickListener {
             val newtask = Intent(activity, TaskCreateEdit::class.java)
 //                newtask.putExtra("userid", userid)

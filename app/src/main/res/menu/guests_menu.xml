@@ -18,6 +18,12 @@
         android:title="Add as Guest"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/add_vendor"
+        android:iconTint="@color/white"
+        android:title="Add as Vendor"
+        app:showAsAction="never"/>
+
 <!--    <item-->
 <!--        android:id="@+id/action_sortguest"-->
 <!--        android:gravity="right"-->

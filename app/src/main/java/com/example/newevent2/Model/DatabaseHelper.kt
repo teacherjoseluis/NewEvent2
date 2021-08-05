@@ -18,12 +18,18 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context,
         "CREATE TABLE EVENT (eventid TEXT, imageurl TEXT, placeid TEXT, latitude REAL, longitude REAL, address TEXT, name TEXT, date TEXT, time TEXT, about TEXT, location TEXT)"
     private val createguesttable =
         "CREATE TABLE GUEST (guestid TEXT, name TEXT, phone TEXT, email TEXT, rsvp TEXT, companion TEXT, tableguest TEXT)"
+    private val createvendortable =
+        "CREATE TABLE VENDOR (vendorid TEXT, name TEXT, phone TEXT, email TEXT, category TEXT, eventid TEXT, placeid TEXT, location TEXT)"
+    private val createnotetable =
+        "CREATE TABLE NOTE (noteid INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, color TEXT, lastupdateddatetime TEXT)"
 
     override fun onCreate(p0: SQLiteDatabase?) {
         p0!!.execSQL(createtasktable)
         p0.execSQL(createpaymenttable)
         p0.execSQL(createeventtable)
         p0.execSQL(createguesttable)
+        p0.execSQL(createvendortable)
+        p0.execSQL(createnotetable)
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -31,11 +37,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context,
         p0.execSQL("DROP TABLE IF EXISTS PAYMENT")
         p0.execSQL("DROP TABLE IF EXISTS EVENT")
         p0.execSQL("DROP TABLE IF EXISTS GUEST")
+        p0.execSQL("DROP TABLE IF EXISTS VENDOR")
+        p0.execSQL("DROP TABLE IF EXISTS NOTE")
         onCreate(p0)
     }
 
     companion object {
         private const val DATABASENAME = "BDCACHE"
-        private const val DATABASEVERSION = 5
+        private const val DATABASEVERSION = 9
     }
 }

@@ -67,7 +67,8 @@ class MapsActivity() : AppCompatActivity() {
             }
 
             override fun onError(p0: Status) {
-                Toast.makeText(applicationContext, "" + p0.toString(), Toast.LENGTH_LONG).show();
+                // Here it's where I Should be implementing the case when the provider has not been found
+                //Toast.makeText(applicationContext, "" + p0.toString(), Toast.LENGTH_LONG).show();
             }
         })
     }
