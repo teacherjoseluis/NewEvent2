@@ -52,7 +52,7 @@ class Rv_TableGuestsAdapter(
                 setRecycledViewPool(viewPool)
             }
         }
-        val rvAdapter = Rv_GuestAdapter(tableguestsList[p1].tableguestlist, context)
+        val rvAdapter = Rv_GuestAdapter2(tableguestsList[p1].tableguestlist, context)
         p0.recyclerView!!.adapter = rvAdapter
     }
 

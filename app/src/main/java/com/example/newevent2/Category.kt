@@ -7,22 +7,24 @@ import java.util.*
 enum class Category(
     val code: String,
     val en_name: String,
-    val drawable: String
+    val drawable: String,
+    val colorbackground: String,
+    val colorforeground: String
 ) {
-    Venue("venue", "Venue", "venue"),
-    Photo("photo", "Photo & Video", "photo"),
-    Entertainment("entertainment", "Entertainment", "entertainment"),
-    Flowers("flowers", "Flowers & Deco", "flowers"),
-    Transportation("transport", "Transportation", "transportation"),
-    Ceremony("ceremony", "Ceremony", "ceremony"),
-    Accesories("accessories", "Attire & Accessories", "attire"),
-    Beauty("beauty", "Health & Beauty", "beauty"),
-    Food("food", "Food & Drink", "food"),
-    Guests("guests", "Guests", "guests");
+    Venue("venue", "Venue", "venue","#FF9AA2","#9AFFF7"),
+    Photo("photo", "Photo & Video", "photo","#FFB7B2", "#FFFFFF"),
+    Entertainment("entertainment", "Entertainment", "entertainment","#FFDAC1", "#C1E6FF"),
+    Flowers("flowers", "Flowers & Deco", "flowers","#E2F0CB","#000000"),
+    Transportation("transport", "Transportation", "transportation","#B5EAD7","#FFFFFF"),
+    Ceremony("ceremony", "Ceremony", "ceremony","#C7CEEA","#000000"),
+    Accesories("accessories", "Attire & Accessories", "attire","#B1B1B1", "#000000"),
+    Beauty("beauty", "Health & Beauty", "beauty","#ACD0C0","#D0ACBC"),
+    Food("food", "Food & Drink", "food","#C5CADC","#FFFFFF"),
+    Guests("guests", "Guests", "guests","#AFB4C3","#C3BEAF");
 
     companion object {
         fun getCategory(code: String): Category {
-             return when (code) {
+            return when (code) {
                 "venue" -> Venue
                 "photo" -> Photo
                 "entertainment" -> Entertainment
@@ -76,5 +78,5 @@ enum class Category(
 //            editor.putInt("payments_${category.code}", count)
 //        }
 //    }
-    }
+}
 

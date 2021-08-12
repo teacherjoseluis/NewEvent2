@@ -9,6 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:clipToPadding="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -18,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Table: "
-            android:textColor="@color/rosaChillon"
+            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Table"
-            android:textColor="@color/rosaChillon"
+            android:textColor="@color/black"
             app:layout_constraintStart_toEndOf="@id/tablelabel"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,8 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="- Count: "
-            android:textColor="@color/rosaChillon"
+            android:text="- "
+            android:textColor="@color/black"
             app:layout_constraintStart_toEndOf="@id/table"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,18 +52,29 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="Count"
-            android:textColor="@color/rosaChillon"
+            android:textColor="@color/black"
             app:layout_constraintStart_toEndOf="@id/countlabel"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/guestsrv"
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
+            app:cardCornerRadius="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/table" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tablelabel">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/guestsrv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:padding="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/table" />
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -182,8 +182,14 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
 
             cardtitle.setText("Due next task")
             cardsecondarytext.setText("${task.name} due by ${task.date}")
-            action1Button.setText("mark complete")
+            action1Button.setText("view")
             action2Button.visibility = View.INVISIBLE
+
+            action1Button.setOnClickListener {
+                val taskdetail = Intent(context, TaskCreateEdit::class.java)
+                taskdetail.putExtra("task", task)
+                context!!.startActivity(taskdetail)
+            }
         }
     }
 

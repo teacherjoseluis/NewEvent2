@@ -13,6 +13,7 @@ import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.LoginView
 import com.example.newevent2.R
 import com.facebook.login.LoginManager
+import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.*
 
@@ -222,21 +223,11 @@ class User(
         Log.d(TAG, "Session for User $key has been updated")
     }
 
-    fun logout(
-        activity: Activity,
-        authtype: String,
-        mGoogleSignInClient: GoogleSignInClient?,
-        mFacebookLoginManager: LoginManager?
-    ) {
-        when (authtype) {
-            "google" -> {
-                mGoogleSignInClient!!.signOut().addOnCompleteListener(activity) {
-                }
-            }
-            "facebook" -> {
-                mFacebookLoginManager!!.logOut()
-            }
-        }
+    fun deleteUserSession(context: Context){
+        context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).edit().clear().apply()
+    }
+
+    fun logout(activity: Activity) {
         mAuth.signOut()
         Toast.makeText(activity, activity.getString(R.string.success_logout), Toast.LENGTH_SHORT)
             .show()

@@ -47,10 +47,21 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
                 if (o1.date == null || o2.date == null) 0 else o1.date
                     .compareTo(o2.date)
             })
-
-        fragment.onTasksStats(view, countactive, countcompleted, sumbudget, list[0])
+        val nextactivetask = nextactive(list)
+        fragment.onTasksStats(view, countactive, countcompleted, sumbudget, nextactivetask)
         paymentsumbudget = sumbudget
         presenterpayment.getPaymentsList()
+    }
+
+    private fun nextactive(list: ArrayList<Task>): Task {
+        var nexttask = Task()
+        for (task in list) {
+            if (task.status == "A") {
+                nexttask = task
+                break
+            }
+        }
+        return nexttask
     }
 
     override fun onTaskListError(errcode: String) {

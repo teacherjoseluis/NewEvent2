@@ -1,34 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/home_fragment"
-            android:icon="@drawable/icons8_home"
-            android:title="Home"/>
-        <item
             android:id="@+id/event_fragment"
             android:icon="@drawable/balloons_1"
             android:title="Events"/>
         <item
             android:id="@+id/task_fragment"
             android:icon="@drawable/organizer"
-            android:title="Tasks">
-        <menu>
-            <item
-                android:id="@+id/activetasks"
-                android:title="Active Tasks"/>
-            <item
-                android:id="@+id/completedtasks"
-                android:title="Completed Tasks"/>
-        </menu>
-        </item>
+            android:title="Tasks"/>
         <item
-            android:id="@+id/contact_fragment"
+            android:id="@+id/guest_fragment"
             android:icon="@drawable/guests2"
-            android:title="Contacts"/>
+            android:title="Guests"/>
         <item
-            android:id="@+id/notes_fragment"
+            android:id="@+id/vendor_fragment"
             android:icon="@drawable/icons8_edit"
-            android:title="Notes"/>
+            android:title="Vendors"/>
     </group>
 
     <item
@@ -40,9 +27,9 @@
                 android:icon="@drawable/vector"
                 android:title="Settings"/>
             <item
-                android:id="@+id/account_fragment"
+                android:id="@+id/account_logoff"
                 android:icon="@drawable/person"
-                android:title="Account"/>
+                android:title="Log Off"/>
         </menu>
     </item>
 </menu>

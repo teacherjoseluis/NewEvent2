@@ -88,7 +88,7 @@ class UserModel(
         postRef.child("eventid").setValue(user.eventid)
         postRef.child("shortname").setValue(user.shortname)
         //postRef.child("email").setValue(user.email)
-        postRef.child("country").setValue(user.country)
+        //postRef.child("country").setValue(user.country)
         postRef.child("language").setValue(user.language)
         //postRef.child("createdatetime").setValue(user.createdatetime)
         //postRef.child("authtype").setValue(user.authtype)

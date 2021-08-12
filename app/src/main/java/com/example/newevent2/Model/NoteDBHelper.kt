@@ -4,18 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
-import com.example.newevent2.*
-import com.example.newevent2.Functions.converttoDate
-import com.example.newevent2.getUserSession
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import java.text.Normalizer
-import java.util.*
-import kotlin.Comparator
 import kotlin.collections.ArrayList
 
 class NoteDBHelper(context: Context) {

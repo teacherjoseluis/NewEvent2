@@ -42,7 +42,9 @@ class Rv_TaskDatesAdapter(
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        p0.journaldate?.text = converttoString(taskjournalList[p1].date, DateFormat.FULL)
+        val stringdate = converttoString(taskjournalList[p1].date, DateFormat.MEDIUM)
+        p0.journaldate?.text =
+            stringdate.substring(0, stringdate.lastIndexOf(',')).trim()
         p0.recyclerView?.apply {
             layoutManager = LinearLayoutManager(p0.recyclerView.context).apply {
                 stackFromEnd = true
@@ -52,7 +54,7 @@ class Rv_TaskDatesAdapter(
             }
         }
         //val rvAdapter = Rv_TaskJournalAdapter(taskjournalList[p1].taskjournallist)
-        val rvAdapter = Rv_TaskAdapter(taskjournalList[p1].taskjournallist)
+        val rvAdapter = Rv_TaskAdapter2(taskjournalList[p1].taskjournallist)
         p0.recyclerView!!.adapter = rvAdapter
     }
 

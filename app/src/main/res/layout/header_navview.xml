@@ -23,6 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/headershortname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -30,7 +31,7 @@
             android:layout_marginTop="5dp"
             android:text="User Name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/headername"></TextView>
+            app:layout_constraintTop_toBottomOf="@id/headername"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
