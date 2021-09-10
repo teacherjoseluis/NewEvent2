@@ -71,29 +71,6 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
-        val vendorid = vendoritem.key
-
-        if (vendorid != "") {
-            val vendormodel = VendorModel()
-            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
-            vendormodel.getVendordetail(
-                user.key,
-                user.eventid,
-                vendorid,
-                object : VendorModel.FirebaseSuccessVendor {
-                    override fun onVendor(vendor: Vendor) {
-                        nameinputedit.setText(vendor.name)
-                        phoneinputedit.setText(vendor.phone)
-                        mailinputedit.setText(vendor.email)
-
-                        vendoritem.key = vendor.key
-                        vendoritem.name = vendor.name
-                        vendoritem.phone = vendor.phone
-                        vendoritem.email = vendor.email
-                    }
-                })
-        }
-
         nameinputedit.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
             if (!p1) {
                 val validationmessage = TextValidate(nameinputedit).namefieldValidate()
@@ -149,6 +126,12 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                     ).show()
                 }
             }
+        }
+
+        if (vendoritem.key != "") {
+            nameinputedit.setText(vendoritem.name)
+            phoneinputedit.setText(vendoritem.phone)
+            mailinputedit.setText(vendoritem.email)
         }
 
         button.setOnClickListener {

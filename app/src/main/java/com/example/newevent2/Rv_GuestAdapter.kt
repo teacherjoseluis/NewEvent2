@@ -61,7 +61,7 @@ class Rv_GuestAdapter(
             p0.contactavatar.setImageResource(R.drawable.avatar2)
         }
         p0.companions.text = contactlist[p1].companion
-        p0.table.text = contactlist[p1].table
+//        p0.table.text = contactlist[p1].table
 
         p0.itemView.setOnClickListener {
             val guestdetail = Intent(context, GuestCreateEdit::class.java)
@@ -75,7 +75,7 @@ class Rv_GuestAdapter(
         val contactavatar = itemView.findViewById<AvatarView>(R.id.contactavatar)!!
         val rsvp = itemView.findViewById<TextView>(R.id.rsvp)!!
         val companions = itemView.findViewById<TextView>(R.id.companions)!!
-        val table = itemView.findViewById<TextView>(R.id.table)!!
+//        val table = itemView.findViewById<TextView>(R.id.table)!!
     }
 
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {

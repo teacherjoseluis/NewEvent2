@@ -13,7 +13,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context,
     private val createtasktable =
         "CREATE TABLE TASK (taskid TEXT, name TEXT, date TEXT, category TEXT, budget TEXT, status TEXT, eventid TEXT, createdatetime TEXT)"
     private val createpaymenttable =
-        "CREATE TABLE PAYMENT (paymentid TEXT, name TEXT, date TEXT, category TEXT, amount TEXT, eventid TEXT, createdatetime TEXT)"
+        "CREATE TABLE PAYMENT (paymentid TEXT, name TEXT, date TEXT, category TEXT, amount TEXT, eventid TEXT, createdatetime TEXT, vendorid TEXT)"
     private val createeventtable =
         "CREATE TABLE EVENT (eventid TEXT, imageurl TEXT, placeid TEXT, latitude REAL, longitude REAL, address TEXT, name TEXT, date TEXT, time TEXT, about TEXT, location TEXT)"
     private val createguesttable =
@@ -44,6 +44,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context,
 
     companion object {
         private const val DATABASENAME = "BDCACHE"
-        private const val DATABASEVERSION = 9
+        private const val DATABASEVERSION = 10
     }
 }

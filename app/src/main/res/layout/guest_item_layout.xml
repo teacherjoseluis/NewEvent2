@@ -10,152 +10,159 @@
     android:paddingTop="5dp"
     android:paddingRight="16dp">
 
-
-    <com.redmadrobot.acronymavatar.AvatarView
-        android:id="@+id/contactavatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:paddingBottom="5dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/contactname"
-        style="@style/Body1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Name"
-        app:layout_constraintStart_toEndOf="@+id/contactavatar"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toEndOf="@+id/contactavatar"
-        app:layout_constraintTop_toBottomOf="@+id/contactname">
-
-        <TextView
-            android:id="@+id/textView37"
-            style="@style/Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Companions"
-            android:textColor="@color/rosaChillon"
+        <com.redmadrobot.acronymavatar.AvatarView
+            android:id="@+id/contactavatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:paddingBottom="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView39"
+            android:id="@+id/contactname"
             style="@style/Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="("
-            app:layout_constraintStart_toEndOf="@id/textView37"
+            android:layout_marginStart="10dp"
+            android:text="Name"
+            app:layout_constraintStart_toEndOf="@+id/contactavatar"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toEndOf="@+id/contactavatar"
+            app:layout_constraintTop_toBottomOf="@+id/contactname">
+
+            <TextView
+                android:id="@+id/textView37"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Companions"
+                android:textColor="@color/rosaChillon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView39"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="("
+                app:layout_constraintStart_toEndOf="@id/textView37"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/companions"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="Companions"
+                app:layout_constraintStart_toEndOf="@id/textView39"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView40"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=")"
+                app:layout_constraintEnd_toEndOf="@id/companions"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--        android:id="@+id/constraintLayout19"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="10dp"-->
+        <!--        android:layout_marginTop="5dp"-->
+        <!--        app:layout_constraintStart_toEndOf="@+id/contactavatar"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/constraintLayout18">-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/textView38"-->
+        <!--            style="@style/Body1"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Table"-->
+        <!--            android:textColor="@color/rosaChillon"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/textView41"-->
+        <!--            style="@style/Body1"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="("-->
+        <!--            app:layout_constraintStart_toStartOf="@id/table"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/table"-->
+        <!--            style="@style/Body1"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="5dp"-->
+        <!--            android:paddingLeft="5dp"-->
+        <!--            android:paddingRight="5dp"-->
+        <!--            android:text="Table"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/textView38"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/textView42"-->
+        <!--            style="@style/Body1"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text=")"-->
+        <!--            app:layout_constraintEnd_toEndOf="@id/table"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
         <TextView
-            android:id="@+id/companions"
+            android:id="@+id/rsvp"
             style="@style/Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="Companions"
-            app:layout_constraintStart_toEndOf="@id/textView39"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView40"
-            style="@style/Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=")"
-            app:layout_constraintEnd_toEndOf="@id/companions"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout19"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toEndOf="@+id/contactavatar"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout18">
-
-        <TextView
-            android:id="@+id/textView38"
-            style="@style/Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Table"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="rsvp"
             android:textColor="@color/rosaChillon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView41"
-            style="@style/Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="("
-            app:layout_constraintStart_toStartOf="@id/table"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/table"
-            style="@style/Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="Table"
-            app:layout_constraintStart_toEndOf="@+id/textView38"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView42"
-            style="@style/Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=")"
-            app:layout_constraintEnd_toEndOf="@id/table"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/rsvp"
-        style="@style/Body1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="rsvp"
-        android:textColor="@color/rosaChillon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <View
-        android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout19" />
+        android:background="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout12"
+        tools:layout_editor_absoluteX="16dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

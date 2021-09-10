@@ -1,6 +1,8 @@
 package com.example.newevent2.Functions
 
+import java.text.DecimalFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 fun <T> removeDuplicates(list: ArrayList<T>): ArrayList<T>? {
     // Create a new ArrayList
@@ -25,4 +27,13 @@ fun <T> clone(list: ArrayList<T>): ArrayList<T>? {
     }
     //------------------------------------------
     return newList
+}
+
+fun sumStrings(list: ArrayList<Float>) : String {
+    var sumlist = 0F
+    for (amount in list){
+        sumlist += amount
+    }
+    val formatter = DecimalFormat("$#,###.00")
+    return formatter.format(sumlist)
 }

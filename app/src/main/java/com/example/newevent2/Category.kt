@@ -11,16 +11,16 @@ enum class Category(
     val colorbackground: String,
     val colorforeground: String
 ) {
-    Venue("venue", "Venue", "venue","#FF9AA2","#9AFFF7"),
-    Photo("photo", "Photo & Video", "photo","#FFB7B2", "#FFFFFF"),
-    Entertainment("entertainment", "Entertainment", "entertainment","#FFDAC1", "#C1E6FF"),
-    Flowers("flowers", "Flowers & Deco", "flowers","#E2F0CB","#000000"),
-    Transportation("transport", "Transportation", "transportation","#B5EAD7","#FFFFFF"),
-    Ceremony("ceremony", "Ceremony", "ceremony","#C7CEEA","#000000"),
-    Accesories("accessories", "Attire & Accessories", "attire","#B1B1B1", "#000000"),
-    Beauty("beauty", "Health & Beauty", "beauty","#ACD0C0","#D0ACBC"),
-    Food("food", "Food & Drink", "food","#C5CADC","#FFFFFF"),
-    Guests("guests", "Guests", "guests","#AFB4C3","#C3BEAF");
+    Venue("venue", "Venue", "venue","#DB5ABA","#FFFFFF"),
+    Photo("photo", "Photo & Video", "photo","#C455A8", "#FFFFFF"),
+    Entertainment("entertainment", "Entertainment", "entertainment","#CF8BA3", "#000000"),
+    Flowers("flowers", "Flowers & Deco", "flowers","#D7A6B3","#000000"),
+    Transportation("transport", "Transportation", "transportation","#E5CDC8","#000000"),
+    Ceremony("ceremony", "Ceremony", "ceremony","#D94A98","#FFFFFF"),
+    Accesories("accessories", "Attire & Accessories", "attire","#F285C1", "#FFFFFF"),
+    Beauty("beauty", "Health & Beauty", "beauty","#F2B3D6","#000000"),
+    Food("food", "Food & Drink", "food","#1D3973","#FFFFFF"),
+    Guests("guests", "Guests", "guests","#F2D8D5","#000000");
 
     companion object {
         fun getCategory(code: String): Category {

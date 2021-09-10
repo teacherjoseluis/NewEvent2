@@ -27,6 +27,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         values.put("amount", payment.amount)
         values.put("eventid", payment.eventid)
         values.put("createdatetime", payment.createdatetime)
+        values.put("vendorid", payment.vendorid)
         db.insert("PAYMENT", null, values)
         Log.d(TAG, "Payment record inserted")
     }
@@ -56,10 +57,29 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
                     val amount = cursor.getString(cursor.getColumnIndex("amount"))
                     val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
                     val createdatetime = cursor.getString(cursor.getColumnIndex("createdatetime"))
+                    val vendorid = cursor.getString(cursor.getColumnIndex("vendorid"))
                     val payment =
-                        Payment(paymentid, name, date, category, amount, eventid, createdatetime)
+                        Payment(paymentid, name, date, category, amount, eventid, createdatetime,vendorid)
                     list.add(payment)
                     Log.d(TAG, "Task $paymentid record obtained from local DB")
+                } while (cursor.moveToNext())
+            }
+        }
+        return list
+    }
+
+    fun getVendorPayments(vendorkey: String): ArrayList<Float>{
+        val list = ArrayList<Float>()
+            val cursor: Cursor = db.rawQuery("SELECT amount FROM PAYMENT where vendorid ='$vendorkey'", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                val re = Regex("[^A-Za-z0-9 ]")
+                do {
+                    val amount = cursor.getString(cursor.getColumnIndex("amount"))
+                    val amountdeformatted = re.replace(amount, "").dropLast(2)
+                    list.add(amountdeformatted.toFloat())
+                    Log.d(TAG, "Amount $amount record obtained for vendor $vendorkey")
                 } while (cursor.moveToNext())
             }
         }
@@ -125,8 +145,9 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         values.put("amount", payment.amount)
         values.put("eventid", payment.eventid)
         values.put("createdatetime", payment.createdatetime)
+        values.put("vendorid", payment.vendorid)
 
-        val retVal = db.update("PAYMENT", values, "paymentid = ${payment.key}'",  null)
+        val retVal = db.update("PAYMENT", values, "paymentid = '${payment.key}'",  null)
         if (retVal >= 1) {
             Log.d(TAG, "Payment ${payment.key} updated")
         } else {
@@ -136,7 +157,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
     }
 
     fun delete(payment: Payment) {
-        val retVal = db.delete("PAYMENT", "paymentid = ${payment.key}'", null)
+        val retVal = db.delete("PAYMENT", "paymentid = '${payment.key}'", null)
         if (retVal >= 1) {
             Log.d(TAG, "Payment ${payment.key} deleted")
         } else {

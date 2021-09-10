@@ -41,6 +41,32 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         return existsflag
     }
 
+    fun getVendorIdByName(name: String): String {
+        var vendorid = ""
+        val cursor: Cursor =
+            db.rawQuery("SELECT vendorid FROM VENDOR WHERE name = '$name' LIMIT 1", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                vendorid = cursor.getString(cursor.getColumnIndex("vendorid"))
+            }
+        }
+        return vendorid
+    }
+
+    fun getVendorNameById(key: String): String {
+        var vendorname = ""
+        val cursor: Cursor =
+            db.rawQuery("SELECT name FROM VENDOR WHERE vendorid = '$key'", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                vendorname = cursor.getString(cursor.getColumnIndex("name"))
+            }
+        }
+        return vendorname
+    }
+
     fun getAllVendors(): ArrayList<Vendor> {
         val list = ArrayList<Vendor>()
         val cursor: Cursor = db.rawQuery("SELECT * FROM VENDOR ORDER BY name ASC", null)
@@ -49,13 +75,13 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
                 cursor.moveToFirst()
                 do {
                     val vendorid = cursor.getString(cursor.getColumnIndex("vendorid"))
-                    val name=cursor.getString(cursor.getColumnIndex("name"))
-                    val phone=cursor.getString(cursor.getColumnIndex("phone"))
-                    val email=cursor.getString(cursor.getColumnIndex("email"))
-                    val category=cursor.getString(cursor.getColumnIndex("category"))
-                    val eventid=cursor.getString(cursor.getColumnIndex("eventid"))
-                    val placeid=cursor.getString(cursor.getColumnIndex("placeid"))
-                    val location=cursor.getString(cursor.getColumnIndex("location"))
+                    val name = cursor.getString(cursor.getColumnIndex("name"))
+                    val phone = cursor.getString(cursor.getColumnIndex("phone"))
+                    val email = cursor.getString(cursor.getColumnIndex("email"))
+                    val category = cursor.getString(cursor.getColumnIndex("category"))
+                    val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
+                    val placeid = cursor.getString(cursor.getColumnIndex("placeid"))
+                    val location = cursor.getString(cursor.getColumnIndex("location"))
 
                     val vendor =
                         Vendor(vendorid, name, phone, email, category, eventid, placeid, location)

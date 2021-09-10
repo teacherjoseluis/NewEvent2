@@ -1,15 +1,23 @@
 package com.example.newevent2
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.NotificationManager
+import android.app.PendingIntent.getActivity
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.PersistableBundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Category.Companion.getCategory
@@ -19,7 +27,9 @@ import com.example.newevent2.Functions.editTask
 import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Task
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.task_item_layout.view.*
+import java.util.*
 
 class Rv_TaskAdapter(val taskList: MutableList<Task>) :
     RecyclerView.Adapter<Rv_TaskAdapter.ViewHolder>(), ItemTouchAdapterAction {
@@ -96,6 +106,8 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
             createdatetime = taskswift.createdatetime
         }
 
+        //delNotification(taskswift)
+
         if (action == DELETEACTION) {
             taskList.removeAt(position)
             notifyItemRemoved(position)
@@ -107,6 +119,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
                     notifyItemInserted(taskList.lastIndex)
                     taskswift.status = ACTIVETASK
                     addTask(context, taskbackup)
+                    //addNotification(taskbackup)
                 }
             snackbar.show()
         } else if (action == UNDOACTION) {
@@ -114,7 +127,67 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
             notifyItemInserted(taskList.lastIndex)
             taskswift.status = ACTIVETASK
             editTask(context, taskswift)
+            //addNotification(taskbackup)
         }
+    }
+
+    //-------------------------------------------------------------------------------
+    // Creating Notification for Tasks
+    //-------------------------------------------------------------------------------
+//    private fun addNotification(task: Task) {
+//        // Job ID must be unique if you have multiple jobs scheduled
+//        var jobID = NotificationID.getID()
+//
+//        var gson = Gson()
+//        var json = gson.toJson(task)
+//        var bundle = PersistableBundle()
+//        bundle.putString("task", json)
+//
+//        // Get fake user set time (a future time 1 min from current time)
+//        val (userSetHourOfDay, userSetMinute) = getMockUserSetTime()
+//        val timeToWaitBeforeExecuteJob = calculateTimeDifferenceMs(userSetHourOfDay, userSetMinute)
+//        (context.applicationContext.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).run {
+//            schedule(
+//                JobInfo.Builder(
+//                    jobID,
+//                    ComponentName(context, NotificationJobService::class.java)
+//                )
+//                    // job execution will be delayed by this amount of time
+//                    .setMinimumLatency(timeToWaitBeforeExecuteJob)
+//                    // job will be run by this deadline
+//                    .setOverrideDeadline(timeToWaitBeforeExecuteJob)
+//                    .setExtras(bundle)
+//                    .build()
+//            )
+//        }
+//    }
+
+    //-------------------------------------------------------------------------------
+//    private fun delNotification(task: Task) {
+//        val notificationManager =
+//            context.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager.cancel(task.key, 0)
+//    }
+    //-------------------------------------------------------------------------------
+
+    // Returns a pair ( hourOfDay, minute ) that represents a future time,
+    // 1 minute after the current time
+    private fun getMockUserSetTime(): Pair<Int, Int> {
+        val calendar = Calendar.getInstance().apply {
+            // add just 1 min from current time
+            add(Calendar.MINUTE, 1)
+        }
+        return Pair(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+    }
+
+    // Calculate time difference relative to current time in ms
+    private fun calculateTimeDifferenceMs(hourOfDay: Int, minute: Int): Long {
+        val now = Calendar.getInstance()
+        val then = (now.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, hourOfDay)
+            set(Calendar.MINUTE, minute)
+        }
+        return then.timeInMillis - now.timeInMillis
     }
 
     companion object {

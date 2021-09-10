@@ -17,10 +17,13 @@ import com.example.newevent2.Model.TableGuests
 //import com.example.newevent2.MVP.TaskPresenter
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskJournal
+import com.example.newevent2.ui.ViewAnimation
 import kotlinx.android.synthetic.main.dashboardactivity.*
 import kotlinx.android.synthetic.main.dashboardactivity.noactivity
 import kotlinx.android.synthetic.main.dashboardactivity.view.*
 import kotlinx.android.synthetic.main.dashboardactivity.view.NewTaskActionButton
+import kotlinx.android.synthetic.main.guests_all.*
+import kotlinx.android.synthetic.main.guests_all.view.*
 import kotlinx.android.synthetic.main.tableguestsactivity.*
 import kotlinx.android.synthetic.main.tableguestsactivity.view.*
 import kotlinx.android.synthetic.main.welcome.*
@@ -34,6 +37,7 @@ class TableGuestsActivity() : Fragment(), TableGuestsActivityPresenter.TableGues
 
     lateinit var recyclerViewActivity: RecyclerView
     private lateinit var presenterguest: TableGuestsActivityPresenter
+    private var isRotate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +63,33 @@ class TableGuestsActivity() : Fragment(), TableGuestsActivityPresenter.TableGues
         }
 
         presenterguest = TableGuestsActivityPresenter(context!!, this)
+
+        ViewAnimation.init(inf.NewGuestTG)
+        ViewAnimation.init(inf.ContactGuestTG)
+
+        inf.floatingActionButtonGuestTG.setOnClickListener()
+        {
+            isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonGuestTG, !isRotate)
+            if (isRotate) {
+                ViewAnimation.showIn(NewGuestTG)
+                ViewAnimation.showIn(ContactGuestTG)
+            } else {
+                ViewAnimation.showOut(NewGuestTG)
+                ViewAnimation.showOut(ContactGuestTG)
+            }
+        }
+
+        inf.fabNewGuestTG.setOnClickListener {
+            val newguest = Intent(context, GuestCreateEdit::class.java)
+            newguest.putExtra("userid", "")
+            startActivity(newguest)
+        }
+
+        inf.fabContactGuestTG.setOnClickListener {
+            val newguest = Intent(context, ContactsAll::class.java)
+            newguest.putExtra("guestid", "")
+            startActivity(newguest)
+        }
         return inf
     }
 

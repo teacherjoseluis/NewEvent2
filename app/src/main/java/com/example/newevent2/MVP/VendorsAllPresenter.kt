@@ -24,7 +24,13 @@ class VendorsAllPresenter(
     }
 
     override fun onVendorList(list: ArrayList<Vendor>) {
-       fragment.onVAVendors(view, list)
+        val vendorpaymentlist = ArrayList<VendorPayment>()
+        val paymentDB = PaymentDBHelper(context)
+        list.forEach { vendor ->
+            var amountlist = paymentDB.getVendorPayments(vendor.key)
+            vendorpaymentlist.add(VendorPayment(vendor, amountlist))
+        }
+        fragment.onVAVendors(view, vendorpaymentlist)
     }
 
     override fun onVendorListError(errcode: String) {
@@ -34,7 +40,7 @@ class VendorsAllPresenter(
     interface VAVendors {
         fun onVAVendors(
             inflatedView: View,
-            list: ArrayList<Vendor>
+            vendorpaymentlist: ArrayList<VendorPayment>
         )
 
         fun onVAVendorsError(inflatedView: View, errcode: String)

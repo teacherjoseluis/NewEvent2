@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<!--    <item-->
+<!--        android:id="@+id/action_search"-->
+<!--        android:gravity="right"-->
+<!--        android:icon="@drawable/icons8_conversion_24"-->
+<!--        android:iconifiedByDefault="false"-->
+<!--        android:title=""-->
+<!--        android:iconTint="@color/white"-->
+<!--        app:actionViewClass="android.widget.SearchView"-->
+<!--        app:showAsAction="ifRoom|collapseActionView" />-->
+
+    <item
+        android:id="@+id/complete_task"
+        android:iconTint="@color/white"
+        android:title="Complete Task"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/delete_task"
+        android:iconTint="@color/white"
+        android:title="Delete Task"
+        app:showAsAction="never"/>
+
+<!--    <item-->
+<!--        android:id="@+id/add_vendor"-->
+<!--        android:iconTint="@color/white"-->
+<!--        android:title="Add as Vendor"-->
+<!--        app:showAsAction="never"/>-->
+
+<!--    <item-->
+<!--        android:id="@+id/action_sortguest"-->
+<!--        android:gravity="right"-->
+<!--        android:icon="@drawable/icons8_sort_24"-->
+<!--        android:iconifiedByDefault="false"-->
+<!--        android:title=""-->
+<!--        app:showAsAction="ifRoom|collapseActionView" />-->
+</menu>

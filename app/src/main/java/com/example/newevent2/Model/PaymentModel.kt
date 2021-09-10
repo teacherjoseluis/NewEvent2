@@ -16,7 +16,7 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PaymentModel : CoRAddEditPayment, CoRDeletePayment{
+class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
@@ -65,7 +65,6 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment{
 //                )
 //                dataFetched.onPaymentStats(countpayment, sumpayment)
 //            }
-//
 //            override fun onCancelled(databaseError: DatabaseError) {
 //                println("loadPost:onCancelled ${databaseError.toException()}")
 //            }
@@ -153,7 +152,8 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment{
             "amount" to payment.amount,
             "date" to payment.date,
             "category" to payment.category,
-            "createdatetime" to payment.createdatetime
+            "createdatetime" to payment.createdatetime,
+            "vendorid" to payment.vendorid
         )
 
         postRef.setValue(paymentadd as Map<String, Any>)
@@ -185,7 +185,8 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment{
             "name" to payment.name,
             "amount" to payment.amount,
             "date" to payment.date,
-            "category" to payment.category
+            "category" to payment.category,
+            "vendorid" to payment.vendorid
         )
 
         postRef.setValue(paymentedit as Map<String, Any>)
@@ -258,7 +259,6 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment{
                 }
             })
     }
-
 
 
     interface FirebaseSuccessPayment {

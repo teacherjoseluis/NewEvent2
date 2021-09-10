@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -157,10 +158,15 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
         val taskListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
-                val taskitem = p0.getValue(Task::class.java)!!
-                taskitem!!.key = p0.key.toString()
-                Log.d(TAG, "Detail retrieved for task ${taskitem.key}")
-                dataFetched.onTask(taskitem)
+                try {
+                    val taskitem = p0.getValue(Task::class.java)!!
+                    taskitem!!.key = p0.key.toString()
+                    Log.d(TAG, "Detail retrieved for task ${taskitem.key}")
+                    dataFetched.onTask(taskitem)
+                } catch (e: Exception) {
+                    Log.d(TAG, "Error trying to retrieve the task ${e.message}")
+                    dataFetched.onError(e.message.toString())
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -223,6 +229,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Task").orderByChild("date")
+
         var tasklist = ArrayList<Task>()
 
         val tasklListenerActive = object : ValueEventListener {
@@ -270,6 +277,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
             "budget" to task.budget,
             "date" to task.date,
             "category" to task.category,
+            "eventid" to task.eventid,
             "status" to ACTIVESTATUS,
             "createdatetime" to sdf.format(taskdatetime)
         )
@@ -301,6 +309,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
             "budget" to task.budget,
             "date" to task.date,
             "category" to task.category,
+            "eventid" to task.eventid,
             "status" to task.status,
             "createdatetime" to task.createdatetime
         )
@@ -386,6 +395,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
 
     interface FirebaseSuccessTask {
         fun onTask(task: Task)
+        fun onError(errorcode: String)
     }
 
     interface FirebaseSuccessTaskList {
@@ -407,6 +417,4 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
         const val INACTIVEFLAG = "N"
         const val TAG = "TaskModel"
     }
-
-
 }

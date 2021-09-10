@@ -10,7 +10,9 @@ open class Payment(
     var category: String = "",
     var amount: String = "",
     var eventid: String = "",
-    var createdatetime: String = "") : Parcelable {
+    var createdatetime: String = "",
+    var vendorid: String = ""
+) : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         key = parcel.readString().toString()
@@ -20,8 +22,9 @@ open class Payment(
         amount = parcel.readString().toString()
         eventid = parcel.readString().toString()
         createdatetime = parcel.readString().toString()
+        vendorid = parcel.readString().toString()
     }
-    //At some point I will be adding the updatedatetime
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(key)
         parcel.writeString(name)
@@ -30,6 +33,7 @@ open class Payment(
         parcel.writeString(amount)
         parcel.writeString(eventid)
         parcel.writeString(createdatetime)
+        parcel.writeString(vendorid)
     }
 
     override fun describeContents(): Int {

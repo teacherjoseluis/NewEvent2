@@ -20,6 +20,7 @@ class EventPresenter : Cache.EventItemCacheData {
 
     private lateinit var fragmentES: EventSummaryPresenter
     private lateinit var fragmentMA: MainActivity
+    private lateinit var fragmentDE: DashboardEventPresenter
 
     private lateinit var cacheevent: Cache<Event>
 
@@ -35,6 +36,12 @@ class EventPresenter : Cache.EventItemCacheData {
         activefragment = "MA"
     }
 
+    constructor(context: Context, fragment: DashboardEventPresenter) {
+        fragmentDE = fragment
+        mContext = context
+        activefragment = "DE"
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun getEventDetail() {
         cacheevent = Cache(mContext, this)
@@ -46,6 +53,7 @@ class EventPresenter : Cache.EventItemCacheData {
         when (activefragment) {
             "ES" -> fragmentES.onEvent(item)
             "MA" -> fragmentMA.onEvent(item)
+            "DE" -> fragmentDE.onEvent(item)
         }
     }
 
@@ -63,6 +71,7 @@ class EventPresenter : Cache.EventItemCacheData {
                     when (activefragment) {
                         "ES" -> fragmentES.onEvent(event)
                         "MA" -> fragmentMA.onEvent(event)
+                        "DE" -> fragmentDE.onEvent(event)
                     }
                 }
             }
@@ -71,6 +80,7 @@ class EventPresenter : Cache.EventItemCacheData {
         when (activefragment) {
             "ES" -> fragmentES.onEventError(ERRCODEEVENTS)
             "MA" -> fragmentMA.onEventError(ERRCODEEVENTS)
+            "DE" -> fragmentDE.onEventError(ERRCODEEVENTS)
         }
     }
 

@@ -5,20 +5,19 @@ import android.view.View
 import com.example.newevent2.DashboardEvent
 import com.example.newevent2.MVP.PaymentPresenter.Companion.ERRCODEPAYMENTS
 import com.example.newevent2.MVP.TaskPresenter.Companion.ERRCODETASKS
-import com.example.newevent2.Model.Guest
-import com.example.newevent2.Model.GuestModel
-import com.example.newevent2.Model.Payment
-import com.example.newevent2.Model.Task
+import com.example.newevent2.Model.*
 import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
 class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent, val view: View) :
-    TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList {
+    TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList, EventPresenter.EventItem {
 
     private var presentertask: TaskPresenter = TaskPresenter(context!!, this)
     private var presenterpayment: PaymentPresenter = PaymentPresenter(context!!, this)
     private var presenterguest: GuestPresenter = GuestPresenter(context!!, this)
+    private var presenterevent: EventPresenter = EventPresenter(context!!, this)
+
 
     private var paymentsumbudget = 0.0F
 
@@ -102,10 +101,20 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
             }
         }
         fragment.onGuestConfirmation(view, confirmed, rejected, pending)
+        presenterevent.getEventDetail()
     }
 
     override fun onGuestListError(errcode: String) {
         fragment.onGuestConfirmationError(view, GuestPresenter.ERRCODEGUESTS)
+        presenterevent.getEventDetail()
+    }
+
+    override fun onEvent(event: Event) {
+        fragment.onEvent(context, view, event)
+    }
+
+    override fun onEventError(errcode: String) {
+        fragment.onEventError(view, EventPresenter.ERRCODEEVENTS)
     }
 
     interface TaskStats {
@@ -144,6 +153,13 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
             errcode: String
         )
     }
+
+    interface EventInterface {
+        fun onEvent(context:Context, inflatedview: View, event: Event)
+        fun onEventError(inflatedview: View, errorcode: String)
+    }
+
+
 
 
 }

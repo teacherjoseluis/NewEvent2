@@ -1,34 +1,32 @@
 package com.example.newevent2
 
-import android.Manifest
-import android.app.Activity
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.newevent2.Functions.addGuest
-import com.example.newevent2.Functions.addTask
-import com.example.newevent2.Functions.editGuest
-import com.example.newevent2.Functions.editTask
+import com.example.newevent2.Functions.*
 import com.example.newevent2.Model.Guest
-import com.example.newevent2.Model.GuestModel
 import com.example.newevent2.ui.TextValidate
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
-import com.theartofdev.edmodo.cropper.CropImage
+import com.nordan.dialog.Animation
+import com.nordan.dialog.NordanAlertDialog
 import kotlinx.android.synthetic.main.new_guest.*
-import kotlinx.android.synthetic.main.new_guest.button
+
 
 class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
 
@@ -41,6 +39,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
     private lateinit var loadingview: View
     private lateinit var withdataview: View
     lateinit var mContext: Context
+    private lateinit var activitymenu: Menu
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,30 +68,34 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
-        val guestid = guestitem.key
+//        if (guestitem.key != "") {
+//            val guestmodel = GuestModel()
+//            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
+//            guestmodel.getGuestdetail(
+//                user.key,
+//                user.eventid,
+//                guestid,
+//                object : GuestModel.FirebaseSuccessGuest {
+//                    override fun onGuest(guest: Guest) {
+//                        nameinputedit.setText(guest.name)
+//                        phoneinputedit.setText(guest.phone)
+//                        tableinputedit.setText(guest.table)
+//
+//                        guestitem.key = guest.key
+//                        guestitem.name = guest.name
+//                        guestitem.phone = guest.phone
+//                        guestitem.email = guest.email
+//                        guestitem.rsvp = guest.rsvp
+//                        guestitem.companion = guest.companion
+//                        guestitem.table = guest.table
+//                    }
+//                })
+//        }
 
-        if (guestid != "") {
-            val guestmodel = GuestModel()
-            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
-            guestmodel.getGuestdetail(
-                user.key,
-                user.eventid,
-                guestid,
-                object : GuestModel.FirebaseSuccessGuest {
-                    override fun onGuest(guest: Guest) {
-                        nameinputedit.setText(guest.name)
-                        phoneinputedit.setText(guest.phone)
-                        tableinputedit.setText(guest.table)
-
-                        guestitem.key = guest.key
-                        guestitem.name = guest.name
-                        guestitem.phone = guest.phone
-                        guestitem.email = guest.email
-                        guestitem.rsvp = guest.rsvp
-                        guestitem.companion = guest.companion
-                        guestitem.table = guest.table
-                    }
-                })
+        if (guestitem.key != "") {
+            nameinputedit.setText(guestitem.name)
+            phoneinputedit.setText(guestitem.phone)
+            tableinputedit.setText(guestitem.table)
         }
 
         nameinputedit.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
@@ -175,6 +178,39 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
             }
             if (inputvalflag) {
                 saveguest()
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (guestitem.key != "") {
+            menuInflater.inflate(R.menu.guests_menu2, menu)
+            activitymenu = menu
+            val guestmenu = activitymenu.findItem(R.id.remove_guest)
+            guestmenu.isEnabled = true
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.remove_guest -> {
+                AlertDialog.Builder(this)
+                    .setTitle("Delete entry")
+                    .setMessage("Are you sure you want to delete this entry?") // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton(android.R.string.yes,
+                        DialogInterface.OnClickListener { dialog, which ->
+                            deleteGuest(this, guestitem)
+                            finish()
+                        }) // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show()
+                true
+            }
+            else -> {
+                true
             }
         }
     }

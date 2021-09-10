@@ -1,5 +1,6 @@
 package com.example.newevent2.Functions
 
+import Application.CalendarEvent
 import android.content.Context
 import android.widget.Toast
 import com.example.newevent2.CoRAddEditPayment
@@ -8,12 +9,16 @@ import com.example.newevent2.CoRDeletePayment
 import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.Model.*
 
+private lateinit var calendarevent : CalendarEvent
 var paymentmodel = PaymentModel()
 lateinit var paymentdbhelper: PaymentDBHelper
 private lateinit var usermodel: UserModel
 
 internal fun addPayment(context: Context, paymentitem: Payment) {
     try {
+        //------------------------------------------------
+        // Adding Calendar Event
+        calendarevent = CalendarEvent(context)
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = com.example.newevent2.Functions.getUserSession(context!!)
@@ -29,7 +34,7 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         usermodel = UserModel(user.key)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
-        val chainofcommand = orderChainAdd(paymentmodel, paymentdbhelper, usermodel)
+        val chainofcommand = orderChainAdd(calendarevent, paymentmodel, paymentdbhelper, usermodel)
         chainofcommand.onAddEditPayment(paymentitem)
         //------------------------------------------------
         // Updating User information in Session
@@ -49,6 +54,10 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
 
 internal fun deletePayment(context: Context, paymentitem: Payment) {
     try {
+        //------------------------------------------------
+        // Adding Calendar Event
+        calendarevent = CalendarEvent(context)
+        //------------------------------------------------
         val user = getUserSession(context!!)
         paymentmodel.userid = user.key
         paymentmodel.eventid = user.eventid
@@ -68,7 +77,7 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
         user.saveUserSession(context)
 
         val chainofcommand =
-            orderChainDel(usermodel, paymentdbhelper, paymentmodel)
+            orderChainDel(calendarevent, usermodel, paymentdbhelper, paymentmodel)
         chainofcommand.onDeletePayment(paymentitem)
         //------------------------------------------------
         Toast.makeText(context, "Payment was deleted successully", Toast.LENGTH_LONG).show()
@@ -83,6 +92,9 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
 
 internal fun editPayment(context: Context, paymentitem: Payment) {
     try {
+        //------------------------------------------------
+        // Adding Calendar Event
+        calendarevent = CalendarEvent(context)
         //---------------------------------------------------
         val user = getUserSession(context!!)
         paymentmodel.userid = user.key
@@ -94,7 +106,7 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
         //taskdbhelper.task = taskitem
         //------------------------------------------------
 
-        val chainofcommand = orderChainEdit(paymentmodel, paymentdbhelper)
+        val chainofcommand = orderChainEdit(calendarevent, paymentmodel, paymentdbhelper)
         chainofcommand.onAddEditPayment(paymentitem)
         //------------------------------------------------
         Toast.makeText(context, "Payment was edited successully", Toast.LENGTH_LONG).show()
@@ -108,29 +120,35 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
 }
 
 private fun orderChainAdd(
+    calendarEvent: CalendarEvent,
     paymentModel: PaymentModel,
     paymentDBHelper: PaymentDBHelper,
     userModel: UserModel
 ): CoRAddEditPayment {
+    calendarEvent.nexthandlerp = paymentModel
     paymentModel.nexthandler = paymentDBHelper
     paymentDBHelper.nexthandler = userModel
-    return paymentmodel
+    return calendarEvent
 }
 
 private fun orderChainDel(
+    calendarEvent: CalendarEvent,
     userModel: UserModel,
     paymentDBHelper: PaymentDBHelper,
     paymentModel: PaymentModel
 ): CoRDeletePayment {
+    calendarEvent.nexthandlerpdel = userModel
     userModel.nexthandlerdelp = paymentDBHelper
     paymentDBHelper.nexthandlerdel = paymentModel
-    return userModel
+    return calendarEvent
 }
 
 private fun orderChainEdit(
+    calendarEvent: CalendarEvent,
     paymentModel: PaymentModel,
     paymentDBHelper: PaymentDBHelper
 ): CoRAddEditPayment {
+    calendarEvent.nexthandlerp = paymentModel
     paymentModel.nexthandler = paymentDBHelper
-    return paymentmodel
+    return calendarEvent
 }

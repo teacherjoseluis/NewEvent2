@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.example.newevent2.Model.*
+import com.example.newevent2.NewTask_PaymentDetail
 
 import com.example.newevent2.VendorsAll
 
@@ -21,6 +22,7 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
 
     private lateinit var fragmentVA: VendorsAllPresenter
     private lateinit var fragmentCA: ContactsAllPresenter
+    private lateinit var fragmentVP: VendorPaymentPresenter
 
     private lateinit var cachevendor: Cache<Vendor>
 
@@ -34,6 +36,12 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
         fragmentCA = fragment
         mContext = context
         activefragment = "CA"
+    }
+
+    constructor(context: Context, fragment: VendorPaymentPresenter) {
+        fragmentVP = fragment
+        mContext = context
+        activefragment = "VP"
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -72,6 +80,7 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
         if (arrayList.size != 0) {
             when (activefragment) {
                 "VA" -> fragmentVA.onVendorList(arrayList)
+                "VP" -> fragmentVP.onVendorList(arrayList)
             }
         }
     }
@@ -91,11 +100,13 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
 
                         when (activefragment) {
                             "VA" -> fragmentVA.onVendorList(arrayList)
+                            "VP" -> fragmentVP.onVendorList(arrayList)
                         }
                     }else {
                         // This is when there is no data coming from Firebase
                         when (activefragment) {
-                            "VA" -> fragmentVA.onVendorListError(ERRCODEVENDORS) }
+                            "VA" -> fragmentVA.onVendorListError(ERRCODEVENDORS)
+                            "VP" -> fragmentVP.onVendorListError(ERRCODEVENDORS)}
                     }
                 }
             }

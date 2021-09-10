@@ -8,10 +8,10 @@
             android:id="@+id/task_fragment"
             android:icon="@drawable/organizer"
             android:title="Tasks"/>
-        <item
-            android:id="@+id/guest_fragment"
-            android:icon="@drawable/guests2"
-            android:title="Guests"/>
+<!--        <item-->
+<!--            android:id="@+id/guest_fragment"-->
+<!--            android:icon="@drawable/guests2"-->
+<!--            android:title="Guests"/>-->
         <item
             android:id="@+id/vendor_fragment"
             android:icon="@drawable/icons8_edit"

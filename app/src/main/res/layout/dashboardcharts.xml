@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dashboardactivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<!--
-    <include
-        android:id="@+id/loadingscreen"
-        layout="@layout/splashscreen"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
--->
+    android:layout_height="match_parent"
+    android:background="@color/pewter">
+    <!--
+        <include
+            android:id="@+id/loadingscreen"
+            layout="@layout/splashscreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    -->
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
@@ -28,21 +29,43 @@
             android:id="@+id/withdata"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="10dp"
             android:paddingBottom="150dp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/weddingphotodetail"
+                android:layout_width="170dp"
+                android:layout_height="150dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/weddingdetails"
+                    layout="@layout/summary_weddingdetails"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <include
                 android:id="@+id/duenextcard"
                 layout="@layout/actioncard_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="5dp"
+                android:visibility="visible"
+                app:layout_constraintStart_toEndOf="@+id/weddingphotodetail"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/weddingprogress"
+                layout="@layout/summary_weddingprogress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/weddingphotodetail" />
 
             <include
                 android:id="@+id/taskchart"
@@ -52,17 +75,26 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/duenextcard" />
+                app:layout_constraintTop_toBottomOf="@+id/weddingprogress" />
 
             <include
                 android:id="@+id/paymentchart"
                 layout="@layout/chartcard_layoutpayment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/duenextcard" />
+                app:layout_constraintTop_toBottomOf="@+id/weddingprogress" />
+
+            <include
+                android:id="@+id/weddinglocation2"
+
+                layout="@layout/summary_weddinglocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/taskchart" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/guestlayout"
@@ -71,7 +103,7 @@
                 android:padding="5dp"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/taskchart">
+                app:layout_constraintTop_toBottomOf="@+id/weddinglocation2">
 
                 <include
                     android:id="@+id/weddingguests"
@@ -106,17 +138,16 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <include
+                android:id="@+id/withnodata"
+                layout="@layout/empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="26dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <include
-        android:id="@+id/withnodata"
-        layout="@layout/empty_state"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

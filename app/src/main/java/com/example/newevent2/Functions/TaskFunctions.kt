@@ -1,20 +1,35 @@
 package com.example.newevent2.Functions
 
+import Application.CalendarEvent
+import android.app.NotificationManager
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Context
+import android.os.PersistableBundle
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.Model.UserModel
+import com.example.newevent2.NotificationID
+import com.example.newevent2.NotificationJobService
+import com.google.gson.Gson
+import java.util.*
 
+private lateinit var calendarevent : CalendarEvent
 var taskmodel = TaskModel()
 lateinit var taskdbhelper: TaskDBHelper
 private lateinit var usermodel: UserModel
 
 internal fun addTask(context: Context, taskitem: Task) {
     try {
+        //------------------------------------------------
+        // Adding Calendar Event
+        calendarevent = CalendarEvent(context)
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = com.example.newevent2.Functions.getUserSession(context!!)
@@ -30,7 +45,7 @@ internal fun addTask(context: Context, taskitem: Task) {
         usermodel = UserModel(user.key)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
-        val chainofcommand = orderChainAdd(taskmodel, taskdbhelper, usermodel)
+        val chainofcommand = orderChainAdd(calendarevent, taskmodel, taskdbhelper, usermodel)
         chainofcommand.onAddEditTask(taskitem)
         //------------------------------------------------
         // Updating User information in Session
@@ -50,6 +65,10 @@ internal fun addTask(context: Context, taskitem: Task) {
 
 internal fun deleteTask(context: Context, taskitem: Task) {
     try {
+        //------------------------------------------------
+        // Adding Calendar Event
+        calendarevent = CalendarEvent(context)
+        //------------------------------------------------
         val user = getUserSession(context!!)
         taskmodel.userid = user.key
         taskmodel.eventid = user.eventid
@@ -69,7 +88,7 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         user.saveUserSession(context)
 
         val chainofcommand =
-            orderChainDel(usermodel, taskdbhelper, taskmodel)
+            orderChainDel(calendarevent, usermodel, taskdbhelper, taskmodel)
         chainofcommand.onDeleteTask(taskitem)
         //------------------------------------------------
         Toast.makeText(context, "Task was deleted successully", Toast.LENGTH_LONG).show()
@@ -84,6 +103,9 @@ internal fun deleteTask(context: Context, taskitem: Task) {
 
 internal fun editTask(context: Context, taskitem: Task) {
     try {
+        //------------------------------------------------
+        // Adding Calendar Event
+        calendarevent = CalendarEvent(context)
         //---------------------------------------------------
         val user = getUserSession(context!!)
         taskmodel.userid = user.key
@@ -94,8 +116,7 @@ internal fun editTask(context: Context, taskitem: Task) {
         taskdbhelper = TaskDBHelper(context)
         //taskdbhelper.task = taskitem
         //------------------------------------------------
-
-        val chainofcommand = orderChainEdit(taskmodel, taskdbhelper)
+        val chainofcommand = orderChainEdit(calendarevent, taskmodel, taskdbhelper)
         chainofcommand.onAddEditTask(taskitem)
         //------------------------------------------------
         Toast.makeText(context, "Task was edited successully", Toast.LENGTH_LONG).show()
@@ -109,29 +130,35 @@ internal fun editTask(context: Context, taskitem: Task) {
 }
 
 private fun orderChainAdd(
+    calendarEvent: CalendarEvent,
     taskModel: TaskModel,
     taskDBHelper: TaskDBHelper,
     userModel: UserModel
 ): CoRAddEditTask {
+    calendarEvent.nexthandlert = taskModel
     taskModel.nexthandler = taskDBHelper
     taskDBHelper.nexthandler = userModel
-    return taskmodel
+    return calendarEvent
 }
 
 private fun orderChainDel(
+    calendarEvent: CalendarEvent,
     userModel: UserModel,
     taskDBHelper: TaskDBHelper,
     taskModel: TaskModel
 ): CoRDeleteTask {
+    calendarEvent.nexthandlertdel = userModel
     userModel.nexthandlerdelt = taskDBHelper
     taskDBHelper.nexthandlerdel = taskModel
-    return userModel
+    return calendarEvent
 }
 
 private fun orderChainEdit(
+    calendarEvent: CalendarEvent,
     taskModel: TaskModel,
     taskDBHelper: TaskDBHelper
 ): CoRAddEditTask {
+    calendarEvent.nexthandlert = taskModel
     taskModel.nexthandler = taskDBHelper
-    return taskmodel
+    return calendarEvent
 }

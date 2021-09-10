@@ -1,19 +1,38 @@
 package com.example.newevent2
 
+import Application.Notification
+import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.NotificationManager
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import com.example.newevent2.Functions.*
 import com.example.newevent2.Functions.addTask
 import com.example.newevent2.Functions.editTask
+import com.example.newevent2.Functions.getMockUserSetTime
+import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.validateOldDate
+import com.example.newevent2.MVP.ContactsAllPresenter
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.Model.TaskModel
@@ -23,6 +42,12 @@ import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.android.synthetic.main.task_editdetail.taskdate
 import kotlinx.android.synthetic.main.task_editdetail.taskname
@@ -32,13 +57,12 @@ class TaskCreateEdit() : AppCompatActivity() {
 
     private lateinit var taskitem: Task
 
-    //var taskmodel = TaskModel()
-    //lateinit var taskdbhelper: TaskDBHelper
-    //lateinit var usermodel: UserModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.task_editdetail)
+
+        //This call checks the status of Firebase connection
+        checkFirebaseconnection()
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -52,29 +76,36 @@ class TaskCreateEdit() : AppCompatActivity() {
             Task()
         }
 
-        val taskid = taskitem.key
-
-        if (taskid != "") {
-            val taskmodel = TaskModel()
-            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
-            taskmodel.getTaskdetail(user.key, user.eventid, taskid, object :
-                TaskModel.FirebaseSuccessTask {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onTask(task: Task) {
-                    taskname.setText(task.name)
-                    taskdate.setText(task.date)
-                    taskbudget.setText(task.budget)
-
-                    taskitem.key = task.key
-                    taskitem.budget = task.budget
-                    taskitem.category = task.category
-                    taskitem.date = task.date
-                    taskitem.name = task.name
-                    taskitem.createdatetime = task.createdatetime
-                    taskitem.status = task.status
-                }
-            })
-        }
+//        val taskid = taskitem.key
+//        if (taskid != "") {
+//            val taskmodel = TaskModel()
+//            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
+//            taskmodel.getTaskdetail(user.key, user.eventid, taskid, object :
+//                TaskModel.FirebaseSuccessTask {
+//                @RequiresApi(Build.VERSION_CODES.O)
+//                override fun onTask(task: Task) {
+//                    taskitem.key = task.key
+//                    taskitem.budget = task.budget
+//                    taskitem.category = task.category
+//                    taskitem.date = task.date
+//                    taskitem.name = task.name
+//                    taskitem.createdatetime = task.createdatetime
+//                    taskitem.status = task.status
+//
+//                    taskname.setText(taskitem.name)
+//                    taskdate.setText(taskitem.date)
+//                    taskbudget.setText(taskitem.budget)
+//                }
+//
+//                override fun onError(errorcode: String) {
+//                    Toast.makeText(
+//                        applicationContext,
+//                        "There was an error trying to retrieve the task $errorcode",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            })
+//        }
 
         taskname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
             if (!p1) {
@@ -108,6 +139,12 @@ class TaskCreateEdit() : AppCompatActivity() {
                 chip.isSelected = true
                 chipgroupedit.check(chip.id)
             }
+        }
+
+        if (taskitem.key != "") {
+            taskname.setText(taskitem.name)
+            taskdate.setText(taskitem.date)
+            taskbudget.setText(taskitem.budget)
         }
 
         savebuttontask.setOnClickListener {
@@ -144,6 +181,102 @@ class TaskCreateEdit() : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (taskitem.key != "") {
+            menuInflater.inflate(R.menu.tasks_menu, menu)
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.delete_task -> {
+                AlertDialog.Builder(this)
+                    .setTitle("Delete entry")
+                    .setMessage("Are you sure you want to delete this entry?") // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton(android.R.string.yes,
+                        DialogInterface.OnClickListener { dialog, which ->
+                            deleteTask(this, taskitem)
+                            finish()
+                        }) // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show()
+                true
+            }
+            R.id.complete_task -> {
+                taskitem.status = Rv_TaskAdapter.COMPLETETASK
+                editTask(this, taskitem)
+                finish()
+                true
+            }
+            else -> {
+                true
+            }
+        }
+    }
+
+
+    //-------------------------------------------------------------------------------
+    // Creating Notification for Tasks
+    //-------------------------------------------------------------------------------
+//    private fun addNotification(task: Task) {
+//        // Job ID must be unique if you have multiple jobs scheduled
+//        var jobID = NotificationID.getID()
+//
+//        var gson = Gson()
+//        var json = gson.toJson(task)
+//        var bundle = PersistableBundle()
+//        bundle.putString("task", json)
+//
+//        // Get fake user set time (a future time 1 min from current time)
+//        val (userSetHourOfDay, userSetMinute) = getMockUserSetTime()
+//        val timeToWaitBeforeExecuteJob = calculateTimeDifferenceMs(userSetHourOfDay, userSetMinute)
+//        (getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).run {
+//            schedule(
+//                JobInfo.Builder(
+//                    jobID,
+//                    ComponentName(baseContext, NotificationJobService::class.java)
+//                )
+//                    // job execution will be delayed by this amount of time
+//                    .setMinimumLatency(timeToWaitBeforeExecuteJob)
+//                    // job will be run by this deadline
+//                    .setOverrideDeadline(timeToWaitBeforeExecuteJob)
+//                    .setExtras(bundle)
+//                    .build()
+//            )
+//        }
+//    }
+
+    //-------------------------------------------------------------------------------
+//    private fun delNotification(task: Task) {
+//        val notificationManager =
+//            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager.cancel(task.key, 0)
+//    }
+    //-------------------------------------------------------------------------------
+
+    // Returns a pair ( hourOfDay, minute ) that represents a future time,
+    // 1 minute after the current time
+//    private fun getMockUserSetTime(): Pair<Int, Int> {
+//        val calendar = Calendar.getInstance().apply {
+//            // add just 1 min from current time
+//            add(Calendar.MINUTE, 1)
+//        }
+//        return Pair(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+//    }
+//
+//    // Calculate time difference relative to current time in ms
+//    private fun calculateTimeDifferenceMs(hourOfDay: Int, minute: Int): Long {
+//        val now = Calendar.getInstance()
+//        val then = (now.clone() as Calendar).apply {
+//            set(Calendar.HOUR_OF_DAY, hourOfDay)
+//            set(Calendar.MINUTE, minute)
+//        }
+//        return then.timeInMillis - now.timeInMillis
+//    }
+
     private fun getCategory(): String {
         var mycategorycode = ""
         val categoryname = groupedittask.findViewById<Chip>(groupedittask.checkedChipId).text
@@ -179,14 +312,28 @@ class TaskCreateEdit() : AppCompatActivity() {
         taskitem.budget = taskbudget.text.toString()
         taskitem.category = getCategory()
 
-        if (taskitem.key == "") {
-            addTask(applicationContext, taskitem)
-        } else if (taskitem.key != "") {
-            editTask(applicationContext, taskitem)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
+                        PackageManager.PERMISSION_DENIED
+                        ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
+                        PackageManager.PERMISSION_DENIED
+                        )
+            ) {
+                //permission denied
+                val permissions =
+                    arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
+                //show popup to request runtime permission
+                requestPermissions(permissions, PERMISSION_CODE)
+            } else {
+                if (taskitem.key == "") {
+                    addTask(applicationContext, taskitem)
+                } else if (taskitem.key != "") {
+                    editTask(applicationContext, taskitem)
+                }
+                val resultIntent = Intent()
+                setResult(Activity.RESULT_OK, resultIntent)
+            }
         }
-        val resultIntent = Intent()
-        setResult(Activity.RESULT_OK, resultIntent)
-        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -194,9 +341,33 @@ class TaskCreateEdit() : AppCompatActivity() {
         return true
     }
 
+    private fun checkFirebaseconnection() {
+        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java) ?: false
+                if (connected) {
+                    Log.d(TaskModel.TAG, "connected")
+                } else {
+                    val notification = Notification()
+                    notification.sendnotification(
+                        baseContext,
+                        "No connectivity",
+                        "Connectivity to Internet was lost"
+                    )
+                    Log.d(TaskModel.TAG, "not connected")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w(TaskModel.TAG, "Listener was cancelled")
+            }
+        })
+    }
+
     companion object {
-        const val TASKENTITY = "Task"
         const val TAG = "TaskCreateEdit"
+        internal val PERMISSION_CODE = 42
     }
 }
 

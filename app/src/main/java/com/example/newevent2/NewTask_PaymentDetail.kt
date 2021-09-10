@@ -2,13 +2,18 @@ package com.example.newevent2
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.newevent2.Model.Payment
-import com.example.newevent2.Model.PaymentModel
-import com.example.newevent2.Model.TaskModel
+import com.example.newevent2.MVP.VendorPaymentPresenter
+import com.example.newevent2.MVP.VendorPresenter
+import com.example.newevent2.MVP.VendorsAllPresenter
+import com.example.newevent2.Model.*
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.payment_editdetail.*
@@ -17,9 +22,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class NewTask_PaymentDetail : AppCompatActivity() {
+class NewTask_PaymentDetail : AppCompatActivity(){
     var userid = ""
     var eventid = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +101,6 @@ class NewTask_PaymentDetail : AppCompatActivity() {
 
 //        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
 //        val chiptextvalue = chipselected.text.toString()
-//
 //        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
 //        for (category in list) {
 //            if (chiptextvalue == category.en_name) {
@@ -115,4 +120,8 @@ class NewTask_PaymentDetail : AppCompatActivity() {
         finish()
         return true
     }
+
+
+
+
 }

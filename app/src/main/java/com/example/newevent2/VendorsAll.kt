@@ -25,10 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.clone
 import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.MVP.VendorsAllPresenter
-import com.example.newevent2.Model.Guest
-import com.example.newevent2.Model.GuestDBHelper
-import com.example.newevent2.Model.Vendor
-import com.example.newevent2.Model.VendorDBHelper
+import com.example.newevent2.Model.*
 import com.example.newevent2.ui.ViewAnimation
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.contacts.*
@@ -77,27 +74,27 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         val addVendor = menu.findItem(R.id.add_vendor)
         addVendor.isVisible = false
 
-        val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
-        searchView.isIconified = false
-
-        searchView.setOnCloseListener {
-            toolbar.collapseActionView()
-            true
-        }
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(p0: String?): Boolean {
-                val filteredModelList= filter(contactlist, p0)
-                val rvAdapter = Rv_VendorAdapter(filteredModelList as ArrayList<Vendor>, context!!)
-                recyclerViewAllVendor.adapter = rvAdapter
-                return true
-            }
-        })
+//        val searchItem = menu.findItem(R.id.action_search)
+//        val searchView = searchItem.actionView as SearchView
+//        searchView.isIconified = false
+//
+//        searchView.setOnCloseListener {
+//            toolbar.collapseActionView()
+//            true
+//        }
+//
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(p0: String?): Boolean {
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(p0: String?): Boolean {
+//                val filteredModelList= filter(contactlist, p0)
+//                val rvAdapter = Rv_VendorAdapter(filteredModelList as ArrayList<Vendor>, context!!)
+//                recyclerViewAllVendor.adapter = rvAdapter
+//                return true
+//            }
+//        })
     }
 
     override fun onCreateView(
@@ -161,8 +158,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
             val vendordb = VendorDBHelper(context!!)
             val vendorlist = vendordb.getAllVendors()
 
-            rvAdapter = Rv_VendorAdapter(vendorlist, context!!)
-
+            //rvAdapter = Rv_VendorAdapter(vendorlist, context!!)
 //            recyclerViewAllGuests.adapter = null
             recyclerViewAllVendor.adapter = rvAdapter
             contactlist = clone(vendorlist)!!
@@ -196,12 +192,12 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 
     override fun onVAVendors(
         inflatedView: View,
-        list: ArrayList<Vendor>
+        list: ArrayList<VendorPayment>
     ) {
         rvAdapter = Rv_VendorAdapter(list, context!!)
 
         recyclerViewAllVendor.adapter = rvAdapter
-        contactlist = clone(list)!!
+        //contactlist = clone(list)!!
 
         swipeController = SwipeControllerTasks(
             inflatedView.context,

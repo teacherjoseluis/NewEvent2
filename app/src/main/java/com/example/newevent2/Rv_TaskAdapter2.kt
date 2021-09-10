@@ -20,9 +20,10 @@ import com.example.newevent2.Model.Task
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.task_item_layout.view.*
 import kotlinx.android.synthetic.main.task_item_layout2.view.*
+import org.w3c.dom.Text
 
 class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
-    RecyclerView.Adapter<Rv_TaskAdapter2.ViewHolder>(), ItemTouchAdapterAction {
+    RecyclerView.Adapter<Rv_TaskAdapter2.ViewHolder>() {
 
     lateinit var context: Context
     var taskmodel = TaskModel()
@@ -47,6 +48,14 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
         p0.taskcategory?.text = taskList[p1].category
         p0.taskcategory?.setTextColor(getCategory(taskList[p1].category).colorforeground.toColorInt())
         p0.itemView.taskcard.setCardBackgroundColor(getCategory(taskList[p1].category).colorbackground.toColorInt())
+        p0.taskstatus?.setTextColor(getCategory(taskList[p1].category).colorforeground.toColorInt())
+        p0.taskstatus?.text = when(taskList[p1].status) {
+            "A" -> "active"
+            "C" -> "completed"
+            else -> "unknown"
+        }
+
+
 //        p0.taskdate?.text = taskList[p1].date
 //        p0.taskbudget?.text = taskList[p1].budget
 //        val resourceId = context.resources.getIdentifier(getCategory(taskList[p1].category).drawable, "drawable",
@@ -63,61 +72,62 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskname: TextView? = itemView.findViewById<TextView>(R.id.taskname)
         val taskcategory: TextView? = itemView.findViewById<TextView>(R.id.taskcategory)
+        val taskstatus: TextView? = itemView.findViewById(R.id.taskstatus)
 //        val taskbudget: TextView? = itemView.findViewById<TextView>(R.id.taskbudgets)
 //        val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
     }
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
-        if (action == CHECKACTION) {
-            val taskswift = taskList[position]
-            taskList.removeAt(position)
-            notifyItemRemoved(position)
-            taskswift.status = COMPLETETASK
-            editTask(context, taskswift)
-
-            val snackbar = Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
-                .setAction("UNDO") {
-                    taskList.add(taskswift)
-                    notifyItemInserted(taskList.lastIndex)
-                    taskswift.status = ACTIVETASK
-                    editTask(context, taskswift)
-                }
-            snackbar.show()
-        }
-    }
-
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
-        //val user = com.example.newevent2.Functions.getUserSession(context!!)
-        val taskswift = taskList[position]
-        val taskbackup = Task().apply {
-            name = taskswift.name
-            budget = taskswift.budget
-            date = taskswift.date
-            category = taskswift.category
-            status = taskswift.status
-            createdatetime = taskswift.createdatetime
-        }
-
-        if (action == DELETEACTION) {
-            taskList.removeAt(position)
-            notifyItemRemoved(position)
-            deleteTask(context, taskswift)
-
-            val snackbar = Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
-                .setAction("UNDO") {
-                    taskList.add(taskswift)
-                    notifyItemInserted(taskList.lastIndex)
-                    taskswift.status = ACTIVETASK
-                    addTask(context, taskbackup)
-                }
-            snackbar.show()
-        } else if (action == UNDOACTION) {
-            taskList.add(taskswift)
-            notifyItemInserted(taskList.lastIndex)
-            taskswift.status = ACTIVETASK
-            editTask(context, taskswift)
-        }
-    }
+//    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
+//        if (action == CHECKACTION) {
+//            val taskswift = taskList[position]
+//            taskList.removeAt(position)
+//            notifyItemRemoved(position)
+//            taskswift.status = COMPLETETASK
+//            editTask(context, taskswift)
+//
+//            val snackbar = Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
+//                .setAction("UNDO") {
+//                    taskList.add(taskswift)
+//                    notifyItemInserted(taskList.lastIndex)
+//                    taskswift.status = ACTIVETASK
+//                    editTask(context, taskswift)
+//                }
+//            snackbar.show()
+//        }
+//    }
+//
+//    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
+//        //val user = com.example.newevent2.Functions.getUserSession(context!!)
+//        val taskswift = taskList[position]
+//        val taskbackup = Task().apply {
+//            name = taskswift.name
+//            budget = taskswift.budget
+//            date = taskswift.date
+//            category = taskswift.category
+//            status = taskswift.status
+//            createdatetime = taskswift.createdatetime
+//        }
+//
+//        if (action == DELETEACTION) {
+//            taskList.removeAt(position)
+//            notifyItemRemoved(position)
+//            deleteTask(context, taskswift)
+//
+//            val snackbar = Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
+//                .setAction("UNDO") {
+//                    taskList.add(taskswift)
+//                    notifyItemInserted(taskList.lastIndex)
+//                    taskswift.status = ACTIVETASK
+//                    addTask(context, taskbackup)
+//                }
+//            snackbar.show()
+//        } else if (action == UNDOACTION) {
+//            taskList.add(taskswift)
+//            notifyItemInserted(taskList.lastIndex)
+//            taskswift.status = ACTIVETASK
+//            editTask(context, taskswift)
+//        }
+//    }
 
     companion object {
         const val ACTIVETASK = "A"
