@@ -42,6 +42,10 @@ import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.testing.FakeReviewManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -334,8 +338,26 @@ class TaskCreateEdit() : AppCompatActivity() {
                 setResult(Activity.RESULT_OK, resultIntent)
             }
         }
-    }
+        //------------------------------------------------
+        // Request User's feedback
+        val reviewManager: ReviewManager = ReviewManagerFactory.create(this)
 
+        val requestReviewTask: com.google.android.play.core.tasks.Task<ReviewInfo> = reviewManager.requestReviewFlow()
+        requestReviewTask.addOnCompleteListener { request ->
+            if (request.isSuccessful) {
+                // Request succeeded and a ReviewInfo instance was received
+                val reviewInfo: ReviewInfo = request.result
+                val launchReviewTask: com.google.android.play.core.tasks.Task<*> = reviewManager.launchReviewFlow(this, reviewInfo)
+                launchReviewTask.addOnCompleteListener { _ ->
+                    // The review has finished, continue your app flow.
+                }
+            } else {
+                // Request failed
+            }
+        }
+        //------------------------------------------------
+    }
+    
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true

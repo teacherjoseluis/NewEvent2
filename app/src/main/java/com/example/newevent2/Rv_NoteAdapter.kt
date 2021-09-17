@@ -51,7 +51,7 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
 
         try {
             p0.itemView.background.setTint(noteList[p1].color.toColorInt())
-        } catch (e: Exception){
+        } catch (e: Exception) {
             p0.itemView.background.setTint(Color.WHITE)
         }
         p0.itemView.setOnClickListener {
@@ -88,13 +88,14 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
             notifyItemRemoved(position)
             notedb.delete(noteswift)
 
-            Snackbar.make(recyclerView, "Note deleted", Snackbar.LENGTH_LONG)
-                .setAction("UNDO") {
-                    val notedbins = NoteDBHelper(context)
-                    noteList.add(notebackup)
-                    notifyItemInserted(noteList.lastIndex)
-                    notedbins.insert(notebackup)
-                }.show()
+            val snackbar = Snackbar.make(recyclerView, "Note deleted", Snackbar.LENGTH_LONG)
+//                .setAction("UNDO") {
+//                    val notedbins = NoteDBHelper(context)
+//                    noteList.add(notebackup)
+//                    notifyItemInserted(noteList.lastIndex)
+//                    notedbins.insert(notebackup)
+//        }
+            snackbar.show()
         }
     }
 

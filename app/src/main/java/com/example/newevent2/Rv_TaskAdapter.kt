@@ -84,12 +84,12 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
             editTask(context, taskswift)
 
             val snackbar = Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
-                .setAction("UNDO") {
-                    taskList.add(taskswift)
-                    notifyItemInserted(taskList.lastIndex)
-                    taskswift.status = ACTIVETASK
-                    editTask(context, taskswift)
-                }
+//                .setAction("UNDO") {
+//                    taskList.add(taskswift)
+//                    notifyItemInserted(taskList.lastIndex)
+//                    taskswift.status = ACTIVETASK
+//                    editTask(context, taskswift)
+//                }
             snackbar.show()
         }
     }
@@ -114,13 +114,13 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
             deleteTask(context, taskswift)
 
             val snackbar = Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
-                .setAction("UNDO") {
-                    taskList.add(taskswift)
-                    notifyItemInserted(taskList.lastIndex)
-                    taskswift.status = ACTIVETASK
-                    addTask(context, taskbackup)
-                    //addNotification(taskbackup)
-                }
+//                .setAction("UNDO") {
+//                    taskList.add(taskswift)
+//                    notifyItemInserted(taskList.lastIndex)
+//                    taskswift.status = ACTIVETASK
+//                    addTask(context, taskbackup)
+//                    //addNotification(taskbackup)
+//                }
             snackbar.show()
         } else if (action == UNDOACTION) {
             taskList.add(taskswift)

@@ -1,14 +1,18 @@
 package com.example.newevent2
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -17,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.Functions.*
 import com.example.newevent2.MVP.ImagePresenter
+import com.example.newevent2.Model.PaymentDBHelper
 import com.example.newevent2.Model.Vendor
 import com.example.newevent2.Model.VendorModel
 import com.example.newevent2.ui.TextValidate
@@ -39,6 +44,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
     private lateinit var loadingview: View
     private lateinit var withdataview: View
     lateinit var mContext: Context
+    private lateinit var activitymenu: Menu
 
     var placelatitude = 0.0
     var placelongitude = 0.0
@@ -70,6 +76,12 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
 
         val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+
+        if (vendoritem.key != "") {
+            nameinputedit.setText(vendoritem.name)
+            phoneinputedit.setText(vendoritem.phone)
+            mailinputedit.setText(vendoritem.email)
+        }
 
         nameinputedit.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
             if (!p1) {
@@ -128,12 +140,6 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             }
         }
 
-        if (vendoritem.key != "") {
-            nameinputedit.setText(vendoritem.name)
-            phoneinputedit.setText(vendoritem.phone)
-            mailinputedit.setText(vendoritem.email)
-        }
-
         button.setOnClickListener {
             var inputvalflag = true
             if (nameinputedit.text.toString().isEmpty()) {
@@ -146,6 +152,48 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             }
             if (inputvalflag) {
                 savevendor()
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (vendoritem.key != "") {
+            menuInflater.inflate(R.menu.vendors_menu2, menu)
+            activitymenu = menu
+            val guestmenu = activitymenu.findItem(R.id.remove_guest)
+            guestmenu.isEnabled = true
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.remove_guest -> {
+                AlertDialog.Builder(this)
+                    .setTitle("Delete entry")
+                    .setMessage("Are you sure you want to delete this entry?") // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton(android.R.string.yes,
+                        DialogInterface.OnClickListener { dialog, which ->
+                            val paymentdb = PaymentDBHelper(this)
+                            if (paymentdb.hasVendorPayments(vendoritem.key) == 0) {
+                                deleteVendor(this, vendoritem)
+                                finish()
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "Vendor can't be removed as there are still payments associated",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }) // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show()
+                true
+            }
+            else -> {
+                true
             }
         }
     }

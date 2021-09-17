@@ -86,11 +86,11 @@ class Rv_PaymentAdapter(
             deletePayment(context, paymentswift)
 
             val snackbar = Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
-                .setAction("UNDO") {
-                    paymentList.add(paymentswift)
-                    notifyItemInserted(paymentList.lastIndex)
-                    addPayment(context, paymentbackup)
-                }
+//                .setAction("UNDO") {
+//                    paymentList.add(paymentswift)
+//                    notifyItemInserted(paymentList.lastIndex)
+//                    addPayment(context, paymentbackup)
+//                }
             snackbar.show()
         }
     }

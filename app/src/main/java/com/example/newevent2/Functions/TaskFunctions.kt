@@ -1,6 +1,7 @@
 package com.example.newevent2.Functions
 
 import Application.CalendarEvent
+import android.app.Activity
 import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
@@ -17,6 +18,9 @@ import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.Model.UserModel
 import com.example.newevent2.NotificationID
 import com.example.newevent2.NotificationJobService
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.gson.Gson
 import java.util.*
 
@@ -52,7 +56,7 @@ internal fun addTask(context: Context, taskitem: Task) {
         user.tasksactive = user.tasksactive + 1
         user.hastask = TaskModel.ACTIVEFLAG
         user.saveUserSession(context)
-        //------------------------------------------------
+        //--------------------------------------------------------------------------------------
         Toast.makeText(context, "Task was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -118,7 +122,7 @@ internal fun editTask(context: Context, taskitem: Task) {
         //------------------------------------------------
         val chainofcommand = orderChainEdit(calendarevent, taskmodel, taskdbhelper)
         chainofcommand.onAddEditTask(taskitem)
-        //------------------------------------------------
+
         Toast.makeText(context, "Task was edited successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(

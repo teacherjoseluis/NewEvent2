@@ -59,7 +59,16 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
                     val createdatetime = cursor.getString(cursor.getColumnIndex("createdatetime"))
                     val vendorid = cursor.getString(cursor.getColumnIndex("vendorid"))
                     val payment =
-                        Payment(paymentid, name, date, category, amount, eventid, createdatetime,vendorid)
+                        Payment(
+                            paymentid,
+                            name,
+                            date,
+                            category,
+                            amount,
+                            eventid,
+                            createdatetime,
+                            vendorid
+                        )
                     list.add(payment)
                     Log.d(TAG, "Task $paymentid record obtained from local DB")
                 } while (cursor.moveToNext())
@@ -68,9 +77,10 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         return list
     }
 
-    fun getVendorPayments(vendorkey: String): ArrayList<Float>{
+    fun getVendorPayments(vendorkey: String): ArrayList<Float> {
         val list = ArrayList<Float>()
-            val cursor: Cursor = db.rawQuery("SELECT amount FROM PAYMENT where vendorid ='$vendorkey'", null)
+        val cursor: Cursor =
+            db.rawQuery("SELECT amount FROM PAYMENT where vendorid ='$vendorkey'", null)
         if (cursor != null) {
             if (cursor.count > 0) {
                 cursor.moveToFirst()
@@ -86,6 +96,23 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         return list
     }
 
+    fun hasVendorPayments(vendorkey: String): Int {
+        var paymentcount = 0
+        val cursor: Cursor = db.rawQuery(
+            "SELECT COUNT(*) as vendorpayment FROM PAYMENT where vendorid ='$vendorkey'",
+            null
+        )
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    paymentcount = cursor.getInt(cursor.getColumnIndex("vendorpayment"))
+                } while (cursor.moveToNext())
+            }
+        }
+        return paymentcount
+    }
+
     fun getActiveCategories(): ArrayList<Category> {
         val list = ArrayList<Category>()
         val cursor: Cursor =
@@ -96,7 +123,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
                 do {
                     val category = cursor.getString(cursor.getColumnIndex("category"))
                     val paymentcategory = Category.getCategory(category)
-                    list.add(paymentcategory )
+                    list.add(paymentcategory)
                 } while (cursor.moveToNext())
             }
         }
@@ -147,7 +174,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         values.put("createdatetime", payment.createdatetime)
         values.put("vendorid", payment.vendorid)
 
-        val retVal = db.update("PAYMENT", values, "paymentid = '${payment.key}'",  null)
+        val retVal = db.update("PAYMENT", values, "paymentid = '${payment.key}'", null)
         if (retVal >= 1) {
             Log.d(TAG, "Payment ${payment.key} updated")
         } else {
