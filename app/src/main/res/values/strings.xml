@@ -18,8 +18,6 @@
     <string name="privacypolicy">https://brides-grooms.flycricket.io/privacy.html</string>
     <string name="termsandconditions">https://brides-grooms.flycricket.io/terms.html</string>
 
-<!--   <string name="google_api_key">AIzaSyC6nCSLYrxoARX3OAEqNdpSFsf73OOHdbo</string>-->
-<!--    <string name="default_web_client_id" translatable="false">319634884697-ihokd8d4om17tsanagl74ife42c5n68f.apps.googleusercontent.com</string>-->
 
     <string name="facebook_app_id">420436362323049</string>
     <string name="fb_login_protocol_scheme">fb420436362323049</string>
