@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newevent2.Functions.clone
 import com.example.newevent2.MVP.NotePresenter
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Note
 import com.example.newevent2.Model.NoteDBHelper
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.my_notes.*
 import kotlinx.android.synthetic.main.my_notes.view.*
 import kotlinx.android.synthetic.main.navbottom.*
@@ -44,6 +46,13 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
         presenternote = NotePresenter(context!!, this, inf)
 
         inf.floatingNewNote.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWNOTE")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+
             val newnote = Intent(context, NoteCreateEdit::class.java)
             newnote.putExtra("userid", "")
             startActivity(newnote)

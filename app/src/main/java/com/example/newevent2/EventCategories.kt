@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.PaymentPresenter
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.ui.ViewAnimation
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.mainevent_summary.*
 import kotlinx.android.synthetic.main.mainevent_summary.view.*
@@ -36,7 +38,6 @@ class EventCategories : Fragment() {
         retainInstance = true
 //        userid = this.arguments!!.get("userid").toString()
 //        eventid = this.arguments!!.get("eventid").toString()
-
 
     }
 
@@ -77,17 +78,28 @@ class EventCategories : Fragment() {
         }
 
         inf.fabTask.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWTASK")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
             val newtask = Intent(context, TaskCreateEdit::class.java)
             newtask.putExtra("userid", "")
             startActivity(newtask)
         }
 
         inf.fabPayment.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWPAYMENT")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
             val newpayment = Intent(context, PaymentCreateEdit::class.java)
             newpayment.putExtra("userid", "")
             startActivity(newpayment)
         }
-
         return inf
     }
 }

@@ -10,6 +10,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,7 @@ import com.example.newevent2.Functions.editTask
 import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Task
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.task_item_layout.view.*
 import java.util.*

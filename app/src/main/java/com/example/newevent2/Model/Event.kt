@@ -13,7 +13,7 @@ open class Event(
     var name: String = "",
     var date: String = "",
     var time: String = "",
-    var about: String = "",
+    var eventid: String = "",
     var location: String = "") : Parcelable {
 
     constructor(parcel: Parcel) : this() {
@@ -26,7 +26,7 @@ open class Event(
         name = parcel.readString().toString()
         date = parcel.readString().toString()
         time = parcel.readString().toString()
-        about = parcel.readString().toString()
+        eventid = parcel.readString().toString()
         location = parcel.readString().toString()
     }
 
@@ -40,7 +40,7 @@ open class Event(
         parcel.writeString(name)
         parcel.writeString(date)
         parcel.writeString(time)
-        parcel.writeString(about)
+        parcel.writeString(eventid)
         parcel.writeString(location)
     }
 

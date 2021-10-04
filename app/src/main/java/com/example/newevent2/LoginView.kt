@@ -87,7 +87,7 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
             // Google Sign In
             signgoogle.setOnClickListener {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestIdToken("319634884697-ihokd8d4om17tsanagl74ife42c5n68f.apps.googleusercontent.com")
                     .requestEmail()
                     .build()
 
@@ -221,6 +221,7 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
         onboarding.putExtra("userid", userid)
         onboarding.putExtra("email", email)
         onboarding.putExtra("authtype", authtype)
+
         startActivity(onboarding)
         overridePendingTransition(android.R.anim.slide_out_right, android.R.anim.slide_in_left)
     }

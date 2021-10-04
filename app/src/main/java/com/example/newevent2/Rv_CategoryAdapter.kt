@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.TaskDBHelper
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class rvCategoryAdapter(private val categorylist: List<Category>) :
     RecyclerView.Adapter<rvCategoryAdapter.ViewHolder>() {
@@ -43,6 +46,13 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
         p0.taskbudgetlabel?.text=taskstats.sumbudget.toString()
 
         p0.itemView.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "CATEGORYCARD")
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, categorylist[p1].code)
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
             val catdetail = Intent(context, TaskPaymentList::class.java)
             catdetail.putExtra("category", categorylist[p1].code)
             context.startActivity(catdetail)

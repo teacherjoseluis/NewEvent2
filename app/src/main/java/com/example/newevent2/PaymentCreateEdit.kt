@@ -28,6 +28,7 @@ import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.payment_editdetail.*
 import java.util.*
 
@@ -235,7 +236,7 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
                 } else if (paymentitem.key != "") {
                     editPayment(this, paymentitem)
                 }
-//                val resultIntent = Intent()
+//               val resultIntent = Intent()
 //                setResult(Activity.RESULT_OK, resultIntent)
             }
         }

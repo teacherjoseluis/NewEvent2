@@ -33,11 +33,8 @@ import com.example.newevent2.Functions.getMockUserSetTime
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.validateOldDate
 import com.example.newevent2.MVP.ContactsAllPresenter
+import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Task
-import com.example.newevent2.Model.TaskDBHelper
-import com.example.newevent2.Model.TaskModel
-import com.example.newevent2.Model.User
-import com.example.newevent2.Model.UserModel
 import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
@@ -46,6 +43,7 @@ import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.testing.FakeReviewManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -357,7 +355,7 @@ class TaskCreateEdit() : AppCompatActivity() {
         }
         //------------------------------------------------
     }
-    
+
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true

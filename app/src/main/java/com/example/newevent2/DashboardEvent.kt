@@ -2,11 +2,7 @@ package com.example.newevent2
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
 import android.content.Context
-import android.content.Context.JOB_SCHEDULER_SERVICE
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -27,7 +23,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -44,6 +39,7 @@ import com.example.newevent2.Functions.getImgfromPlaces
 import com.example.newevent2.MVP.DashboardEventPresenter
 import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Task
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
@@ -51,13 +47,16 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
-import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.android.synthetic.main.dashboardcharts.*
 import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import kotlinx.android.synthetic.main.dashboardcharts.view.withnodata
+import kotlinx.android.synthetic.main.dashboardcharts.weddingprogress
 import kotlinx.android.synthetic.main.empty_state.view.*
+import kotlinx.android.synthetic.main.event_summary.*
 import kotlinx.android.synthetic.main.event_summary.view.*
 import kotlinx.android.synthetic.main.summary_weddingguests.view.*
 import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
@@ -122,11 +121,27 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
 
         val weddingphotodetail = inf.findViewById<ConstraintLayout>(R.id.weddingphotodetail)
         weddingphotodetail.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "EDITEVENT")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
             val editevent = Intent(context, MainActivity::class.java)
 //            editevent.putExtra("userid", userid)
 //            editevent.putExtra("eventid", eventid)
             startActivityForResult(editevent, SUCCESS_RETURN)
             //startActivity(editevent)
+        }
+
+        val weddingprogress = inf.findViewById<ConstraintLayout>(R.id.weddingprogress)
+        weddingprogress.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "MYPROGRESS")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
         }
 
         stepview
@@ -230,6 +245,15 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
             invalidate()
         }
 
+        charttask.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "CHARTTASK")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+        }
+
         val duenextcard = inflatedView.findViewById<View>(R.id.duenextcard)
         if (task.key == "") {
             duenextcard.visibility = View.GONE
@@ -245,6 +269,15 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
             action2Button.visibility = View.INVISIBLE
 
             action1Button.setOnClickListener {
+                // ------- Analytics call ----------------
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "DUENEXTTASK")
+                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+                MyFirebaseApp.mFirebaseAnalytics!!.logEvent(
+                    FirebaseAnalytics.Event.SELECT_ITEM,
+                    bundle
+                )
+                //----------------------------------------
                 val taskdetail = Intent(context, TaskCreateEdit::class.java)
                 taskdetail.putExtra("task", task)
                 context!!.startActivity(taskdetail)
@@ -352,6 +385,15 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
             invalidate()
         }
 
+        chartpayment.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "CHARTPAYMENT")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+        }
+
         val loadingscreen = activity!!.findViewById<ConstraintLayout>(R.id.loadingscreen)
         val drawerlayout = activity!!.findViewById<DrawerLayout>(R.id.drawerlayout)
         loadingscreen.visibility = ConstraintLayout.GONE
@@ -442,6 +484,15 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
         rejected: Int,
         pending: Int
     ) {
+        inflatedView.guestlayout.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTINFOCARD")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+        }
+
         inflatedView.acceptednumber.text = confirmed.toString()
         inflatedView.rejectednumber.text = rejected.toString()
         inflatedView.pendingnumber.text = pending.toString()
@@ -471,10 +522,17 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
         // Load thumbnail
         imagePresenter = ImagePresenter(context, this, inflatedView)
         imagePresenter.getEventImage()
-        imagePresenter.ApiKey = getString(R.string.google_api_key)
+        imagePresenter.ApiKey = resources.getString(R.string.google_maps_key)
         imagePresenter.getPlaceImage()
 
         inflatedView.weddinglocation2.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "LOCATIONEVENT")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+
             val gmmIntentUri =
                 Uri.parse("geo:${event.latitude},${event.longitude}?z=10&q=${event.location}")
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
@@ -540,7 +598,7 @@ class DashboardEvent() : Fragment(), DashboardEventPresenter.TaskStats,
         getImgfromPlaces(
             context!!,
             placeid,
-            getString(R.string.google_api_key),
+            resources.getString(R.string.google_maps_key),
             ImagePresenter.PLACEIMAGE,
             inflatedView!!.placesimage
         )

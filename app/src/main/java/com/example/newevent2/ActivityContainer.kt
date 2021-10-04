@@ -59,7 +59,7 @@ class ActivityContainer : AppCompatActivity() {
         var activefragment = fm.findFragmentById(R.id.fragment_container)
 
         if (activefragment == null) {
-            activefragment = DashboardView_clone(usersession)
+            activefragment = DashboardView_clone()
             fm.beginTransaction()
                 .add(R.id.fragment_container, activefragment, "DashboardView")
                 .commit()
@@ -102,7 +102,7 @@ class ActivityContainer : AppCompatActivity() {
             when (p0.itemId) {
                 R.id.event_fragment -> {
                     clickNavItem = R.id.event_fragment
-                    newfragment = MainEventView_clone(usersession)
+                    newfragment = MainEventView_clone()
                 }
                 R.id.task_fragment -> {
                     clickNavItem = R.id.task_fragment
@@ -133,14 +133,13 @@ class ActivityContainer : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.home -> {
-                    val newfragment = DashboardView_clone(usersession)
+                    val newfragment = DashboardView_clone()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
-                        // .addToBackStack(null)
                         .commit()
                 }
                 R.id.events -> {
-                    val newfragment = MainEventView_clone(usersession)
+                    val newfragment = MainEventView_clone()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
 

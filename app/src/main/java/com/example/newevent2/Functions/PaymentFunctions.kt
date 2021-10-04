@@ -2,6 +2,7 @@ package com.example.newevent2.Functions
 
 import Application.CalendarEvent
 import android.content.Context
+import android.os.Bundle
 import android.widget.Toast
 import com.example.newevent2.CoRAddEditPayment
 import com.example.newevent2.CoRAddEditTask
@@ -42,6 +43,13 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         user.haspayment = PaymentModel.ACTIVEFLAG
         user.saveUserSession(context)
         //------------------------------------------------
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("CATEGORY", paymentitem.category)
+        bundle.putString("AMOUNT", paymentitem.amount)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("ADDPAYMENT", bundle)
+        //------------------------------------------------
         Toast.makeText(context, "Payment was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -80,6 +88,13 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
             orderChainDel(calendarevent, usermodel, paymentdbhelper, paymentmodel)
         chainofcommand.onDeletePayment(paymentitem)
         //------------------------------------------------
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("CATEGORY", paymentitem.category)
+        bundle.putString("AMOUNT", paymentitem.amount)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("DELETEPAYMENT", bundle)
+        //------------------------------------------------
         Toast.makeText(context, "Payment was deleted successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -108,6 +123,13 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
 
         val chainofcommand = orderChainEdit(calendarevent, paymentmodel, paymentdbhelper)
         chainofcommand.onAddEditPayment(paymentitem)
+        //------------------------------------------------
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("CATEGORY", paymentitem.category)
+        bundle.putString("AMOUNT", paymentitem.amount)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITPAYMENT", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Payment was edited successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {

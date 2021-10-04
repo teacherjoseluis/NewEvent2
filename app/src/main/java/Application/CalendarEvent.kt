@@ -9,19 +9,17 @@ import android.graphics.Color
 import android.net.Uri
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
-import com.example.newevent2.CoRAddEditPayment
-import com.example.newevent2.CoRAddEditTask
-import com.example.newevent2.CoRDeletePayment
-import com.example.newevent2.CoRDeleteTask
+import com.example.newevent2.*
 import com.example.newevent2.Functions.converttoCalendar
 import com.example.newevent2.Functions.converttoDate
+import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.Payment
 import com.example.newevent2.Model.Task
 import java.util.*
 
 
 class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment,
-    CoRDeletePayment {
+    CoRDeletePayment, CoRAddEditEvent {
 
     lateinit var calendar_uri: String
     lateinit var begindate: Calendar
@@ -29,6 +27,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
     var event: ContentValues = ContentValues()
 
+    var nexthandlere: CoRAddEditEvent? = null
     var nexthandlert: CoRAddEditTask? = null
     var nexthandlertdel: CoRDeleteTask? = null
     var nexthandlerp: CoRAddEditPayment? = null
@@ -38,6 +37,14 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
     fun addEvent(item: Any) {
         when (item) {
+            is Event -> {
+                var eventitem = item
+                val eventdate = converttoDate(eventitem.date)
+                begindate = converttoCalendar(eventdate)
+
+                event.put(Events.TITLE, eventitem.name)
+                event.put(Events.DESCRIPTION, eventitem.address)
+            }
             is Task -> {
                 var task = item
                 val taskdate = converttoDate(task.date)
@@ -249,6 +256,12 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
     override fun onDeletePayment(payment: Payment) {
         deleteEvent(payment)
         nexthandlerpdel?.onDeletePayment(payment)
+    }
+
+    override fun onAddEditEvent(event: Event) {
+        addEvent(event)
+        event.eventid = getNewEventId().toString()
+        nexthandlere?.onAddEditEvent(event)
     }
 }
 

@@ -20,9 +20,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.Functions.*
 import com.example.newevent2.Model.Guest
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.ui.TextValidate
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.nordan.dialog.Animation
 import com.nordan.dialog.NordanAlertDialog
 import kotlinx.android.synthetic.main.new_guest.*

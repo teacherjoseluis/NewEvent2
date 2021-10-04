@@ -5,10 +5,13 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.example.newevent2.CoRAddEditEvent
+import com.example.newevent2.CoRAddEditTask
 
-class EventDBHelper(val context: Context) {
+class EventDBHelper(val context: Context) : CoRAddEditEvent {
 
     private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+    var nexthandlere: CoRAddEditEvent? = null
 
     fun insert(event: Event) {
         var values = ContentValues()
@@ -21,10 +24,21 @@ class EventDBHelper(val context: Context) {
         values.put("name", event.name)
         values.put("date", event.date)
         values.put("time", event.time)
-        values.put("about", event.about)
+        values.put("about", event.eventid)
         values.put("location", event.location)
         db.insert("EVENT", null, values)
         Log.d(TAG, "Event record inserted")
+    }
+
+    fun getEventexists(key: String): Boolean {
+        var existsflag = false
+        val cursor: Cursor = db.rawQuery("SELECT * FROM EVENT WHERE eventid = '$key'", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                existsflag = true
+            }
+        }
+        return existsflag
     }
 
     fun getEvent(): Event {
@@ -67,7 +81,7 @@ class EventDBHelper(val context: Context) {
         values.put("name", event.name)
         values.put("date", event.date)
         values.put("time", event.time)
-        values.put("about", event.about)
+        values.put("about", event.eventid)
         values.put("location", event.location)
 
         val retVal = db.update("EVENT", values, "eventid = '${event.key}'", null)
@@ -91,5 +105,14 @@ class EventDBHelper(val context: Context) {
 
     companion object {
         const val TAG = "EventDBHelper"
+    }
+
+    override fun onAddEditEvent(event: Event) {
+        if (!getEventexists(event.key)) {
+            insert(event)
+        } else {
+            update(event)
+        }
+        nexthandlere?.onAddEditEvent(event)
     }
 }

@@ -16,8 +16,7 @@ import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.event_detail.view.*
 import kotlinx.android.synthetic.main.navbottom.*
 
-class MainEventView_clone(val userSession: User) : Fragment() {
-
+class MainEventView_clone() : Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +31,7 @@ class MainEventView_clone(val userSession: User) : Fragment() {
 
         val tablayout = inf.findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = inf.findViewById<View>(R.id.pager) as ViewPager
+        val userSession=com.example.newevent2.Functions.getUserSession(activity!!.applicationContext)
 
 //        val apptitle = findViewById<TextView>(R.id.appbartitle)
 //        apptitle.text = "Event Detail"

@@ -16,7 +16,9 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newevent2.Functions.Blog
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.ui.Functions.texttrimming
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.storage.FirebaseStorage
 
 
@@ -57,6 +59,14 @@ class Rv_BlogAdapter(val blogList: ArrayList<Blog>) :
 
 
         p0.itemView.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "BLOGPOST")
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, blogList[p1].blogtitle)
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+
             val uris = Uri.parse(blogList[p1].link)
             val intents = Intent(Intent.ACTION_VIEW, uris)
             val b = Bundle()

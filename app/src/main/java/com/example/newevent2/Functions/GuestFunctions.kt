@@ -2,6 +2,7 @@ package com.example.newevent2.Functions
 
 import android.content.Context
 import android.database.Cursor
+import android.os.Bundle
 import android.provider.ContactsContract
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
@@ -62,6 +63,15 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
         user.saveUserSession(context)
         //------------------------------------------------
         // It's fair to believe that asynchronous calls were already executed at this point
+
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("RSVP", guestitem.rsvp)
+        bundle.putString("COMPANION", guestitem.companion)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("ADDGUEST", bundle)
+        //------------------------------------------------
+
         Toast.makeText(context, "Guest was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -96,6 +106,13 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
             orderChainDel(usermodel, guestdbhelper, guestmodel)
         chainofcommand.onDeleteGuest(guestitem)
         //------------------------------------------------
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("RSVP", guestitem.rsvp)
+        bundle.putString("COMPANION", guestitem.companion)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("DELETEGUEST", bundle)
+        //------------------------------------------------
         Toast.makeText(context, "Guest was deleted successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -123,6 +140,13 @@ internal fun editGuest(context: Context, guestitem: Guest) {
 
         val chainofcommand = orderChainEdit(guestmodel, guestdbhelper, guestCreateEdit)
         chainofcommand.onAddEditGuest(guestitem)
+        //------------------------------------------------
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("RSVP", guestitem.rsvp)
+        bundle.putString("COMPANION", guestitem.companion)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITGUEST", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Guest was edited successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {

@@ -2,6 +2,7 @@ package com.example.newevent2.Functions
 
 import android.content.Context
 import android.database.Cursor
+import android.os.Bundle
 import android.provider.ContactsContract
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
@@ -62,6 +63,13 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
         user.saveUserSession(context)
         //------------------------------------------------
         // It's fair to believe that asynchronous calls were already executed at this point
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("CATEGORY", vendoritem.category)
+        bundle.putString("LOCATION", vendoritem.location)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("ADDVENDOR", bundle)
+        //------------------------------------------------
         Toast.makeText(context, "Vendor was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -96,6 +104,13 @@ internal fun deleteVendor(context: Context, vendoritem: Vendor) {
             orderChainDel(usermodel, vendordbhelper, vendormodel)
         chainofcommand.onDeleteVendor(vendoritem)
         //------------------------------------------------
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("CATEGORY", vendoritem.category)
+        bundle.putString("LOCATION", vendoritem.location)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("DELETEVENDOR", bundle)
+        //------------------------------------------------
         Toast.makeText(context, "vendor was deleted successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -123,6 +138,13 @@ internal fun editVendor(context: Context, vendoritem: Vendor) {
 
         val chainofcommand = orderChainEdit(vendormodel, vendordbhelper, vendorCreateEdit)
         chainofcommand.onAddEditVendor(vendoritem)
+        //------------------------------------------------
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("CATEGORY", vendoritem.category)
+        bundle.putString("LOCATION", vendoritem.location)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITVENDOR", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Vendor was edited successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {

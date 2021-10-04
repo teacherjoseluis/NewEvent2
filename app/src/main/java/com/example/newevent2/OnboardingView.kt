@@ -14,15 +14,24 @@ import kotlinx.android.synthetic.main.event_edit.etabout
 import kotlinx.android.synthetic.main.event_edit.etlocation
 import kotlinx.android.synthetic.main.event_edit.etname
 import TimePickerFragment
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.newevent2.Functions.addEvent
+import com.example.newevent2.Functions.addTask
+import com.example.newevent2.Functions.addUser
+import com.example.newevent2.Functions.editTask
 import com.example.newevent2.MVP.OnboardingPresenter
 import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.User
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -30,13 +39,15 @@ import kotlinx.android.synthetic.main.onboarding.*
 import kotlinx.android.synthetic.main.onboarding.buttonname
 import kotlinx.android.synthetic.main.onboarding.nameinputedit
 import kotlinx.android.synthetic.main.onboarding_name.*
+import kotlinx.android.synthetic.main.settings.view.*
 import kotlinx.android.synthetic.main.welcome.*
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
-class OnboardingView() : AppCompatActivity(),
-    OnboardingPresenter.ViewOnboardingActivity {
+class OnboardingView() : AppCompatActivity()
+//    ,    OnboardingPresenter.ViewOnboardingActivity
+{
 
     private val autocompletePlaceCode = 1
 
@@ -54,6 +65,8 @@ class OnboardingView() : AppCompatActivity(),
         userSession.key = intent.getStringExtra("userid").toString()
         userSession.email = intent.getStringExtra("email").toString()
         userSession.authtype = intent.getStringExtra("authtype").toString()
+        userSession.language = this.resources.configuration.locale.language
+        userSession.language = this.resources.configuration.locale.country
 
         setContentView(R.layout.onboarding_name)
 
@@ -130,7 +143,35 @@ class OnboardingView() : AppCompatActivity(),
                             time = etPlannedTime.text.toString()
                             location = etlocation.text.toString()
                         }
-                        presenter = OnboardingPresenter(this, this, userSession, event)
+
+                        userSession.role = when (spinner.selectedItemPosition) {
+                            0 -> "Bride"
+                            1 -> "Groom"
+                            else -> "Bride"
+                        }
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
+                                        PackageManager.PERMISSION_DENIED
+                                        ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
+                                        PackageManager.PERMISSION_DENIED
+                                        )
+                            ) {
+                                //permission denied
+                                val permissions =
+                                    arrayOf(
+                                        Manifest.permission.READ_CALENDAR,
+                                        Manifest.permission.WRITE_CALENDAR
+                                    )
+                                //show popup to request runtime permission
+                                requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
+                            } else {
+                                addUser(this, userSession)
+                                addEvent(this, event)
+                            }
+                            val resultIntent = Intent()
+                            setResult(Activity.RESULT_OK, resultIntent)
+                        }
                     }
                 }
             }
@@ -159,7 +200,6 @@ class OnboardingView() : AppCompatActivity(),
                 val selectedDate = day.toString() + "/" + (month + 1) + "/" + year
                 etPlannedDate.setText(selectedDate)
             })
-
         newFragment.show(supportFragmentManager, "datePicker")
     }
 
@@ -169,27 +209,27 @@ class OnboardingView() : AppCompatActivity(),
 
     }
 
-    override fun onOnboardingSuccess() {
-        Toast.makeText(
-            this,
-            getString(R.string.sucess_onboardingwelcome),
-            Toast.LENGTH_SHORT
-        ).show()
-        finish()
-    }
-
-    override fun onOnboardingError(errorcode: String) {
-        when(errorcode) {
-            "USERERROR" -> Toast.makeText(
-                this,
-                getString(R.string.error_onboardingcreateaccount),
-                Toast.LENGTH_SHORT
-            ).show()
-            "EVENTERROR" -> Toast.makeText(
-                this,
-                getString(R.string.error_onboardingcreateevent),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
+//    override fun onOnboardingSuccess() {
+//        Toast.makeText(
+//            this,
+//            getString(R.string.sucess_onboardingwelcome),
+//            Toast.LENGTH_SHORT
+//        ).show()
+//        finish()
+//    }
+//
+//    override fun onOnboardingError(errorcode: String) {
+//        when(errorcode) {
+//            "USERERROR" -> Toast.makeText(
+//                this,
+//                getString(R.string.error_onboardingcreateaccount),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//            "EVENTERROR" -> Toast.makeText(
+//                this,
+//                getString(R.string.error_onboardingcreateevent),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        }
+//    }
 }

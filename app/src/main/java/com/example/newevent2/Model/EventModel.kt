@@ -1,8 +1,13 @@
 package com.example.newevent2.Model
 
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.newevent2.CoRAddEditEvent
+import com.example.newevent2.CoRAddEditTask
+import com.example.newevent2.CoRAddEditUser
+import com.example.newevent2.Functions.addEvent
 import com.example.newevent2.Functions.saveImgtoStorage
 import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.MainActivity
@@ -13,14 +18,18 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-class EventModel() {
+class EventModel : CoRAddEditEvent {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     private val storage = Firebase.storage
     private val storageRef = storage.reference
+    var nexthandlere: CoRAddEditEvent? = null
+    var nexthandleru: CoRAddEditUser? = null
 
-    //var userid = ""
+    var userid = ""
+    lateinit var event: Event
+    lateinit var eventContext: Context
 
     fun addEvent(
         userid: String,
@@ -38,7 +47,7 @@ class EventModel() {
             "name" to event.name,
             "date" to event.date,
             "time" to event.time,
-            "about" to event.about,
+            "about" to event.eventid,
             "location" to event.location
         )
 
@@ -115,5 +124,19 @@ class EventModel() {
 
     interface FirebaseSuccessListenerEventDetail {
         fun onEvent(event: Event)
+    }
+
+    override fun onAddEditEvent(event: Event) {
+        addEvent(
+            userid,
+            event,
+            null,
+            object : EventModel.FirebaseSaveSuccess {
+                override fun onSaveSuccess(eventid: String) {
+                    if (eventid != "") {
+                        nexthandlere?.onAddEditEvent(event)
+                    }
+                }
+            })
     }
 }

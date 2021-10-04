@@ -31,8 +31,10 @@ import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.EventDBHelper
 import com.example.newevent2.Model.EventModel
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.eventform_layout.*
 import kotlinx.android.synthetic.main.task_editdetail.*
@@ -232,6 +234,17 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
                 }
             }
         })
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("LOCATION", event.location)
+        bundle.putString("DATE", event.date)
+        bundle.putString("TIME", event.date)
+        bundle.putDouble("LATITUDE", event.latitude)
+        bundle.putDouble("LONGITUDE", event.longitude)
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITEVENT", bundle)
+        //----------------------------------------
+
         val resultIntent = Intent()
         setResult(Activity.RESULT_OK, resultIntent)
         finish()

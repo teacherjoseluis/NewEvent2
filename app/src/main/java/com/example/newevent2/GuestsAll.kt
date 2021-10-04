@@ -16,7 +16,9 @@ import com.example.newevent2.Functions.clone
 import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.Model.Guest
 import com.example.newevent2.Model.GuestDBHelper
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.ui.ViewAnimation
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.guests_all.*
 import kotlinx.android.synthetic.main.guests_all.view.*
 import kotlin.collections.ArrayList
@@ -122,12 +124,26 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         }
 
         inf.fabNewGuest.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWGUEST")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+
             val newguest = Intent(context, GuestCreateEdit::class.java)
             newguest.putExtra("userid", "")
             startActivity(newguest)
         }
 
         inf.fabContactGuest.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTFROMCONTACTS")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+
             val newguest = Intent(context, ContactsAll::class.java)
             newguest.putExtra("guestid", "")
             startActivity(newguest)

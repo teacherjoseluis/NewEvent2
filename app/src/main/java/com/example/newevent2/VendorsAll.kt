@@ -28,6 +28,7 @@ import com.example.newevent2.MVP.VendorsAllPresenter
 import com.example.newevent2.Model.*
 import com.example.newevent2.ui.ViewAnimation
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.contacts.*
 import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.guests_all.*
@@ -42,7 +43,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     private var isRotate = false
 
     lateinit var recyclerViewAllVendor: RecyclerView
-    lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    //lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var presentervendor: VendorsAllPresenter
     private lateinit var inf: View
     private lateinit var rvAdapter: Rv_VendorAdapter
@@ -63,7 +64,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbar = activity!!.findViewById(R.id.toolbar)
+        //toolbar = activity!!.findViewById(R.id.toolbar)
         setHasOptionsMenu(true)
     }
 
@@ -130,6 +131,12 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         }
 
         inf.fabNewVendor.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWVENDOR")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
             val newvendor = Intent(context, VendorCreateEdit::class.java)
             newvendor.putExtra("userid", "")
             startActivity(newvendor)
@@ -141,6 +148,12 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 //        }
 
         inf.fabContactVendor.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "VENDORFROMCONTACTS")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
             val newvendor = Intent(context, ContactsAll::class.java)
             newvendor.putExtra("vendorid", "")
             startActivity(newvendor)

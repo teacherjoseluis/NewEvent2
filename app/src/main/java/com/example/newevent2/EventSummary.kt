@@ -231,7 +231,7 @@ class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
         getImgfromPlaces(
             context!!,
             placeid,
-            getString(R.string.google_api_key),
+            resources.getString(R.string.google_api_key),
             ImagePresenter.PLACEIMAGE,
             inflatedView!!.placesimage
         )
@@ -244,8 +244,8 @@ class EventSummary : Fragment(), EventSummaryPresenter.EventInterface,
             Toast.makeText(activity, "Event changes saved successfully", LENGTH_LONG).show()
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed(Runnable {
-                val user = com.example.newevent2.Functions.getUserSession(context!!)
-                val newfragment = MainEventView_clone(user)
+                //val user = com.example.newevent2.Functions.getUserSession(context!!)
+                val newfragment = MainEventView_clone()
                 fm!!.beginTransaction()
                     .replace(R.id.fragment_container, newfragment)
                     // .addToBackStack(null)

@@ -21,11 +21,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.Functions.*
 import com.example.newevent2.MVP.ImagePresenter
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.PaymentDBHelper
 import com.example.newevent2.Model.Vendor
 import com.example.newevent2.Model.VendorModel
 import com.example.newevent2.ui.TextValidate
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.event_edit.*
 import kotlinx.android.synthetic.main.new_vendor.*
 import kotlinx.android.synthetic.main.new_vendor.button

@@ -3,8 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/weddingrings_logo.xml" value="0.180859375" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/activitycontainer.xml" value="0.110546875" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/dashboardactivity.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/dashboardcharts.xml" value="0.2" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/onboarding_event.xml" value="0.17421875" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/onboarding_name.xml" value="0.17421875" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/settings.xml" value="0.22" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_editdetail.xml" value="0.17421875" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/welcome.xml" value="0.1171448087431694" />
       </map>
     </option>
   </component>

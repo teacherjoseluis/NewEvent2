@@ -7,20 +7,19 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
+import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeleteTask
-import com.example.newevent2.Model.Task
-import com.example.newevent2.Model.TaskDBHelper
-import com.example.newevent2.Model.TaskModel
-import com.example.newevent2.Model.UserModel
+import com.example.newevent2.Model.*
 import com.example.newevent2.NotificationID
 import com.example.newevent2.NotificationJobService
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.Gson
 import java.util.*
 
@@ -31,7 +30,6 @@ private lateinit var usermodel: UserModel
 
 internal fun addTask(context: Context, taskitem: Task) {
     try {
-        //------------------------------------------------
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //------------------------------------------------
@@ -57,6 +55,13 @@ internal fun addTask(context: Context, taskitem: Task) {
         user.hastask = TaskModel.ACTIVEFLAG
         user.saveUserSession(context)
         //--------------------------------------------------------------------------------------
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("CATEGORY", taskitem.category)
+        bundle.putString("BUDGET", taskitem.budget)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("ADDTASK", bundle)
+        //------------------------------------------------
         Toast.makeText(context, "Task was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -95,6 +100,13 @@ internal fun deleteTask(context: Context, taskitem: Task) {
             orderChainDel(calendarevent, usermodel, taskdbhelper, taskmodel)
         chainofcommand.onDeleteTask(taskitem)
         //------------------------------------------------
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("CATEGORY", taskitem.category)
+        bundle.putString("BUDGET", taskitem.budget)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("DELETETASK", bundle)
+        //------------------------------------------------
         Toast.makeText(context, "Task was deleted successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(
@@ -122,7 +134,13 @@ internal fun editTask(context: Context, taskitem: Task) {
         //------------------------------------------------
         val chainofcommand = orderChainEdit(calendarevent, taskmodel, taskdbhelper)
         chainofcommand.onAddEditTask(taskitem)
-
+        // ------- Analytics call ----------------
+        val bundle = Bundle()
+        bundle.putString("CATEGORY", taskitem.category)
+        bundle.putString("BUDGET", taskitem.budget)
+        bundle.putString("COUNTRY", user.country)
+        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITTASK", bundle)
+        //------------------------------------------------
         Toast.makeText(context, "Task was edited successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         Toast.makeText(

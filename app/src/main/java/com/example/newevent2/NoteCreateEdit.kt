@@ -12,8 +12,10 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Note
 import com.example.newevent2.Model.NoteDBHelper
+import com.google.firebase.analytics.FirebaseAnalytics
 import dev.sasikanth.colorsheet.ColorSheet
 import dev.sasikanth.colorsheet.utils.ColorSheetUtils
 import kotlinx.android.synthetic.main.new_note.*
@@ -115,6 +117,13 @@ class NoteCreateEdit : AppCompatActivity() {
                 ).show()
                 return@setOnMenuItemClickListener true
             } else {
+                // ------- Analytics call ----------------
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "SHARENOTE")
+                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+                MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+                //----------------------------------------
+
                 val intent = Intent(Intent.ACTION_SEND)
                 val shareBody =
                     "Title:" + notetitle.text.toString() + " Note:" + editTextTextMultiLine.text.toString()

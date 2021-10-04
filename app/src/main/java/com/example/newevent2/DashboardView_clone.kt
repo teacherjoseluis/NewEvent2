@@ -7,7 +7,7 @@ import androidx.viewpager.widget.ViewPager
 import com.example.newevent2.Model.User
 import com.google.android.material.tabs.TabLayout
 
-class DashboardView_clone(val userSession: User) : Fragment() {
+class DashboardView_clone() : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +21,7 @@ class DashboardView_clone(val userSession: User) : Fragment() {
 
         val tablayout = inf.findViewById<TabLayout>(R.id.dashboard_tabLayout)
         val viewPager = inf.findViewById<View>(R.id.dashboardpager) as ViewPager
+        val userSession=com.example.newevent2.Functions.getUserSession(activity!!.applicationContext)
         if (viewPager != null) {
             val adapter =
                 DashboardPagerAdapter(
