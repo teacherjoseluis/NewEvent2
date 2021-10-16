@@ -101,7 +101,6 @@ private fun orderChainAdd(
 ): CoRAddEditEvent {
     calendarEvent.nexthandlere = eventModel
     eventModel.nexthandlere = eventDBHelper
-    eventDBHelper.nexthandlere = userModel
     return calendarEvent
 }
 
@@ -113,6 +112,5 @@ private fun orderChainEdit(
 ): CoRAddEditEvent {
     calendarEvent.nexthandlere = eventModel
     eventModel.nexthandlere = eventDBHelper
-    eventDBHelper.nexthandlere = userModel
     return calendarEvent
 }

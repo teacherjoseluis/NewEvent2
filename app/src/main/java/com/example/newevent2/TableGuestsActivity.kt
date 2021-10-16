@@ -8,24 +8,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.DashboardActivityPresenter
 import com.example.newevent2.MVP.TableGuestsActivityPresenter
+import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.TableGuests
 //import com.example.newevent2.MVP.TaskPresenter
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskJournal
 import com.example.newevent2.ui.ViewAnimation
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.dashboardactivity.*
 import kotlinx.android.synthetic.main.dashboardactivity.noactivity
 import kotlinx.android.synthetic.main.dashboardactivity.view.*
 import kotlinx.android.synthetic.main.dashboardactivity.view.NewTaskActionButton
 import kotlinx.android.synthetic.main.guests_all.*
 import kotlinx.android.synthetic.main.guests_all.view.*
+import kotlinx.android.synthetic.main.mainevent_summary.view.*
 import kotlinx.android.synthetic.main.tableguestsactivity.*
 import kotlinx.android.synthetic.main.tableguestsactivity.view.*
+import kotlinx.android.synthetic.main.tableguestsactivity.view.adView
 import kotlinx.android.synthetic.main.welcome.*
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -52,6 +60,9 @@ class TableGuestsActivity() : Fragment(), TableGuestsActivityPresenter.TableGues
 
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.tableguestsactivity, container, false)
+
+        val adRequest = AdRequest.Builder().build()
+        inf.adView.loadAd(adRequest)
 
         recyclerViewActivity = inf.tableguestsparentrv
         recyclerViewActivity.apply {
@@ -89,6 +100,37 @@ class TableGuestsActivity() : Fragment(), TableGuestsActivityPresenter.TableGues
             val newguest = Intent(context, ContactsAll::class.java)
             newguest.putExtra("guestid", "")
             startActivity(newguest)
+        }
+
+        inf.adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                inf.adView.isVisible = true
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                // Code to be executed when an ad request fails.
+            }
+
+            override fun onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                // ------- Analytics call ----------------
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "ADOPENED")
+                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+                MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+                //----------------------------------------
+            }
+
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
         }
         return inf
     }

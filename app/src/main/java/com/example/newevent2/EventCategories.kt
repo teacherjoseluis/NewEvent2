@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,6 +18,9 @@ import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.ui.ViewAnimation
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.mainevent_summary.*
@@ -28,7 +32,7 @@ import kotlin.collections.ArrayList
 
 class EventCategories : Fragment() {
 
-//    var userid = ""
+    //    var userid = ""
 //    var eventid = ""
     lateinit var recyclerViewCategory: RecyclerView
     private var isRotate = false
@@ -52,6 +56,8 @@ class EventCategories : Fragment() {
         val taskdb = TaskDBHelper(context!!)
         val list = taskdb.getActiveCategories()
         //list1.addAll(list2) - Need to consider adding categories from Payments in cases were no tasks where created but Payments were
+        val adRequest = AdRequest.Builder().build()
+        inf.adView.loadAd(adRequest)
 
         recyclerViewCategory = inf.categoryrv
         recyclerViewCategory.apply {
@@ -100,6 +106,38 @@ class EventCategories : Fragment() {
             newpayment.putExtra("userid", "")
             startActivity(newpayment)
         }
+
+        inf.adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                inf.adView.isVisible = true
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                // Code to be executed when an ad request fails.
+            }
+
+            override fun onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                // ------- Analytics call ----------------
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "ADOPENED")
+                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+                MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+                //----------------------------------------
+            }
+
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        }
+
         return inf
     }
 }
