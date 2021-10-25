@@ -111,7 +111,6 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
-
         when (p0) {
             is TaskViewHolder -> {
                 p0.taskname?.text = taskList[p1].name
@@ -122,7 +121,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
                     getCategory(taskList[p1].category).drawable, "drawable",
                     context.packageName
                 )
-                p0.categoryavatar?.setImageResource(resourceId)
+                //p0.categoryavatar?.setImageResource(resourceId)
 
                 p0.itemView.setOnClickListener {
                     val taskdetail = Intent(context, TaskCreateEdit::class.java)
@@ -141,7 +140,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
 //                            p0.nativeAdView!!.setNativeAd(it)
 //                        }
                     }
-                    .withAdListener(object: AdListener() {
+                    .withAdListener(object : AdListener() {
                         override fun onAdFailedToLoad(p0: LoadAdError) {
                             super.onAdFailedToLoad(p0)
                             Log.d("AD1015", p0.message)
@@ -154,8 +153,6 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
     }
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
-
-
         // Set the media view.
         adView.mediaView = adView.findViewById<MediaView>(R.id.ad_media)
 
@@ -174,7 +171,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
         val taskcategory: TextView? = itemView.findViewById<TextView>(R.id.taskcategory)
         val taskdate: TextView? = itemView.findViewById<TextView>(R.id.taskdate)
         val taskbudget: TextView? = itemView.findViewById<TextView>(R.id.taskbudgets)
-        val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
+        //val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
     }
 
     class NativeAdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -182,7 +179,6 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
     }
 
 
-    //Need to eliminate the sweeps for Native Ads
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
         if (action == CHECKACTION) {
             val taskswift = taskList[position]
@@ -191,7 +187,8 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
             taskswift.status = COMPLETETASK
             editTask(context, taskswift)
 
-            val snackbar = Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
+            val snackbar =
+                Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
 //                .setAction("UNDO") {
 //                    taskList.add(taskswift)
 //                    notifyItemInserted(taskList.lastIndex)
@@ -203,6 +200,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
     }
 
     override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
+
         //val user = com.example.newevent2.Functions.getUserSession(context!!)
         val taskswift = taskList[position]
         val taskbackup = Task().apply {

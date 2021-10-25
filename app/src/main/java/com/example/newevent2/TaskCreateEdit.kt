@@ -5,17 +5,11 @@ import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.NotificationManager
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -25,39 +19,38 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import com.example.newevent2.Functions.*
-import com.example.newevent2.Functions.addTask
-import com.example.newevent2.Functions.editTask
-import com.example.newevent2.Functions.getMockUserSetTime
-import com.example.newevent2.Functions.getUserSession
-import com.example.newevent2.Functions.validateOldDate
-import com.example.newevent2.MVP.ContactsAllPresenter
 import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Task
 import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.OnUserEarnedRewardListener
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.android.play.core.review.testing.FakeReviewManager
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import kotlinx.android.synthetic.main.task_editdetail.*
-import kotlinx.android.synthetic.main.task_editdetail.taskdate
-import kotlinx.android.synthetic.main.task_editdetail.taskname
 import java.util.*
 
 class TaskCreateEdit() : AppCompatActivity() {
 
     private lateinit var taskitem: Task
+    private var mRewardedAd: RewardedAd? = null
+    //private lateinit var mRewardedAdLoadCallBack: RewardedAdLoadCallback
+    //private lateinit var mRewardedAdCallBack: RewardedAdLoadCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -181,6 +174,39 @@ class TaskCreateEdit() : AppCompatActivity() {
                 saveTask()
             }
         }
+
+        var adRequest = AdRequest.Builder().build()
+        RewardedAd.load(this,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.d(TAG, adError?.message)
+                mRewardedAd = null
+            }
+
+            override fun onAdLoaded(rewardedAd: RewardedAd) {
+                Log.d(TAG, "Ad was loaded.")
+                mRewardedAd = rewardedAd
+            }
+        })
+
+        mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdShowedFullScreenContent() {
+                // Called when ad is shown.
+                Log.d(TAG, "Ad was shown.")
+            }
+
+            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                // Called when ad fails to show.
+                Log.d(TAG, "Ad failed to show.")
+            }
+
+            override fun onAdDismissedFullScreenContent() {
+                // Called when ad is dismissed.
+                // Set the ad reference to null so you don't show the ad a second time.
+                Log.d(TAG, "Ad was dismissed.")
+                mRewardedAd = null
+            }
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -354,6 +380,11 @@ class TaskCreateEdit() : AppCompatActivity() {
             }
         }
         //------------------------------------------------
+        if (mRewardedAd != null) {
+            mRewardedAd?.show(this, OnUserEarnedRewardListener() {})
+        } else {
+            Log.d(TAG, "The rewarded ad wasn't ready yet.")
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

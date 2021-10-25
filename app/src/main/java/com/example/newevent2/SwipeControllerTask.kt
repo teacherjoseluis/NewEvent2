@@ -63,6 +63,7 @@ class SwipeControllerTasks(
         }
     }
 
+
     override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,
@@ -72,89 +73,110 @@ class SwipeControllerTasks(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        if (actionState == ACTION_STATE_SWIPE) {
-            setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-        }
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        when (viewHolder) {
+            !is Rv_TaskAdapter.NativeAdViewHolder -> {
 
-        //---------------------------------------------------------------------------------------------
-        val itemView = viewHolder!!.itemView
-        val itemHeight = itemView.height
-
-        val isCancelled = dX == 0.0f && !isCurrentlyActive
-
-        if (isCancelled) {
-            clearCanvas(
-                c,
-                itemView.right + dX,
-                itemView.top.toFloat(),
-                itemView.right.toFloat(),
-                itemView.bottom.toFloat()
-            )
-            super.onChildDrawOver(
-                c,
-                recyclerView,
-                viewHolder,
-                dX,
-                dY,
-                actionState,
-                isCurrentlyActive
-            )
-            return
-        }
-
-        if (dX > 0) {// Swipe to Delete
-
-            var rightcontrol: SwipeControl? = null
-            if (rightaction == "delete") {
-                rightcontrol = SwipeControlDelete(context)
-            } else if (rightaction == "undo") {
-                rightcontrol = SwipeControlUndo(context)
-            }
-
-            rightcontrol!!.background.color = rightcontrol.backgroundcolor!!
-            rightcontrol.background.setBounds(
-                itemView.left + dX.toInt(),
-                itemView.top,
-                itemView.left,
-                itemView.bottom
-            )
-            rightcontrol.background.draw(c)
-
-            val IconTop = itemView.top + (itemHeight - rightcontrol.intrinsicHeight!!) / 2
-            val IconMargin = (itemHeight - rightcontrol.intrinsicHeight!!) / 2
-            val IconLeft = itemView.left + IconMargin
-            val IconRight = itemView.left + IconMargin + rightcontrol.intrinsicWidth!!
-            val IconBottom = IconTop + rightcontrol.intrinsicWidth!!
-
-            rightcontrol.drawable!!.setBounds(
-                IconLeft,
-                IconTop,
-                IconRight,
-                IconBottom
-            )
-            rightcontrol.drawable!!.draw(c)
-        } else {// Swipe to Check
-            if (leftaction == "check") {
-                var leftcontrol = SwipeControlCheck(context)
-
-                leftcontrol.background.color = leftcontrol.backgroundcolor
-                leftcontrol.background.setBounds(
-                    itemView.right + dX.toInt(),
-                    itemView.top,
-                    itemView.right,
-                    itemView.bottom
+                if (actionState == ACTION_STATE_SWIPE) {
+                    setTouchListener(
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
+                }
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
                 )
-                leftcontrol.background.draw(c)
 
-                val IconTop = itemView.top + (itemHeight - leftcontrol.intrinsicHeight) / 2
-                val IconMargin = (itemHeight - leftcontrol.intrinsicHeight) / 2
-                val IconLeft = itemView.right - IconMargin - leftcontrol.intrinsicWidth
-                val IconRight = itemView.right - IconMargin
-                val IconBottom = IconTop + leftcontrol.intrinsicHeight
+                //---------------------------------------------------------------------------------------------
+                val itemView = viewHolder!!.itemView
+                val itemHeight = itemView.height
 
-                leftcontrol.drawable.setBounds(IconLeft, IconTop, IconRight, IconBottom)
-                leftcontrol.drawable.draw(c)
+                val isCancelled = dX == 0.0f && !isCurrentlyActive
+
+                if (isCancelled) {
+                    clearCanvas(
+                        c,
+                        itemView.right + dX,
+                        itemView.top.toFloat(),
+                        itemView.right.toFloat(),
+                        itemView.bottom.toFloat()
+                    )
+                    super.onChildDrawOver(
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
+                    return
+                }
+
+                if (dX > 0) {// Swipe to Delete
+
+                    var rightcontrol: SwipeControl? = null
+                    if (rightaction == "delete") {
+                        rightcontrol = SwipeControlDelete(context)
+                    } else if (rightaction == "undo") {
+                        rightcontrol = SwipeControlUndo(context)
+                    }
+
+                    rightcontrol!!.background.color = rightcontrol.backgroundcolor!!
+                    rightcontrol.background.setBounds(
+                        itemView.left + dX.toInt(),
+                        itemView.top,
+                        itemView.left,
+                        itemView.bottom
+                    )
+                    rightcontrol.background.draw(c)
+
+                    val IconTop = itemView.top + (itemHeight - rightcontrol.intrinsicHeight!!) / 2
+                    val IconMargin = (itemHeight - rightcontrol.intrinsicHeight!!) / 2
+                    val IconLeft = itemView.left + IconMargin
+                    val IconRight = itemView.left + IconMargin + rightcontrol.intrinsicWidth!!
+                    val IconBottom = IconTop + rightcontrol.intrinsicWidth!!
+
+                    rightcontrol.drawable!!.setBounds(
+                        IconLeft,
+                        IconTop,
+                        IconRight,
+                        IconBottom
+                    )
+                    rightcontrol.drawable!!.draw(c)
+                } else {// Swipe to Check
+                    if (leftaction == "check") {
+                        var leftcontrol = SwipeControlCheck(context)
+
+                        leftcontrol.background.color = leftcontrol.backgroundcolor
+                        leftcontrol.background.setBounds(
+                            itemView.right + dX.toInt(),
+                            itemView.top,
+                            itemView.right,
+                            itemView.bottom
+                        )
+                        leftcontrol.background.draw(c)
+
+                        val IconTop = itemView.top + (itemHeight - leftcontrol.intrinsicHeight) / 2
+                        val IconMargin = (itemHeight - leftcontrol.intrinsicHeight) / 2
+                        val IconLeft = itemView.right - IconMargin - leftcontrol.intrinsicWidth
+                        val IconRight = itemView.right - IconMargin
+                        val IconBottom = IconTop + leftcontrol.intrinsicHeight
+
+                        leftcontrol.drawable.setBounds(IconLeft, IconTop, IconRight, IconBottom)
+                        leftcontrol.drawable.draw(c)
+                    }
+                }
             }
         }
     }

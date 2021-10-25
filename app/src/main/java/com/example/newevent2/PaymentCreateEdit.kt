@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -26,6 +27,13 @@ import com.example.newevent2.MVP.VendorPaymentPresenter
 import com.example.newevent2.Model.*
 import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.OnUserEarnedRewardListener
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -36,6 +44,8 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
 
     private lateinit var paymentitem: Payment
     private lateinit var presentervendor: VendorPaymentPresenter
+
+    private var mRewardedAd: RewardedAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -181,6 +191,38 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
                 savePayment()
             }
         }
+
+        var adRequest = AdRequest.Builder().build()
+        RewardedAd.load(this,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.d(TaskCreateEdit.TAG, adError?.message)
+                mRewardedAd = null
+            }
+
+            override fun onAdLoaded(rewardedAd: RewardedAd) {
+                Log.d(TaskCreateEdit.TAG, "Ad was loaded.")
+                mRewardedAd = rewardedAd
+            }
+        })
+
+        mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdShowedFullScreenContent() {
+                // Called when ad is shown.
+                Log.d(TaskCreateEdit.TAG, "Ad was shown.")
+            }
+
+            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                // Called when ad fails to show.
+                Log.d(TaskCreateEdit.TAG, "Ad failed to show.")
+            }
+
+            override fun onAdDismissedFullScreenContent() {
+                // Called when ad is dismissed.
+                // Set the ad reference to null so you don't show the ad a second time.
+                Log.d(TaskCreateEdit.TAG, "Ad was dismissed.")
+                mRewardedAd = null
+            }
+        }
     }
 
     private fun getCategory(): String {
@@ -240,6 +282,12 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
 //                setResult(Activity.RESULT_OK, resultIntent)
             }
         }
+        if (mRewardedAd != null) {
+            mRewardedAd?.show(this, OnUserEarnedRewardListener() {})
+        } else {
+            Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
