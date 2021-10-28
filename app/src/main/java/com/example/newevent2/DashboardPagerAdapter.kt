@@ -1,10 +1,8 @@
 package com.example.newevent2
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
 
 class DashboardPagerAdapter(
@@ -20,17 +18,12 @@ class DashboardPagerAdapter(
         bundle.putString("userid", userid)
         bundle.putString("eventid", eventid)
 
-        return when (position) {
+        when (position) {
             0 -> {
                 val fragInfo = DashboardEvent()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
-//            1 -> {
-//                val fragInfo = DashboardActivity()
-//                fragInfo.arguments = bundle
-//                return fragInfo
-//            }
             1 -> {
                 val fragInfo = DashboardBlog()
                 bundle.putString("language", language)

@@ -5,18 +5,14 @@ import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.DatePicker
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.newevent2.Functions.*
@@ -28,8 +24,6 @@ import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.OnUserEarnedRewardListener
-import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.material.chip.Chip
@@ -41,16 +35,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import kotlinx.android.synthetic.main.task_editdetail.*
 import java.util.*
 
-class TaskCreateEdit() : AppCompatActivity() {
+class TaskCreateEdit : AppCompatActivity() {
 
     private lateinit var taskitem: Task
     private var mRewardedAd: RewardedAd? = null
-    //private lateinit var mRewardedAdLoadCallBack: RewardedAdLoadCallback
-    //private lateinit var mRewardedAdCallBack: RewardedAdLoadCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,11 +50,15 @@ class TaskCreateEdit() : AppCompatActivity() {
         //This call checks the status of Firebase connection
         checkFirebaseconnection()
 
+        //Declaring and enabling the toolbar for this view
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        //If nothing comes in the extras, we can assume this is a new task but if this is
+        //coming populated we can assume it's coming from an existing task which in this case
+        //loads taskitem
         val extras = intent.extras
         taskitem = if (extras!!.containsKey("task")) {
             intent.getParcelableExtra("task")!!
@@ -71,46 +66,19 @@ class TaskCreateEdit() : AppCompatActivity() {
             Task()
         }
 
-//        val taskid = taskitem.key
-//        if (taskid != "") {
-//            val taskmodel = TaskModel()
-//            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
-//            taskmodel.getTaskdetail(user.key, user.eventid, taskid, object :
-//                TaskModel.FirebaseSuccessTask {
-//                @RequiresApi(Build.VERSION_CODES.O)
-//                override fun onTask(task: Task) {
-//                    taskitem.key = task.key
-//                    taskitem.budget = task.budget
-//                    taskitem.category = task.category
-//                    taskitem.date = task.date
-//                    taskitem.name = task.name
-//                    taskitem.createdatetime = task.createdatetime
-//                    taskitem.status = task.status
-//
-//                    taskname.setText(taskitem.name)
-//                    taskdate.setText(taskitem.date)
-//                    taskbudget.setText(taskitem.budget)
-//                }
-//
-//                override fun onError(errorcode: String) {
-//                    Toast.makeText(
-//                        applicationContext,
-//                        "There was an error trying to retrieve the task $errorcode",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            })
-//        }
-
+        //I intend here to validate the name field and not invalid text is coming here
+        //it's validated as soon as the user moves away
         taskname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
             if (!p1) {
                 val validationmessage = TextValidate(taskname).namefieldValidate()
                 if (validationmessage != "") {
+                    //I'm afraid I'm not localizing this one for the moment
                     taskname.error = "Error in Task name: $validationmessage"
                 }
             }
         }
 
+        //As soon as it's touched, the error message disappears
         taskbudget.setOnClickListener {
             taskbudget.error = null
         }
@@ -136,6 +104,7 @@ class TaskCreateEdit() : AppCompatActivity() {
             }
         }
 
+        //Loads task fields as we are editing an existing task
         if (taskitem.key != "") {
             taskname.setText(taskitem.name)
             taskdate.setText(taskitem.date)
@@ -146,7 +115,7 @@ class TaskCreateEdit() : AppCompatActivity() {
             var inputvalflag = true
             taskname.clearFocus()
             if (taskname.text.toString().isEmpty()) {
-                taskname.error = "Error in Task name: Task name is required!"
+                taskname.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             } else {
                 val validationmessage = TextValidate(taskname).namefieldValidate()
@@ -158,16 +127,20 @@ class TaskCreateEdit() : AppCompatActivity() {
 
             taskdate.clearFocus()
             if (taskdate.text.toString().isEmpty()) {
-                taskdate.error = "Task date is required!"
+                taskdate.error = getString(R.string.error_taskdateinput)
                 inputvalflag = false
             }
             taskbudget.clearFocus()
             if (taskbudget.text.toString().isEmpty()) {
-                taskbudget.error = "Task budget is required!"
+                taskbudget.error = getString(R.string.error_taskbudgetinput)
                 inputvalflag = false
             }
             if (groupedittask.checkedChipId == -1) {
-                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    getString(R.string.error_taskcategoryinput),
+                    Toast.LENGTH_SHORT
+                ).show()
                 inputvalflag = false
             }
             if (inputvalflag) {
@@ -175,19 +148,25 @@ class TaskCreateEdit() : AppCompatActivity() {
             }
         }
 
-        var adRequest = AdRequest.Builder().build()
-        RewardedAd.load(this,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d(TAG, adError?.message)
-                mRewardedAd = null
-            }
+        // Loading the Ad at this point
+        val adRequest = AdRequest.Builder().build()
+        RewardedAd.load(
+            this,
+            "ca-app-pub-3940256099942544/5224354917",
+            adRequest,
+            object : RewardedAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d(TAG, adError.message)
+                    mRewardedAd = null
+                }
 
-            override fun onAdLoaded(rewardedAd: RewardedAd) {
-                Log.d(TAG, "Ad was loaded.")
-                mRewardedAd = rewardedAd
-            }
-        })
+                override fun onAdLoaded(rewardedAd: RewardedAd) {
+                    Log.d(TAG, "Ad was loaded.")
+                    mRewardedAd = rewardedAd
+                }
+            })
 
+        //Listeners on the Ad loading and displaying in case I want to use them later
         mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdShowedFullScreenContent() {
                 // Called when ad is shown.
@@ -209,6 +188,8 @@ class TaskCreateEdit() : AppCompatActivity() {
 
     }
 
+    // The menu will allow the user to mark tasks as deleted or completed but this
+    // cannot happen when the tasks is brand new
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (taskitem.key != "") {
             menuInflater.inflate(R.menu.tasks_menu, menu)
@@ -220,14 +201,17 @@ class TaskCreateEdit() : AppCompatActivity() {
         return when (item.itemId) {
             R.id.delete_task -> {
                 AlertDialog.Builder(this)
-                    .setTitle("Delete entry")
-                    .setMessage("Are you sure you want to delete this entry?") // Specifying a listener allows you to take an action before dismissing the dialog.
+                    .setTitle(getString(R.string.delete_message))
+                    .setMessage(getString(R.string.delete_entry))
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
                     // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton(android.R.string.yes,
-                        DialogInterface.OnClickListener { dialog, which ->
-                            deleteTask(this, taskitem)
-                            finish()
-                        }) // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setPositiveButton(android.R.string.yes
+                    ) { _, _ ->
+                        deleteTask(this, taskitem)
+                        finish()
+                    }
+                    // A null listener allows the button to dismiss the dialog and take no
+                    // further action.
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
@@ -245,66 +229,8 @@ class TaskCreateEdit() : AppCompatActivity() {
         }
     }
 
-
-    //-------------------------------------------------------------------------------
-    // Creating Notification for Tasks
-    //-------------------------------------------------------------------------------
-//    private fun addNotification(task: Task) {
-//        // Job ID must be unique if you have multiple jobs scheduled
-//        var jobID = NotificationID.getID()
-//
-//        var gson = Gson()
-//        var json = gson.toJson(task)
-//        var bundle = PersistableBundle()
-//        bundle.putString("task", json)
-//
-//        // Get fake user set time (a future time 1 min from current time)
-//        val (userSetHourOfDay, userSetMinute) = getMockUserSetTime()
-//        val timeToWaitBeforeExecuteJob = calculateTimeDifferenceMs(userSetHourOfDay, userSetMinute)
-//        (getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).run {
-//            schedule(
-//                JobInfo.Builder(
-//                    jobID,
-//                    ComponentName(baseContext, NotificationJobService::class.java)
-//                )
-//                    // job execution will be delayed by this amount of time
-//                    .setMinimumLatency(timeToWaitBeforeExecuteJob)
-//                    // job will be run by this deadline
-//                    .setOverrideDeadline(timeToWaitBeforeExecuteJob)
-//                    .setExtras(bundle)
-//                    .build()
-//            )
-//        }
-//    }
-
-    //-------------------------------------------------------------------------------
-//    private fun delNotification(task: Task) {
-//        val notificationManager =
-//            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        notificationManager.cancel(task.key, 0)
-//    }
-    //-------------------------------------------------------------------------------
-
-    // Returns a pair ( hourOfDay, minute ) that represents a future time,
-    // 1 minute after the current time
-//    private fun getMockUserSetTime(): Pair<Int, Int> {
-//        val calendar = Calendar.getInstance().apply {
-//            // add just 1 min from current time
-//            add(Calendar.MINUTE, 1)
-//        }
-//        return Pair(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
-//    }
-//
-//    // Calculate time difference relative to current time in ms
-//    private fun calculateTimeDifferenceMs(hourOfDay: Int, minute: Int): Long {
-//        val now = Calendar.getInstance()
-//        val then = (now.clone() as Calendar).apply {
-//            set(Calendar.HOUR_OF_DAY, hourOfDay)
-//            set(Calendar.MINUTE, minute)
-//        }
-//        return then.timeInMillis - now.timeInMillis
-//    }
-
+    // Based on the chip that has been selected,
+    // this function retrieves the name of the category to be saved in the DB
     private fun getCategory(): String {
         var mycategorycode = ""
         val categoryname = groupedittask.findViewById<Chip>(groupedittask.checkedChipId).text
@@ -320,15 +246,12 @@ class TaskCreateEdit() : AppCompatActivity() {
 
     private fun showDatePickerDialog() {
         val newFragment =
-            DatePickerFragment.newInstance((object : DatePickerDialog.OnDateSetListener {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-                    if (validateOldDate(p1, p2 + 1, p3)) {
-                        val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                        taskdate.setText(selectedDate)
-                    } else {
-                        taskdate.error = "Task date is invalid!"
-                    }
+            DatePickerFragment.newInstance((DatePickerDialog.OnDateSetListener { _, p1, p2, p3 ->
+                if (validateOldDate(p1, p2 + 1, p3)) {
+                    val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
+                    taskdate.setText(selectedDate)
+                } else {
+                    taskdate.error = getString(R.string.error_invaliddate)
                 }
             }))
         newFragment.show(supportFragmentManager, "datePicker")
@@ -340,48 +263,48 @@ class TaskCreateEdit() : AppCompatActivity() {
         taskitem.budget = taskbudget.text.toString()
         taskitem.category = getCategory()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
-                        PackageManager.PERMISSION_DENIED
-                        ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
-                        PackageManager.PERMISSION_DENIED
-                        )
-            ) {
-                //permission denied
-                val permissions =
-                    arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
-                //show popup to request runtime permission
-                requestPermissions(permissions, PERMISSION_CODE)
-            } else {
-                if (taskitem.key == "") {
-                    addTask(applicationContext, taskitem)
-                } else if (taskitem.key != "") {
-                    editTask(applicationContext, taskitem)
-                }
-                val resultIntent = Intent()
-                setResult(Activity.RESULT_OK, resultIntent)
+        // Since we are going to add the entry in the calendar for the task
+        // we need to ask for permission on the Calendar
+        if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
+                    PackageManager.PERMISSION_DENIED
+                    ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
+                    PackageManager.PERMISSION_DENIED
+                    )
+        ) {
+            //permission denied
+            val permissions =
+                arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
+            //show popup to request runtime permission
+            requestPermissions(permissions, PERMISSION_CODE)
+        } else {
+            if (taskitem.key == "") {
+                addTask(applicationContext, taskitem)
+            } else if (taskitem.key != "") {
+                editTask(applicationContext, taskitem)
             }
+            val resultIntent = Intent()
+            setResult(Activity.RESULT_OK, resultIntent)
         }
         //------------------------------------------------
         // Request User's feedback
         val reviewManager: ReviewManager = ReviewManagerFactory.create(this)
 
-        val requestReviewTask: com.google.android.play.core.tasks.Task<ReviewInfo> = reviewManager.requestReviewFlow()
+        val requestReviewTask: com.google.android.play.core.tasks.Task<ReviewInfo> =
+            reviewManager.requestReviewFlow()
         requestReviewTask.addOnCompleteListener { request ->
             if (request.isSuccessful) {
                 // Request succeeded and a ReviewInfo instance was received
                 val reviewInfo: ReviewInfo = request.result
-                val launchReviewTask: com.google.android.play.core.tasks.Task<*> = reviewManager.launchReviewFlow(this, reviewInfo)
-                launchReviewTask.addOnCompleteListener { _ ->
+                val launchReviewTask: com.google.android.play.core.tasks.Task<*> =
+                    reviewManager.launchReviewFlow(this, reviewInfo)
+                launchReviewTask.addOnCompleteListener {
                     // The review has finished, continue your app flow.
                 }
-            } else {
-                // Request failed
             }
         }
         //------------------------------------------------
         if (mRewardedAd != null) {
-            mRewardedAd?.show(this, OnUserEarnedRewardListener() {})
+            mRewardedAd?.show(this) {}
         } else {
             Log.d(TAG, "The rewarded ad wasn't ready yet.")
         }
@@ -392,6 +315,8 @@ class TaskCreateEdit() : AppCompatActivity() {
         return true
     }
 
+    //Not sure about kkeping with this function as I think is not very useful.
+    // Simply checks if there is connectivity with Firebase and sends a notification to the user
     private fun checkFirebaseconnection() {
         val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
         connectedRef.addValueEventListener(object : ValueEventListener {
@@ -418,7 +343,7 @@ class TaskCreateEdit() : AppCompatActivity() {
 
     companion object {
         const val TAG = "TaskCreateEdit"
-        internal val PERMISSION_CODE = 42
+        internal const val PERMISSION_CODE = 42
     }
 }
 

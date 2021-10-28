@@ -12,9 +12,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.newevent2.Model.Contact
-import com.example.newevent2.Model.Guest
 import com.example.newevent2.ui.LetterAvatar
 
 class Rv_ContactAdapter(
@@ -23,17 +21,15 @@ class Rv_ContactAdapter(
     RecyclerView.Adapter<Rv_ContactAdapter.ViewHolder>(), ClearSelected {
 
     lateinit var context: Context
-    val selected: ArrayList<Int> = ArrayList()
-    var selectedPos = RecyclerView.NO_POSITION
+    private val selected: ArrayList<Int> = ArrayList()
+    private var selectedPos = RecyclerView.NO_POSITION
 
     var mOnItemClickListener: OnItemClickListener? = null
 
-    //var mClearSelected: ClearSelected? = null
-    var countselected: Int = 0
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
-        val v = LayoutInflater.from(p0?.context).inflate(R.layout.contact_item_layout, p0, false)
+        val v = LayoutInflater.from(p0.context).inflate(R.layout.contact_item_layout, p0, false)
         context = p0.context
         return ViewHolder(v)
     }
@@ -52,6 +48,7 @@ class Rv_ContactAdapter(
         p0.contactname.text = contactlist[p1].name
         p0.contactavatar.apply {
             isSelected = (selectedPos == p1)
+            //Get an avatar of the contacts name if it's not selected
             if (!selected.contains(p1)) {
                 setImageDrawable(
                     LetterAvatar(
@@ -62,10 +59,12 @@ class Rv_ContactAdapter(
                     )
                 )
             } else {
+                //If it's previously selected show a checkmark
                 setImageDrawable(checkDrawable)
             }
 
             setOnClickListener {
+                //If a previously checked contact is clicked on again, then show the avatar
                 if (selected.contains(p1)) {
                     selected.remove(p1)
                     setImageDrawable(
@@ -80,12 +79,10 @@ class Rv_ContactAdapter(
                     selected.add(p1)
                     setImageDrawable(checkDrawable)
                 }
-                //notifyItemChanged(selectedPos)
                 selectedPos = p0.layoutPosition
                 notifyItemChanged(selectedPos)
 
                 mOnItemClickListener?.onItemClick(p1, selected)
-                //Toast.makeText(context, "Saliendo del listener", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -98,11 +95,10 @@ class Rv_ContactAdapter(
         val contactavatar = itemView.findViewById<ImageView>(R.id.contactavatar)!!
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onClearSelected(): Boolean {
         selected.clear()
         notifyDataSetChanged()
-        //selectedPos = RecyclerView.NO_POSITION
-        //notifyItemChanged(selectedPos)
         return true
     }
 }

@@ -1,20 +1,19 @@
 package com.example.newevent2
 
-import android.content.Context
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
 class TaskPayment_PagerAdapter(
-    private val myContext: Context,
     fm: FragmentManager,
     private val userid: String,
     private val eventid: String,
     private val category: String,
     private val status: String,
     private var totalTabs: Int
-) : FragmentPagerAdapter(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         val bundle = Bundle()
@@ -23,7 +22,7 @@ class TaskPayment_PagerAdapter(
         bundle.putString("category", category)
         bundle.putString("status", status)
 
-        return when (position) {
+        when (position) {
             0 -> {
                 val fragInfo = TaskPaymentTasks()
                 fragInfo.arguments = bundle

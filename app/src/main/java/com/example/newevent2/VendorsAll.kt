@@ -1,57 +1,30 @@
 package com.example.newevent2
 
-import android.Manifest
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.Cursor
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.view.*
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.widget.SearchView
-import android.widget.Spinner
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.clone
-import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.MVP.VendorsAllPresenter
 import com.example.newevent2.Model.*
 import com.example.newevent2.ui.ViewAnimation
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.contacts.*
-import kotlinx.android.synthetic.main.event_detail.*
-import kotlinx.android.synthetic.main.guests_all.*
-import kotlinx.android.synthetic.main.guests_all.view.*
 import kotlinx.android.synthetic.main.vendors_all.*
 import kotlinx.android.synthetic.main.vendors_all.view.*
 
-
 class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 
-    var contactlist = ArrayList<com.example.newevent2.Model.Vendor>()
-    private var isRotate = false
-
-    lateinit var recyclerViewAllVendor: RecyclerView
-    //lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var recyclerViewAllVendor: RecyclerView
     private lateinit var presentervendor: VendorsAllPresenter
-    private lateinit var inf: View
     private lateinit var rvAdapter: Rv_VendorAdapter
     private lateinit var swipeController: SwipeControllerTasks
 
-    private var recyclerViewReadyCallback: RecyclerViewReadyCallback? = null
-
-    private val autocomplete_place_code = 1
+    private val autocompleteplacecode = 1
     private var placeid: String? = null
     private var latitude = 0.0
     private var longitude = 0.0
@@ -60,11 +33,12 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     private var web: String? = null
     private var rating = 0.0
     private var userrating = 0
+    private var isRotate = false
 
+    var contactlist = ArrayList<Vendor>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //toolbar = activity!!.findViewById(R.id.toolbar)
         setHasOptionsMenu(true)
     }
 
@@ -72,37 +46,16 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.vendors_menu, menu)
 
+        //By default the menu is set as invisible, if the vendor already exists
+        // (and it's an edit operation) the menu will be back to visibility
         val addVendor = menu.findItem(R.id.add_vendor)
         addVendor.isVisible = false
-
-//        val searchItem = menu.findItem(R.id.action_search)
-//        val searchView = searchItem.actionView as SearchView
-//        searchView.isIconified = false
-//
-//        searchView.setOnCloseListener {
-//            toolbar.collapseActionView()
-//            true
-//        }
-//
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(p0: String?): Boolean {
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(p0: String?): Boolean {
-//                val filteredModelList= filter(contactlist, p0)
-//                val rvAdapter = Rv_VendorAdapter(filteredModelList as ArrayList<Vendor>, context!!)
-//                recyclerViewAllVendor.adapter = rvAdapter
-//                return true
-//            }
-//        })
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val inf = inflater.inflate(R.layout.vendors_all, container, false)
 
         recyclerViewAllVendor = inf.recyclerViewVendors
@@ -113,13 +66,16 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
             }
         }
 
+        // Invoking the presenter that will populate the recyclerview
         presentervendor = VendorsAllPresenter(context!!, this, inf)
 
+        //This is for the Add button, Vendors can be added from scratch or from the contact list
         ViewAnimation.init(inf.NewVendor)
         ViewAnimation.init(inf.ContactVendor)
 
         inf.floatingActionButtonVendor.setOnClickListener()
         {
+            //When it's clicked on, the button will rotate and show the additional options
             isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonVendor, !isRotate)
             if (isRotate) {
                 ViewAnimation.showIn(NewVendor)
@@ -135,25 +91,22 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWVENDOR")
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
+            // Call to the form to create vendors
             val newvendor = Intent(context, VendorCreateEdit::class.java)
             newvendor.putExtra("userid", "")
             startActivity(newvendor)
         }
-
-//        inf.fabGoogleVendor.setOnClickListener {
-//            val newvendor = Intent(context, MapsActivity::class.java)
-//            startActivityForResult(newvendor, autocomplete_place_code)
-//        }
 
         inf.fabContactVendor.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "VENDORFROMCONTACTS")
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
+            // Call to the contact list from which vendors can added from the contacts in the phone
             val newvendor = Intent(context, ContactsAll::class.java)
             newvendor.putExtra("vendorid", "")
             startActivity(newvendor)
@@ -163,54 +116,24 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 
     override fun onResume() {
         super.onResume()
-////Just want to enter here after a new guest was added not every time. I don't like this.
-
+        // Not really sure about keeping with this option. This is suppose
+        // to refresh the list whenever the user comes back but I think it's not working properly
         if (vendorcreated_flag == 1){
-//            presenterguest = GuestsAllPresenter(context!!, this, inf)
-
             val vendordb = VendorDBHelper(context!!)
             val vendorlist = vendordb.getAllVendors()
-
-            //rvAdapter = Rv_VendorAdapter(vendorlist, context!!)
-//            recyclerViewAllGuests.adapter = null
             recyclerViewAllVendor.adapter = rvAdapter
             contactlist = clone(vendorlist)!!
-
-//            swipeController = SwipeControllerTasks(
-//                context!!,
-//                rvAdapter,
-//                recyclerViewAllGuests,
-//                null,
-//                RIGHTACTION
-//            )
-//            val itemTouchHelper = ItemTouchHelper(swipeController)
-//            itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
-
             vendorcreated_flag = 0
         }
-
-    }
-
-    private fun filter(models: ArrayList<Vendor>, query: String?): List<Vendor> {
-        val lowerCaseQuery = query!!.toLowerCase()
-        val filteredModelList: ArrayList<Vendor> = ArrayList()
-        for (model in models) {
-            val text: String = model.name.toLowerCase()
-            if (text.contains(lowerCaseQuery)) {
-                filteredModelList.add(model)
-            }
-        }
-        return filteredModelList
     }
 
     override fun onVAVendors(
         inflatedView: View,
-        list: ArrayList<VendorPayment>
+        vendorpaymentlist: ArrayList<VendorPayment>
     ) {
-        rvAdapter = Rv_VendorAdapter(list, context!!)
-
+        // There are vendors obtained from the presenter and these are passed to the recyclerview
+        rvAdapter = Rv_VendorAdapter(vendorpaymentlist, context!!)
         recyclerViewAllVendor.adapter = rvAdapter
-        //contactlist = clone(list)!!
 
         swipeController = SwipeControllerTasks(
             inflatedView.context,
@@ -219,56 +142,50 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
             null,
             RIGHTACTION
         )
+        // Adding the Swipe capabilities to the recyclerview
         val itemTouchHelper = ItemTouchHelper(swipeController)
         itemTouchHelper.attachToRecyclerView(recyclerViewAllVendor)
     }
 
     override fun onVAVendorsError(inflatedView: View, errcode: String) {
+        // No vendors coming, the regular layout is hidden and the emptystate one is shown
         inflatedView.withdatav.visibility = ConstraintLayout.GONE
         inflatedView.withnodatav.visibility = ConstraintLayout.VISIBLE
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == autocomplete_place_code) {
-            val placenameString = data?.getStringExtra("place_name")
-            //          eventkey = data?.getStringExtra("eventid").toString()
+        //This is when it's coming from the Google's search for a Business,
+        // if the user selects a business that is a provider for the event, all of its data
+        // is dumped here an used to be saved as a Vendor's item
+        if (resultCode == Activity.RESULT_OK && requestCode == autocompleteplacecode) {
             placeid = data?.getStringExtra("place_id").toString()
             latitude = data!!.getDoubleExtra("place_latitude", 0.0)
-            longitude = data!!.getDoubleExtra("place_longitude", 0.0)
-            address = data?.getStringExtra("place_address").toString()
-            phone = data?.getStringExtra("place_phone").toString()
-            web = data?.getStringExtra("place_web").toString()
-            rating = data?.getDoubleExtra("place_rating", 0.0)
-            userrating = data?.getIntExtra("place_userrating", 0)
+            longitude = data.getDoubleExtra("place_longitude", 0.0)
+            address = data.getStringExtra("place_address").toString()
+            phone = data.getStringExtra("place_phone").toString()
+            web = data.getStringExtra("place_web").toString()
+            rating = data.getDoubleExtra("place_rating", 0.0)
+            userrating = data.getIntExtra("place_userrating", 0)
 
-            val newvendor = Intent(activity, NewVendor::class.java)
-//            newvendor.putExtra("eventkey", eventkey)
-            newvendor.putExtra("location", placenameString)
-            newvendor.putExtra("placeid", placeid)
-            newvendor.putExtra("latitude", latitude)
-            newvendor.putExtra("longitude", longitude)
-            newvendor.putExtra("address", address)
-            newvendor.putExtra("phone", phone)
-            newvendor.putExtra("web", web)
-            newvendor.putExtra("rating", rating)
-            newvendor.putExtra("userrating", userrating)
-
-            newvendor.putExtra("source", "google")
-
-            startActivity(newvendor)
-            //etlocation.setText(placenameString)
+//          I think this code is never called
+//            val newvendor = Intent(activity, NewVendor::class.java)
+//            newvendor.putExtra("location", placenameString)
+//            newvendor.putExtra("placeid", placeid)
+//            newvendor.putExtra("latitude", latitude)
+//            newvendor.putExtra("longitude", longitude)
+//            newvendor.putExtra("address", address)
+//            newvendor.putExtra("phone", phone)
+//            newvendor.putExtra("web", web)
+//            newvendor.putExtra("rating", rating)
+//            newvendor.putExtra("userrating", userrating)
+//            newvendor.putExtra("source", "google")
+//            startActivity(newvendor)
         }
     }
 
     companion object {
-        //image pick code
-        private val IMAGE_PICK_CODE = 1000
-
-        //Permission code
-        private val PERMISSION_CODE = 1001
         const val RIGHTACTION = "delete"
-        internal val VENDORCREATION = 1
         var vendorcreated_flag = 0
     }
 }

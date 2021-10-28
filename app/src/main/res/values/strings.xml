@@ -9,7 +9,6 @@
     <string name="newevent_eventlocationinput_en">Select Event location</string>
     <string name="newevent_eventaboutinput_en">About my event</string>
     <string name="title_activity_maps">Map</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="eventdetail_summary">Event Detail Summary</string>
     <string name="eventdetail_event">Event Detail Event</string>
@@ -49,6 +48,41 @@
     <string name="error_emailpasswordincorrect">The password is incorrect</string>
     <string name="error_emailaccountexists">The email you are trying to use already exists</string>
     <string name="error_emailsignup">There was a problem tryng in the Sign Up</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="weddingday">Today is your wedding day</string>
+    <string name="great">Great!</string>
+    <string name="myeventtitle">My Event</string>
+    <string name="logoff">Log off</string>
+    <string name="logoff_question">Do you want to log off?</string>
+    <string name="accept">Accept</string>
+    <string name="error_tasknameinput">Name is required!</string>
+    <string name="error_taskdateinput">Date is required!</string>
+    <string name="error_taskbudgetinput">Amount is required!</string>
+    <string name="error_taskcategoryinput">Category is required!</string>
+    <string name="delete_message">Delete entry</string>
+    <string name="delete_entry">Are you sure you want to delete this?</string>
+    <string name="error_invaliddate">Date is invalid!</string>
+    <string name="clearvendor">Clear vendor</string>
+    <string name="clearvendor_warning">Are you sure you want to clear the vendor for this payment?</string>
+    <string name="vendornotfound">Vendor was not found</string>
+    <string name="newvendor_title">New Vendor</string>
+    <string name="requestinfo">Request for Information</string>
+    <string name="error_noemailclient">There are no email client installed on your device</string>
+    <string name="error_vendorphoneinput">Phone is required!</string>
+    <string name="title_delete">Delete</string>
+    <string name="delete_confirmation">Are you sure you want to delete?</string>
+    <string name="error_vendorwithpayments">Vendor can\'t be removed as there are still payments associated</string>
+    <string name="title_contacts">Contacts</string>
+    <string name="todo">To Do</string>
+    <string name="done">Done</string>
+    <string name="duenext">Due next task</string>
+    <string name="view">view</string>
+    <string name="payments">Payments</string>
+    <string name="tasks">Tasks</string>
+    <string name="spent">Spent</string>
+    <string name="available">Available</string>
+    <string name="error_gettingdata">There was an error trying to get Event data</string>
+    <string name="success_eventchanges">Event changes saved successfully</string>
 
     <string-array name="role" >
         <item>Bride</item>

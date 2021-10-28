@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 class MainEventPagerAdapter(
     private val userid: String,
     private val eventid: String,
-    private val language: String,
     fm: FragmentManager?,
     private var totalTabs: Int
 ) : FragmentStatePagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -18,14 +17,18 @@ class MainEventPagerAdapter(
         bundle.putString("userid", userid)
         bundle.putString("eventid", eventid)
 
+        // Depending on the selected tab, it goes to EventCategories (default) or Vendors
         return when (position) {
             0 -> {
                 val fragInfo = EventCategories()
                 fragInfo.arguments = bundle
                 return fragInfo
             }
-//            2 -> return GuestsAll()
-            1 -> return VendorsAll()
+            1 -> {
+                val fragInfo = VendorsAll()
+                fragInfo.arguments = bundle
+                return fragInfo
+            }
             else -> {
                 val fragInfo = EventCategories()
                 fragInfo.arguments = bundle

@@ -1,8 +1,6 @@
 package com.example.newevent2
 
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -25,17 +23,15 @@ import com.nordan.dialog.NordanAlertDialog
 import kotlinx.android.synthetic.main.header_navview.*
 import kotlinx.android.synthetic.main.header_navview.view.*
 
-
 class ActivityContainer : AppCompatActivity() {
-
-    private var usersession = User()
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var loadingscreen: ConstraintLayout
+    private lateinit var newfragment: Fragment
 
     private val fm = supportFragmentManager
+    private var usersession = User()
     private var clickNavItem = 0
-    private lateinit var newfragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,49 +41,46 @@ class ActivityContainer : AppCompatActivity() {
         loadingscreen = findViewById(R.id.loadingscreen)
         val sidenavView = findViewById<NavigationView>(R.id.sidenav)
 
+        //If session is empty the user gets redirected to the login screen
         usersession = com.example.newevent2.Functions.getUserSession(this)
         if (usersession.key == "") {
             val loginactivity =
                 Intent(this, LoginView::class.java)
             startActivity(loginactivity)
         } else {
+            //Short name is shown in the sidebar header
             val headershortname =
                 sidenavView.getHeaderView(0).findViewById<TextView>(R.id.headershortname)
-            headershortname.setText(usersession.shortname)
+            headershortname.text = usersession.shortname
         }
 
+        //Fragment container is initialized with Dashboard fragment
         var activefragment = fm.findFragmentById(R.id.fragment_container)
-
         if (activefragment == null) {
             activefragment = DashboardView_clone()
             fm.beginTransaction()
                 .add(R.id.fragment_container, activefragment, "DashboardView")
                 .commit()
         }
-        //--------------------------------------------------------------------------------------------------
+
+        //If today is the day of the event, the user will get a notification to congratulate him/her
         if (isEventDate(this) == 0) {
-        NordanAlertDialog.Builder(this)
-            .setAnimation(Animation.SLIDE)
-            .isCancellable(false)
-            .setTitle("Congratulations!")
-            .setMessage("Today is your wedding day")
-            .setIcon(R.drawable.love_animated_gif_2018_8,true)
-            .setPositiveBtnText("Great!")
-            //.onPositiveClicked( -> {/* Do something here */})
-            .build().show();
+            NordanAlertDialog.Builder(this)
+                .setAnimation(Animation.SLIDE)
+                .isCancellable(false)
+                .setTitle(getString(R.string.congratulations))
+                .setMessage(getString(R.string.weddingday))
+                .setIcon(R.drawable.love_animated_gif_2018_8, true)
+                .setPositiveBtnText(getString(R.string.great))
+                .build().show()
         }
-        //--------------------------------------------------------------------------------------------------
+
+        // Declare the toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        //supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_google)
-        //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        val apptitle = findViewById<TextView>(R.id.appbartitle)
-        apptitle.text = "Event Detail"
-
+        // Create the toggle that will open and close the sidebar
         drawerLayout = findViewById(R.id.drawerlayout)
-
         val toggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
@@ -98,6 +91,13 @@ class ActivityContainer : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        // Adding the title for the fragment container "My Event", this will be shown in
+        // all of the others fragments
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        apptitle.text = getString(R.string.myeventtitle)
+
+        // Declaration of the sidebar and the different calls it makes
+        // In this implementation, the classes are assigned but fragments are not yet created
         sidenavView.setNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.event_fragment -> {
@@ -108,10 +108,6 @@ class ActivityContainer : AppCompatActivity() {
                     clickNavItem = R.id.task_fragment
                     newfragment = EventCategories()
                 }
-//                R.id.guest_fragment -> {
-//                    clickNavItem = R.id.guest_fragment
-//                    newfragment = GuestsAll()
-//                }
                 R.id.vendor_fragment -> {
                     clickNavItem = R.id.vendor_fragment
                     newfragment = VendorsAll()
@@ -128,7 +124,9 @@ class ActivityContainer : AppCompatActivity() {
             true
         }
         sidenavView.menu.getItem(0).isChecked = true
-        //--------------------------------------------------------------------------------------------------
+
+        //Creation of the navigation bar and the different calls it makes.
+        //In this section, the fragments are indeed invoked and called
         val navView = findViewById<BottomNavigationView>(R.id.bottomnav)
         navView.setOnNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
@@ -142,32 +140,24 @@ class ActivityContainer : AppCompatActivity() {
                     val newfragment = MainEventView_clone()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
-
-                        //.addToBackStack(null)
                         .commit()
                 }
                 R.id.tasks -> {
                     val newfragment = DashboardActivity()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
-
-                        //.addToBackStack(null)
                         .commit()
                 }
                 R.id.guests -> {
                     val newfragment = TableGuestsActivity()
-//                    val newfragment = GuestsAll()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
-
-                        //.addToBackStack(null)
                         .commit()
                 }
                 R.id.notes -> {
                     val newfragment = MyNotes()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
-                        //.addToBackStack(null)
                         .commit()
                 }
             }
@@ -175,12 +165,11 @@ class ActivityContainer : AppCompatActivity() {
         }
         navView.menu.getItem(0).isChecked = true
 
+        // Whatever option has been selected for the sidebar it's invoked here and the fragment is
+        // created
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-            }
-
-            override fun onDrawerOpened(drawerView: View) {
-            }
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {}
 
             override fun onDrawerClosed(drawerView: View) {
                 when (clickNavItem) {
@@ -194,11 +183,6 @@ class ActivityContainer : AppCompatActivity() {
                             .replace(R.id.fragment_container, newfragment)
                             .commit()
                     }
-//                    R.id.guest_fragment -> {
-//                        fm.beginTransaction()
-//                            .replace(R.id.fragment_container, newfragment)
-//                            .commit()
-//                    }
                     R.id.vendor_fragment -> {
                         fm.beginTransaction()
                             .replace(R.id.fragment_container, newfragment)
@@ -209,19 +193,13 @@ class ActivityContainer : AppCompatActivity() {
                             .replace(R.id.fragment_container, newfragment)
                             .commit()
                     }
-//                    R.id.account_logoff -> {
-//                        fm.beginTransaction()
-//                            .replace(R.id.fragment_container, newfragment)
-//                            .commit()
-//                    }
                 }
             }
-
-            override fun onDrawerStateChanged(newState: Int) {
-            }
+            override fun onDrawerStateChanged(newState: Int) {}
         })
     }
 
+    // This catches the back option in Android, if the sidebar is displayed, then it gets closed
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -230,34 +208,35 @@ class ActivityContainer : AppCompatActivity() {
         }
     }
 
+    // This function is invoked when the user decides to logoff
     private fun logoffapp() {
+        // Dialog
         val builder = android.app.AlertDialog.Builder(this)
-        builder.setTitle("Log off")
-        builder.setMessage("Do you want to log off?")
+        builder.setTitle(getString(R.string.logoff))
+        builder.setMessage(getString(R.string.logoff_question))
 
-        builder.setPositiveButton("Accept", object : DialogInterface.OnClickListener {
-            override fun onClick(p0: DialogInterface?, p1: Int) {
-                when (usersession.authtype) {
-                    "google" -> {
-                        val gso =
-                            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
-                        val googleSignInClient = GoogleSignIn.getClient(this@ActivityContainer, gso)
-                        googleSignInClient.signOut()
-                    }
-                    "facebook" -> {
-                        LoginManager.getInstance().logOut()
-                    }
+        builder.setPositiveButton(getString(R.string.accept)
+        ) { _, _ ->
+            when (usersession.authtype) {
+                //Logoff in case the user was logged in with Google
+                "google" -> {
+                    val gso =
+                        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+                    val googleSignInClient = GoogleSignIn.getClient(this@ActivityContainer, gso)
+                    googleSignInClient.signOut()
                 }
-                usersession.logout(this@ActivityContainer)
-                usersession.deleteUserSession(this@ActivityContainer)
-                finish()
+                //Logoff in case the user was logged in with Facebook
+                "facebook" -> {
+                    LoginManager.getInstance().logOut()
+                }
             }
-        })
-        builder.setNegativeButton("Cancel", object : DialogInterface.OnClickListener {
-            override fun onClick(p0: DialogInterface?, p1: Int) {
-                p0!!.dismiss()
-            }
-        })
+            //Logoff from Firebase
+            usersession.logout(this@ActivityContainer)
+            usersession.deleteUserSession(this@ActivityContainer)
+            finish()
+        }
+        builder.setNegativeButton("Cancel"
+        ) { p0, _ -> p0!!.dismiss() }
 
         val dialog = builder.create()
         dialog.show()

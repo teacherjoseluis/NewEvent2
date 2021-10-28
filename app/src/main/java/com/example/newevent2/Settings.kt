@@ -3,32 +3,22 @@ package com.example.newevent2
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.newevent2.Functions.editUser
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.User
-import com.example.newevent2.Model.UserModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.settings.*
 import kotlinx.android.synthetic.main.settings.view.*
 
 class Settings : Fragment() {
 
-    lateinit var userEntity: UserModel
     lateinit var usersession: User
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +26,10 @@ class Settings : Fragment() {
     ): View? {
         val inf = inflater.inflate(R.layout.settings, container, false)
 
+        //Get information about the logged user
         usersession = getUserSession(context!!)
 
+        //Load the spinner with whatever comes from the user role
         inf.textinput.setText(usersession.shortname)
         val position = when (usersession.role) {
             "Bride" -> 0
@@ -46,6 +38,7 @@ class Settings : Fragment() {
         }
         inf.spinner.setSelection(position)
 
+        //Load the spinner with the language selected for the user
         val language = when (usersession.language) {
             "en" -> 0
             "es" -> 1
@@ -58,7 +51,8 @@ class Settings : Fragment() {
             textinput.error = null
         }
 
-        inf.spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        //When the user selects via the spinner Bride or Groom, that will be saved in his/her profile
+        inf.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 usersession.role = when (inf.spinner.selectedItemPosition) {
                     0 -> "Bride"
@@ -70,9 +64,10 @@ class Settings : Fragment() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
-        })
+        }
 
-        inf.spinner4.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        //When the user selects via the spinner English or Spanish, that will be saved in his/her profile
+        inf.spinner4.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 usersession.language = when (inf.spinner4.selectedItemPosition) {
@@ -85,7 +80,7 @@ class Settings : Fragment() {
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "LANGUAGE")
                 bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, usersession.language)
                 bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-                MyFirebaseApp.mFirebaseAnalytics!!.logEvent(
+                MyFirebaseApp.mFirebaseAnalytics.logEvent(
                     FirebaseAnalytics.Event.SELECT_ITEM,
                     bundle
                 )
@@ -95,13 +90,13 @@ class Settings : Fragment() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
-        })
+        }
 
         inf.settingsbutton.setOnClickListener()
         {
             var inputvalflag = true
             if (inf.textinput.text.toString().isEmpty()) {
-                inf.textinput.error = "Name is required!"
+                inf.textinput.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             }
             if (inputvalflag) {
@@ -114,10 +109,10 @@ class Settings : Fragment() {
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "PRIVACYPOLICY")
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
-            val uris = Uri.parse("https://brides-grooms.flycricket.io/privacy.html")
+            val uris = Uri.parse(getString(R.string.privacypolicy))
             val intents = Intent(Intent.ACTION_VIEW, uris)
             val b = Bundle()
             b.putBoolean("new_window", true)
@@ -129,10 +124,10 @@ class Settings : Fragment() {
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TERMS&CONDITIONS")
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
-            val uris = Uri.parse("https://brides-grooms.flycricket.io/terms.html")
+            val uris = Uri.parse(getString(R.string.termsandconditions))
             val intents = Intent(Intent.ACTION_VIEW, uris)
             val b = Bundle()
             b.putBoolean("new_window", true)
@@ -142,20 +137,4 @@ class Settings : Fragment() {
 
         return inf
     }
-
-//    private fun savesettings() {
-//        try {
-////            userEntity = UserModel(usersession.key)
-////            userEntity.editUser(usersession)
-//            editUser(context!!, usersession)
-//            usersession.saveUserSession(context!!)
-//            Toast.makeText(context, "Settings were saved successully", Toast.LENGTH_LONG).show()
-//        } catch (e: Exception) {
-//            Toast.makeText(
-//                context,
-//                "There was an error trying to save the settings ${e.message}",
-//                Toast.LENGTH_LONG
-//            ).show()
-//        }
-//    }
 }

@@ -1,64 +1,50 @@
 package com.example.newevent2
 
 import android.content.Intent
-import android.hardware.SensorManager.getOrientation
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newevent2.MVP.PaymentPresenter
 import com.example.newevent2.Model.MyFirebaseApp
-import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.ui.ViewAnimation
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.event_detail.*
 import kotlinx.android.synthetic.main.mainevent_summary.*
 import kotlinx.android.synthetic.main.mainevent_summary.view.*
-import kotlinx.android.synthetic.main.taskpayment_list.*
-import java.text.DecimalFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class EventCategories : Fragment() {
 
-    //    var userid = ""
-//    var eventid = ""
-    lateinit var recyclerViewCategory: RecyclerView
+    private lateinit var recyclerViewCategory: RecyclerView
     private var isRotate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // This instruction intends to keep the state of the fragment and don't reload when the user returns
         retainInstance = true
-//        userid = this.arguments!!.get("userid").toString()
-//        eventid = this.arguments!!.get("eventid").toString()
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.mainevent_summary, container, false)
-        //----------------------------------------------------------------------------------------------------
-        //val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+
+        // Getting the list of categories that I'm actually going to show from the local DB
         val taskdb = TaskDBHelper(context!!)
         val list = taskdb.getActiveCategories()
-        //list1.addAll(list2) - Need to consider adding categories from Payments in cases were no tasks where created but Payments were
+
+        // Creates and loads the Ad
         val adRequest = AdRequest.Builder().build()
         inf.adView.loadAd(adRequest)
 
+        //Creating the recyclerview to show the Categories, 2 columns
         recyclerViewCategory = inf.categoryrv
         recyclerViewCategory.apply {
             layoutManager = GridLayoutManager(context, 2).apply {
@@ -68,6 +54,7 @@ class EventCategories : Fragment() {
         val rvAdapter = rvCategoryAdapter(list)
         recyclerViewCategory.adapter = rvAdapter
 
+        // This segment initializes the animation for Task and Payment buttons
         ViewAnimation.init(inf.TaskLayout)
         ViewAnimation.init(inf.PaymentLayout)
 
@@ -75,38 +62,45 @@ class EventCategories : Fragment() {
         {
             isRotate = ViewAnimation.rotateFab(inf.NewTaskPaymentActionButton, !isRotate)
             if (isRotate) {
+                //when it rotates, it shows the two additional options to create Tasks and Payments
                 ViewAnimation.showIn(TaskLayout)
                 ViewAnimation.showIn(PaymentLayout)
             } else {
+                // when it's not rotating, both options are hidden
                 ViewAnimation.showOut(TaskLayout)
                 ViewAnimation.showOut(PaymentLayout)
             }
         }
 
         inf.fabTask.setOnClickListener {
+            // Before invoking the view to create the task, the Analytics records the action
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWTASK")
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
+            // As it's a new task, the value userid comes empty
             val newtask = Intent(context, TaskCreateEdit::class.java)
             newtask.putExtra("userid", "")
             startActivity(newtask)
         }
 
         inf.fabPayment.setOnClickListener {
+            // Before invoking the view to create the payment, the Analytics records the action
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWPAYMENT")
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
+            // As it's a new payment, the value userid comes empty
             val newpayment = Intent(context, PaymentCreateEdit::class.java)
             newpayment.putExtra("userid", "")
             startActivity(newpayment)
         }
 
+        // For the Ad in this View, the below is a listener that catches events
         inf.adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
@@ -118,13 +112,13 @@ class EventCategories : Fragment() {
             }
 
             override fun onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
+                // Code to be executed when an ad opens an overlay that covers the screen.
+                // The Analytics catches whenever the user opens an Ad
                 // ------- Analytics call ----------------
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "ADOPENED")
                 bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-                MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+                MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
                 //----------------------------------------
             }
 
@@ -137,7 +131,6 @@ class EventCategories : Fragment() {
                 // to the app after tapping on an ad.
             }
         }
-
         return inf
     }
 }

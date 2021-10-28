@@ -1,26 +1,19 @@
 package com.example.newevent2
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.DatePicker
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.newevent2.Functions.addPayment
-import com.example.newevent2.Functions.deleteGuest
 import com.example.newevent2.Functions.editPayment
 import com.example.newevent2.Functions.validateOldDate
 import com.example.newevent2.MVP.VendorPaymentPresenter
@@ -31,35 +24,34 @@ import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.payment_editdetail.*
 import java.util.*
 
-class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendors {
+class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors {
 
     private lateinit var paymentitem: Payment
     private lateinit var presentervendor: VendorPaymentPresenter
-
     private var mRewardedAd: RewardedAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.payment_editdetail)
 
+        // Declaring and enabling the toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        //---------------------------------------------------------------------------------------
-        presentervendor = VendorPaymentPresenter(this!!, this)
-        //---------------------------------------------------------------------------------------
 
+       //Calling the presenter for Vendors that will be used to associate the Payment to a Vendor
+        presentervendor = VendorPaymentPresenter(this, this)
 
+        //Paymentitem will be blank if nothing comes in the extras
+        // but if something comes it will assume this is an edit
         val extras = intent.extras
         paymentitem = if (extras!!.containsKey("payment")) {
             intent.getParcelableExtra("payment")!!
@@ -67,29 +59,7 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
             Payment()
         }
 
-//        val paymentid = paymentitem.key
-//
-//        if (paymentid != "") {
-//            val paymentmodel = PaymentModel()
-//            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
-//            paymentmodel.getPaymentdetail(user.key, user.eventid, paymentid, object :
-//                PaymentModel.FirebaseSuccessPayment {
-//                @RequiresApi(Build.VERSION_CODES.O)
-//                override fun onPayment(payment: Payment) {
-//                    paymentname.setText(payment.name)
-//                    paymentdate.setText(payment.date)
-//                    paymentamount.setText(payment.amount)
-//
-//                    paymentitem.key = payment.key
-//                    paymentitem.amount = payment.amount
-//                    paymentitem.category = payment.category
-//                    paymentitem.date = payment.date
-//                    paymentitem.name = payment.name
-//                    paymentitem.createdatetime = payment.createdatetime
-//                }
-//            })
-//        }
-
+        //We are making sure that only valid text is entered in the name of the payment
         paymentname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
             if (!p1) {
                 val validationmessage = TextValidate(paymentname).namefieldValidate()
@@ -99,6 +69,7 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
             }
         }
 
+        //Erasing any possible error whenever the user clicks again
         paymentamount.setOnClickListener {
             paymentamount.error = null
         }
@@ -109,7 +80,6 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
         }
 
         val chipgroupedit = findViewById<ChipGroup>(R.id.groupeditpayment)
-        //chipgroupedit.isSingleSelection = true
 
         // Create chips and select the one matching the category
         val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
@@ -125,18 +95,19 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
             }
         }
 
+        //This is simply to clear the vendor in case the user clicks on this field
         vendorautocomplete.setOnClickListener {
             // Here it is where the text clearing takes place
             if (vendorautocomplete.text.toString().isNotEmpty()) {
                 AlertDialog.Builder(this)
-                    .setTitle("Clear vendor")
-                    .setMessage("Are you sure you want to clear the vendor for this payment?") // Specifying a listener allows you to take an action before dismissing the dialog.
+                    .setTitle(getString(R.string.clearvendor))
+                    .setMessage(getString(R.string.clearvendor_warning)) // Specifying a listener allows you to take an action before dismissing the dialog.
                     // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton(android.R.string.yes,
-                        DialogInterface.OnClickListener { dialog, which ->
-                            vendorautocomplete.setText("")
-                            finish()
-                        }) // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setPositiveButton(android.R.string.yes
+                    ) { _, _ ->
+                        vendorautocomplete.setText("")
+                        finish()
+                    } // A null listener allows the button to dismiss the dialog and take no further action.
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
@@ -153,7 +124,7 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
             var inputvalflag = true
             paymentname.clearFocus()
             if (paymentname.text.toString().isEmpty()) {
-                paymentname.error = "Payment name is required!"
+                paymentname.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             } else {
                 val validationmessage = TextValidate(paymentname).namefieldValidate()
@@ -164,12 +135,12 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
             }
             paymentdate.clearFocus()
             if (paymentdate.text.toString().isEmpty()) {
-                paymentdate.error = "Payment date is required!"
+                paymentdate.error = getString(R.string.error_taskdateinput)
                 inputvalflag = false
             }
             paymentamount.clearFocus()
             if (paymentamount.text.toString().isEmpty()) {
-                paymentamount.error = "Payment amount is required!"
+                paymentamount.error = getString(R.string.error_taskbudgetinput)
                 inputvalflag = false
             }
             if (groupeditpayment.checkedChipId == -1) {
@@ -181,7 +152,7 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
                 val vendordb = VendorDBHelper(this)
                 val vendorid = vendordb.getVendorIdByName(vendorautocomplete.text.toString())
                 if (vendorid == "") {
-                    Toast.makeText(this, "Vendor was not found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT).show()
                     inputvalflag = false
                 } else {
                     paymentitem.vendorid = vendorid
@@ -192,10 +163,11 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
             }
         }
 
-        var adRequest = AdRequest.Builder().build()
+        // Loading the Ad
+        val adRequest = AdRequest.Builder().build()
         RewardedAd.load(this,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d(TaskCreateEdit.TAG, adError?.message)
+                Log.d(TaskCreateEdit.TAG, adError.message)
                 mRewardedAd = null
             }
 
@@ -205,6 +177,7 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
             }
         })
 
+        // Ad listener in case I want to add additional behavior
         mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdShowedFullScreenContent() {
                 // Called when ad is shown.
@@ -225,6 +198,7 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
         }
     }
 
+    // Repeated from TaskCreateEdit
     private fun getCategory(): String {
         var mycategorycode = ""
         val categoryname = groupeditpayment.findViewById<Chip>(groupeditpayment.checkedChipId).text
@@ -240,15 +214,12 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
 
     private fun showDatePickerDialog() {
         val newFragment =
-            DatePickerFragment.newInstance((object : DatePickerDialog.OnDateSetListener {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-                    if (validateOldDate(p1, p2 + 1, p3)) {
-                        val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                        paymentdate.setText(selectedDate)
-                    } else {
-                        paymentdate.error = "Payment date is invalid!"
-                    }
+            DatePickerFragment.newInstance((DatePickerDialog.OnDateSetListener { _, p1, p2, p3 ->
+                if (validateOldDate(p1, p2 + 1, p3)) {
+                    val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
+                    paymentdate.setText(selectedDate)
+                } else {
+                    paymentdate.error = getString(R.string.error_invaliddate)
                 }
             }))
         newFragment.show(supportFragmentManager, "datePicker")
@@ -260,34 +231,29 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
         paymentitem.amount = paymentamount.text.toString()
         paymentitem.category = getCategory()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
-                        PackageManager.PERMISSION_DENIED
-                        ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
-                        PackageManager.PERMISSION_DENIED
-                        )
-            ) {
-                //permission denied
-                val permissions =
-                    arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
-                //show popup to request runtime permission
-                requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
-            } else {
-                if (paymentitem.key == "") {
-                    addPayment(this, paymentitem)
-                } else if (paymentitem.key != "") {
-                    editPayment(this, paymentitem)
-                }
-//               val resultIntent = Intent()
-//                setResult(Activity.RESULT_OK, resultIntent)
+        if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
+                    PackageManager.PERMISSION_DENIED
+                    ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
+                    PackageManager.PERMISSION_DENIED
+                    )
+        ) {
+            //permission denied
+            val permissions =
+                arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
+            //show popup to request runtime permission
+            requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
+        } else {
+            if (paymentitem.key == "") {
+                addPayment(this, paymentitem)
+            } else if (paymentitem.key != "") {
+                editPayment(this, paymentitem)
             }
         }
         if (mRewardedAd != null) {
-            mRewardedAd?.show(this, OnUserEarnedRewardListener() {})
+            mRewardedAd?.show(this) {}
         } else {
             Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
         }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -304,6 +270,7 @@ class PaymentCreateEdit() : AppCompatActivity(), VendorPaymentPresenter.VAVendor
     }
 
     override fun onVAVendorsError(errcode: String) {
+        //This absolutely needs to be handled as it has been generating very nasty exceptions
         TODO("Not yet implemented")
     }
 
