@@ -3,11 +3,11 @@
         <item
             android:id="@+id/event_fragment"
             android:icon="@drawable/balloons_1"
-            android:title="Events"/>
+            android:title="@string/events"/>
         <item
             android:id="@+id/task_fragment"
             android:icon="@drawable/organizer"
-            android:title="Tasks"/>
+            android:title="@string/tasks"/>
 <!--        <item-->
 <!--            android:id="@+id/guest_fragment"-->
 <!--            android:icon="@drawable/guests2"-->
@@ -15,21 +15,19 @@
         <item
             android:id="@+id/vendor_fragment"
             android:icon="@drawable/icons8_edit"
-            android:title="Vendors"/>
+            android:title="@string/vendors"/>
     </group>
 
-    <item
-        android:id="@+id/navigation_subheader"
-        android:title="More Options">
+    <item android:title="@string/more_options">
         <menu>
             <item
                 android:id="@+id/settings_fragment"
                 android:icon="@drawable/vector"
-                android:title="Settings"/>
+                android:title="@string/settings"/>
             <item
                 android:id="@+id/account_logoff"
                 android:icon="@drawable/person"
-                android:title="Log Off"/>
+                android:title="@string/log_off"/>
         </menu>
     </item>
 </menu>

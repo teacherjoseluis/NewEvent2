@@ -1,14 +1,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/main_toolbar"
-        app:layout_constraintTop_toTopOf="parent"></include>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/eventimage"
@@ -18,24 +16,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:srcCompat="@drawable/frame_206" />
+        app:srcCompat="@drawable/frame_206"
+        android:contentDescription="@string/eventimage" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/editImageActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
         android:clickable="true"
         app:tint="@color/white"
         app:backgroundTint="@color/rosaChillon"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="@+id/eventimage"
         app:layout_constraintEnd_toEndOf="@+id/eventimage"
-        app:srcCompat="@drawable/camera" />
+        app:srcCompat="@drawable/camera"
+        android:contentDescription="@string/editeventImage" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/inputlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -52,7 +50,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventnametextinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -81,7 +78,6 @@
             app:layout_constraintTop_toBottomOf="@id/field1">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventdatetextinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +95,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
-                android:id="@+id/calendar"
                 android:layout_width="24dp"
                 android:layout_height="26dp"
                 android:layout_marginEnd="8dp"
@@ -107,7 +102,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_icons8_calendar"
-                app:tint="#757575" />
+                app:tint="#757575"
+                android:contentDescription="@string/calendaricon" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -139,7 +135,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
-                android:id="@+id/clock"
                 android:layout_width="24dp"
                 android:layout_height="26dp"
                 android:layout_marginEnd="8dp"
@@ -147,7 +142,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/eventtimetextinput"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_icons8_clock"
-                app:tint="#757575" />
+                app:tint="#757575"
+                android:contentDescription="@string/clockicon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -176,7 +172,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
-                android:id="@+id/locator"
                 android:layout_width="24dp"
                 android:layout_height="26dp"
                 android:layout_marginEnd="8dp"
@@ -184,7 +179,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/icons8_place_marker_64"
-                app:tint="#757575" />
+                app:tint="#757575"
+                android:contentDescription="@string/placemarkericon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -195,7 +191,7 @@
         android:layout_marginBottom="16dp"
         android:shadowDy="2"
         android:shadowRadius="4"
-        android:text="save"
+        android:text="@string/save"
         app:backgroundTint="@color/rosaChillon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

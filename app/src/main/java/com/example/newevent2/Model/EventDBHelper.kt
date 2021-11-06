@@ -6,15 +6,14 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.CoRAddEditEvent
-import com.example.newevent2.CoRAddEditTask
 
 class EventDBHelper(val context: Context) : CoRAddEditEvent {
 
     private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
-    var nexthandlere: CoRAddEditEvent? = null
+    private var nexthandlere: CoRAddEditEvent? = null
 
     fun insert(event: Event) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("eventid", event.key)
         values.put("imageurl", event.imageurl)
         values.put("placeid", event.placeid)
@@ -30,7 +29,7 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent {
         Log.d(TAG, "Event record inserted")
     }
 
-    fun getEventexists(key: String): Boolean {
+    private fun getEventexists(key: String): Boolean {
         var existsflag = false
         val cursor: Cursor = db.rawQuery("SELECT * FROM EVENT WHERE eventid = '$key'", null)
         if (cursor != null) {
@@ -38,6 +37,7 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent {
                 existsflag = true
             }
         }
+        cursor.close()
         return existsflag
     }
 
@@ -67,11 +67,12 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent {
                 } while (cursor.moveToNext())
             }
         }
+        cursor.close()
         return event
     }
 
     fun update(event: Event) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("eventid", event.key)
         values.put("imageurl", event.imageurl)
         values.put("placeid", event.placeid)

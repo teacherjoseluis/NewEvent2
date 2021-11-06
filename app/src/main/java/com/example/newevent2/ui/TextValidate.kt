@@ -1,6 +1,5 @@
 package com.example.newevent2.ui
 
-import android.text.TextWatcher
 import android.widget.TextView
 import java.util.regex.Pattern
 

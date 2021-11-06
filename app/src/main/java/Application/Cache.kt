@@ -2,15 +2,15 @@ package Application
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.newevent2.Functions.*
+import com.example.newevent2.Functions.createemptyBitmap
+import com.example.newevent2.Functions.getImgfromSD
+import com.example.newevent2.Functions.saveBitmaptoSD
+import com.example.newevent2.Functions.saveURLImgtoSD
 import com.example.newevent2.MVP.*
 import com.example.newevent2.Model.*
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.StorageReference
-import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
 
 class Cache<T : Any> {
@@ -94,11 +94,13 @@ class Cache<T : Any> {
     }
 
     fun save(category: String, storageRef: StorageReference) {
-        storageRef.downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-            override fun onSuccess(p0: Uri?) {
-                saveURLImgtoSD(category, p0, contextCache)
-            }
-        })
+        storageRef.downloadUrl.addOnSuccessListener { p0 ->
+            saveURLImgtoSD(
+                category,
+                p0,
+                contextCache
+            )
+        }
     }
 
     fun save(context: Context, category: String, bitmap: Bitmap){
@@ -207,9 +209,5 @@ class Cache<T : Any> {
         fun onEmptyPlaceImage(errorcode: String)
     }
 
-    companion object {
-        const val ONE_MINUTE_IN_MILLIS: Long = 60000
-        private const val TAG = "Cache"
-
-    }
+    companion object
 }

@@ -9,7 +9,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -145,38 +144,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
 //        postRef.addValueEventListener(taskListenerActive)
 //    }
 
-    fun getTaskdetail(
-        userid: String,
-        eventid: String,
-        taskid: String,
-        dataFetched: FirebaseSuccessTask
-    ) {
-        val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Task").child(taskid)
-
-        val taskListenerActive = object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onDataChange(p0: DataSnapshot) {
-                try {
-                    val taskitem = p0.getValue(Task::class.java)!!
-                    taskitem!!.key = p0.key.toString()
-                    Log.d(TAG, "Detail retrieved for task ${taskitem.key}")
-                    dataFetched.onTask(taskitem)
-                } catch (e: Exception) {
-                    Log.d(TAG, "Error trying to retrieve the task ${e.message}")
-                    dataFetched.onError(e.message.toString())
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
-            }
-        }
-        postRef.addValueEventListener(taskListenerActive)
-    }
-
-//    fun getTasksList(
+    //    fun getTasksList(
 //        userid: String,
 //        eventid: String,
 //        category: String,
@@ -230,7 +198,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Task").orderByChild("date")
 
-        var tasklist = ArrayList<Task>()
+        val tasklist = ArrayList<Task>()
 
         val tasklListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -240,7 +208,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
                 for (snapshot in p0.children) {
                     val taskitem = snapshot.getValue(Task::class.java)
                     taskitem!!.key = snapshot.key.toString()
-                    tasklist.add(taskitem!!)
+                    tasklist.add(taskitem)
                 }
                 Log.d(TAG, "Number of tasks retrieved ${tasklist.count()}")
                 dataFetched.onTaskList(tasklist)
@@ -253,7 +221,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
         postRef.addValueEventListener(tasklListenerActive)
     }
 
-    fun addTask(
+    private fun addTask(
         userid: String,
         eventid: String,
         task: Task,
@@ -294,7 +262,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
             }
     }
 
-    fun editTask(
+    private fun editTask(
         userid: String,
         eventid: String,
         task: Task,
@@ -325,7 +293,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
             }
     }
 
-    fun deleteTask(
+    private fun deleteTask(
         userid: String,
         eventid: String,
         task: Task,
@@ -392,11 +360,6 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
 //    interface FirebaseSuccessTaskBudget {
 //        fun onTasksBudget(sumbudget: Float)
 //    }
-
-    interface FirebaseSuccessTask {
-        fun onTask(task: Task)
-        fun onError(errorcode: String)
-    }
 
     interface FirebaseSuccessTaskList {
         fun onTaskList(list: ArrayList<Task>)

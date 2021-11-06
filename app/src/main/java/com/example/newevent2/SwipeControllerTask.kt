@@ -1,12 +1,11 @@
 package com.example.newevent2
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.view.MotionEvent
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
@@ -17,18 +16,15 @@ class SwipeControllerTasks(
     val context: Context,
     adapter: ItemTouchAdapterAction,
     recyclerView: RecyclerView,
-    leftaction: String?,
-    rightaction: String?
+    private var leftaction: String?,
+    private var rightaction: String?
 ) : ItemTouchHelper.Callback() {
 
     private val mClearPaint = Paint()
     private var mAdapter: ItemTouchAdapterAction
     private var rv: RecyclerView
 
-    private var leftaction = leftaction
-    private var rightaction = rightaction
-
-    var swipeBack: Boolean = false
+    private var swipeBack: Boolean = false
 
     init {
         mClearPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
@@ -78,13 +74,7 @@ class SwipeControllerTasks(
 
                 if (actionState == ACTION_STATE_SWIPE) {
                     setTouchListener(
-                        c,
-                        recyclerView,
-                        viewHolder,
-                        dX,
-                        dY,
-                        actionState,
-                        isCurrentlyActive
+                        recyclerView
                     )
                 }
                 super.onChildDraw(
@@ -98,7 +88,7 @@ class SwipeControllerTasks(
                 )
 
                 //---------------------------------------------------------------------------------------------
-                val itemView = viewHolder!!.itemView
+                val itemView = viewHolder.itemView
                 val itemHeight = itemView.height
 
                 val isCancelled = dX == 0.0f && !isCurrentlyActive
@@ -141,22 +131,22 @@ class SwipeControllerTasks(
                     )
                     rightcontrol.background.draw(c)
 
-                    val IconTop = itemView.top + (itemHeight - rightcontrol.intrinsicHeight!!) / 2
-                    val IconMargin = (itemHeight - rightcontrol.intrinsicHeight!!) / 2
-                    val IconLeft = itemView.left + IconMargin
-                    val IconRight = itemView.left + IconMargin + rightcontrol.intrinsicWidth!!
-                    val IconBottom = IconTop + rightcontrol.intrinsicWidth!!
+                    val iconTop = itemView.top + (itemHeight - rightcontrol.intrinsicHeight!!) / 2
+                    val iconMargin = (itemHeight - rightcontrol.intrinsicHeight!!) / 2
+                    val iconLeft = itemView.left + iconMargin
+                    val iconRight = itemView.left + iconMargin + rightcontrol.intrinsicWidth!!
+                    val iconBottom = iconTop + rightcontrol.intrinsicWidth!!
 
                     rightcontrol.drawable!!.setBounds(
-                        IconLeft,
-                        IconTop,
-                        IconRight,
-                        IconBottom
+                        iconLeft,
+                        iconTop,
+                        iconRight,
+                        iconBottom
                     )
                     rightcontrol.drawable!!.draw(c)
                 } else {// Swipe to Check
                     if (leftaction == "check") {
-                        var leftcontrol = SwipeControlCheck(context)
+                        val leftcontrol = SwipeControlCheck(context)
 
                         leftcontrol.background.color = leftcontrol.backgroundcolor
                         leftcontrol.background.setBounds(
@@ -167,13 +157,13 @@ class SwipeControllerTasks(
                         )
                         leftcontrol.background.draw(c)
 
-                        val IconTop = itemView.top + (itemHeight - leftcontrol.intrinsicHeight) / 2
-                        val IconMargin = (itemHeight - leftcontrol.intrinsicHeight) / 2
-                        val IconLeft = itemView.right - IconMargin - leftcontrol.intrinsicWidth
-                        val IconRight = itemView.right - IconMargin
-                        val IconBottom = IconTop + leftcontrol.intrinsicHeight
+                        val iconTop = itemView.top + (itemHeight - leftcontrol.intrinsicHeight) / 2
+                        val iconMargin = (itemHeight - leftcontrol.intrinsicHeight) / 2
+                        val iconLeft = itemView.right - iconMargin - leftcontrol.intrinsicWidth
+                        val iconRight = itemView.right - iconMargin
+                        val iconBottom = iconTop + leftcontrol.intrinsicHeight
 
-                        leftcontrol.drawable.setBounds(IconLeft, IconTop, IconRight, IconBottom)
+                        leftcontrol.drawable.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                         leftcontrol.drawable.draw(c)
                     }
                 }
@@ -185,14 +175,11 @@ class SwipeControllerTasks(
         c.drawRect(left, top, right, bottom, mClearPaint)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setTouchListener(
-        c: Canvas,
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        dX: Float, dY: Float,
-        actionState: Int, isCurrentlyActive: Boolean
+        recyclerView: RecyclerView
     ) {
-        recyclerView.setOnTouchListener { view, motionEvent ->
+        recyclerView.setOnTouchListener { _, motionEvent ->
             swipeBack =
                 motionEvent.action == MotionEvent.ACTION_CANCEL || motionEvent.action == MotionEvent.ACTION_UP
             false

@@ -1,19 +1,9 @@
 package com.example.newevent2.MVP
 
 import android.content.Context
-import android.database.Cursor
-import android.view.View
-import com.example.newevent2.DashboardActivity
-import com.example.newevent2.Functions.converttoDate
-import com.example.newevent2.MVP.TaskPresenter.Companion.ERRCODETASKS
 import com.example.newevent2.Model.Guest
 import com.example.newevent2.Model.TableGuests
-import com.example.newevent2.Model.Task
-import com.example.newevent2.Model.TaskJournal
 import com.example.newevent2.TableGuestsActivity
-import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 class TableGuestsActivityPresenter(
     val context: Context,
@@ -21,22 +11,22 @@ class TableGuestsActivityPresenter(
 ) :
     GuestPresenter.GuestList {
 
-    private var presenterguest: GuestPresenter = GuestPresenter(context!!, this)
+    private var presenterguest: GuestPresenter = GuestPresenter(context, this)
 
     init {
         presenterguest.getGuestList()
     }
 
     override fun onGuestList(list: ArrayList<Guest>) {
-        var tablelist: ArrayList<String> = ArrayList()
+        val tablelist: ArrayList<String> = ArrayList()
         for (guest in list) {
             if (!tablelist.contains(guest.table)) {
                 tablelist.add(guest.table)
             }
         }
 
-        var guesttables: ArrayList<TableGuests> = ArrayList()
-        var guesttableslist: ArrayList<Guest> = ArrayList()
+        val guesttables: ArrayList<TableGuests> = ArrayList()
+        val guesttableslist: ArrayList<Guest> = ArrayList()
         for (tables in tablelist) {
             guesttableslist.clear()
             var count = 0

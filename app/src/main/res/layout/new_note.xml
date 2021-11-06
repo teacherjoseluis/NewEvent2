@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,7 +23,7 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/main_toolbar"></include>
+            layout="@layout/main_toolbar" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -46,7 +45,7 @@
                     style="@style/Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Title"
+                    android:hint="@string/title"
                     android:maxLength="30" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,20 +59,21 @@
                 android:ems="10"
                 android:padding="10dp"
                 android:gravity="start|top"
-                android:hint="Note"
+                android:hint="@string/note"
                 android:inputType="textMultiLine"
                 android:shadowColor="#9E9E9E"
                 android:shadowDx="2"
                 android:shadowDy="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notetitlelayout" />
+                app:layout_constraintTop_toBottomOf="@+id/notetitlelayout"
+                android:autofillHints="" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSelectColorBg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="note color"
+                android:text="@string/note_color"
                 app:backgroundTint="@color/rosaChillon"
                 app:cornerRadius="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -90,7 +90,7 @@
             android:layout_marginBottom="16dp"
             android:shadowDy="2"
             android:shadowRadius="4"
-            android:text="save"
+            android:text="@string/save"
             app:backgroundTint="@color/rosaChillon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

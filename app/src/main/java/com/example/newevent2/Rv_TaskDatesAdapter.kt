@@ -2,35 +2,27 @@ package com.example.newevent2
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.converttoString
-import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskJournal
-import com.example.newevent2.Model.TaskModel
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.dashboardactivity.*
-import kotlinx.android.synthetic.main.dashboardactivity.view.*
 import java.text.DateFormat
 
 class Rv_TaskDatesAdapter(
-    val taskjournalList: ArrayList<TaskJournal>
+    private val taskjournalList: ArrayList<TaskJournal>
 ) : RecyclerView.Adapter<Rv_TaskDatesAdapter.ViewHolder>() {
 
     lateinit var context: Context
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        val v = LayoutInflater.from(p0?.context).inflate(R.layout.journal_parentlayout, p0, false)
+        val v = LayoutInflater.from(p0.context).inflate(R.layout.journal_parentlayout, p0, false)
         context = p0.context
         return ViewHolder(v)
     }
@@ -59,8 +51,8 @@ class Rv_TaskDatesAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val journaldate: TextView? = itemView.findViewById<TextView>(R.id.journaldate)
-        val recyclerView: RecyclerView? = itemView.findViewById<RecyclerView>(R.id.tasksrv)
+        val journaldate: TextView? = itemView.findViewById(R.id.journaldate)
+        val recyclerView: RecyclerView? = itemView.findViewById(R.id.tasksrv)
     }
 }
 

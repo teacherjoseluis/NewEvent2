@@ -8,18 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.Blog
-import com.example.newevent2.Functions.Loginfo
 import com.example.newevent2.MVP.BlogPresenter
-import com.example.newevent2.MVP.LogPresenter
-import kotlinx.android.synthetic.main.dashboardactivity.*
-import kotlinx.android.synthetic.main.dashboardactivity.view.*
+import kotlinx.android.synthetic.main.dashboardblog.*
 import kotlinx.android.synthetic.main.dashboardblog.view.*
-import kotlinx.android.synthetic.main.welcome.*
-import kotlinx.android.synthetic.main.welcome.recentactivityrv
 
-class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
+class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity {
 
-    lateinit var recyclerViewBlog: RecyclerView
+    private lateinit var recyclerViewBlog: RecyclerView
     private lateinit var presenter: BlogPresenter
     private lateinit var inf:View
 
@@ -27,13 +22,13 @@ class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        language = arguments!!.get("language").toString()
+        language = requireArguments().get("language").toString()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         // Inflate the layout for this fragment
         inf = inflater.inflate(R.layout.dashboardblog, container, false)
@@ -50,7 +45,7 @@ class DashboardBlog() : Fragment(), BlogPresenter.ViewBlogActivity {
 
     override fun onResume() {
         super.onResume()
-        presenter = BlogPresenter(context!!, this, inf, language)
+        presenter = BlogPresenter(requireContext(), this, inf, language)
     }
 
     override fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<Blog>) {

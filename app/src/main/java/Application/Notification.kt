@@ -5,7 +5,6 @@ import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
 import android.os.PersistableBundle
-import androidx.core.content.ContextCompat.getSystemService
 import com.example.newevent2.Functions.calculateTimeDifferenceMs
 import com.example.newevent2.Functions.getMockUserSetTime
 import com.example.newevent2.NotificationID
@@ -18,8 +17,8 @@ class Notification {
         val timeToWaitBeforeExecuteJob =
             calculateTimeDifferenceMs(userSetHourOfDay, userSetMinute)
 
-        var jobID = NotificationID.getID()
-        var bundle = PersistableBundle()
+        val jobID = NotificationID.getID()
+        val bundle = PersistableBundle()
         bundle.putString("title", title)
         bundle.putString("body", body)
 

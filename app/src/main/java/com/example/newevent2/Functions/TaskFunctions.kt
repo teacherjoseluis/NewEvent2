@@ -1,31 +1,19 @@
 package com.example.newevent2.Functions
 
 import Application.CalendarEvent
-import android.app.Activity
-import android.app.NotificationManager
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.Model.*
-import com.example.newevent2.NotificationID
-import com.example.newevent2.NotificationJobService
-import com.google.android.play.core.review.ReviewInfo
-import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.gson.Gson
-import java.util.*
 
+@SuppressLint("StaticFieldLeak")
 private lateinit var calendarevent : CalendarEvent
 var taskmodel = TaskModel()
-lateinit var taskdbhelper: TaskDBHelper
+@SuppressLint("StaticFieldLeak")
+private lateinit var taskdbhelper: TaskDBHelper
 private lateinit var usermodel: UserModel
 
 internal fun addTask(context: Context, taskitem: Task) {
@@ -34,7 +22,7 @@ internal fun addTask(context: Context, taskitem: Task) {
         calendarevent = CalendarEvent(context)
         //------------------------------------------------
         // Adding a new record in Firebase
-        val user = com.example.newevent2.Functions.getUserSession(context!!)
+        val user = getUserSession(context)
         taskmodel.userid = user.key
         taskmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -60,7 +48,7 @@ internal fun addTask(context: Context, taskitem: Task) {
         bundle.putString("CATEGORY", taskitem.category)
         bundle.putString("BUDGET", taskitem.budget)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("ADDTASK", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDTASK", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Task was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
@@ -78,7 +66,7 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //------------------------------------------------
-        val user = getUserSession(context!!)
+        val user = getUserSession(context)
         taskmodel.userid = user.key
         taskmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -105,7 +93,7 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         bundle.putString("CATEGORY", taskitem.category)
         bundle.putString("BUDGET", taskitem.budget)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("DELETETASK", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("DELETETASK", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Task was deleted successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
@@ -123,7 +111,7 @@ internal fun editTask(context: Context, taskitem: Task) {
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //---------------------------------------------------
-        val user = getUserSession(context!!)
+        val user = getUserSession(context)
         taskmodel.userid = user.key
         taskmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -139,7 +127,7 @@ internal fun editTask(context: Context, taskitem: Task) {
         bundle.putString("CATEGORY", taskitem.category)
         bundle.putString("BUDGET", taskitem.budget)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITTASK", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITTASK", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Task was edited successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {

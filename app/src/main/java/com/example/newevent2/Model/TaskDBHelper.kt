@@ -4,13 +4,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.newevent2.Category
 import com.example.newevent2.Category.Companion.getCategory
 import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeleteTask
-import com.example.newevent2.Functions.removeDuplicates
 import java.text.DecimalFormat
 
 class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
@@ -22,7 +20,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
     var nexthandlerdel: CoRDeleteTask? = null
 
     fun insert(task: Task) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("taskid", task.key)
         values.put("name", task.name)
         values.put("date", task.date)
@@ -35,7 +33,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         Log.d(TAG, "Task record inserted")
     }
 
-    fun getTaskexists(key: String): Boolean {
+    private fun getTaskexists(key: String): Boolean {
         var existsflag = false
         val cursor: Cursor = db.rawQuery("SELECT * FROM TASK WHERE taskid = '$key'", null)
         if (cursor != null) {
@@ -43,6 +41,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
                 existsflag = true
             }
         }
+        cursor.close()
         return existsflag
     }
 
@@ -68,6 +67,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
                 } while (cursor.moveToNext())
             }
         }
+        cursor.close()
         return list
     }
 
@@ -85,35 +85,32 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
                 } while (cursor.moveToNext())
             }
         }
+        cursor.close()
         return list
     }
 
     fun getCategoryStats(category: String): TaskStatsToken {
-        var taskstats = TaskStatsToken()
+        val taskstats = TaskStatsToken()
         var sumbudget = 0.0F
         var cursor: Cursor = db.rawQuery(
             "SELECT COUNT(*) as taskpending FROM TASK WHERE category='$category' and status='A'",
             null
         )
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                do {
-                    taskstats.taskpending = cursor.getInt(cursor.getColumnIndex("taskpending"))
-                } while (cursor.moveToNext())
-            }
+        if (cursor.count > 0) {
+            cursor.moveToFirst()
+            do {
+                taskstats.taskpending = cursor.getInt(cursor.getColumnIndex("taskpending"))
+            } while (cursor.moveToNext())
         }
         cursor = db.rawQuery(
             "SELECT COUNT(*) as taskcompleted FROM TASK WHERE category='$category' and status='C'",
             null
         )
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                do {
-                    taskstats.taskcompleted = cursor.getInt(cursor.getColumnIndex("taskcompleted"))
-                } while (cursor.moveToNext())
-            }
+        if (cursor != null && cursor.count > 0) {
+            cursor.moveToFirst()
+            do {
+                taskstats.taskcompleted = cursor.getInt(cursor.getColumnIndex("taskcompleted"))
+            } while (cursor.moveToNext())
         }
         cursor =
             db.rawQuery("SELECT budget FROM TASK WHERE category='$category' and status='A'", null)
@@ -130,11 +127,12 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
                 taskstats.sumbudget = formatter.format(sumbudget)
             }
         }
+        cursor.close()
         return taskstats
     }
 
     fun update(task: Task) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("taskid", task.key)
         values.put("name", task.name)
         values.put("date", task.date)

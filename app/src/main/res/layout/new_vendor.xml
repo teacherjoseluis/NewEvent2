@@ -1,7 +1,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout2"
     style="@style/Body1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -68,7 +67,7 @@
                         style="@style/Body1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="Name"
+                        android:hint="@string/name"
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,7 +79,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/icons8_google" />
+                    app:srcCompat="@drawable/icons8_google"
+                    android:contentDescription="@string/googleicon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -110,7 +110,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:digits="0123456789+"
-                        android:hint="Phone"
+                        android:hint="@string/phone"
                         android:inputType="phone"
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -119,13 +119,15 @@
                     android:id="@+id/phoneimage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:paddingTop="10dp"
-                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp"
                     android:src="@drawable/icons8_phone_24"
                     app:layout_constraintBottom_toBottomOf="@+id/phoneinput"
                     app:layout_constraintEnd_toEndOf="@id/phoneinput"
-                    app:layout_constraintTop_toTopOf="@id/phoneinput" />
+                    app:layout_constraintTop_toTopOf="@id/phoneinput"
+                    android:contentDescription="@string/phoneimage"
+                    tools:ignore="RtlSymmetry" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -153,7 +155,7 @@
                         style="@style/Body1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="Email"
+                        android:hint="@string/email"
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -161,13 +163,15 @@
                     android:id="@+id/mailimage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:paddingTop="10dp"
-                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp"
                     android:src="@drawable/icons8_important_mail_24"
                     app:layout_constraintBottom_toBottomOf="@+id/mailinput"
                     app:layout_constraintEnd_toEndOf="@id/mailinput"
-                    app:layout_constraintTop_toTopOf="@id/mailinput" />
+                    app:layout_constraintTop_toTopOf="@id/mailinput"
+                    android:contentDescription="@string/mailimage"
+                    tools:ignore="RtlSymmetry" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -190,7 +194,7 @@
         android:layout_marginBottom="16dp"
         android:shadowDy="2"
         android:shadowRadius="4"
-        android:text="save"
+        android:text="@string/save"
         app:backgroundTint="@color/rosaChillon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

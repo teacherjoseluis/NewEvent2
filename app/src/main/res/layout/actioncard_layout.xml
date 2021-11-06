@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
         android:layout_width="230dp"
         android:layout_height="wrap_content"
         app:cardElevation="2dp"
@@ -29,10 +28,11 @@
                     style="@style/Heading5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Card Title"
+                    android:text="@string/card_title"
                     android:textColor="@color/rosaChillon"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="DuplicateIncludedIds" />
 
                 <TextView
                     android:id="@+id/secondarytext"
@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Seconday Text"
+                    android:text="@string/seconday_text"
                     android:textColor="@color/secondaryText"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardtitle" />
@@ -51,9 +51,10 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Action 1"
+                android:text="@string/action_1"
                 android:textColor="@color/azulOscuro"
                 android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardviewtext" />
 
             <Button
@@ -62,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="Action 2"
+                android:text="@string/action_2"
                 android:textColor="@color/azulOscuro"
                 android:visibility="invisible"
                 app:layout_constraintStart_toEndOf="@+id/action1"

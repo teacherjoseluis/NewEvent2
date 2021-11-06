@@ -10,46 +10,31 @@ import androidx.annotation.RequiresApi
 import com.example.newevent2.DashboardEvent
 import com.example.newevent2.Functions.getImgfromStorage
 import com.example.newevent2.MainActivity
-import com.example.newevent2.EventSummary
-import com.example.newevent2.Functions.getImgfromPlaces
-import com.example.newevent2.Functions.getImgfromSD
 
 class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
 
     private var activefragment = ""
 
     @SuppressLint("StaticFieldLeak")
-    private lateinit var inflatedView: View
+    private var inflatedView: View = view
 
     @SuppressLint("StaticFieldLeak")
-    private lateinit var mContext: Context
+    private var mContext: Context
 
     private lateinit var cacheimage: Cache<Bitmap>
-    private lateinit var fragmentES: EventSummary
     private lateinit var fragmentMA: MainActivity
     private lateinit var fragmentDE: DashboardEvent
 
     // Place Image related variables
     var placeId = ""
-    var ApiKey = ""
-
-    constructor(context: Context, fragment: EventSummary, view: View) {
-        fragmentES = fragment
-        inflatedView = view
-        mContext = context
-        activefragment = "ES"
-    }
 
     constructor(context: Context, fragment: MainActivity) {
-        fragmentMA = fragment
         //inflatedView = view
         mContext = context
         activefragment = "MA"
     }
 
     constructor(context: Context, fragment: DashboardEvent, view: View) {
-        fragmentDE = fragment
-        inflatedView = view
         mContext = context
         activefragment = "DE"
     }
@@ -67,11 +52,6 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
 
     override fun onEventImage(image: Bitmap) {
         when (activefragment) {
-            "ES" -> fragmentES.onEventImage(
-                mContext,
-                inflatedView,
-                image
-            )
             "MA" -> fragmentMA.onEventImage(
                 mContext,
                 null,
@@ -86,38 +66,26 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     }
 
     override fun onEmptyEventImage(errorcode: String) {
-        val user = com.example.newevent2.Functions.getUserSession(mContext!!)
+        val user = com.example.newevent2.Functions.getUserSession(mContext)
         val storageRef =
             getImgfromStorage(EVENTIMAGE, user.key, user.eventid)
-        if (storageRef != null) {
-            cacheimage.save(EVENTIMAGE, storageRef)
-            when (activefragment) {
-                "ES" -> fragmentES.onEventImage(
-                    mContext,
-                    inflatedView,
-                    storageRef
-                )
-                "MA" -> fragmentMA.onEventImage(
-                    mContext,
-                    null,
-                    storageRef
-                )
-                "DE" -> fragmentDE.onEventImage(
-                    mContext,
-                    inflatedView,
-                    storageRef
-                )
-            }
+        cacheimage.save(EVENTIMAGE, storageRef)
+        when (activefragment) {
+            "MA" -> fragmentMA.onEventImage(
+                mContext,
+                null,
+                storageRef
+            )
+            "DE" -> fragmentDE.onEventImage(
+                mContext,
+                inflatedView,
+                storageRef
+            )
         }
     }
 
     override fun onPlaceImage(image: Bitmap) {
         when (activefragment) {
-            "ES" -> fragmentES.onPlaceImage(
-                mContext,
-                inflatedView,
-                image
-            )
             "DE" -> fragmentDE.onPlaceImage(
                 mContext,
                 inflatedView,
@@ -128,8 +96,7 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
 
     override fun onEmptyPlaceImage(errorcode: String) {
         when (activefragment) {
-            "ES" -> fragmentES.onEmptyPlaceImageSD(inflatedView)
-            "DE" -> fragmentES.onEmptyPlaceImageSD(inflatedView)
+            "DE" -> fragmentDE.onEmptyPlaceImageSD(inflatedView)
         }
     }
 

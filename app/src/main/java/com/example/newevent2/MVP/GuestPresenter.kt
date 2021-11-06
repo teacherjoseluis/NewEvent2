@@ -1,55 +1,44 @@
 package com.example.newevent2.MVP
 
 import Application.Cache
-import android.Manifest
-import android.content.Context;
-import android.content.pm.PackageManager
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.provider.ContactsContract
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.checkSelfPermission
 import com.example.newevent2.Model.Contact
 
 import com.example.newevent2.Model.Guest
 import com.example.newevent2.Model.GuestModel
-import com.example.newevent2.Model.TableGuests
-import com.example.newevent2.VendorsAll
 
 class GuestPresenter : Cache.GuestArrayListCacheData {
 
     private var activefragment = ""
     private var mContext: Context
 
-    private lateinit var fragmentDE: DashboardEventPresenter
-    private lateinit var fragmentGA: GuestsAllPresenter
-    private lateinit var fragmentCA: ContactsAllPresenter
-    private lateinit var fragmentTG: TableGuestsActivityPresenter
+    private var fragmentDE: DashboardEventPresenter = fragment
+    private var fragmentGA: GuestsAllPresenter = fragment
+    private var fragmentCA: ContactsAllPresenter = fragment
+    private var fragmentTG: TableGuestsActivityPresenter = fragment
 
     private lateinit var cacheguest: Cache<Guest>
-    private lateinit var cachetableguest: Cache<TableGuests>
 
     constructor(context: Context, fragment: DashboardEventPresenter) {
-        fragmentDE = fragment
         mContext = context
         activefragment = "DE"
     }
 
     constructor(context: Context, fragment: GuestsAllPresenter) {
-        fragmentGA = fragment
         mContext = context
         activefragment = "GA"
     }
 
     constructor(context: Context, fragment: ContactsAllPresenter) {
-        fragmentCA = fragment
         mContext = context
         activefragment = "CA"
     }
 
     constructor(context: Context, fragment: TableGuestsActivityPresenter) {
-        fragmentTG = fragment
         mContext = context
         activefragment = "TG"
     }
@@ -60,9 +49,10 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
         cacheguest.loadarraylist(Guest::class)
     }
 
+    @SuppressLint("Recycle")
     fun getContactsList(){
-        var contactlist = ArrayList<Contact>()
-        val contentResolver = mContext!!.contentResolver
+        val contactlist = ArrayList<Contact>()
+        val contentResolver = mContext.contentResolver
         val cursor =
             contentResolver.query(
                 ContactsContract.Contacts.CONTENT_URI,
@@ -97,22 +87,22 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
     }
 
     override fun onEmptyListG() {
-        val user = com.example.newevent2.Functions.getUserSession(mContext!!)
+        val user = com.example.newevent2.Functions.getUserSession(mContext)
         val guest = GuestModel()
         guest.getAllGuestList(
             user.key,
             user.eventid,
             object : GuestModel.FirebaseSuccessGuestList {
                 @RequiresApi(Build.VERSION_CODES.O)
-                override fun onGuestList(arrayList: ArrayList<Guest>) {
-                    if (arrayList.isNotEmpty()) {
+                override fun onGuestList(list: ArrayList<Guest>) {
+                    if (list.isNotEmpty()) {
                         // This may be heavy, getting all of the tasks from Firebase but storing them into the cache
-                        cacheguest.save(arrayList)
+                        cacheguest.save(list)
 
                         when (activefragment) {
-                            "GA" -> fragmentGA.onGuestList(arrayList)
-                            "DE" -> fragmentDE.onGuestList(arrayList)
-                            "TG" -> fragmentTG.onGuestList(arrayList)
+                            "GA" -> fragmentGA.onGuestList(list)
+                            "DE" -> fragmentDE.onGuestList(list)
+                            "TG" -> fragmentTG.onGuestList(list)
                         }
                     }else {
                         // This is when there is no data coming from Firebase

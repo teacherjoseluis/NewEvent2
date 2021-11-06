@@ -17,7 +17,7 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
     var nexthandlerdel: CoRDeleteVendor? = null
 
     fun insert(vendor: Vendor) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("vendorid", vendor.key)
         values.put("name", vendor.name)
         values.put("phone", vendor.phone)
@@ -30,7 +30,7 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         Log.d(TAG, "Vendor record inserted")
     }
 
-    fun getVendorexists(key: String): Boolean {
+    private fun getVendorexists(key: String): Boolean {
         var existsflag = false
         val cursor: Cursor = db.rawQuery("SELECT * FROM VENDOR WHERE vendorid = '$key'", null)
         if (cursor != null) {
@@ -38,6 +38,7 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
                 existsflag = true
             }
         }
+        cursor.close()
         return existsflag
     }
 
@@ -51,20 +52,8 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
                 vendorid = cursor.getString(cursor.getColumnIndex("vendorid"))
             }
         }
+        cursor.close()
         return vendorid
-    }
-
-    fun getVendorNameById(key: String): String {
-        var vendorname = ""
-        val cursor: Cursor =
-            db.rawQuery("SELECT name FROM VENDOR WHERE vendorid = '$key'", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                vendorname = cursor.getString(cursor.getColumnIndex("name"))
-            }
-        }
-        return vendorname
     }
 
     fun getAllVendors(): ArrayList<Vendor> {
@@ -90,11 +79,12 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
                 } while (cursor.moveToNext())
             }
         }
+        cursor.close()
         return list
     }
 
     fun update(vendor: Vendor) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("vendorid", vendor.key)
         values.put("name", vendor.name)
         values.put("phone", vendor.phone)

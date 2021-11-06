@@ -2,7 +2,6 @@ package com.example.newevent2.Model
 
 import android.os.Parcel
 import android.os.Parcelable
-import android.provider.ContactsContract
 
 open class Guest(
     var key: String = "",

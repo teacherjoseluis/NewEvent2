@@ -82,12 +82,12 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
         //Declaring the colors and fonts to be used by charts
         //-------------------------------------------------------------------------
-        val rosaPalido = ContextCompat.getColor(context!!, R.color.rosapalido)
-        val azulmasClaro = ContextCompat.getColor(context!!, R.color.azulmasClaro)
-        val palodeRosa = ContextCompat.getColor(context!!, R.color.paloderosa)
-        tfLight = ResourcesCompat.getFont(context!!, R.font.raleway_thin)
-        tfRegular = ResourcesCompat.getFont(context!!, R.font.raleway_medium)
-        tfLarge = ResourcesCompat.getFont(context!!, R.font.raleway_medium)
+        val rosaPalido = ContextCompat.getColor(requireContext(), R.color.rosapalido)
+        val azulmasClaro = ContextCompat.getColor(requireContext(), R.color.azulmasClaro)
+        val palodeRosa = ContextCompat.getColor(requireContext(), R.color.paloderosa)
+        tfLight = ResourcesCompat.getFont(requireContext(), R.font.raleway_thin)
+        tfRegular = ResourcesCompat.getFont(requireContext(), R.font.raleway_medium)
+        tfLarge = ResourcesCompat.getFont(requireContext(), R.font.raleway_medium)
 
         @SuppressLint("ResourceType")
         BandG_Colors = arrayListOf(
@@ -110,7 +110,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     ): View? {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.dashboardcharts, container, false)
-        val user = com.example.newevent2.Functions.getUserSession(context!!)
+        val user = com.example.newevent2.Functions.getUserSession(requireContext())
 
         //Load with the achievements obtained by the user -------------------------------------------
         val stepsBeanList = user.onboardingprogress()
@@ -118,13 +118,13 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         stepview
             .setStepViewTexts(stepsBeanList)//总步骤
             .setTextSize(12)//set textSize
-            .setStepsViewIndicatorCompletedLineColor(ContextCompat.getColor(context!!,R.color.azulmasClaro))//设置StepsViewIndicator完成线的颜色
-            .setStepsViewIndicatorUnCompletedLineColor(ContextCompat.getColor(context!!,R.color.rosaChillon))//设置StepsViewIndicator未完成线的颜色
-            .setStepViewComplectedTextColor(ContextCompat.getColor(context!!,R.color.azulmasClaro))//设置StepsView text完成线的颜色
-            .setStepViewUnComplectedTextColor(ContextCompat.getColor(context!!,R.color.rosaChillon))//设置StepsView text未完成线的颜色
-            .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(context!!,R.drawable.icons8_checked_rosachillon))//设置StepsViewIndicator CompleteIcon
-            .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(context!!,R.drawable.circle_rosachillon))//设置StepsViewIndicator DefaultIcon
-            .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(context!!,R.drawable.alert_icon_rosachillon))//设置StepsViewIndicator AttentionIcon
+            .setStepsViewIndicatorCompletedLineColor(ContextCompat.getColor(requireContext(),R.color.azulmasClaro))//设置StepsViewIndicator完成线的颜色
+            .setStepsViewIndicatorUnCompletedLineColor(ContextCompat.getColor(requireContext(),R.color.rosaChillon))//设置StepsViewIndicator未完成线的颜色
+            .setStepViewComplectedTextColor(ContextCompat.getColor(requireContext(),R.color.azulmasClaro))//设置StepsView text完成线的颜色
+            .setStepViewUnComplectedTextColor(ContextCompat.getColor(requireContext(),R.color.rosaChillon))//设置StepsView text未完成线的颜色
+            .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(requireContext(),R.drawable.icons8_checked_rosachillon))//设置StepsViewIndicator CompleteIcon
+            .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(requireContext(),R.drawable.circle_rosachillon))//设置StepsViewIndicator DefaultIcon
+            .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(requireContext(),R.drawable.alert_icon_rosachillon))//设置StepsViewIndicator AttentionIcon
         //--------------------------------------------------------------------------------------------
 
         val weddingphotodetail = inf.findViewById<ConstraintLayout>(R.id.weddingphotodetail)
@@ -150,7 +150,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
 
         //Calling the presenter that will pull of the data I need for this view
-        presentertask = DashboardEventPresenter(context!!, this, inf)
+        presentertask = DashboardEventPresenter(requireContext(), this, inf)
         return inf
     }
 
@@ -186,7 +186,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             setValueFormatter(DefaultValueFormatter(0))
             setValueTextSize(14f)
             //Aqui hay un bug cuando aparentemente no dejo que cargue este control y me muevo a otra pantalla
-            setValueTextColor(ContextCompat.getColor(context!!,R.color.secondaryText))
+            setValueTextColor(ContextCompat.getColor(requireContext(),R.color.secondaryText))
             setValueTypeface(tfRegular)
         }
 
@@ -195,7 +195,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
             verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
             textSize = 12.0f
-            textColor = (ContextCompat.getColor(context!!,R.color.secondaryText))
+            textColor = (ContextCompat.getColor(requireContext(),R.color.secondaryText))
             typeface = tfRegular
             setDrawInside(true)
             xEntrySpace = 10f
@@ -210,7 +210,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             setExtraOffsets(5f, -5f, -20f, 15f) //apparently this is padding
             dragDecelerationFrictionCoef = 0.95f
             setCenterTextTypeface(tfRegular)
-            setCenterTextColor(ContextCompat.getColor(context!!,R.color.rosaChillon))
+            setCenterTextColor(ContextCompat.getColor(requireContext(),R.color.rosaChillon))
             setCenterTextSize(30f)
             isDrawHoleEnabled = true
             setHoleColor(Color.WHITE)
@@ -223,7 +223,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             rotationAngle = 0f
             isRotationEnabled = false
             isHighlightPerTapEnabled = true
-            setEntryLabelColor(ContextCompat.getColor(context!!,R.color.secondaryText))
+            setEntryLabelColor(ContextCompat.getColor(requireContext(),R.color.secondaryText))
             setEntryLabelTypeface(tfRegular)
             setEntryLabelTextSize(14f)
             centerText = "${taskcompleted + taskpending}"
@@ -267,7 +267,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 //----------------------------------------
                 val taskdetail = Intent(context, TaskCreateEdit::class.java)
                 taskdetail.putExtra("task", task)
-                context!!.startActivity(taskdetail)
+                requireContext().startActivity(taskdetail)
             }
         }
     }
@@ -314,7 +314,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         val datapayment = PieData(dataSetpayment).apply {
             setValueFormatter(myPercentageFormatter())
             setValueTextSize(14f)
-            setValueTextColor(ContextCompat.getColor(context!!,R.color.secondaryText))
+            setValueTextColor(ContextCompat.getColor(requireContext(),R.color.secondaryText))
             setValueTypeface(tfRegular)
         }
 
@@ -323,7 +323,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
             verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
             textSize = 12.0f
-            textColor = (ContextCompat.getColor(context!!,R.color.secondaryText))
+            textColor = (ContextCompat.getColor(requireContext(),R.color.secondaryText))
             typeface = tfRegular
             setDrawInside(false)
             xEntrySpace = 10f
@@ -341,7 +341,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             rotationAngle = 0f
             isRotationEnabled = false
             isHighlightPerTapEnabled = true
-            setEntryLabelColor(ContextCompat.getColor(context!!,R.color.secondaryText))
+            setEntryLabelColor(ContextCompat.getColor(requireContext(),R.color.secondaryText))
             setEntryLabelTypeface(tfRegular)
             setEntryLabelTextSize(14f)
             data = datapayment
@@ -358,8 +358,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             //----------------------------------------
         }
 
-        val loadingscreen = activity!!.findViewById<ConstraintLayout>(R.id.loadingscreen)
-        val drawerlayout = activity!!.findViewById<DrawerLayout>(R.id.drawerlayout)
+        val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
+        val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
         loadingscreen.visibility = ConstraintLayout.GONE
         drawerlayout.visibility = ConstraintLayout.VISIBLE
     }
@@ -369,8 +369,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         paymentlayout.visibility =
             View.INVISIBLE
 
-        val loadingscreen = activity!!.findViewById<ConstraintLayout>(R.id.loadingscreen)
-        val drawerlayout = activity!!.findViewById<DrawerLayout>(R.id.drawerlayout)
+        val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
+        val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
         loadingscreen.visibility = ConstraintLayout.GONE
         drawerlayout.visibility = ConstraintLayout.VISIBLE
     }
@@ -426,7 +426,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         // Load thumbnail
         imagePresenter = ImagePresenter(context, this, inflatedview)
         imagePresenter.getEventImage()
-        imagePresenter.ApiKey = resources.getString(R.string.google_maps_key)
+        //TODO Waiting this to fail and see how it's used
+       // imagePresenter.apiKey = resources.getString(R.string.google_maps_key)
         imagePresenter.getPlaceImage()
 
         inflatedview.weddinglocation2.setOnClickListener {
@@ -444,8 +445,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             mapIntent.resolveActivity(context.packageManager)?.let {
                 startActivity(mapIntent)
             }
-            val loadingscreen = activity!!.findViewById<ConstraintLayout>(R.id.loadingscreen)
-            val drawerlayout = activity!!.findViewById<DrawerLayout>(R.id.drawerlayout)
+            val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
+            val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
             loadingscreen.visibility = ConstraintLayout.GONE
             drawerlayout.visibility = ConstraintLayout.VISIBLE
         }
@@ -457,9 +458,9 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             getString(R.string.error_gettingdata),
             Toast.LENGTH_SHORT
         ).show()
-        Log.i(EventSummary.TAG, "No data was obtained from the Event")
-        val loadingscreen = activity!!.findViewById<ConstraintLayout>(R.id.loadingscreen)
-        val drawerlayout = activity!!.findViewById<DrawerLayout>(R.id.drawerlayout)
+        Log.i("EventSummary.TAG", "No data was obtained from the Event")
+        val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
+        val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
         loadingscreen.visibility = ConstraintLayout.GONE
         drawerlayout.visibility = ConstraintLayout.VISIBLE
     }
@@ -491,7 +492,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 }
             }).placeholder(R.drawable.avatar2)
             .into(wedavater)
-        Log.i(EventSummary.TAG, "Image for the event is loaded")
+        Log.i("EventSummary.TAG", "Image for the event is loaded")
     }
 
     override fun onPlaceImage(context: Context, inflatedView: View?, image: Bitmap) {
@@ -500,7 +501,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
     override fun onEmptyPlaceImageSD(inflatedView: View?) {
         getImgfromPlaces(
-            context!!,
+            requireContext(),
             placeid,
             resources.getString(R.string.google_maps_key),
             ImagePresenter.PLACEIMAGE,
@@ -510,8 +511,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val fm = activity!!.supportFragmentManager
-        if (resultCode == Activity.RESULT_OK && requestCode == EventSummary.SUCCESS_RETURN) {
+        val fm = requireActivity().supportFragmentManager
+        if (resultCode == Activity.RESULT_OK) {
             Toast.makeText(activity, getString(R.string.success_eventchanges), Toast.LENGTH_LONG).show()
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({

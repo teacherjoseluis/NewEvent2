@@ -30,7 +30,8 @@
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="@string/categoryavatar" />
 
     <TextView
         android:id="@+id/paymentname"
@@ -38,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:text="Payment"
+        android:text="@string/payment"
         android:textColor="@color/rosaChillon"
         app:layout_constraintStart_toEndOf="@+id/categoryavatar"
         app:layout_constraintTop_toTopOf="parent" />
@@ -48,7 +49,7 @@
         style="@style/BodyItalic2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="date"
+        android:text="@string/date"
         android:visibility="invisible"
         android:textColor="@color/azulmasClaro"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,33 +62,31 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:text="amount"
+        android:text="@string/payment_amount"
         android:textColor="@color/azulmasClaro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/paymentname" />
 
     <TextView
-        android:id="@+id/textView9"
         style="@style/BodySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
         android:paddingBottom="5dp"
-        android:text="Date"
+        android:text="@string/date"
         android:visibility="invisible"
         android:textColor="@color/azulmasClaro"
         app:layout_constraintEnd_toStartOf="@+id/paymentdate"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView15"
         style="@style/BodySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:paddingBottom="5dp"
-        android:text="Budget"
+        android:text="@string/budget"
         android:textColor="@color/azulmasClaro"
         app:layout_constraintEnd_toStartOf="@+id/paymentamounts"
         app:layout_constraintTop_toBottomOf="@+id/paymentname" />

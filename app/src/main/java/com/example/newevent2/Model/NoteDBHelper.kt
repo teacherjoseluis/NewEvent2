@@ -15,7 +15,7 @@ class NoteDBHelper(context: Context) {
     var key = ""
 
     fun insert(note: Note) {
-        var values = ContentValues()
+        val values = ContentValues()
 //        values.put("noteid", note.noteid)
         //removing accents
         note.title = Normalizer.normalize(note.title, Normalizer.Form.NFD).replace("\\p{InCombiningDiacriticalMarks}+", "")
@@ -27,17 +27,6 @@ class NoteDBHelper(context: Context) {
         values.put("lastupdateddatetime", note.lastupdateddatetime)
         db.insert("NOTE", null, values)
         Log.d(TAG, "Note record inserted")
-    }
-
-    fun getNoteexists(key: String): Boolean {
-        var existsflag = false
-        val cursor: Cursor = db.rawQuery("SELECT * FROM NOTE WHERE noteid = '$key'", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                existsflag = true
-            }
-        }
-        return existsflag
     }
 
     fun getAllNotes(): ArrayList<Note> {
@@ -60,11 +49,12 @@ class NoteDBHelper(context: Context) {
                 } while (cursor.moveToNext())
             }
         }
+        cursor.close()
         return list
     }
 
     fun update(note: Note) {
-        var values = ContentValues()
+        val values = ContentValues()
         note.title = Normalizer.normalize(note.title, Normalizer.Form.NFD).replace("\\p{InCombiningDiacriticalMarks}+", "")
         values.put("title", note.title)
         //removing accents

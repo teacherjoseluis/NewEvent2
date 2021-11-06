@@ -37,7 +37,7 @@ class EventCategories : Fragment() {
         val inf = inflater.inflate(R.layout.mainevent_summary, container, false)
 
         // Getting the list of categories that I'm actually going to show from the local DB
-        val taskdb = TaskDBHelper(context!!)
+        val taskdb = TaskDBHelper(requireContext())
         val list = taskdb.getActiveCategories()
 
         // Creates and loads the Ad

@@ -1,41 +1,30 @@
 package com.example.newevent2.Model
 
-import android.content.Context
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.newevent2.CoRAddEditEvent
-import com.example.newevent2.CoRAddEditTask
-import com.example.newevent2.CoRAddEditUser
-import com.example.newevent2.Functions.addEvent
 import com.example.newevent2.Functions.saveImgtoStorage
 import com.example.newevent2.MVP.ImagePresenter
-import com.example.newevent2.MainActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 
 class EventModel : CoRAddEditEvent {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
-    private val storage = Firebase.storage
-    private val storageRef = storage.reference
     var nexthandlere: CoRAddEditEvent? = null
-    var nexthandleru: CoRAddEditUser? = null
 
     var userid = ""
     lateinit var event: Event
-    lateinit var eventContext: Context
 
-    fun addEvent(
+    private fun addEvent(
         userid: String,
         event: Event,
         uri: Uri?,
-        savesuccessflag: EventModel.FirebaseSaveSuccess
+        savesuccessflag: FirebaseSaveSuccess
     ) {
         val postRef = myRef.child("User").child(userid).child("Event").push()
         val eventmap = hashMapOf(
@@ -72,7 +61,6 @@ class EventModel : CoRAddEditEvent {
     fun editEvent(
         userid: String,
         event: Event,
-        uri: Uri?,
         savesuccessflag: FirebaseSaveSuccess
     ) {
 
@@ -103,7 +91,7 @@ class EventModel : CoRAddEditEvent {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
                 val eventitem = p0.getValue(Event::class.java)!!
-                eventitem!!.key = p0.key.toString()
+                eventitem.key = p0.key.toString()
                 dataFetched.onEvent(eventitem)
             }
 
@@ -118,10 +106,6 @@ class EventModel : CoRAddEditEvent {
         fun onSaveSuccess(eventid: String)
     }
 
-    interface FirebaseSaveImage {
-        fun onImagetoSave(uri: Uri)
-    }
-
     interface FirebaseSuccessListenerEventDetail {
         fun onEvent(event: Event)
     }
@@ -131,7 +115,7 @@ class EventModel : CoRAddEditEvent {
             userid,
             event,
             null,
-            object : EventModel.FirebaseSaveSuccess {
+            object : FirebaseSaveSuccess {
                 override fun onSaveSuccess(eventid: String) {
                     if (eventid != "") {
                         nexthandlere?.onAddEditEvent(event)

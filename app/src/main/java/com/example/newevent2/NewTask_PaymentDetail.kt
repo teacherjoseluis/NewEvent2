@@ -1,25 +1,11 @@
 package com.example.newevent2
 
-import android.app.DatePickerDialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.newevent2.MVP.VendorPaymentPresenter
-import com.example.newevent2.MVP.VendorPresenter
-import com.example.newevent2.MVP.VendorsAllPresenter
-import com.example.newevent2.Model.*
-import com.example.newevent2.ui.dialog.DatePickerFragment
-import com.google.android.material.chip.Chip
+import com.example.newevent2.Model.Payment
 import kotlinx.android.synthetic.main.payment_editdetail.*
-import kotlinx.android.synthetic.main.task_editdetail.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class NewTask_PaymentDetail : AppCompatActivity(){
@@ -39,7 +25,7 @@ class NewTask_PaymentDetail : AppCompatActivity(){
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
-        apptitle.text = "New Payment"
+        apptitle.text = getString(R.string.new_payment)
 
         //groupedit.isSingleSelection = true
 

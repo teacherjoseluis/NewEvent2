@@ -15,7 +15,7 @@ internal fun getBlog(
 ) {
     val postRef =
         myRef.child("Blog").child(language)
-    var bloglist = ArrayList<Blog>()
+    val bloglist = ArrayList<Blog>()
     val blogListenerActive = object : ValueEventListener {
         override fun onDataChange(p0: DataSnapshot) {
             for (snapshot in p0.children) {

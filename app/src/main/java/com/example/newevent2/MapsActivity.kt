@@ -1,12 +1,10 @@
 package com.example.newevent2
 
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.telephony.TelephonyManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
@@ -17,7 +15,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import java.util.*
 
 
-class MapsActivity() : AppCompatActivity() {
+class MapsActivity : AppCompatActivity() {
 
     private var eventkey: String? = null
 
@@ -28,7 +26,7 @@ class MapsActivity() : AppCompatActivity() {
         eventkey = intent.getStringExtra("eventkey").toString()
 
         if (!Places.isInitialized()) {
-            Places.initialize(applicationContext, getString(R.string.google_api_key), Locale.US)
+            Places.initialize(applicationContext, getString(R.string.google_maps_key), Locale.US)
         }
 
         // Initialize the AutocompleteSupportFragment.

@@ -2,15 +2,8 @@ package com.example.newevent2.MVP
 
 import android.content.Context
 import android.view.View
-import com.example.newevent2.Functions.converttoDate
 import com.example.newevent2.GuestsAll
 import com.example.newevent2.Model.Guest
-import com.example.newevent2.Model.TableGuests
-import com.example.newevent2.Model.Task
-import com.example.newevent2.Model.TaskJournal
-import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 class GuestsAllPresenter(
     val context: Context,
@@ -19,7 +12,7 @@ class GuestsAllPresenter(
 ) :
     GuestPresenter.GuestList {
 
-    private var presenterguest: GuestPresenter = GuestPresenter(context!!, this)
+    private var presenterguest: GuestPresenter = GuestPresenter(context, this)
 
     init {
         presenterguest.getGuestList()

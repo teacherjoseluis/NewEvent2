@@ -3,6 +3,7 @@ package com.example.newevent2.ui;
 import androidx.annotation.CallSuper;
 import androidx.fragment.app.Fragment;
 
+@SuppressWarnings("ALL")
 public class LazyFragment extends Fragment {
 
         private boolean _wasVisible = false;
@@ -12,7 +13,7 @@ public class LazyFragment extends Fragment {
             _wasVisible = true;
         }
 
-        protected void onVisibilityChange(boolean isVisible) {
+        protected void onVisibilityChange() {
             throw new UnsupportedOperationException("method not overridden");
         }
 
@@ -28,7 +29,7 @@ public class LazyFragment extends Fragment {
 
             // call visibility change
             try {
-                onVisibilityChange(isVisibleToUser);
+                onVisibilityChange();
             } catch (UnsupportedOperationException e){
                 // child not override 'onVisibilityChange' method
             }

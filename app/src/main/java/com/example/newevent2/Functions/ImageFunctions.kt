@@ -1,18 +1,12 @@
 package com.example.newevent2.Functions
 
-import Application.Cache
 import android.app.DownloadManager
-import android.content.ContentResolver
 import android.content.Context
-import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
@@ -21,13 +15,11 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.example.newevent2.EventSummary
 import com.example.newevent2.R
 import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
-import com.google.android.libraries.places.api.net.FetchPhotoResponse
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FetchPlaceResponse
 import com.google.firebase.ktx.Firebase
@@ -35,9 +27,6 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.summary_weddinglocation.*
 import java.io.*
-import java.net.HttpURLConnection
-import java.net.URL
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 
@@ -79,7 +68,7 @@ fun getImgfromPlaces(
     category: String,
     placesimage : ImageView
 ) {
-    var bitmapimage: Bitmap? = null
+    var bitmapimage: Bitmap?
     val fields = listOf(Place.Field.PHOTO_METADATAS)
 
     if (!Places.isInitialized()) {
@@ -95,13 +84,13 @@ fun getImgfromPlaces(
             // Get the photo metadata.
             val metada = place.photoMetadatas
             if (metada == null || metada.isEmpty()) {
-                Log.w(EventSummary.TAG, "No photo metadata.")
+                Log.w("EventSummary.TAG", "No photo metadata.")
                 return@addOnSuccessListener
             }
             val photoMetadata = metada.first()
 
             // Get the attribution text.
-            val attributions = photoMetadata?.attributions
+            photoMetadata?.attributions
 
             // Create a FetchPhotoRequest.
             val photoRequest = FetchPhotoRequest.builder(photoMetadata)
@@ -139,7 +128,7 @@ fun getImgfromPlaces(
                     //placesimage.setImageBitmap(bitmapimage)
                 }.addOnFailureListener { exception: Exception ->
                     if (exception is ApiException) {
-                        Log.e(EventSummary.TAG, "Place not found: " + exception.message)
+                        Log.e("EventSummary.TAG", "Place not found: " + exception.message)
                         bitmapimage = createemptyBitmap(250, 250)
                     }
                 }
@@ -168,7 +157,7 @@ fun saveURLImgtoSD(category: String, uri: Uri?, context: Context) {
         .setDescription("Downloading")
         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
         .setDestinationInExternalFilesDir(context, path, "$category.PNG")
-    val downloadId = downloadmanager.enqueue(request)
+    downloadmanager.enqueue(request)
     Log.d("ImageFunctions", "Download $category image from Firebase to Local Storage")
 }
 
@@ -202,47 +191,6 @@ fun delImgfromSD(category: String, context: Context) {
         ).toString()
     val imagefile = File(imagepath, "$category.PNG")
     imagefile.delete()
-}
-
-fun drawableToBitmap(drawable: Drawable): Bitmap? {
-    var bitmap: Bitmap? = null
-    if (drawable is BitmapDrawable) {
-        if (drawable.bitmap != null) {
-            return drawable.bitmap
-        }
-    }
-    bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
-        Bitmap.createBitmap(
-            1,
-            1,
-            Bitmap.Config.ARGB_8888
-        ) // Single color bitmap will be created of 1x1 pixel
-    } else {
-        Bitmap.createBitmap(
-            drawable.intrinsicWidth,
-            drawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
-        )
-    }
-    val canvas = Canvas(bitmap)
-    drawable.setBounds(0, 0, canvas.getWidth(), canvas.height)
-    drawable.draw(canvas)
-    return bitmap
-}
-
-fun getDefaultImage(context: Context): Bitmap? {
-    val defaultimage = Uri.parse(
-        ContentResolver.SCHEME_ANDROID_RESOURCE +
-                "://" + context.resources.getResourcePackageName(R.drawable.avatar2)
-                + '/' + context.resources.getResourceTypeName(R.drawable.avatar2) + '/' + context.resources.getResourceEntryName(
-            R.drawable.avatar2
-        )
-    )
-    return MediaStore.Images.Media.getBitmap(context.contentResolver, defaultimage)
-}
-
-fun uritoBitmap(context: Context, uri: Uri): Bitmap? {
-    return MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
 }
 
 fun createemptyBitmap(w: Int, h: Int): Bitmap? {

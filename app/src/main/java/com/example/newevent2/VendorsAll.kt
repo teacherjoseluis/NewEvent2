@@ -35,7 +35,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     private var userrating = 0
     private var isRotate = false
 
-    var contactlist = ArrayList<Vendor>()
+    private var contactlist = ArrayList<Vendor>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +67,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         }
 
         // Invoking the presenter that will populate the recyclerview
-        presentervendor = VendorsAllPresenter(context!!, this, inf)
+        presentervendor = VendorsAllPresenter(requireContext(), this, inf)
 
         //This is for the Add button, Vendors can be added from scratch or from the contact list
         ViewAnimation.init(inf.NewVendor)
@@ -119,10 +119,10 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         // Not really sure about keeping with this option. This is suppose
         // to refresh the list whenever the user comes back but I think it's not working properly
         if (vendorcreated_flag == 1){
-            val vendordb = VendorDBHelper(context!!)
+            val vendordb = VendorDBHelper(requireContext())
             val vendorlist = vendordb.getAllVendors()
             recyclerViewAllVendor.adapter = rvAdapter
-            contactlist = clone(vendorlist)!!
+            contactlist = clone(vendorlist)
             vendorcreated_flag = 0
         }
     }
@@ -132,7 +132,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         vendorpaymentlist: ArrayList<VendorPayment>
     ) {
         // There are vendors obtained from the presenter and these are passed to the recyclerview
-        rvAdapter = Rv_VendorAdapter(vendorpaymentlist, context!!)
+        rvAdapter = Rv_VendorAdapter(vendorpaymentlist, requireContext())
         recyclerViewAllVendor.adapter = rvAdapter
 
         swipeController = SwipeControllerTasks(

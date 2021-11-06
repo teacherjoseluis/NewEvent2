@@ -4,14 +4,11 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.newevent2.CoRAddEditPayment
-import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeletePayment
-import com.example.newevent2.CoRDeleteTask
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -80,7 +77,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Payment").orderByChild("date")
-        var paymentlist = ArrayList<Payment>()
+        val paymentlist = ArrayList<Payment>()
 
         val paymentlListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -90,7 +87,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
                 for (snapshot in p0.children) {
                     val paymentitem = snapshot.getValue(Payment::class.java)
                     paymentitem!!.key = snapshot.key.toString()
-                    paymentlist.add(paymentitem!!)
+                    paymentlist.add(paymentitem)
                 }
                 Log.d(TAG, "Number of payments retrieved ${paymentlist.count()}")
                 dataFetched.onPaymentList(paymentlist)
@@ -103,33 +100,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
         postRef.addValueEventListener(paymentlListenerActive)
     }
 
-    fun getPaymentdetail(
-        userid: String,
-        eventid: String,
-        paymentid: String,
-        dataFetched: PaymentModel.FirebaseSuccessPayment
-    ) {
-        val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Payment").child(paymentid)
-
-        val paymentListenerActive = object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onDataChange(p0: DataSnapshot) {
-                val paymentitem = p0.getValue(Payment::class.java)!!
-                paymentitem!!.key = p0.key.toString()
-                Log.d(TAG, "Detail retrieved for payment ${paymentitem.key}")
-                dataFetched.onPayment(paymentitem)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
-            }
-        }
-        postRef.addValueEventListener(paymentListenerActive)
-    }
-
-    fun addPayment(
+    private fun addPayment(
         userid: String,
         eventid: String,
         payment: Payment,
@@ -171,7 +142,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
             }
     }
 
-    fun editPayment(
+    private fun editPayment(
         userid: String,
         eventid: String,
         payment: Payment,
@@ -200,7 +171,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
             }
     }
 
-    fun deletePayment(
+    private fun deletePayment(
         userid: String,
         eventid: String,
         payment: Payment,
@@ -251,7 +222,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
             userid,
             eventid,
             payment,
-            object : PaymentModel.FirebaseDeletePaymentSuccess {
+            object : FirebaseDeletePaymentSuccess {
                 override fun onPaymentDeleted(flag: Boolean, payment: Payment) {
                     if (flag) {
                         nexthandlerdel?.onDeletePayment(payment)
@@ -260,10 +231,6 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
             })
     }
 
-
-    interface FirebaseSuccessPayment {
-        fun onPayment(payment: Payment)
-    }
 
     interface FirebaseSuccessPaymentList {
         fun onPaymentList(list: ArrayList<Payment>)
@@ -279,7 +246,6 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
 
     companion object {
         const val ACTIVEFLAG = "Y"
-        const val INACTIVEFLAG = "N"
         const val TAG = "PaymentModel"
     }
 

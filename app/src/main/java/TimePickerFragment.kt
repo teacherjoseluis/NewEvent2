@@ -1,16 +1,16 @@
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.TimePickerDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
-import android.app.Dialog
-import android.content.DialogInterface
-import java.util.Calendar
 import android.widget.TimePicker
 import android.widget.Toast
-import com.example.newevent2.R
+import androidx.fragment.app.DialogFragment
+import java.util.*
 
 
-class TimePickerFragment(val tv: TextView) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class TimePickerFragment(private val tv: TextView) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
     private lateinit var calendar:Calendar
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -20,19 +20,6 @@ class TimePickerFragment(val tv: TextView) : DialogFragment(), TimePickerDialog.
         // Get the system current hour and minute
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
-
-        /*
-            *** reference source developer.android.com ***
-
-            TimePickerDialog(Context context, TimePickerDialog.OnTimeSetListener listener,
-            int hourOfDay, int minute, boolean is24HourView)
-                Creates a new time picker dialog.
-
-            TimePickerDialog(Context context, int themeResId, TimePickerDialog.OnTimeSetListener
-            listener, int hourOfDay, int minute, boolean is24HourView)
-                Creates a new time picker dialog with the specified theme.
-
-        */
 
         // Create a TimePickerDialog with system current time
         // Return the TimePickerDialog
@@ -47,11 +34,12 @@ class TimePickerFragment(val tv: TextView) : DialogFragment(), TimePickerDialog.
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         // Do something with the returned time
         //val tv:TextView = activity?.findViewById(R.id.etPlannedTime) as TextView
         val minutestring = String.format("%02d",minute)
-        tv.text = "${getHourAMPM(hourOfDay)}:"+ minutestring +"${getAMPM(hourOfDay)}"
+        tv.text = "${getHourAMPM(hourOfDay)}:"+ minutestring + getAMPM(hourOfDay)
         //val timeValue = String.format("%02d",hour) + ":" + String.format("%02d",minute)
     }
 
@@ -59,7 +47,7 @@ class TimePickerFragment(val tv: TextView) : DialogFragment(), TimePickerDialog.
     // When user cancel the time picker dialog
     override fun onCancel(dialog: DialogInterface) {
         Toast.makeText(activity,"Picker Canceled.",Toast.LENGTH_SHORT).show()
-        super.onCancel(dialog!!)
+        super.onCancel(dialog)
     }
 
 

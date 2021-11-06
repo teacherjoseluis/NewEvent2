@@ -3,7 +3,6 @@ package com.example.newevent2.ui.Functions
 import android.app.DatePickerDialog
 import androidx.fragment.app.FragmentManager
 import com.example.newevent2.ui.dialog.DatePickerFragment
-import kotlinx.android.synthetic.main.task_editdetail.*
 
 var selectedDate = ""
 

@@ -2,7 +2,6 @@ package com.example.newevent2
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -43,7 +42,7 @@ class NoteCreateEdit : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
-        apptitle.text = "New Note"
+        apptitle.text = getString(R.string.new_note)
 
         loadingview = findViewById(R.id.loadingscreen)
         withdataview = findViewById(R.id.withdata)
@@ -121,14 +120,14 @@ class NoteCreateEdit : AppCompatActivity() {
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "SHARENOTE")
                 bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-                MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+                MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
                 //----------------------------------------
 
                 val intent = Intent(Intent.ACTION_SEND)
                 val shareBody =
                     "Title:" + notetitle.text.toString() + " Note:" + editTextTextMultiLine.text.toString()
                 intent.type = "text/plain"
-                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Note")
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Note")
                 intent.putExtra(Intent.EXTRA_TEXT, shareBody)
                 startActivity(Intent.createChooser(intent, "Share using"))
                 return@setOnMenuItemClickListener true

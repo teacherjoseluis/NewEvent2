@@ -1,19 +1,10 @@
 package com.example.newevent2
 
-import android.app.DatePickerDialog
 import android.os.Bundle
-import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.newevent2.Model.PaymentModel
-import com.example.newevent2.Model.Task
-import com.example.newevent2.Model.TaskModel
-import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.payment_editdetail.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -71,12 +62,8 @@ class Payment_EditDetail : AppCompatActivity() {
         }
 
         //---------------------------------------------------------------------------------//
-//        setSupportActionBar(findViewById(R.id.toolbar))
-//        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
         val apptitle = findViewById<TextView>(R.id.appbartitle)
-        apptitle.text = "Payment Detail"
+        apptitle.text = getString(R.string.payment_detail)
         //-------------------------------------------------------------------------------//
 
         groupeditpayment.isSingleSelection = true

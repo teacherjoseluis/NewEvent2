@@ -138,7 +138,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
             rvAdapter = Rv_ContactAdapter(list)
             recyclerViewAllContacts = recyclerViewContacts
             recyclerViewAllContacts.adapter = rvAdapter
-            contactlist = clone(list)!!
+            contactlist = clone(list)
 
             if (callerclass == "guest") {
                 rvAdapter.mOnItemClickListener = object : OnItemClickListener {
@@ -239,6 +239,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             PERMISSION_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] ==

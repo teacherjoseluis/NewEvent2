@@ -27,7 +27,7 @@ class Settings : Fragment() {
         val inf = inflater.inflate(R.layout.settings, container, false)
 
         //Get information about the logged user
-        usersession = getUserSession(context!!)
+        usersession = getUserSession(requireContext())
 
         //Load the spinner with whatever comes from the user role
         inf.textinput.setText(usersession.shortname)
@@ -101,7 +101,7 @@ class Settings : Fragment() {
             }
             if (inputvalflag) {
                 //savesettings()
-                editUser(context!!, usersession)
+                editUser(requireContext(), usersession)
             }
         }
 
@@ -117,7 +117,7 @@ class Settings : Fragment() {
             val b = Bundle()
             b.putBoolean("new_window", true)
             intents.putExtras(b)
-            context!!.startActivity(intents)
+            requireContext().startActivity(intents)
         }
 
         inf.termsandconditions.setOnClickListener {
@@ -132,7 +132,7 @@ class Settings : Fragment() {
             val b = Bundle()
             b.putBoolean("new_window", true)
             intents.putExtras(b)
-            context!!.startActivity(intents)
+            requireContext().startActivity(intents)
         }
 
         return inf

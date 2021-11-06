@@ -1,16 +1,5 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowStyle</item>
-    </style>
-
-    <style name="AppTheme.DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@android:color/black</item>
-    </style>
 
     <style name="Heading5">
         <item name="android:fontFamily">@font/raleway_medium</item>
@@ -35,79 +24,66 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="Heading9">
-        <item name="android:fontFamily">@font/raleway_medium</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
     <style name="BodySmall" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotoregular</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="BodyXSmall" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="Body1" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:fontFamily">@font/robotoregular</item>
-        <item name="android:textSize">18dp</item>
-    </style>
+    <style name="Body1" parent="TextAppearance.AppCompat.Body1" />
 
     <style name="Body2" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="BodyBold" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotomedium</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="BodyBold2" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotomedium</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="JournalDate" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/raleway_medium</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="BodyItalic" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolightitalic</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="BodyItalic2" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolightitalic</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="Caption" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotolight</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CaptionBold" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotobold</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="Legal" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotolightitalic</item>
-        <item name="android:textSize">11dp</item>
+        <item name="android:textSize">11sp</item>
     </style>
 
     <style name="Overline" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/robotomedium</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/colorAccent</item>
-        <item name="colorControlActivated">@color/rosaChillon</item>
-    </style>
 </resources>

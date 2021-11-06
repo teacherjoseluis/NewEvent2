@@ -1,6 +1,5 @@
 package com.example.newevent2
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
@@ -8,24 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarView
-import com.applandeo.materialcalendarview.EventDay
-import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
-import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import kotlinx.android.synthetic.main.calendar.*
-import kotlinx.android.synthetic.main.guests_all.view.*
-import kotlinx.android.synthetic.main.navbottom.*
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 internal class MyCalendar : AppCompatActivity() {
     private var mCalendarView: CalendarView? = null
     private var currentCalendar = Calendar.getInstance()
     private var eventkey = ""
-    private val events: MutableList<EventDay?> = ArrayList()
 
-    lateinit var recyclerViewTaskCalendar: RecyclerView
-    lateinit var recyclerViewPaymentCalendar: RecyclerView
+    private lateinit var recyclerViewTaskCalendar: RecyclerView
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +40,7 @@ internal class MyCalendar : AppCompatActivity() {
 //            }
 //        }
 
-        mCalendarView = findViewById<CalendarView>(R.id.calendarView) as CalendarView
+        mCalendarView = findViewById(R.id.calendarView)
 //        loadcalendar(currentCalendar)
 // Load all dates for Active Tasks and Payments for all of the existing Events in the active month
 
@@ -107,21 +97,17 @@ internal class MyCalendar : AppCompatActivity() {
 //            }
 //        })
 
-        mCalendarView!!.setOnPreviousPageChangeListener(object : OnCalendarPageChangeListener {
-            override fun onChange() {
-                // Execute the same process as in the creation of the activity just for the month - 1
-                currentCalendar.add(Calendar.MONTH, -1)
-//                loadcalendar(currentCalendar)
-            }
-        })
+        mCalendarView!!.setOnPreviousPageChangeListener {
+            // Execute the same process as in the creation of the activity just for the month - 1
+            currentCalendar.add(Calendar.MONTH, -1)
+            //                loadcalendar(currentCalendar)
+        }
 
-        mCalendarView!!.setOnForwardPageChangeListener(object : OnCalendarPageChangeListener {
-            override fun onChange() {
-                // Execute the same process as in the creation of the activity just for the month + 1
-                currentCalendar.add(Calendar.MONTH, +1)
-//                loadcalendar(currentCalendar)
-            }
-        })
+        mCalendarView!!.setOnForwardPageChangeListener {
+            // Execute the same process as in the creation of the activity just for the month + 1
+            currentCalendar.add(Calendar.MONTH, +1)
+            //                loadcalendar(currentCalendar)
+        }
 
 //        imageButton1.setOnClickListener {
 //            val home = Intent(this, Welcome::class.java)

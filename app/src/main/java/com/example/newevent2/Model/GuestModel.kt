@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -12,7 +13,7 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
+class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
 
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val myRef = database.reference
@@ -30,7 +31,7 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Guest").orderByChild("name")
-        var guestlist = ArrayList<Guest>()
+        val guestlist = ArrayList<Guest>()
 
         val guestlListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -40,7 +41,7 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
                 for (snapshot in p0.children) {
                     val guestitem = snapshot.getValue(Guest::class.java)
                     guestitem!!.key = snapshot.key.toString()
-                    guestlist.add(guestitem!!)
+                    guestlist.add(guestitem)
                 }
                 Log.d(TAG, "Number of guests retrieved ${guestlist.count()}")
                 dataFetched.onGuestList(guestlist)
@@ -53,33 +54,8 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
         postRef.addValueEventListener(guestlListenerActive)
     }
 
-    fun getGuestdetail(
-        userid: String,
-        eventid: String,
-        guestid: String,
-        dataFetched: FirebaseSuccessGuest
-    ) {
-        val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Guest").child(guestid)
-
-        val guestListenerActive = object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onDataChange(p0: DataSnapshot) {
-                val guestitem = p0.getValue(Guest::class.java)!!
-                guestitem!!.key = p0.key.toString()
-                Log.d(TAG, "Detail retrieved for guest ${guestitem.key}")
-                dataFetched.onGuest(guestitem)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
-            }
-        }
-        postRef.addValueEventListener(guestListenerActive)
-    }
-
-    fun addGuest(
+    @SuppressLint("SimpleDateFormat")
+    private fun addGuest(
         userid: String,
         eventid: String,
         guest: Guest,
@@ -122,7 +98,7 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
             }
     }
 
-    fun editGuest(
+    private fun editGuest(
         userid: String,
         eventid: String,
         guest: Guest,
@@ -152,7 +128,7 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
             }
     }
 
-    fun deleteGuest(
+    private fun deleteGuest(
         userid: String,
         eventid: String,
         guest: Guest,
@@ -210,10 +186,6 @@ class GuestModel() : CoRAddEditGuest, CoRDeleteGuest {
                     }
                 }
             })
-    }
-
-    interface FirebaseSuccessGuest {
-        fun onGuest(guest: Guest)
     }
 
     interface FirebaseAddEditGuestSuccess {

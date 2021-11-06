@@ -1,17 +1,15 @@
 package com.example.newevent2
 
 
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.*
+import android.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.newevent2.Functions.clone
 import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.Model.Guest
@@ -21,6 +19,7 @@ import com.example.newevent2.ui.ViewAnimation
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.guests_all.*
 import kotlinx.android.synthetic.main.guests_all.view.*
+import java.util.*
 import kotlin.collections.ArrayList
 
 class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
@@ -37,7 +36,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toolbar = activity!!.findViewById(R.id.toolbar)
+        toolbar = requireActivity().findViewById(R.id.toolbar)
         setHasOptionsMenu(true)
     }
 
@@ -77,7 +76,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         inf = inflater.inflate(R.layout.guests_all, container, false)
 
@@ -106,7 +105,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //        val itemTouchHelper = ItemTouchHelper(swipeController)
 //        itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
 
-        presenterguest = GuestsAllPresenter(context!!, this, inf)
+        presenterguest = GuestsAllPresenter(requireContext(), this, inf)
 
         ViewAnimation.init(inf.NewGuest)
         ViewAnimation.init(inf.ContactGuest)
@@ -128,7 +127,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWGUEST")
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
             val newguest = Intent(context, GuestCreateEdit::class.java)
@@ -141,7 +140,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTFROMCONTACTS")
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
             val newguest = Intent(context, ContactsAll::class.java)
@@ -158,14 +157,14 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         if (guestcreated_flag == 1){
 //            presenterguest = GuestsAllPresenter(context!!, this, inf)
 
-            val guestdb = GuestDBHelper(context!!)
+            val guestdb = GuestDBHelper(requireContext())
             val guestlist = guestdb.getAllGuests()
 
-            rvAdapter = Rv_GuestAdapter(guestlist, context!!)
+            rvAdapter = Rv_GuestAdapter(guestlist, requireContext())
 
 //            recyclerViewAllGuests.adapter = null
             recyclerViewAllGuests.adapter = rvAdapter
-            contactlist = clone(guestlist)!!
+            contactlist = clone(guestlist)
 
 //            swipeController = SwipeControllerTasks(
 //                context!!,
@@ -183,10 +182,10 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
     }
 
     private fun filter(models: ArrayList<Guest>, query: String?): List<Guest> {
-        val lowerCaseQuery = query!!.toLowerCase()
+        val lowerCaseQuery = query!!.toLowerCase(Locale.ROOT)
         val filteredModelList: ArrayList<Guest> = ArrayList()
         for (model in models) {
-            val text: String = model.name.toLowerCase()
+            val text: String = model.name.toLowerCase(Locale.ROOT)
             if (text.contains(lowerCaseQuery)) {
                 filteredModelList.add(model)
             }
@@ -205,10 +204,10 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //                reverseLayout = true
 //            }
 //        }
-        rvAdapter = Rv_GuestAdapter(list, context!!)
+        rvAdapter = Rv_GuestAdapter(list, requireContext())
 
         recyclerViewAllGuests.adapter = rvAdapter
-        contactlist = clone(list)!!
+        contactlist = clone(list)
 
         swipeController = SwipeControllerTasks(
             inflatedView.context,
@@ -252,7 +251,6 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
     companion object {
         const val RIGHTACTION = "delete"
-        internal val GUESTCREATION = 1
         var guestcreated_flag = 0
     }
 }

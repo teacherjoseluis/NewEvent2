@@ -1,33 +1,27 @@
 package com.example.newevent2
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.addGuest
 import com.example.newevent2.Functions.deleteGuest
 import com.example.newevent2.Model.Guest
-import com.example.newevent2.ui.LetterAvatar
 import com.google.android.material.snackbar.Snackbar
 import com.redmadrobot.acronymavatar.AvatarView
-import java.lang.Exception
 
 class Rv_GuestAdapter(
-    val contactlist: ArrayList<Guest>, val context: Context
+    private val contactlist: ArrayList<Guest>, val context: Context
 ) :
     RecyclerView.Adapter<Rv_GuestAdapter.ViewHolder>(), ItemTouchAdapterAction {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
-        val v = LayoutInflater.from(p0?.context).inflate(R.layout.guest_item_layout, p0, false)
+        val v = LayoutInflater.from(p0.context).inflate(R.layout.guest_item_layout, p0, false)
         return ViewHolder(v)
     }
 
@@ -82,6 +76,7 @@ class Rv_GuestAdapter(
         TODO("Not yet implemented")
     }
 
+    @SuppressLint("ShowToast")
     override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
         val guestswift = contactlist[position]
         val guestbackup = Guest().apply {
@@ -104,7 +99,8 @@ class Rv_GuestAdapter(
                     contactlist.add(guestbackup)
                     notifyItemInserted(contactlist.lastIndex)
                     addGuest(context, guestbackup, CALLER)
-                }.show()
+                }
+                .show()
         }
     }
 

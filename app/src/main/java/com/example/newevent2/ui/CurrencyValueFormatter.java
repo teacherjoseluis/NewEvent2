@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
  *
  * @author Philipp Jahoda
  */
+@SuppressWarnings("Since15")
 public class CurrencyValueFormatter extends ValueFormatter
 {
 
@@ -21,25 +22,16 @@ public class CurrencyValueFormatter extends ValueFormatter
     protected int mDecimalDigits;
 
     /**
-     * Constructor that specifies to how many digits the value should be
-     * formatted.
-     *
-     * @param digits
-     */
-    public CurrencyValueFormatter(int digits) {
-        setup(digits);
-    }
-
-    /**
      * Sets up the formatter with a given number of decimal digits.
      *
      * @param digits
      */
+
     public void setup(int digits) {
 
         this.mDecimalDigits = digits;
 
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder();
         for (int i = 0; i < digits; i++) {
             if (i == 0)
                 b.append(".");
@@ -58,12 +50,4 @@ public class CurrencyValueFormatter extends ValueFormatter
         return mFormat.format(value);
     }
 
-    /**
-     * Returns the number of decimal digits this formatter uses.
-     *
-     * @return
-     */
-    public int getDecimalDigits() {
-        return mDecimalDigits;
-    }
 }

@@ -4,26 +4,17 @@ import android.content.Context
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
-import com.example.newevent2.DashboardEvent
 import com.example.newevent2.EventSummary
 import com.example.newevent2.MVP.EventPresenter.Companion.ERRCODEEVENTS
-import com.example.newevent2.MVP.GuestPresenter.Companion.ERRCODEGUESTS
 import com.example.newevent2.Model.Event
-import com.example.newevent2.Model.Guest
-import com.example.newevent2.Model.Payment
-import com.example.newevent2.Model.Task
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
 import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 @RequiresApi(Build.VERSION_CODES.O)
 class EventSummaryPresenter(val context: Context, val fragment: EventSummary, val view: View) :
      EventPresenter.EventItem {
 
 
-    private var presenterevent: EventPresenter = EventPresenter(context!!, this)
+    private var presenterevent: EventPresenter = EventPresenter(context, this)
 
     init {
         presenterevent.getEventDetail()
@@ -57,11 +48,6 @@ class EventSummaryPresenter(val context: Context, val fragment: EventSummary, va
     override fun onEventError(errcode: String) {
         fragment.onEventError(view, ERRCODEEVENTS)
         //presenterguest.getGuestList()
-    }
-
-    interface EventInterface {
-        fun onEvent(context:Context, inflatedview: View, event: Event)
-        fun onEventError(inflatedview: View, errorcode: String)
     }
 
 }

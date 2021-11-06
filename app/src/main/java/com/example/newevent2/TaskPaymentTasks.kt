@@ -27,12 +27,12 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
 
         //If there is a category sent as parameter, then the class will return a list of tasks
         // matching the category, otherwise it will send all of the Tasks available
-        category = if (this.arguments!!.get("category") != null) {
-            this.arguments!!.get("category").toString()
+        category = if (this.requireArguments().get("category") != null) {
+            this.requireArguments().get("category").toString()
         } else {
             ""
         }
-        status = this.arguments!!.get("status").toString()
+        status = this.requireArguments().get("status").toString()
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -42,7 +42,7 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
     ): View? {
         val inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
         //Calling the presenter
-        presentertask = TaskPaymentTasksPresenter(context!!, this, inf, category, status)
+        presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
         return inf
     }
 

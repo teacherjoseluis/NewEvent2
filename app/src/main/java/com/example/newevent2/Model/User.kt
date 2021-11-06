@@ -8,13 +8,8 @@ import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import com.baoyachi.stepview.bean.StepBean
-import com.example.newevent2.CoRAddEditTask
-import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.LoginView
 import com.example.newevent2.R
-import com.facebook.login.LoginManager
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.*
 
 @SuppressLint("ParcelCreator")
@@ -43,7 +38,7 @@ class User(
 ) : Parcelable {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    lateinit var viewLogin: LoginView
+    private lateinit var viewLogin: LoginView
 
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
@@ -89,7 +84,7 @@ class User(
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 //Upon login pass UserId to the Presenter
-                                dataFetched.onUserId(mAuth.currentUser!!.uid, UserEmail!!)
+                                dataFetched.onUserId(mAuth.currentUser!!.uid, UserEmail)
                             } else {
                                 Toast.makeText(
                                     activity,

@@ -3,9 +3,7 @@ package com.example.newevent2.Functions
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.EventDBHelper
-import com.example.newevent2.Model.EventModel
 import java.sql.Time
 import java.text.DateFormat
 import java.text.SimpleDateFormat

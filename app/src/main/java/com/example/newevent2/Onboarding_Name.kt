@@ -1,11 +1,7 @@
 package com.example.newevent2
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.login.*
-import kotlinx.android.synthetic.main.onboarding_name.*
 
 class Onboarding_Name : AppCompatActivity() {
 

@@ -25,12 +25,12 @@
                 android:layout_width="161dp"
                 android:layout_height="173dp"
                 android:layout_marginStart="2dp"
-                android:layout_marginLeft="2dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                tools:srcCompat="@tools:sample/avatars"
+                android:contentDescription="@string/categoryimage" />
 
             <TextView
                 android:id="@+id/categorytitle"
@@ -38,8 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:text="Category"
+                android:text="@string/category"
                 android:textColor="#000000"
                 app:layout_constraintStart_toStartOf="@+id/categoryimage"
                 app:layout_constraintTop_toBottomOf="@+id/categoryimage" />
@@ -72,26 +71,29 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:tint="@color/rosaChillon"
-                            app:srcCompat="@drawable/task_pending_outline" />
+                            app:srcCompat="@drawable/task_pending_outline"
+                            android:contentDescription="@string/taskpendingimage" />
 
                         <TextView
                             android:id="@+id/taskpendinglabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="4dp"
+                            android:paddingStart="4dp"
                             style="@style/BodyXSmall"
-                            android:text="0"
+                            android:text="@string/_0"
                             app:layout_constraintStart_toEndOf="@+id/taskpendingimage"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="RtlSymmetry" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/completed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
+                        android:paddingStart="8dp"
                         app:layout_constraintStart_toEndOf="@+id/pending"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="RtlSymmetry">
 
                         <ImageView
                             android:id="@+id/taskdoneimage"
@@ -100,26 +102,28 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:tint="@color/rosaChillon"
-                            app:srcCompat="@drawable/task_done_outline" />
+                            app:srcCompat="@drawable/task_done_outline"
+                            android:contentDescription="@string/taskdoneimage" />
 
                         <TextView
                             android:id="@+id/taskdonelabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             style="@style/BodyXSmall"
-                            android:paddingLeft="4dp"
-                            android:text="0"
+                            android:paddingStart="4dp"
+                            android:text="@string/_0"
                             app:layout_constraintStart_toEndOf="@+id/taskdoneimage"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="RtlSymmetry" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/budget"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
+                        android:paddingStart="8dp"
                         app:layout_constraintStart_toEndOf="@+id/completed"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="RtlSymmetry">
 
                         <ImageView
                             android:id="@+id/taskbudgetimage"
@@ -128,18 +132,20 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:tint="@color/rosaChillon"
-                            app:srcCompat="@drawable/icons8_invoice_paid_32" />
+                            app:srcCompat="@drawable/icons8_invoice_paid_32"
+                            android:contentDescription="@string/taskbudgetimage" />
 
                         <TextView
                             android:id="@+id/taskbudgetlabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="4dp"
+                            android:paddingStart="4dp"
                             style="@style/BodyXSmall"
-                            android:text="0"
+                            android:text="@string/_0"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/taskbudgetimage"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="RtlSymmetry" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

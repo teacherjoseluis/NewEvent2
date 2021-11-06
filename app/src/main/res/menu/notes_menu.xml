@@ -5,7 +5,7 @@
         <item
             android:id="@+id/share_note"
             android:iconTint="@color/white"
-            android:title="Share Note"
+            android:title="@string/share_note"
             app:showAsAction="never"/>
 
 </menu>

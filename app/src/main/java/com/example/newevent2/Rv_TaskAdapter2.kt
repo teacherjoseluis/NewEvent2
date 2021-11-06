@@ -12,15 +12,11 @@ import androidx.annotation.RequiresApi
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Category.Companion.getCategory
-import com.example.newevent2.Functions.addTask
-import com.example.newevent2.Functions.deleteTask
-import com.example.newevent2.Functions.editTask
-import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Task
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.task_item_layout.view.*
+import com.example.newevent2.Model.TaskDBHelper
+import com.example.newevent2.Model.TaskModel
+import com.example.newevent2.Model.UserModel
 import kotlinx.android.synthetic.main.task_item_layout2.view.*
-import org.w3c.dom.Text
 
 class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
     RecyclerView.Adapter<Rv_TaskAdapter2.ViewHolder>() {
@@ -31,7 +27,7 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
     lateinit var usermodel: UserModel
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        val v = LayoutInflater.from(p0?.context).inflate(R.layout.task_item_layout2, p0, false)
+        val v = LayoutInflater.from(p0.context).inflate(R.layout.task_item_layout2, p0, false)
         context = p0.context
         return ViewHolder(v)
     }
@@ -70,8 +66,8 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val taskname: TextView? = itemView.findViewById<TextView>(R.id.taskname)
-        val taskcategory: TextView? = itemView.findViewById<TextView>(R.id.taskcategory)
+        val taskname: TextView? = itemView.findViewById(R.id.taskname)
+        val taskcategory: TextView? = itemView.findViewById(R.id.taskcategory)
         val taskstatus: TextView? = itemView.findViewById(R.id.taskstatus)
 //        val taskbudget: TextView? = itemView.findViewById<TextView>(R.id.taskbudgets)
 //        val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
@@ -130,11 +126,6 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
 //    }
 
     companion object {
-        const val ACTIVETASK = "A"
-        const val COMPLETETASK = "C"
-        const val CHECKACTION = "check"
-        const val DELETEACTION = "delete"
-        const val UNDOACTION = "undo"
         const val TAG = "Rv_TaskAdapter"
     }
 }

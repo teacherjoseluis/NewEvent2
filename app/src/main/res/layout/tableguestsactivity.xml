@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dashboardactivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashboardActivity">
@@ -118,14 +117,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="24dp"
         app:srcCompat="@drawable/ic_icons8_plus_white"
-        app:tint="@color/white" />
+        app:tint="@color/white"
+        android:contentDescription="@string/floatingactionbuttonguest" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/NewGuestTG"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/ContactGuestTG"
@@ -146,18 +145,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:maxImageSize="24dp"
             app:rippleColor="@color/white"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            android:contentDescription="@string/floatingactionbuttonguest"
+            tools:targetApi="p" />
 
         <TextView
             style="@style/Overline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:layout_marginRight="2dp"
             android:background="@color/white"
             android:elevation="2dp"
             android:padding="5dp"
-            android:text="New Guest"
+            android:text="@string/new_guest"
             android:textColor="@color/rosaChillon"
             app:elevation="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -171,7 +171,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonGuestTG"
@@ -192,18 +191,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:maxImageSize="24dp"
             app:rippleColor="@color/white"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            android:contentDescription="@string/fabcontactguest"
+            tools:targetApi="p" />
 
         <TextView
             style="@style/Overline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:layout_marginRight="2dp"
             android:background="@color/white"
             android:elevation="2dp"
             android:padding="5dp"
-            android:text="From Contacts"
+            android:text="@string/from_contacts"
             android:textColor="@color/rosaChillon"
             app:elevation="2dp"
             app:layout_constraintBottom_toBottomOf="parent"

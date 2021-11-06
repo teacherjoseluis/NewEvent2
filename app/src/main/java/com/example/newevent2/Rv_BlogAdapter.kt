@@ -22,14 +22,14 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.storage.FirebaseStorage
 
 
-class Rv_BlogAdapter(val blogList: ArrayList<Blog>) :
+class Rv_BlogAdapter(private val blogList: ArrayList<Blog>) :
     RecyclerView.Adapter<Rv_BlogAdapter.ViewHolder>() {
 
     lateinit var context: Context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
-        val v = LayoutInflater.from(p0?.context).inflate(R.layout.blog_item_layout, p0, false)
+        val v = LayoutInflater.from(p0.context).inflate(R.layout.blog_item_layout, p0, false)
         context = p0.context
         return ViewHolder(v)
     }
@@ -38,7 +38,6 @@ class Rv_BlogAdapter(val blogList: ArrayList<Blog>) :
         return blogList.size
     }
 
-    // public abstract void onBindViewHolder (VH holder, int position)
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
@@ -64,7 +63,7 @@ class Rv_BlogAdapter(val blogList: ArrayList<Blog>) :
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "BLOGPOST")
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, blogList[p1].blogtitle)
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
             val uris = Uri.parse(blogList[p1].link)
@@ -79,11 +78,11 @@ class Rv_BlogAdapter(val blogList: ArrayList<Blog>) :
     // A ViewHolder describes an item view and metadata about its place within the RecyclerView.
     //class ViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val blogtitle: TextView? = itemView.findViewById<TextView>(R.id.blogtitle)
-        val author: TextView? = itemView.findViewById<TextView>(R.id.author)
-        val date: TextView? = itemView.findViewById<TextView>(R.id.date)
-        val time: TextView? = itemView.findViewById<TextView>(R.id.time)
-        val blogimage: ImageView? = itemView.findViewById<ImageView>(R.id.blogimage)
+        val blogtitle: TextView? = itemView.findViewById(R.id.blogtitle)
+        val author: TextView? = itemView.findViewById(R.id.author)
+        val date: TextView? = itemView.findViewById(R.id.date)
+        val time: TextView? = itemView.findViewById(R.id.time)
+        val blogimage: ImageView? = itemView.findViewById(R.id.blogimage)
     }
 
     companion object {

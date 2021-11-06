@@ -18,7 +18,7 @@ class DashboardView_clone : Fragment() {
         val viewPager = inf.findViewById<View>(R.id.dashboardpager) as ViewPager
 
         //Getting the user currently loaded
-        val userSession=com.example.newevent2.Functions.getUserSession(activity!!.applicationContext)
+        val userSession=com.example.newevent2.Functions.getUserSession(requireActivity().applicationContext)
 
         //Setting up the pager adapter for this view
         val adapter =

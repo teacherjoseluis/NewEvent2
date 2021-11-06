@@ -1,17 +1,9 @@
 package com.example.newevent2
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.NotificationManager
-import android.app.PendingIntent.getActivity
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,29 +11,21 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Category.Companion.getCategory
-import com.example.newevent2.Functions.addTask
 import com.example.newevent2.Functions.deleteTask
 import com.example.newevent2.Functions.editTask
-import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Task
+import com.example.newevent2.Model.TaskDBHelper
+import com.example.newevent2.Model.TaskModel
+import com.example.newevent2.Model.UserModel
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.gson.Gson
-import kotlinx.android.synthetic.main.mainevent_summary.view.*
-import kotlinx.android.synthetic.main.task_item_layout.view.*
-import java.util.*
-
-import android.widget.RatingBar
-import com.google.android.gms.ads.*
-
-import com.google.android.gms.ads.VideoController.VideoLifecycleCallbacks
-import com.google.android.gms.ads.nativead.MediaView
 
 
 class Rv_TaskAdapter(val taskList: MutableList<Task>) :
@@ -69,14 +53,14 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
         lateinit var genericViewHolder: RecyclerView.ViewHolder
         when (p1) {
             DEFAULT_VIEW_TYPE -> {
-                val v = LayoutInflater.from(p0?.context)
-                    .inflate(com.example.newevent2.R.layout.task_item_layout, p0, false)
+                val v = LayoutInflater.from(p0.context)
+                    .inflate(R.layout.task_item_layout, p0, false)
                 context = p0.context
                 genericViewHolder = TaskViewHolder(v)
             }
             NATIVE_AD_VIEW_TYPE -> {
-                val v = LayoutInflater.from(p0?.context)
-                    .inflate(com.example.newevent2.R.layout.native_ad_layout, p0, false)
+                val v = LayoutInflater.from(p0.context)
+                    .inflate(R.layout.native_ad_layout, p0, false)
                 context = p0.context
                 genericViewHolder = NativeAdViewHolder(v)
             }
@@ -135,7 +119,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
 //                        NativeAd.OnNativeAdLoadedListener {
                         Log.d("AD1015", it.responseInfo.toString())
                         Log.d("AD1015", it.mediaContent.toString())
-                        populateNativeAdView(it, p0.nativeAdView!!)
+                        populateNativeAdView(it, p0.nativeAdView)
 //                            p0.nativeAdView!!.visibility=View.VISIBLE
 //                            p0.nativeAdView!!.setNativeAd(it)
 //                        }
@@ -154,7 +138,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
         // Set the media view.
-        adView.mediaView = adView.findViewById<MediaView>(R.id.ad_media)
+        adView.mediaView = adView.findViewById(R.id.ad_media)
 
         // The headline and mediaContent are guaranteed to be in every NativeAd.
         //(adView.headlineView as TextView).text = nativeAd.headline
@@ -167,15 +151,15 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
     }
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val taskname: TextView? = itemView.findViewById<TextView>(R.id.taskname)
-        val taskcategory: TextView? = itemView.findViewById<TextView>(R.id.taskcategory)
-        val taskdate: TextView? = itemView.findViewById<TextView>(R.id.taskdate)
-        val taskbudget: TextView? = itemView.findViewById<TextView>(R.id.taskbudgets)
+        val taskname: TextView? = itemView.findViewById(R.id.taskname)
+        val taskcategory: TextView? = itemView.findViewById(R.id.taskcategory)
+        val taskdate: TextView? = itemView.findViewById(R.id.taskdate)
+        val taskbudget: TextView? = itemView.findViewById(R.id.taskbudgets)
         //val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
     }
 
     class NativeAdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nativeAdView: NativeAdView? = itemView.findViewById(R.id.nativeAd) as NativeAdView
+        val nativeAdView: NativeAdView = itemView.findViewById(R.id.nativeAd) as NativeAdView
     }
 
 
@@ -275,26 +259,6 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
 //        notificationManager.cancel(task.key, 0)
 //    }
     //-------------------------------------------------------------------------------
-
-    // Returns a pair ( hourOfDay, minute ) that represents a future time,
-    // 1 minute after the current time
-    private fun getMockUserSetTime(): Pair<Int, Int> {
-        val calendar = Calendar.getInstance().apply {
-            // add just 1 min from current time
-            add(Calendar.MINUTE, 1)
-        }
-        return Pair(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
-    }
-
-    // Calculate time difference relative to current time in ms
-    private fun calculateTimeDifferenceMs(hourOfDay: Int, minute: Int): Long {
-        val now = Calendar.getInstance()
-        val then = (now.clone() as Calendar).apply {
-            set(Calendar.HOUR_OF_DAY, hourOfDay)
-            set(Calendar.MINUTE, minute)
-        }
-        return then.timeInMillis - now.timeInMillis
-    }
 
     companion object {
         const val ACTIVETASK = "A"

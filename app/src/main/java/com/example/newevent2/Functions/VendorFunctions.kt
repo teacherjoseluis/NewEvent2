@@ -1,31 +1,30 @@
 package com.example.newevent2.Functions
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.telephony.PhoneNumberUtils
-import android.telephony.TelephonyManager
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.getSystemService
-import com.example.newevent2.*
-import com.example.newevent2.Functions.getUserSession
+import com.example.newevent2.CoRAddEditVendor
+import com.example.newevent2.CoRDeleteVendor
+import com.example.newevent2.ContactsAll
 import com.example.newevent2.Model.*
-import com.example.newevent2.Model.Vendor
-import kotlinx.android.synthetic.main.contacts_all.view.*
+import com.example.newevent2.VendorCreateEdit
 
 var vendormodel = VendorModel()
 lateinit var vendordbhelper: VendorDBHelper
 private lateinit var usermodel: UserModel
+@SuppressLint("StaticFieldLeak")
 private lateinit var contactsAll: ContactsAll
+@SuppressLint("StaticFieldLeak")
 private lateinit var vendorCreateEdit: VendorCreateEdit
 
 internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
     try {
         //------------------------------------------------
         // Adding a new record in Firebase
-        val user = getUserSession(context!!)
+        val user = getUserSession(context)
         vendormodel.userid = user.key
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -68,7 +67,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
         bundle.putString("CATEGORY", vendoritem.category)
         bundle.putString("LOCATION", vendoritem.location)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("ADDVENDOR", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDVENDOR", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Vendor was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
@@ -82,7 +81,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
 
 internal fun deleteVendor(context: Context, vendoritem: Vendor) {
     try {
-        val user = getUserSession(context!!)
+        val user = getUserSession(context)
         vendormodel.userid = user.key
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -109,7 +108,7 @@ internal fun deleteVendor(context: Context, vendoritem: Vendor) {
         bundle.putString("CATEGORY", vendoritem.category)
         bundle.putString("LOCATION", vendoritem.location)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("DELETEVENDOR", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("DELETEVENDOR", bundle)
         //------------------------------------------------
         Toast.makeText(context, "vendor was deleted successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
@@ -124,7 +123,7 @@ internal fun deleteVendor(context: Context, vendoritem: Vendor) {
 internal fun editVendor(context: Context, vendoritem: Vendor) {
     try {
         //---------------------------------------------------
-        val user = getUserSession(context!!)
+        val user = getUserSession(context)
         vendormodel.userid = user.key
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -144,7 +143,7 @@ internal fun editVendor(context: Context, vendoritem: Vendor) {
         bundle.putString("CATEGORY", vendoritem.category)
         bundle.putString("LOCATION", vendoritem.location)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITVENDOR", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITVENDOR", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Vendor was edited successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
@@ -157,10 +156,10 @@ internal fun editVendor(context: Context, vendoritem: Vendor) {
 }
 
 internal fun contacttoVendor(context: Context, contactid: String): Vendor {
-    var contactvendor = Vendor()
-    var cursor: Cursor?
-    var phonecursor: Cursor?
-    var emailcursor: Cursor?
+    val contactvendor = Vendor()
+    val cursor: Cursor?
+    val phonecursor: Cursor?
+    val emailcursor: Cursor?
 
     val whereclause = StringBuffer()
     whereclause.append(ContactsContract.Contacts._ID)

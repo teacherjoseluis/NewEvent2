@@ -5,7 +5,6 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.graphics.Color
 import android.net.Uri
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
@@ -21,9 +20,9 @@ import java.util.*
 class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment,
     CoRDeletePayment, CoRAddEditEvent {
 
-    lateinit var calendar_uri: String
-    lateinit var begindate: Calendar
-    lateinit var eventUri: Uri
+    private lateinit var calendaruri: String
+    private lateinit var begindate: Calendar
+    private lateinit var eventUri: Uri
 
     var event: ContentValues = ContentValues()
 
@@ -35,31 +34,28 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
     val cr: ContentResolver = context.contentResolver
 
-    fun addEvent(item: Any) {
+    private fun addEvent(item: Any) {
         when (item) {
             is Event -> {
-                var eventitem = item
-                val eventdate = converttoDate(eventitem.date)
+                val eventdate = converttoDate(item.date)
                 begindate = converttoCalendar(eventdate)
 
-                event.put(Events.TITLE, eventitem.name)
-                event.put(Events.DESCRIPTION, eventitem.address)
+                event.put(Events.TITLE, item.name)
+                event.put(Events.DESCRIPTION, item.address)
             }
             is Task -> {
-                var task = item
-                val taskdate = converttoDate(task.date)
+                val taskdate = converttoDate(item.date)
                 begindate = converttoCalendar(taskdate)
 
-                event.put(Events.TITLE, task.name)
-                event.put(Events.DESCRIPTION, "Task for the ${task.category} category")
+                event.put(Events.TITLE, item.name)
+                event.put(Events.DESCRIPTION, "Task for the ${item.category} category")
             }
             is Payment -> {
-                var payment = item
-                val paymentdate = converttoDate(payment.date)
+                val paymentdate = converttoDate(item.date)
                 begindate = converttoCalendar(paymentdate)
 
-                event.put(Events.TITLE, payment.name)
-                event.put(Events.DESCRIPTION, "Payment for the ${payment.category} category")
+                event.put(Events.TITLE, item.name)
+                event.put(Events.DESCRIPTION, "Payment for the ${item.category} category")
             }
         }
         event.put(Events.CALENDAR_ID, getCalendarId(context))
@@ -74,17 +70,16 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
         cr.insert(Events.CONTENT_URI, event)
     }
 
-    fun editEvent(item: Any) {
+    private fun editEvent(item: Any) {
         when (item) {
             is Task -> {
-                var task = item
-                if (task.eventid != "") {
-                    val taskdate = converttoDate(task.date)
+                if (item.eventid != "") {
+                    val taskdate = converttoDate(item.date)
                     begindate = converttoCalendar(taskdate)
-                    eventUri = ContentUris.withAppendedId(Events.CONTENT_URI, task.eventid.toLong())
+                    eventUri = ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
 
-                    event.put(Events.TITLE, task.name)
-                    event.put(Events.DESCRIPTION, "Task for the ${task.category} category")
+                    event.put(Events.TITLE, item.name)
+                    event.put(Events.DESCRIPTION, "Task for the ${item.category} category")
                     event.put(Events.CALENDAR_ID, getCalendarId(context))
                     event.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
                     event.put(Events.DTSTART, begindate.timeInMillis + 60 * 60 * 1000)
@@ -99,15 +94,14 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
             }
 
             is Payment -> {
-                var payment = item
-                if (payment.eventid != "") {
-                    val paymentdate = converttoDate(payment.date)
+                if (item.eventid != "") {
+                    val paymentdate = converttoDate(item.date)
                     begindate = converttoCalendar(paymentdate)
                     eventUri =
-                        ContentUris.withAppendedId(Events.CONTENT_URI, payment.eventid.toLong())
+                        ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
 
-                    event.put(Events.TITLE, payment.name)
-                    event.put(Events.DESCRIPTION, "Payment for the ${payment.category} category")
+                    event.put(Events.TITLE, item.name)
+                    event.put(Events.DESCRIPTION, "Payment for the ${item.category} category")
                     event.put(Events.CALENDAR_ID, getCalendarId(context))
                     event.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
                     event.put(Events.DTSTART, begindate.timeInMillis + 60 * 60 * 1000)
@@ -123,17 +117,15 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
         }
     }
 
-    fun deleteEvent(item: Any) {
+    private fun deleteEvent(item: Any) {
         when (item) {
             is Task -> {
-                var task = item
-                eventUri = ContentUris.withAppendedId(Events.CONTENT_URI, task.eventid.toLong())
+                eventUri = ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
             }
 
             is Payment -> {
-                var payment = item
                 eventUri =
-                    ContentUris.withAppendedId(Events.CONTENT_URI, payment.eventid.toLong())
+                    ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
             }
         }
         cr.delete(eventUri, null, null)
@@ -165,15 +157,9 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
         if (calCursor != null) {
             if (calCursor.moveToFirst()) {
-                val calName: String
                 val calID: String
-                val nameCol = calCursor.getColumnIndex(projection[1])
                 val idCol = calCursor.getColumnIndex(projection[0])
-
-                calName = calCursor.getString(nameCol)
                 calID = calCursor.getString(idCol)
-
-                //Log.d("Calendar name = $calName Calendar ID = $calID")
 
                 calCursor.close()
                 return calID.toLong()
@@ -183,20 +169,21 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
     }
 
     private fun getNewEventId(): Long {
-        var local_uri = Uri.parse(getCalendarUriBase() + "events")
+        val localuri = Uri.parse(getCalendarUriBase() + "events")
         val cursor: Cursor? = context.contentResolver.query(
-            local_uri!!,
+            localuri!!,
             arrayOf("MAX(_id) as max_id"),
             null,
             null,
             "_id"
         )
         cursor!!.moveToFirst()
-        val max_val: Long = cursor.getLong(cursor.getColumnIndex("max_id"))
-        return max_val
+        val eventidlong = cursor.getLong(cursor.getColumnIndex("max_id"))
+        cursor.close()
+        return eventidlong
     }
 
-    fun getCalendarUriBase(): String? {
+    private fun getCalendarUriBase(): String {
         var calendarUriBase: String? = null
         var calendars = Uri.parse("content://calendar/calendars")
         var managedCursor: Cursor? = null
@@ -222,7 +209,8 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                 calendarUriBase = "content://com.android.calendar/"
             }
         }
-        calendar_uri = calendarUriBase!!
+        calendaruri = calendarUriBase!!
+        managedCursor?.close()
         return calendarUriBase
     }
 

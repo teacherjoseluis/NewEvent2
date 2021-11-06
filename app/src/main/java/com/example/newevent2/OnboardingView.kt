@@ -3,60 +3,30 @@ package com.example.newevent2
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newevent2.ui.dialog.DatePickerFragment
-import kotlinx.android.synthetic.main.event_edit.*
-import kotlinx.android.synthetic.main.event_edit.button
-import kotlinx.android.synthetic.main.event_edit.etPlannedDate
-import kotlinx.android.synthetic.main.event_edit.etPlannedTime
-import kotlinx.android.synthetic.main.event_edit.etabout
-import kotlinx.android.synthetic.main.event_edit.etlocation
-import kotlinx.android.synthetic.main.event_edit.etname
 import TimePickerFragment
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
-import android.util.Log
 import android.widget.Button
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.Functions.addEvent
-import com.example.newevent2.Functions.addTask
 import com.example.newevent2.Functions.addUser
-import com.example.newevent2.Functions.editTask
-import com.example.newevent2.MVP.OnboardingPresenter
 import com.example.newevent2.Model.Event
-import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.User
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.main.onboarding.*
-import kotlinx.android.synthetic.main.onboarding.buttonname
-import kotlinx.android.synthetic.main.onboarding.nameinputedit
 import kotlinx.android.synthetic.main.onboarding_name.*
-import kotlinx.android.synthetic.main.settings.view.*
-import kotlinx.android.synthetic.main.welcome.*
-import java.sql.Time
-import java.text.SimpleDateFormat
-import java.util.*
 
-class OnboardingView() : AppCompatActivity()
-//    ,    OnboardingPresenter.ViewOnboardingActivity
+class OnboardingView : AppCompatActivity()
 {
 
     private val autocompletePlaceCode = 1
 
-    private var event_placeid: String? = null
-    private var event_latitude = 0.0
-    private var event_longitude = 0.0
-    private var event_address: String? = null
+    private var eventplaceid: String? = null
+    private var eventlatitude = 0.0
+    private var eventlongitude = 0.0
+    private var eventaddress: String? = null
 
-    private lateinit var presenter: OnboardingPresenter
     private lateinit var userSession: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,8 +35,8 @@ class OnboardingView() : AppCompatActivity()
         userSession.key = intent.getStringExtra("userid").toString()
         userSession.email = intent.getStringExtra("email").toString()
         userSession.authtype = intent.getStringExtra("authtype").toString()
-        userSession.language = this.resources.configuration.locale.language
-        userSession.language = this.resources.configuration.locale.country
+        userSession.language = this.resources.configuration.locales.get(0).language
+        userSession.language = this.resources.configuration.locales.get(0).country
 
         setContentView(R.layout.onboarding_name)
 
@@ -115,7 +85,8 @@ class OnboardingView() : AppCompatActivity()
                 }
 
                 submitevent.setOnClickListener {
-                    var inputvalflag = true
+                    var inputvalflag: Boolean
+                    inputvalflag = true
                     if (etname.text.toString().isEmpty()) {
                         etname.error = getString(R.string.error_eventnameinput)
                         inputvalflag = false
@@ -134,10 +105,10 @@ class OnboardingView() : AppCompatActivity()
                     }
                     if (inputvalflag) {
                         val event = Event().apply {
-                            placeid = event_placeid.toString()
-                            latitude = event_latitude
-                            longitude = event_longitude
-                            address = event_address.toString()
+                            placeid = eventplaceid.toString()
+                            latitude = eventlatitude
+                            longitude = eventlongitude
+                            address = eventaddress.toString()
                             name = etname.text.toString()
                             date = etPlannedDate.text.toString()
                             time = etPlannedTime.text.toString()
@@ -150,28 +121,26 @@ class OnboardingView() : AppCompatActivity()
                             else -> "Bride"
                         }
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
-                                        PackageManager.PERMISSION_DENIED
-                                        ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
-                                        PackageManager.PERMISSION_DENIED
-                                        )
-                            ) {
-                                //permission denied
-                                val permissions =
-                                    arrayOf(
-                                        Manifest.permission.READ_CALENDAR,
-                                        Manifest.permission.WRITE_CALENDAR
+                        if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
+                                    PackageManager.PERMISSION_DENIED
+                                    ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
+                                    PackageManager.PERMISSION_DENIED
                                     )
-                                //show popup to request runtime permission
-                                requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
-                            } else {
-                                addUser(this, userSession)
-                                addEvent(this, event)
-                            }
-                            val resultIntent = Intent()
-                            setResult(Activity.RESULT_OK, resultIntent)
+                        ) {
+                            //permission denied
+                            val permissions =
+                                arrayOf(
+                                    Manifest.permission.READ_CALENDAR,
+                                    Manifest.permission.WRITE_CALENDAR
+                                )
+                            //show popup to request runtime permission
+                            requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
+                        } else {
+                            addUser(this, userSession)
+                            addEvent(this, event)
                         }
+                        val resultIntent = Intent()
+                        setResult(Activity.RESULT_OK, resultIntent)
                     }
                 }
             }
@@ -183,13 +152,11 @@ class OnboardingView() : AppCompatActivity()
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == autocompletePlaceCode) {
             val placenameString = data?.getStringExtra("place_name")
-            event_placeid = data!!.getStringExtra("place_id").toString()
-            event_latitude = data.getDoubleExtra("place_latitude", 0.0)
-            event_longitude = data.getDoubleExtra("place_longitude", 0.0)
-            event_address = data.getStringExtra("place_address").toString()
+            eventplaceid = data!!.getStringExtra("place_id").toString()
+            eventlatitude = data.getDoubleExtra("place_latitude", 0.0)
+            eventlongitude = data.getDoubleExtra("place_longitude", 0.0)
+            eventaddress = data.getStringExtra("place_address").toString()
             etlocation.setText(placenameString)
-        } else {
-            //Toast.makeText(this, "Error in autocomplete location", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -209,27 +176,4 @@ class OnboardingView() : AppCompatActivity()
 
     }
 
-//    override fun onOnboardingSuccess() {
-//        Toast.makeText(
-//            this,
-//            getString(R.string.sucess_onboardingwelcome),
-//            Toast.LENGTH_SHORT
-//        ).show()
-//        finish()
-//    }
-//
-//    override fun onOnboardingError(errorcode: String) {
-//        when(errorcode) {
-//            "USERERROR" -> Toast.makeText(
-//                this,
-//                getString(R.string.error_onboardingcreateaccount),
-//                Toast.LENGTH_SHORT
-//            ).show()
-//            "EVENTERROR" -> Toast.makeText(
-//                this,
-//                getString(R.string.error_onboardingcreateevent),
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//    }
 }

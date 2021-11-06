@@ -14,14 +14,14 @@ class TaskPaymentPaymentsPresenter(
 ) :
     PaymentPresenter.PaymentList {
 
-    private var presenterpayment: PaymentPresenter = PaymentPresenter(context!!, this)
+    private var presenterpayment: PaymentPresenter = PaymentPresenter(context, this)
 
     init {
         presenterpayment.getPaymentsList()
     }
 
     override fun onPaymentList(list: ArrayList<Payment>) {
-        var filteredpaymentlistactive = ArrayList<Payment>()
+        val filteredpaymentlistactive = ArrayList<Payment>()
         for (payment in list) {
             if ((payment.category == paymentcategory) || (paymentcategory == "")) {
 //                if (task.status == status) {

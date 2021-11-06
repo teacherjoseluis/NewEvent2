@@ -3,9 +3,7 @@ package com.example.newevent2.MVP
 import android.content.Context
 import android.view.View
 import com.example.newevent2.Model.Task
-import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.TaskPaymentTasks
-import kotlin.collections.ArrayList
 
 class TaskPaymentTasksPresenter(
     val context: Context,
@@ -16,14 +14,14 @@ class TaskPaymentTasksPresenter(
 ) :
     TaskPresenter.TaskList {
 
-    private var presentertask: TaskPresenter = TaskPresenter(context!!, this)
+    private var presentertask: TaskPresenter = TaskPresenter(context, this)
 
     init {
         presentertask.getTasksList()
     }
 
     override fun onTaskList(list: ArrayList<Task>) {
-        var filteredtasklistactive = ArrayList<Task>()
+        val filteredtasklistactive = ArrayList<Task>()
         for (task in list) {
             if ((task.category == taskcategory) || (taskcategory == "")) {
                 if (task.status == status) {

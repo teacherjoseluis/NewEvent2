@@ -7,9 +7,6 @@ import com.example.newevent2.Functions.converttoDate
 import com.example.newevent2.MVP.TaskPresenter.Companion.ERRCODETASKS
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskJournal
-import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 class DashboardActivityPresenter(
     val context: Context,
@@ -18,7 +15,7 @@ class DashboardActivityPresenter(
 ) :
     TaskPresenter.TaskList {
 
-    private var presentertask: TaskPresenter = TaskPresenter(context!!, this)
+    private var presentertask: TaskPresenter = TaskPresenter(context, this)
 
     init {
         presentertask.getTasksList()
@@ -27,15 +24,15 @@ class DashboardActivityPresenter(
     override fun onTaskList(list: ArrayList<Task>) {
         //Converting a Task list into a TaskJournal list
         // Unique Dates Array
-        var taskdatelist: ArrayList<String> = ArrayList()
+        val taskdatelist: ArrayList<String> = ArrayList()
         for (task in list) {
             if (!taskdatelist.contains(task.date)) {
                 taskdatelist.add(task.date)
             }
         }
         // Araylist of Tasks when the Date is the Key
-        var taskjournal: ArrayList<TaskJournal> = ArrayList()
-        var taskjournallist: ArrayList<Task> = ArrayList()
+        val taskjournal: ArrayList<TaskJournal> = ArrayList()
+        val taskjournallist: ArrayList<Task> = ArrayList()
         for (taskdates in taskdatelist) {
             taskjournallist.clear()
             for (task in list) {
@@ -48,11 +45,10 @@ class DashboardActivityPresenter(
             taskjournal.add(TaskJournal(converttoDate(taskdates), newtasklist))
         }
         // This is supposed to sort TaskJournal based on the date
-        Collections.sort(taskjournal,
-            Comparator { o1, o2 ->
-                if (o1.date == null || o2.date == null) 0 else o1.date
-                    .compareTo(o2.date)
-            })
+        taskjournal.sortWith(Comparator { o1, o2 ->
+            if (o1.date == null || o2.date == null) 0 else o1.date
+                .compareTo(o2.date)
+        })
         fragment.onTaskJournal(view, taskjournal)
     }
 

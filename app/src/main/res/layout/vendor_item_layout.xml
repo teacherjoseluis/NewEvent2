@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
@@ -10,28 +9,27 @@
     android:paddingTop="5dp"
     android:paddingRight="16dp">
 
-<!--    <ImageView-->
-<!--        android:id="@+id/contactavatar"-->
-<!--        android:layout_width="60dp"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:layout_marginStart="5dp"-->
-<!--        android:layout_marginLeft="5dp"-->
-<!--        android:layout_marginTop="5dp"-->
-<!--        android:paddingBottom="5dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:srcCompat="@tools:sample/avatars"/>-->
+    <!--    <ImageView-->
+    <!--        android:id="@+id/contactavatar"-->
+    <!--        android:layout_width="60dp"-->
+    <!--        android:layout_height="60dp"-->
+    <!--        android:layout_marginStart="5dp"-->
+    <!--        android:layout_marginLeft="5dp"-->
+    <!--        android:layout_marginTop="5dp"-->
+    <!--        android:paddingBottom="5dp"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        tools:srcCompat="@tools:sample/avatars"/>-->
 
-    <com.redmadrobot.acronymavatar.AvatarView
+    <ImageView
         android:id="@+id/contactavatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:paddingBottom="5dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/contactname"
@@ -39,11 +37,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:paddingBottom="10dp"
-        android:text="TextView"
+        android:text="@string/location"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/contactavatar"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Payments:"
+        android:text="@string/payments"
         app:layout_constraintEnd_toStartOf="@+id/paymentscount"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,15 +59,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="0"
+        android:text="@string/_0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView27"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Amount:"
+        android:text="@string/amount"
         app:layout_constraintEnd_toStartOf="@+id/paymentsamount"
         app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
@@ -78,7 +74,7 @@
         android:id="@+id/paymentsamount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
+        android:text="@string/_0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/paymentscount" />
 

@@ -1,11 +1,9 @@
 package com.example.newevent2
 
-import Application.Cache
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,28 +12,22 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newevent2.Functions.addPayment
-import com.example.newevent2.Functions.addTask
 import com.example.newevent2.Functions.deletePayment
-import com.example.newevent2.Model.*
+import com.example.newevent2.Model.Payment
+import com.example.newevent2.Model.UserModel
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.analytics.FirebaseAnalytics
-import java.util.*
 
 class Rv_PaymentAdapter(
-    val paymentList: MutableList<Payment>
+    private val paymentList: MutableList<Payment>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchAdapterAction {
 
     lateinit var context: Context
-    var paymentmodel = PaymentModel()
-    lateinit var paymentdbhelper: PaymentDBHelper
     lateinit var usermodel: UserModel
 
     private val DEFAULT_VIEW_TYPE = 1
@@ -55,16 +47,16 @@ class Rv_PaymentAdapter(
         lateinit var genericViewHolder: RecyclerView.ViewHolder
         when (p1) {
             DEFAULT_VIEW_TYPE -> {
-                val v = LayoutInflater.from(p0?.context)
-                    .inflate(com.example.newevent2.R.layout.payment_item_layout, p0, false)
+                val v = LayoutInflater.from(p0.context)
+                    .inflate(R.layout.payment_item_layout, p0, false)
                 context = p0.context
-                genericViewHolder = Rv_PaymentAdapter.PaymentViewHolder(v)
+                genericViewHolder = PaymentViewHolder(v)
             }
             NATIVE_AD_VIEW_TYPE -> {
-                val v = LayoutInflater.from(p0?.context)
-                    .inflate(com.example.newevent2.R.layout.native_ad_layout, p0, false)
+                val v = LayoutInflater.from(p0.context)
+                    .inflate(R.layout.native_ad_layout, p0, false)
                 context = p0.context
-                genericViewHolder = Rv_PaymentAdapter.NativeAdViewHolder(v)
+                genericViewHolder = NativeAdViewHolder(v)
             }
         }
         return genericViewHolder
@@ -87,7 +79,7 @@ class Rv_PaymentAdapter(
                     Category.getCategory(paymentList[p1].category).drawable, "drawable",
                     context.packageName
                 )
-                p0.categoryavatar?.setImageResource(resourceId)
+                p0.categoryavatar.setImageResource(resourceId)
 
                 p0.itemView.setOnClickListener {
                     val paymentdetail = Intent(context, PaymentCreateEdit::class.java)
@@ -101,7 +93,7 @@ class Rv_PaymentAdapter(
 //                        NativeAd.OnNativeAdLoadedListener {
                         Log.d("AD1015", it.responseInfo.toString())
                         Log.d("AD1015", it.mediaContent.toString())
-                        populateNativeAdView(it, p0.nativeAdView!!)
+                        populateNativeAdView(it, p0.nativeAdView)
 //                            p0.nativeAdView!!.visibility=View.VISIBLE
 //                            p0.nativeAdView!!.setNativeAd(it)
 //                        }
@@ -120,7 +112,7 @@ class Rv_PaymentAdapter(
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
         // Set the media view.
-        adView.mediaView = adView.findViewById<MediaView>(R.id.ad_media)
+        adView.mediaView = adView.findViewById(R.id.ad_media)
 
         // The headline and mediaContent are guaranteed to be in every NativeAd.
         //(adView.headlineView as TextView).text = nativeAd.headline
@@ -133,14 +125,14 @@ class Rv_PaymentAdapter(
     }
 
     class PaymentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val paymentname: TextView? = itemView.findViewById<TextView>(R.id.paymentname)
-        val paymentdate: TextView? = itemView.findViewById<TextView>(R.id.paymentdate)
-        val paymentamount: TextView? = itemView.findViewById<TextView>(R.id.paymentamount)
+        val paymentname: TextView? = itemView.findViewById(R.id.paymentname)
+        val paymentdate: TextView? = itemView.findViewById(R.id.paymentdate)
+        val paymentamount: TextView? = itemView.findViewById(R.id.paymentamount)
         val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
     }
 
     class NativeAdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nativeAdView: NativeAdView? = itemView.findViewById(R.id.nativeAd) as NativeAdView
+        val nativeAdView: NativeAdView = itemView.findViewById(R.id.nativeAd) as NativeAdView
     }
 
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
@@ -174,7 +166,6 @@ class Rv_PaymentAdapter(
 
     companion object {
         const val TAG = "Rv_PaymentAdapter"
-        const val PAYMENTENTITY = "Payment"
         const val DELETEACTION = "delete"
     }
 }

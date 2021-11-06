@@ -15,7 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/wedding_rings_jewel_svgrepo_com3" />
+        app:srcCompat="@drawable/wedding_rings_jewel_svgrepo_com3"
+        android:contentDescription="@string/weddingringslogo" />
 
     <ImageView
         android:id="@+id/imageView22"
@@ -25,7 +26,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView20"
-        app:srcCompat="@drawable/lets_plan_together" />
+        app:srcCompat="@drawable/lets_plan_together"
+        android:contentDescription="@string/letsplantogether" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/mailinput"
@@ -48,7 +50,7 @@
             style="@style/BodySmall"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Email"
+            android:hint="@string/email"
             android:maxLength="50" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,13 +58,15 @@
         android:id="@+id/mailimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:paddingTop="10dp"
-        android:paddingRight="10dp"
+        android:paddingEnd="10dp"
         android:src="@drawable/icons8_important_mail_24"
         app:layout_constraintBottom_toBottomOf="@+id/mailinput"
         app:layout_constraintEnd_toEndOf="@id/mailinput"
-        app:layout_constraintTop_toTopOf="@id/mailinput" />
+        app:layout_constraintTop_toTopOf="@id/mailinput"
+        android:contentDescription="@string/mailimage"
+        tools:ignore="RtlSymmetry" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordinputlogin"
@@ -88,7 +92,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            tools:ignore="LabelFor" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -109,13 +114,13 @@
         app:passwordToggleEnabled="true">
 
         <EditText
-            android:id="@+id/editTextTextPassword2"
             style="@style/BodySmall"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            tools:ignore="LabelFor" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -124,7 +129,7 @@
         android:layout_height="wrap_content"
         android:shadowDy="2"
         android:shadowRadius="4"
-        android:text="submit"
+        android:text="@string/submit"
         app:backgroundTint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -144,12 +149,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
         android:gravity="center"
-        android:text="Forgot your email? Click in here!"
+        android:text="@string/forgot_your_email_click_in_here"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

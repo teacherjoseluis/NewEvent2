@@ -11,10 +11,9 @@
         android:id="@+id/toolbar"
         layout="@layout/main_toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></include>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/fieldlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -31,7 +30,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tasknameinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -42,7 +40,7 @@
                     android:id="@+id/taskname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Task Name"
+                    android:hint="@string/taskname"
                     android:maxLength="20"
                     android:textAppearance="@style/Body2"/>
 
@@ -57,7 +55,6 @@
             app:layout_constraintTop_toBottomOf="@id/field1">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/taskbudgetinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -68,7 +65,7 @@
                 android:id="@+id/taskbudget"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:hint="Task Budget"
+                android:hint="@string/taskbudget"
                 android:maxLength="10"
                 android:textAppearance="@style/Body2" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -94,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="false"
-                    android:hint="Task Due Date"
+                    android:hint="@string/task_due_date"
                     android:textAppearance="@style/Body2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
@@ -109,7 +106,9 @@
                 app:layout_constraintEnd_toEndOf="@+id/taskdateinput"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_icons8_calendar"
-                app:tint="#757575" />
+                app:tint="#757575"
+                android:contentDescription="@string/calendaricon"
+                tools:ignore="RtlHardcoded" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
@@ -124,11 +123,10 @@
             app:layout_constraintTop_toBottomOf="@id/field3">
 
             <TextView
-                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Category"
+                android:text="@string/category"
                 android:textAppearance="@style/Body2" />
 
             <com.google.android.material.chip.ChipGroup
@@ -229,7 +227,7 @@
         android:layout_marginBottom="16dp"
         android:shadowDy="2"
         android:shadowRadius="4"
-        android:text="save"
+        android:text="@string/save"
         app:backgroundTint="@color/rosaChillon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

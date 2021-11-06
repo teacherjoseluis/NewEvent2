@@ -1,11 +1,8 @@
 package com.example.newevent2.MVP
 
 import android.content.Context
-import android.view.View
 import com.example.newevent2.Model.Vendor
-import com.example.newevent2.NewTask_PaymentDetail
 import com.example.newevent2.PaymentCreateEdit
-import com.example.newevent2.VendorsAll
 
 class VendorPaymentPresenter(
     val context: Context,
@@ -13,7 +10,7 @@ class VendorPaymentPresenter(
 ) :
     VendorPresenter.VendorList {
 
-        private var presentervendor: VendorPresenter = VendorPresenter(context!!, this)
+        private var presentervendor: VendorPresenter = VendorPresenter(context, this)
 
         init {
             presentervendor.getVendorList()

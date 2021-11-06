@@ -1,13 +1,9 @@
 package com.example.newevent2.MVP
 
 import android.app.Activity
-import android.view.View
 import com.example.newevent2.LoginEmailView
-import com.example.newevent2.LoginView
 import com.example.newevent2.Model.User
 import com.example.newevent2.Model.UserModel
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.auth.AuthCredential
 
 class LoginEmailPresenter(
     view: LoginEmailView,

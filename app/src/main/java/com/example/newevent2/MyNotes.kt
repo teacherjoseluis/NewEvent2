@@ -1,19 +1,14 @@
 package com.example.newevent2
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.newevent2.Functions.clone
 import com.example.newevent2.MVP.NotePresenter
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Note
@@ -21,8 +16,6 @@ import com.example.newevent2.Model.NoteDBHelper
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.my_notes.*
 import kotlinx.android.synthetic.main.my_notes.view.*
-import kotlinx.android.synthetic.main.navbottom.*
-import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 
 class MyNotes : Fragment(), NotePresenter.NoteActivity {
 
@@ -43,14 +36,14 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
                 reverseLayout = false
             }
         }
-        presenternote = NotePresenter(context!!, this, inf)
+        presenternote = NotePresenter(requireContext(), this, inf)
 
         inf.floatingNewNote.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWNOTE")
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
             val newnote = Intent(context, NoteCreateEdit::class.java)
@@ -63,7 +56,7 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
     override fun onResume() {
         super.onResume()
         if (notescreated_flag== 1) {
-            val notedb = NoteDBHelper(context!!)
+            val notedb = NoteDBHelper(requireContext())
             val notelist = notedb.getAllNotes()
             if (notelist.size == 0) {
                 this.withdata.visibility = ConstraintLayout.GONE
@@ -80,7 +73,7 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
         recyclerView.adapter = rvAdapter
 
         val swipeController = SwipeControllerTasks(
-            context!!,
+            requireContext(),
             rvAdapter,
             recyclerView,
             null,

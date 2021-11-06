@@ -15,12 +15,12 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:paddingBottom="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars"/>
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="@string/contactavatar" />
 
     <TextView
         android:id="@+id/contactname"
@@ -31,7 +31,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:paddingBottom="10dp"
-        android:text="Name"
+        android:text="@string/name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/contactavatar"
         app:layout_constraintTop_toTopOf="parent" />

@@ -1,7 +1,7 @@
 package com.example.newevent2
 
+//import com.example.newevent2.MVP.TaskPresenter
 import android.content.Intent
-import android.icu.text.DateFormat.DAY
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,21 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.DashboardActivityPresenter
-//import com.example.newevent2.MVP.TaskPresenter
-import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskJournal
 import kotlinx.android.synthetic.main.dashboardactivity.*
 import kotlinx.android.synthetic.main.dashboardactivity.view.*
-import kotlinx.android.synthetic.main.welcome.*
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
 
-class DashboardActivity() : Fragment(), DashboardActivityPresenter.TaskJournalInterface {
+class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInterface {
 
-    lateinit var recyclerViewActivity: RecyclerView
+    private lateinit var recyclerViewActivity: RecyclerView
     private lateinit var presentertask: DashboardActivityPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,13 +43,13 @@ class DashboardActivity() : Fragment(), DashboardActivityPresenter.TaskJournalIn
                 isNestedScrollingEnabled = false
             }
         }
-        inf.NewTaskActionButton.setOnClickListener(){
+        inf.NewTaskActionButton.setOnClickListener {
             val newtask = Intent(activity, TaskCreateEdit::class.java)
             newtask.putExtra("userid", "")
 //            newtask.putExtra("eventid", userSession.eventid)
             startActivity(newtask)
         }
-        presentertask = DashboardActivityPresenter(context!!, this, inf)
+        presentertask = DashboardActivityPresenter(requireContext(), this, inf)
         return inf
     }
 

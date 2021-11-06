@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/errorpagecolor"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="Overdraw">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/withnodata"
@@ -20,15 +21,15 @@
             android:layout_height="wrap_content"
             android:src="@drawable/image_37"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/emptystate" />
 
         <TextView
-            android:id="@+id/emptycharts"
             style="@style/BodyBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="There are no elements to show"
+            android:text="@string/there_are_no_elements_to_show"
             android:textColor="@color/azulmasClaro"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,6 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/withnodata"
         app:maxImageSize="24dp"
-        app:srcCompat="@drawable/ic_icons8_plus" />
+        app:srcCompat="@drawable/ic_icons8_plus"
+        android:contentDescription="@string/newtaskbutton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

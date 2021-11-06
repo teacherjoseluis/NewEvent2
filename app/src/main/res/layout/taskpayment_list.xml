@@ -1,7 +1,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TaskPaymentList">
@@ -10,7 +9,7 @@
         android:id="@+id/toolbar"
         layout="@layout/main_toolbar"
         tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="34dp"></include>
+        tools:layout_editor_absoluteY="34dp" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -26,12 +25,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tasks" />
+            android:text="@string/tasks" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="payments" />
+            android:text="@string/payments" />
 
     </com.google.android.material.tabs.TabLayout>
 

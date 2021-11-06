@@ -2,10 +2,8 @@ package com.example.newevent2.ui.dialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
 import java.util.*
-import javax.xml.datatype.DatatypeConstants.MONTHS
 
 class DatePickerFragment : DialogFragment() {
 
@@ -17,7 +15,7 @@ class DatePickerFragment : DialogFragment() {
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
 
-        return DatePickerDialog(this.activity!!,listener, year, month, day)
+        return DatePickerDialog(this.requireActivity(),listener, year, month, day)
 
     }
 

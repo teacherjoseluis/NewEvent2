@@ -3,8 +3,6 @@ package com.example.newevent2.Model
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
-import java.lang.Exception
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context,
     DATABASENAME, null,

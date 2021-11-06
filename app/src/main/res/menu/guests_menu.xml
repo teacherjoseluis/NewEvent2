@@ -15,13 +15,13 @@
     <item
         android:id="@+id/add_guest"
         android:iconTint="@color/white"
-        android:title="Add as a Guest"
+        android:title="@string/add_as_a_guest"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/add_vendor"
         android:iconTint="@color/white"
-        android:title="Add as Vendor"
+        android:title="@string/add_as_vendor"
         app:showAsAction="never"/>
 
 <!--    <item-->

@@ -1,16 +1,12 @@
 package com.example.newevent2.MVP
 
 import Application.Cache
-import Application.CacheCategory
 import android.content.Context
-import android.os.Build
 import android.os.Build.VERSION_CODES
-import android.view.View
 import androidx.annotation.RequiresApi
 import com.example.newevent2.*
 import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Payment
-import com.example.newevent2.Model.Task
 import kotlin.collections.ArrayList
 
 class PaymentPresenter : Cache.PaymentArrayListCacheData {
@@ -18,19 +14,17 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
     private var activefragment = ""
     private var mContext: Context
 
-    private lateinit var fragmentDE: DashboardEventPresenter
-    private lateinit var fragmentTPP: TaskPaymentPaymentsPresenter
+    private var fragmentDE: DashboardEventPresenter = fragment
+    private var fragmentTPP: TaskPaymentPaymentsPresenter = fragment
 
     private lateinit var cachepayment: Cache<Payment>
 
     constructor(context: Context, fragment: DashboardEventPresenter) {
-        fragmentDE = fragment
         mContext = context
         activefragment = "DE"
     }
 
     constructor(context: Context, fragment: TaskPaymentPaymentsPresenter) {
-        fragmentTPP = fragment
         mContext = context
         activefragment = "TPP"
     }
@@ -142,13 +136,13 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
     }
 
     override fun onEmptyListP() {
-        val user = com.example.newevent2.Functions.getUserSession(mContext!!)
+        val user = com.example.newevent2.Functions.getUserSession(mContext)
         val payment = PaymentModel()
         payment.getPaymentsList(
             user.key,
             user.eventid,
             object : PaymentModel.FirebaseSuccessPaymentList {
-                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                @RequiresApi(VERSION_CODES.LOLLIPOP)
                 override fun onPaymentList(arrayList: ArrayList<Payment>) {
                     if (arrayList.isNotEmpty()) {
                         cachepayment.save(arrayList)

@@ -3,8 +3,9 @@ package com.example.newevent2.MVP
 import android.content.Context
 import android.view.View
 import com.example.newevent2.DashboardBlog
-import com.example.newevent2.Functions.*
-import com.example.newevent2.DashboardView
+import com.example.newevent2.Functions.Blog
+import com.example.newevent2.Functions.FirebaseGetBlogSuccess
+import com.example.newevent2.Functions.getBlog
 
 class BlogPresenter(
     var context: Context,

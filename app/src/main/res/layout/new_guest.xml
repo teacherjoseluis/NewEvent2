@@ -1,7 +1,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout2"
     style="@style/Body1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,7 +23,7 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/main_toolbar"></include>
+            layout="@layout/main_toolbar" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -70,7 +69,7 @@
                             style="@style/Body1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:hint="Name"
+                            android:hint="@string/name"
                             android:maxLength="50" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -101,7 +100,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:digits="0123456789+"
-                            android:hint="Phone"
+                            android:hint="@string/phone"
                             android:inputType="phone"
                             android:maxLength="50" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -110,13 +109,15 @@
                         android:id="@+id/phoneimage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:paddingTop="10dp"
-                        android:paddingRight="10dp"
+                        android:paddingEnd="10dp"
                         android:src="@drawable/icons8_phone_24"
                         app:layout_constraintBottom_toBottomOf="@+id/phoneinput"
                         app:layout_constraintEnd_toEndOf="@id/phoneinput"
-                        app:layout_constraintTop_toTopOf="@id/phoneinput" />
+                        app:layout_constraintTop_toTopOf="@id/phoneinput"
+                        android:contentDescription="@string/phoneimage"
+                        tools:ignore="RtlSymmetry" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,7 +145,7 @@
                             style="@style/Body1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:hint="Email"
+                            android:hint="@string/email"
                             android:maxLength="50" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -152,13 +153,15 @@
                         android:id="@+id/mailimage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:paddingTop="10dp"
-                        android:paddingRight="10dp"
+                        android:paddingEnd="10dp"
                         android:src="@drawable/icons8_important_mail_24"
                         app:layout_constraintBottom_toBottomOf="@+id/mailinput"
                         app:layout_constraintEnd_toEndOf="@id/mailinput"
-                        app:layout_constraintTop_toTopOf="@id/mailinput" />
+                        app:layout_constraintTop_toTopOf="@id/mailinput"
+                        android:contentDescription="@string/mailimage"
+                        tools:ignore="RtlSymmetry" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
@@ -179,7 +182,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="RSVP"
+                        android:text="@string/rsvp"
                         android:textAppearance="@style/Heading6" />
 
                     <com.google.android.material.chip.ChipGroup
@@ -190,19 +193,17 @@
                         app:singleSelection="true">
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/chip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
-                            android:text="Yes"
+                            android:text="@string/yes"
                             android:theme="@style/Theme.MaterialComponents.Light" />
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/chip2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
-                            android:text="No"
+                            android:text="@string/no"
                             android:theme="@style/Theme.MaterialComponents.Light" />
 
                         <com.google.android.material.chip.Chip
@@ -210,7 +211,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
-                            android:text="Pending"
+                            android:text="@string/pending"
                             android:theme="@style/Theme.MaterialComponents.Light" />
                     </com.google.android.material.chip.ChipGroup>
 
@@ -234,7 +235,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="Companions"
+                        android:text="@string/companions"
                         android:textAppearance="@style/Heading6" />
 
                     <com.google.android.material.chip.ChipGroup
@@ -245,27 +246,24 @@
                         app:singleSelection="true">
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/chip4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
-                            android:text="Adult"
+                            android:text="@string/adult"
                             android:theme="@style/Theme.MaterialComponents.Light" />
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/chip5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
-                            android:text="Child"
+                            android:text="@string/child"
                             android:theme="@style/Theme.MaterialComponents.Light" />
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/chip6"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
-                            android:text="Baby"
+                            android:text="@string/baby"
                             android:theme="@style/Theme.MaterialComponents.Light" />
 
                         <com.google.android.material.chip.Chip
@@ -273,7 +271,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
-                            android:text="None"
+                            android:text="@string/none"
                             android:theme="@style/Theme.MaterialComponents.Light" />
                     </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
@@ -289,7 +287,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tableinput"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -301,7 +298,7 @@
                             android:id="@+id/tableinputedit"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:hint="Table"
+                            android:hint="@string/table"
                             android:maxLength="10" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -316,7 +313,7 @@
         android:layout_marginBottom="16dp"
         android:shadowDy="2"
         android:shadowRadius="4"
-        android:text="save"
+        android:text="@string/save"
         app:backgroundTint="@color/rosaChillon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

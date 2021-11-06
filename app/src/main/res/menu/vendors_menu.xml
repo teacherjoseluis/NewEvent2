@@ -15,7 +15,7 @@
     <item
         android:id="@+id/add_vendor"
         android:iconTint="@color/white"
-        android:title="Add as Vendor"
+        android:title="@string/add_as_vendor"
         app:showAsAction="never"/>
 
 </menu>

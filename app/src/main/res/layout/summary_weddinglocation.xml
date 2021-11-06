@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -25,7 +24,7 @@
             android:id="@+id/locationlabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Location"
+            android:text="@string/location"
             style="@style/BodyBold"
             android:textColor="@color/rosaChillon"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Location"
+            android:text="@string/location"
             android:textColor="@color/azulmasClaro"
             app:layout_constraintStart_toEndOf="@+id/placesimage"
             app:layout_constraintTop_toBottomOf="@+id/locationlabel" />
@@ -50,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:text="Full Address"
+            android:text="@string/full_address"
             android:textColor="@color/azulmasClaro"
             app:layout_constraintStart_toEndOf="@+id/placesimage"
             app:layout_constraintTop_toBottomOf="@id/eventaddress" />
@@ -63,7 +62,8 @@
             android:src="@drawable/avatar2"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/locationlabel" />
+            app:layout_constraintTop_toBottomOf="@+id/locationlabel"
+            android:contentDescription="@string/placeimage" />
 
 <!--
         <com.google.android.gms.maps.MapView

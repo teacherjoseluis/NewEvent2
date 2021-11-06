@@ -17,7 +17,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
     var nexthandlerdel: CoRDeleteGuest? = null
 
     fun insert(guest: Guest) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("guestid", guest.key)
         values.put("name", guest.name)
         values.put("phone", guest.phone)
@@ -29,7 +29,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         Log.d(TAG, "Guest record inserted")
     }
 
-    fun getGuestexists(key: String): Boolean {
+    private fun getGuestexists(key: String): Boolean {
         var existsflag = false
         val cursor: Cursor = db.rawQuery("SELECT * FROM GUEST WHERE guestid = '$key'", null)
         if (cursor != null) {
@@ -37,6 +37,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
                 existsflag = true
             }
         }
+        cursor.close()
         return existsflag
     }
 
@@ -61,36 +62,12 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
                 } while (cursor.moveToNext())
             }
         }
-        return list
-    }
-
-    fun getGuestsbyRSVP(rsvp: String): ArrayList<Guest> {
-        val list = ArrayList<Guest>()
-        val cursor: Cursor =
-            db.rawQuery("SELECT * FROM GUEST WHERE rsvp ='$rsvp' ORDER BY name ASC", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                do {
-                    val guestid = cursor.getString(cursor.getColumnIndex("guestid"))
-                    val name = cursor.getString(cursor.getColumnIndex("name"))
-                    val phone = cursor.getString(cursor.getColumnIndex("phone"))
-                    val email = cursor.getString(cursor.getColumnIndex("email"))
-                    val rsvp = cursor.getString(cursor.getColumnIndex("rsvp"))
-                    val companion = cursor.getString(cursor.getColumnIndex("companion"))
-                    val tableguest = cursor.getString(cursor.getColumnIndex("tableguest"))
-                    val guest =
-                        Guest(name, phone, email, rsvp, companion, tableguest)
-                    list.add(guest)
-                    Log.d(TAG, "Guest $guestid record obtained from local DB")
-                } while (cursor.moveToNext())
-            }
-        }
+        cursor.close()
         return list
     }
 
     fun update(guest: Guest) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("guestid", guest.key)
         values.put("name", guest.name)
         values.put("phone", guest.phone)

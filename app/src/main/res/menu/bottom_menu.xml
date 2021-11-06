@@ -4,26 +4,26 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/icons8_home"
-        android:title="Home"/>
+        android:title="@string/home"/>
 
     <item
         android:id="@+id/events"
         android:icon="@drawable/balloons_1"
-        android:title="Events"/>
+        android:title="@string/events"/>
 
     <item
         android:id="@+id/tasks"
         android:icon="@drawable/organizer"
-        android:title="Task"/>
+        android:title="@string/task"/>
 
     <item
         android:id="@+id/guests"
         android:icon="@drawable/guests2"
-        android:title="Guests"/>
+        android:title="@string/guests"/>
 
     <item
         android:id="@+id/notes"
         android:icon="@drawable/icons8_edit"
-        android:title="Notes"/>
+        android:title="@string/notes"/>
 
 </menu>

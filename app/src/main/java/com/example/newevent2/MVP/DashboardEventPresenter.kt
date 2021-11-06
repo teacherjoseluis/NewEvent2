@@ -5,18 +5,18 @@ import android.view.View
 import com.example.newevent2.DashboardEvent
 import com.example.newevent2.MVP.PaymentPresenter.Companion.ERRCODEPAYMENTS
 import com.example.newevent2.MVP.TaskPresenter.Companion.ERRCODETASKS
-import com.example.newevent2.Model.*
-import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
+import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.Guest
+import com.example.newevent2.Model.Payment
+import com.example.newevent2.Model.Task
 
 class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent, val view: View) :
     TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList, EventPresenter.EventItem {
 
-    private var presentertask: TaskPresenter = TaskPresenter(context!!, this)
-    private var presenterpayment: PaymentPresenter = PaymentPresenter(context!!, this)
-    private var presenterguest: GuestPresenter = GuestPresenter(context!!, this)
-    private var presenterevent: EventPresenter = EventPresenter(context!!, this)
+    private var presentertask: TaskPresenter = TaskPresenter(context, this)
+    private var presenterpayment: PaymentPresenter = PaymentPresenter(context, this)
+    private var presenterguest: GuestPresenter = GuestPresenter(context, this)
+    private var presenterevent: EventPresenter = EventPresenter(context, this)
 
 
     private var paymentsumbudget = 0.0F
@@ -41,11 +41,10 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
             }
         }
 
-        Collections.sort(list,
-            Comparator { o1, o2 ->
-                if (o1.date == null || o2.date == null) 0 else o1.date
-                    .compareTo(o2.date)
-            })
+        list.sortWith(Comparator { o1, o2 ->
+            if (o1.date == null || o2.date == null) 0 else o1.date
+                .compareTo(o2.date)
+        })
         val nextactivetask = nextactive(list)
         fragment.onTasksStats(view, countactive, countcompleted, sumbudget, nextactivetask)
         paymentsumbudget = sumbudget

@@ -14,7 +14,7 @@ class MyFirebaseApp: Application() {
         super.onCreate()
         /* Enable disk persistence  */
         FirebaseApp.initializeApp(this)
-        MyFirebaseApp.mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         MobileAds.initialize(this)
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)

@@ -6,15 +6,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.newevent2.MVP.LoginEmailPresenter
-import com.example.newevent2.MVP.LoginPresenter
 import com.example.newevent2.Model.User
 import kotlinx.android.synthetic.main.login_email.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginActivity {
-
-    private lateinit var presenter: LoginEmailPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,15 +87,6 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginAc
                 user.sendpasswordreset(this, userEmail)
             }
         }
-    }
-
-    private fun isValidPassword(password: String?): Boolean {
-        val pattern: Pattern
-        val matcher: Matcher
-        val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
-        pattern = Pattern.compile(PASSWORD_PATTERN)
-        matcher = pattern.matcher(password)
-        return matcher.matches()
     }
 
     override fun onLoginEmailSuccess() {

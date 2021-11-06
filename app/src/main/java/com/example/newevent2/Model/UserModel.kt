@@ -1,23 +1,15 @@
 package com.example.newevent2.Model
 
-import android.app.Activity
-import android.net.Uri
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.newevent2.*
 import com.example.newevent2.Functions.converttoString
 import com.example.newevent2.Functions.currentDateTime
-import com.example.newevent2.R
-import com.facebook.login.LoginManager
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.*
-import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import java.lang.Exception
-import java.lang.reflect.Executable
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.text.DateFormat
 
 class UserModel(
@@ -28,19 +20,15 @@ class UserModel(
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     private val postRef = myRef.child("User").child(this.key)
-    private val storage = Firebase.storage
-    private val storageRef = storage.reference
-    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     var tasksactive = 0
     var paymentsactive = 0
     var guestsactive = 0
     var vendorsactive = 0
 
-    var nexthandlere: CoRAddEditEvent? = null
     var nexthandleru: CoRAddEditUser? = null
-    var nexthandlert: CoRAddEditTask? = null
+    private var nexthandlert: CoRAddEditTask? = null
     var nexthandlerdelt: CoRDeleteTask? = null
-    var nexthandlerp: CoRAddEditPayment? = null
+    private var nexthandlerp: CoRAddEditPayment? = null
     var nexthandlerdelp: CoRDeletePayment? = null
     var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
@@ -87,7 +75,7 @@ class UserModel(
         postRef.addValueEventListener(userListenerActive)
     }
 
-    fun editUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
+    private fun editUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
         //Commented entries correspond to values in the User entity that are not to be edited
         postRef.child("eventid").setValue(user.eventid)
         postRef.child("shortname").setValue(user.shortname)
@@ -106,72 +94,47 @@ class UserModel(
         Log.d(TAG, "Data associated to User ${user.key} has just been saved")
     }
 
-    fun editUserAddEvent(value: String) {
-        postRef.child("eventid").setValue(value)
-        Log.d(TAG, "This is the eventid $value tasks associated to the User")
-    }
-
-    fun editUserAddTask(value: Int) {
+    private fun editUserAddTask(value: Int) {
         postRef.child("tasksactive").setValue(value)
         Log.d(TAG, "There are currently $value active tasks associated to the User")
     }
 
-    fun editUserAddPayment(value: Int) {
+    private fun editUserAddPayment(value: Int) {
         postRef.child("payments").setValue(value)
         Log.d(TAG, "There are currently $value payments associated to the User")
     }
 
-    fun editUserAddGuest(value: Int) {
+    private fun editUserAddGuest(value: Int) {
         postRef.child("guests").setValue(value)
         Log.d(TAG, "There are currently $value guests associated to the User")
     }
 
-    fun editUserAddVendor(value: Int) {
+    private fun editUserAddVendor(value: Int) {
         postRef.child("vendors").setValue(value)
         Log.d(TAG, "There are currently $value vendors associated to the User")
     }
 
-    fun editUserEventflag(flag: String) {
-        postRef.child("hasevent").setValue(flag)
-        Log.d(TAG, "Flag hasevent for the User has been set to $flag")
-    }
-
-    fun editUserTaskflag(flag: String) {
+    private fun editUserTaskflag(flag: String) {
         postRef.child("hastask").setValue(flag)
         Log.d(TAG, "Flag hastask for the User has been set to $flag")
     }
 
-    fun editUserPaymentflag(flag: String) {
+    private fun editUserPaymentflag(flag: String) {
         postRef.child("haspayment").setValue(flag)
         Log.d(TAG, "Flag haspayment for the User has been set to $flag")
     }
 
-    fun editUserGuestflag(flag: String) {
+    private fun editUserGuestflag(flag: String) {
         postRef.child("hasguest").setValue(flag)
         Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
     }
 
-    fun editUserVendorflag(flag: String) {
+    private fun editUserVendorflag(flag: String) {
         postRef.child("hasvendor").setValue(flag)
         Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
     }
 
-    fun editUserImage(uri: Uri, imageurl: String) {
-        postRef.child("imageurl").setValue(imageurl)
-
-        val imageRef = storageRef.child("images/User/$key/${uri.lastPathSegment}")
-        val uploadTask = imageRef.putFile(uri)
-
-        uploadTask.addOnFailureListener {
-            Log.e(TAG, "There was an error uploading the image to Firebase Storage")
-            return@addOnFailureListener
-        }.addOnSuccessListener {
-            Log.e(TAG, "Image was successfully uploaded to Firebase Storage")
-            return@addOnSuccessListener
-        }
-    }
-
-    fun addUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
+    private fun addUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
         val userfb = hashMapOf(
             "eventid" to user.eventid,
             "shortname" to user.shortname,
@@ -217,7 +180,7 @@ class UserModel(
         if (user.eventid == "") {
             addUser(
                 user,
-                object : UserModel.FirebaseSaveSuccess {
+                object : FirebaseSaveSuccess {
                     override fun onSaveSuccess(flag: Boolean) {
                         if (flag) {
                             nexthandleru?.onAddEditUser(user)
@@ -227,7 +190,7 @@ class UserModel(
         } else if (user.eventid != "") {
             editUser(
                 user,
-                object : UserModel.FirebaseSaveSuccess {
+                object : FirebaseSaveSuccess {
                     override fun onSaveSuccess(flag: Boolean) {
                         if (flag) {
                             nexthandleru?.onAddEditUser(user)

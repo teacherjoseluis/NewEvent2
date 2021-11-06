@@ -1,15 +1,15 @@
 package com.example.newevent2.Functions
 
 import Application.CalendarEvent
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import com.example.newevent2.CoRAddEditPayment
-import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeletePayment
-import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.Model.*
 
+@SuppressLint("StaticFieldLeak")
 private lateinit var calendarevent : CalendarEvent
 var paymentmodel = PaymentModel()
 lateinit var paymentdbhelper: PaymentDBHelper
@@ -22,7 +22,7 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         calendarevent = CalendarEvent(context)
         //------------------------------------------------
         // Adding a new record in Firebase
-        val user = com.example.newevent2.Functions.getUserSession(context!!)
+        val user = getUserSession(context)
         paymentmodel.userid = user.key
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -48,7 +48,7 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         bundle.putString("CATEGORY", paymentitem.category)
         bundle.putString("AMOUNT", paymentitem.amount)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("ADDPAYMENT", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDPAYMENT", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Payment was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
@@ -66,7 +66,7 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //------------------------------------------------
-        val user = getUserSession(context!!)
+        val user = getUserSession(context)
         paymentmodel.userid = user.key
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -93,7 +93,7 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
         bundle.putString("CATEGORY", paymentitem.category)
         bundle.putString("AMOUNT", paymentitem.amount)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("DELETEPAYMENT", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("DELETEPAYMENT", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Payment was deleted successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
@@ -111,7 +111,7 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //---------------------------------------------------
-        val user = getUserSession(context!!)
+        val user = getUserSession(context)
         paymentmodel.userid = user.key
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -129,7 +129,7 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
         bundle.putString("CATEGORY", paymentitem.category)
         bundle.putString("AMOUNT", paymentitem.amount)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITPAYMENT", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITPAYMENT", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Payment was edited successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {

@@ -1,30 +1,27 @@
 package com.example.newevent2.Functions
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.telephony.PhoneNumberUtils
-import android.telephony.TelephonyManager
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.getSystemService
 import com.example.newevent2.*
-import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Model.*
-import kotlinx.android.synthetic.main.contacts_all.view.*
 
 var guestmodel = GuestModel()
 lateinit var guestdbhelper: GuestDBHelper
 private lateinit var usermodel: UserModel
+@SuppressLint("StaticFieldLeak")
 private lateinit var contactsAll: ContactsAll
+@SuppressLint("StaticFieldLeak")
 private lateinit var guestCreateEdit: GuestCreateEdit
 
 internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
     try {
         //------------------------------------------------
         // Adding a new record in Firebase
-        val user = com.example.newevent2.Functions.getUserSession(context!!)
+        val user = getUserSession(context)
         guestmodel.userid = user.key
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -69,7 +66,7 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
         bundle.putString("RSVP", guestitem.rsvp)
         bundle.putString("COMPANION", guestitem.companion)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("ADDGUEST", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDGUEST", bundle)
         //------------------------------------------------
 
         Toast.makeText(context, "Guest was created successully", Toast.LENGTH_LONG).show()
@@ -84,7 +81,7 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
 
 internal fun deleteGuest(context: Context, guestitem: Guest) {
     try {
-        val user = getUserSession(context!!)
+        val user = getUserSession(context)
         guestmodel.userid = user.key
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -111,7 +108,7 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
         bundle.putString("RSVP", guestitem.rsvp)
         bundle.putString("COMPANION", guestitem.companion)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("DELETEGUEST", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("DELETEGUEST", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Guest was deleted successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
@@ -126,7 +123,7 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
 internal fun editGuest(context: Context, guestitem: Guest) {
     try {
         //---------------------------------------------------
-        val user = getUserSession(context!!)
+        val user = getUserSession(context)
         guestmodel.userid = user.key
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -146,7 +143,7 @@ internal fun editGuest(context: Context, guestitem: Guest) {
         bundle.putString("RSVP", guestitem.rsvp)
         bundle.putString("COMPANION", guestitem.companion)
         bundle.putString("COUNTRY", user.country)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITGUEST", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITGUEST", bundle)
         //------------------------------------------------
         Toast.makeText(context, "Guest was edited successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
@@ -159,10 +156,10 @@ internal fun editGuest(context: Context, guestitem: Guest) {
 }
 
 internal fun contacttoGuest(context: Context, contactid: String): Guest {
-    var contactguest = Guest()
-    var cursor: Cursor?
-    var phonecursor: Cursor?
-    var emailcursor: Cursor?
+    val contactguest = Guest()
+    val cursor: Cursor?
+    val phonecursor: Cursor?
+    val emailcursor: Cursor?
 
     val whereclause = StringBuffer()
     whereclause.append(ContactsContract.Contacts._ID)
@@ -230,13 +227,6 @@ internal fun contacttoGuest(context: Context, contactid: String): Guest {
     phonecursor?.let { phonecursor.close() }
     emailcursor?.let { emailcursor.close() }
 
-//    val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-//    mPhoneNumber.setOnFocusChangeListener { p0, p1 ->
-//        PhoneNumberUtils.formatNumber(
-//            mPhoneNumber.text.toString(),
-//            tm.simCountryIso
-//        )
-//    }
     return contactguest
 }
 

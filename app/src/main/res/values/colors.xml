@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background">#dddddd</color>
-    <color name="colorPrimary">#E91E63</color>
     <color name="colorPrimaryDark">#C2185B</color>
     <color name="colorAccent">#9E9E9E</color>
-    <color name="colorDivider">#BDBDBD</color>
     <color name="colorPrimaryLight">#F8BBD0</color>
-    <color name="Ivory">#FFFFF0</color>
-    <color name="Cream">#FCF6F5FF</color>
     <color name="secondaryText">#757575</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -17,8 +13,6 @@
     <color name="paloderosa">#FFBADE</color>
     <color name="azulOscuro">#1B1752</color>
     <color name="azulmasClaro">#19336C</color>
-    <color name="azulAcqua">#40faa6</color>
-    <color name="azulTiffany">#81D8D0</color>
     <color name="pewter">#FCFCFC</color>
 
     <color name="sunny_pavement">#d8d8d8</color>

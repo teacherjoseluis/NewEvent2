@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getColor
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Model.Note
@@ -18,21 +17,14 @@ import com.example.newevent2.Model.NoteDBHelper
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 
-// Recyclerview - Displays a scrolling list of elements based on large datasets
-// The view holder objects are managed by an adapter, which you create by extending RecyclerView.Adapter.
-// The adapter creates view holders as needed. The adapter also binds the view holders to their data.
-// It does this by assigning the view holder to a position, and calling the adapter's onBindViewHolder() method.
-
-
-class Rv_NoteAdapter(val noteList: MutableList<Note>) :
+class Rv_NoteAdapter(private val noteList: MutableList<Note>) :
     RecyclerView.Adapter<Rv_NoteAdapter.ViewHolder>(), ItemTouchAdapterAction {
-    // ViewGroup - Views container
 
     lateinit var context: Context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         // Instantiates a layout XML file into its corresponding View objects
-        val v = LayoutInflater.from(p0?.context).inflate(R.layout.note_item_layout, p0, false)
+        val v = LayoutInflater.from(p0.context).inflate(R.layout.note_item_layout, p0, false)
         context = p0.context
         return ViewHolder(v)
     }
@@ -41,7 +33,6 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
         return noteList.size
     }
 
-    // public abstract void onBindViewHolder (VH holder, int position)
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
@@ -61,12 +52,10 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
         }
     }
 
-    // A ViewHolder describes an item view and metadata about its place within the RecyclerView.
-    //class ViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val notetitle: TextView? = itemView.findViewById<TextView>(R.id.notetitle)
-        val notedatetime: TextView? = itemView.findViewById<TextView>(R.id.notedatetime)
-        val notesummary: TextView? = itemView.findViewById<TextView>(R.id.notesummary)
+        val notetitle: TextView? = itemView.findViewById(R.id.notetitle)
+        val notedatetime: TextView? = itemView.findViewById(R.id.notedatetime)
+        val notesummary: TextView? = itemView.findViewById(R.id.notesummary)
     }
 
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
@@ -75,7 +64,7 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
 
     override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
         val noteswift = noteList[position]
-        val notebackup = Note().apply {
+        Note().apply {
             title = noteList[position].title
             body = noteList[position].body
             color = noteList[position].color
@@ -89,12 +78,6 @@ class Rv_NoteAdapter(val noteList: MutableList<Note>) :
             notedb.delete(noteswift)
 
             val snackbar = Snackbar.make(recyclerView, "Note deleted", Snackbar.LENGTH_LONG)
-//                .setAction("UNDO") {
-//                    val notedbins = NoteDBHelper(context)
-//                    noteList.add(notebackup)
-//                    notifyItemInserted(noteList.lastIndex)
-//                    notedbins.insert(notebackup)
-//        }
             snackbar.show()
         }
     }

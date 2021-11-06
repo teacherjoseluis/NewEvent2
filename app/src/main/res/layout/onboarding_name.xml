@@ -2,19 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/smalllogoonboarding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/guideline40"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/weddingrings_smalllogo" />
+        app:srcCompat="@drawable/weddingrings_smalllogo"
+        android:contentDescription="@string/weddingringslogo" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/nameonboaarding"
@@ -32,7 +31,7 @@
             style="@style/Heading5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome"
+            android:text="@string/welcome"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,7 +48,7 @@
                 android:id="@+id/nameinputedit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="What's your name?" />
+                android:hint="@string/what_s_your_name" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -58,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Are you Bride/Groom?"
+            android:text="@string/are_you_bride_groom"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nameinput" />
 
@@ -89,7 +88,7 @@
             style="@style/Heading5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create an Event"
+            android:text="@string/create_an_event"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -106,7 +105,7 @@
                 android:id="@+id/etname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="What's your event?" />
+                android:hint="@string/what_s_your_event" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -121,7 +120,7 @@
                 android:id="@+id/etPlannedDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="What day is your event?" />
+                android:hint="@string/what_day_is_your_event" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -136,11 +135,10 @@
                 android:id="@+id/etPlannedTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="At what time?" />
+                android:hint="@string/at_what_time" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/eventlocationinput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -151,7 +149,7 @@
                 android:id="@+id/etlocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Where will you celebrate?" />
+                android:hint="@string/where_will_you_celebrate" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -164,7 +162,7 @@
         android:layout_height="wrap_content"
         android:shadowDy="2"
         android:shadowRadius="4"
-        android:text="continue"
+        android:text="@string/continuemessage"
         app:backgroundTint="@color/rosaChillon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -176,7 +174,7 @@
         android:layout_height="wrap_content"
         android:shadowDy="2"
         android:shadowRadius="4"
-        android:text="continue"
+        android:text="@string/continuemessage"
         app:backgroundTint="@color/rosaChillon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -190,7 +188,6 @@
         app:layout_constraintGuide_percent="0.4" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline80"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

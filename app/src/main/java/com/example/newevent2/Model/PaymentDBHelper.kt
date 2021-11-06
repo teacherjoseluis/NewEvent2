@@ -4,11 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.newevent2.*
-import java.lang.Exception
-import java.text.DecimalFormat
+import com.example.newevent2.CoRAddEditPayment
+import com.example.newevent2.CoRDeletePayment
 
 class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
 
@@ -19,7 +17,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
     var nexthandlerdel: CoRDeletePayment? = null
 
     fun insert(payment: Payment) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("paymentid", payment.key)
         values.put("name", payment.name)
         values.put("date", payment.date)
@@ -32,7 +30,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         Log.d(TAG, "Payment record inserted")
     }
 
-    fun getPaymentexists(key: String): Boolean {
+    private fun getPaymentexists(key: String): Boolean {
         var existsflag = false
         val cursor: Cursor = db.rawQuery("SELECT * FROM PAYMENT WHERE paymentid = '$key'", null)
         if (cursor != null) {
@@ -40,6 +38,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
                 existsflag = true
             }
         }
+        cursor.close()
         return existsflag
     }
 
@@ -74,6 +73,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
                 } while (cursor.moveToNext())
             }
         }
+        cursor.close()
         return list
     }
 
@@ -93,6 +93,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
                 } while (cursor.moveToNext())
             }
         }
+        cursor.close()
         return list
     }
 
@@ -110,61 +111,12 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
                 } while (cursor.moveToNext())
             }
         }
+        cursor.close()
         return paymentcount
     }
 
-    fun getActiveCategories(): ArrayList<Category> {
-        val list = ArrayList<Category>()
-        val cursor: Cursor =
-            db.rawQuery("SELECT DISTINCT category FROM PAYMENT", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                do {
-                    val category = cursor.getString(cursor.getColumnIndex("category"))
-                    val paymentcategory = Category.getCategory(category)
-                    list.add(paymentcategory)
-                } while (cursor.moveToNext())
-            }
-        }
-        return list
-    }
-
-    fun getCategoryStats(category: String): PaymentStatsToken {
-        var paymentstats = PaymentStatsToken()
-        var sumpayment = 0.0F
-        var cursor: Cursor = db.rawQuery(
-            "SELECT COUNT(*) as countpayment FROM PAYMENT WHERE category='$category'",
-            null
-        )
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                do {
-                    paymentstats.countpayment = cursor.getInt(cursor.getColumnIndex("countpayment"))
-                } while (cursor.moveToNext())
-            }
-        }
-        cursor =
-            db.rawQuery("SELECT amount FROM PAYMENT WHERE category='$category'", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                val re = Regex("[^A-Za-z0-9 ]")
-                do {
-                    val amount = cursor.getString(cursor.getColumnIndex("amount"))
-                    val paymentamount = re.replace(amount, "").dropLast(2)
-                    sumpayment += paymentamount.toFloat()
-                } while (cursor.moveToNext())
-                val formatter = DecimalFormat("$#,###.00")
-                paymentstats.sumpayment = formatter.format(sumpayment)
-            }
-        }
-        return paymentstats
-    }
-
     fun update(payment: Payment) {
-        var values = ContentValues()
+        val values = ContentValues()
         values.put("paymentid", payment.key)
         values.put("name", payment.name)
         values.put("date", payment.date)

@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dashboardactivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/pewter">
+    android:background="@color/pewter"
+    tools:ignore="Overdraw">
     <!--
         <include
             android:id="@+id/loadingscreen"
@@ -17,7 +17,6 @@
             app:layout_constraintTop_toTopOf="parent" />
     -->
     <ScrollView
-        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"
@@ -28,7 +27,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/withdata"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:paddingBottom="150dp"
             android:visibility="visible"
@@ -44,7 +43,6 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <include
-                    android:id="@+id/weddingdetails"
                     layout="@layout/summary_weddingdetails"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -106,7 +104,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/weddinglocation2">
 
                 <include
-                    android:id="@+id/weddingguests"
                     layout="@layout/summary_weddingguests"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="parent" />
@@ -129,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:gravity="center"
-                    android:text="There are no guests yet invited"
+                    android:text="@string/there_are_no_guests_yet_invited"
                     android:textColor="@color/azulmasClaro"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

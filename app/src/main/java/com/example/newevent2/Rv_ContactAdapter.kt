@@ -16,7 +16,7 @@ import com.example.newevent2.Model.Contact
 import com.example.newevent2.ui.LetterAvatar
 
 class Rv_ContactAdapter(
-    val contactlist: ArrayList<Contact>
+    private val contactlist: ArrayList<Contact>
 ) :
     RecyclerView.Adapter<Rv_ContactAdapter.ViewHolder>(), ClearSelected {
 

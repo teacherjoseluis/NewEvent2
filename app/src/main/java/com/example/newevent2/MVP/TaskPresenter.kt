@@ -13,26 +13,23 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
     private var activefragment = ""
     private var mContext: Context
 
-    private lateinit var fragmentDE: DashboardEventPresenter
-    private lateinit var fragmentDA: DashboardActivityPresenter
-    private lateinit var fragmentTPT: TaskPaymentTasksPresenter
+    private var fragmentDE: DashboardEventPresenter = fragment
+    private var fragmentDA: DashboardActivityPresenter = fragment
+    private var fragmentTPT: TaskPaymentTasksPresenter = fragment
 
     private lateinit var cachetask: Cache<Task>
 
     constructor(context: Context, fragment: DashboardEventPresenter) {
-        fragmentDE = fragment
         mContext = context
         activefragment = "DE"
     }
 
     constructor(context: Context, fragment: DashboardActivityPresenter) {
-        fragmentDA = fragment
         mContext = context
         activefragment = "DA"
     }
 
     constructor(context: Context, fragment: TaskPaymentTasksPresenter) {
-        fragmentTPT = fragment
         mContext = context
         activefragment = "TPT"
     }
@@ -63,7 +60,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
     }
 
     override fun onEmptyListT() {
-        val user = com.example.newevent2.Functions.getUserSession(mContext!!)
+        val user = com.example.newevent2.Functions.getUserSession(mContext)
         // This is when I receive an empty list of Tasks from the cache
         val task = TaskModel()
         task.getAllTasksList(

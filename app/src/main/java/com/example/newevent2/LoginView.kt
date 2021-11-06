@@ -1,37 +1,28 @@
 package com.example.newevent2
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.newevent2.MVP.LoginEmailPresenter
 import com.example.newevent2.MVP.LoginPresenter
 import com.example.newevent2.Model.User
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.android.synthetic.main.login.*
-import kotlinx.android.synthetic.main.login.signfacebook
-import kotlinx.android.synthetic.main.login.signgoogle
 import kotlinx.android.synthetic.main.login0.*
 import kotlinx.android.synthetic.main.onboarding.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.SignUpActivity {
+class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.SignUpActivity {
 
     private lateinit var mCallbackManager: CallbackManager
     private lateinit var presenter: LoginPresenter
@@ -103,7 +94,7 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
                     .registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
                         override fun onSuccess(result: LoginResult?) {
                             val fbtoken = result!!.accessToken
-                            val credential = FacebookAuthProvider.getCredential(fbtoken!!.token)
+                            val credential = FacebookAuthProvider.getCredential(fbtoken.token)
                             presenter = LoginPresenter(
                                 this@LoginView,
                                 this@LoginView,
@@ -170,7 +161,7 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        mCallbackManager!!.onActivityResult(requestCode, resultCode, data)
+        mCallbackManager.onActivityResult(requestCode, resultCode, data)
         // Pass the activity result back to the Facebook SDK
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -194,9 +185,9 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
     }
 
     companion object {
-        private val TAG = "GoogleActivity"
-        private val TAGF = "FacebookLogin"
-        private val RC_SIGN_IN = 9001
+        private const val TAG = "GoogleActivity"
+        private const val TAGF = "FacebookLogin"
+        private const val RC_SIGN_IN = 9001
     }
 
     override fun onLoginSuccess() {
@@ -238,10 +229,9 @@ class LoginView() : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.
 
     private fun isValidPassword(password: String?): Boolean {
         val pattern: Pattern
-        val matcher: Matcher
         val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
         pattern = Pattern.compile(PASSWORD_PATTERN)
-        matcher = pattern.matcher(password)
+        val matcher: Matcher = pattern.matcher(password)
         return matcher.matches()
     }
 

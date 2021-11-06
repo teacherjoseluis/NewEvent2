@@ -19,8 +19,8 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        category = if (this.arguments!!.get("category") != null) {
-            this.arguments!!.get("category").toString()
+        category = if (this.requireArguments().get("category") != null) {
+            this.requireArguments().get("category").toString()
         } else {
             ""
         }
@@ -32,7 +32,7 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments 
     ): View? {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.taskpayment_payments, container, false)
-        presenterpayment = TaskPaymentPaymentsPresenter(context!!, this, inf, category)
+        presenterpayment = TaskPaymentPaymentsPresenter(requireContext(), this, inf, category)
         return inf
     }
 

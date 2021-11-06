@@ -9,12 +9,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.DatePicker
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
@@ -26,7 +23,6 @@ import com.bumptech.glide.request.target.Target
 import com.example.newevent2.Functions.*
 import com.example.newevent2.Functions.validateOldDate
 import com.example.newevent2.MVP.EventPresenter
-import com.example.newevent2.MVP.EventSummaryPresenter
 import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.EventDBHelper
@@ -40,15 +36,15 @@ import kotlinx.android.synthetic.main.eventform_layout.*
 import kotlinx.android.synthetic.main.task_editdetail.*
 import java.util.*
 
-class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPresenter.EventItem {
+class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresenter.EventItem {
 
     private val autocompletePlaceCode = 1
 
-    private var event_key = ""
-    private var event_placeid = ""
-    private var event_latitude = 0.0
-    private var event_longitude = 0.0
-    private var event_address = ""
+    private var eventkey = ""
+    private var eventplaceid = ""
+    private var eventlatitude = 0.0
+    private var eventlongitude = 0.0
+    private var eventaddress = ""
     private var uri: Uri? = null
 
     private lateinit var presenterevent: EventPresenter
@@ -131,15 +127,12 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
 
     private fun showDatePickerDialog() {
         val newFragment =
-            DatePickerFragment.newInstance((object : DatePickerDialog.OnDateSetListener {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-                    if (validateOldDate(p1, p2 + 1, p3)) {
-                        val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                        eventdate.setText(selectedDate)
-                    } else {
-                        eventdate.error = "Event date is invalid!"
-                    }
+            DatePickerFragment.newInstance((DatePickerDialog.OnDateSetListener { _, p1, p2, p3 ->
+                if (validateOldDate(p1, p2 + 1, p3)) {
+                    val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
+                    eventdate.setText(selectedDate)
+                } else {
+                    eventdate.error = "Event date is invalid!"
                 }
             }))
         newFragment.show(supportFragmentManager, "datePicker")
@@ -156,30 +149,25 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
         intent.type = "image/*"
 
         //Request permissions
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_DENIED
-            ) {
-                //permission denied
-                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                //show popup to request runtime permission
-                requestPermissions(permissions, PERMISSION_CODE)
-            } else {
-                //permission already granted
-                startActivityForResult(intent, IMAGE_PICK_CODE)
-            }
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
+            PackageManager.PERMISSION_DENIED
+        ) {
+            //permission denied
+            val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            //show popup to request runtime permission
+            requestPermissions(permissions, PERMISSION_CODE)
         } else {
-            //system OS is < Marshmallow
+            //permission already granted
             startActivityForResult(intent, IMAGE_PICK_CODE)
         }
     }
 
     companion object {
         //image pick code
-        private val IMAGE_PICK_CODE = 1000
+        private const val IMAGE_PICK_CODE = 1000
 
         //Permission code
-        internal val PERMISSION_CODE = 1001
+        internal const val PERMISSION_CODE = 1001
     }
 
     //handle requested permission result
@@ -188,6 +176,7 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             PERMISSION_CODE -> {
                 if (grantResults[0] ==
@@ -204,20 +193,20 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
     }
 
     private fun saveEvent() {
-        val user = com.example.newevent2.Functions.getUserSession(applicationContext)
+        val user = getUserSession(applicationContext)
         val event = Event().apply {
-            key = event_key
-            placeid = event_placeid
-            latitude = event_latitude
-            longitude = event_longitude
-            address = event_address
+            key = eventkey
+            placeid = eventplaceid
+            latitude = eventlatitude
+            longitude = eventlongitude
+            address = eventaddress
             name = eventname.text.toString()
             date = eventdate.text.toString()
             time = eventtime.text.toString()
             location = eventlocation.text.toString()
         }
         val eventmodel = EventModel()
-        eventmodel.editEvent(user.key, event, uri, object : EventModel.FirebaseSaveSuccess {
+        eventmodel.editEvent(user.key, event, object : EventModel.FirebaseSaveSuccess {
             override fun onSaveSuccess(eventid: String) {
                 //Updating local storage
                 val eventdb = EventDBHelper(applicationContext)
@@ -228,7 +217,7 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
                     replaceImage(applicationContext, "eventimage", user.key, user.eventid, uri!!)
                 }
 
-                if(event_placeid != "") {
+                if(eventplaceid != "") {
                     //There was a change in the event location
                     delImgfromSD(ImagePresenter.PLACEIMAGE, this@MainActivity)
                 }
@@ -242,7 +231,7 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
         bundle.putDouble("LATITUDE", event.latitude)
         bundle.putDouble("LONGITUDE", event.longitude)
         bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-        MyFirebaseApp.mFirebaseAnalytics!!.logEvent("EDITEVENT", bundle)
+        MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITEVENT", bundle)
         //----------------------------------------
 
         val resultIntent = Intent()
@@ -255,13 +244,11 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == autocompletePlaceCode) {
             val placenameString = data?.getStringExtra("place_name")
-            event_placeid = data!!.getStringExtra("place_id").toString()
-            event_latitude = data!!.getDoubleExtra("place_latitude", 0.0)
-            event_longitude = data!!.getDoubleExtra("place_longitude", 0.0)
-            event_address = data!!.getStringExtra("place_address").toString()
+            eventplaceid = data!!.getStringExtra("place_id").toString()
+            eventlatitude = data.getDoubleExtra("place_latitude", 0.0)
+            eventlongitude = data.getDoubleExtra("place_longitude", 0.0)
+            eventaddress = data.getStringExtra("place_address").toString()
             eventlocation.setText(placenameString)
-        } else {
-            //Toast.makeText(this, "Error in autocomplete location", Toast.LENGTH_SHORT).show()
         }
 
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
@@ -284,8 +271,6 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
                     .apply(RequestOptions.circleCropTransform())
                     .into(eventimage)
 
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                val error = result.error
             }
         }
     }
@@ -295,8 +280,8 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
         return true
     }
 
-    override fun onEventImage(mContext: Context, inflatedView: View?, packet: Any) {
-        Glide.with(mContext)
+    override fun onEventImage(context: Context, inflatedView: View?, packet: Any) {
+        Glide.with(context)
             .load(packet)
             .apply(RequestOptions.circleCropTransform())
             .listener(object : RequestListener<Drawable> {
@@ -327,11 +312,11 @@ class MainActivity() : AppCompatActivity(), ImagePresenter.EventImage, EventPres
         eventdate.setText(event.date)
         eventtime.setText(event.time)
         eventlocation.setText(event.location)
-        event_placeid = event.placeid
-        event_latitude = event.latitude
-        event_longitude = event.longitude
-        event_address = event.address
-        event_key = event.key
+        eventplaceid = event.placeid
+        eventlatitude = event.latitude
+        eventlongitude = event.longitude
+        eventaddress = event.address
+        eventkey = event.key
 
         imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
         imagePresenter.getEventImage()

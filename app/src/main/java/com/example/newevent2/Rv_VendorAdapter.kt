@@ -9,27 +9,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.newevent2.Functions.*
-import com.example.newevent2.Functions.addVendor
-import com.example.newevent2.Functions.deleteVendor
-import com.example.newevent2.Model.Vendor
+import com.example.newevent2.Functions.sumStrings
 import com.example.newevent2.Model.VendorPayment
-import com.example.newevent2.ui.LetterAvatar
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
-import com.google.android.material.snackbar.Snackbar
 import com.redmadrobot.acronymavatar.AvatarView
-import org.w3c.dom.Text
-import java.lang.Exception
 
 
-class Rv_VendorAdapter(val contactlist: ArrayList<VendorPayment>, val context: Context) :
+class Rv_VendorAdapter(private val contactlist: ArrayList<VendorPayment>, val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchAdapterAction {
 
     private val DEFAULT_VIEW_TYPE = 1
@@ -49,14 +40,14 @@ class Rv_VendorAdapter(val contactlist: ArrayList<VendorPayment>, val context: C
         lateinit var genericViewHolder: RecyclerView.ViewHolder
         when (p1) {
             DEFAULT_VIEW_TYPE -> {
-                val v = LayoutInflater.from(p0?.context)
-                    .inflate(com.example.newevent2.R.layout.vendor_item_layout, p0, false)
+                val v = LayoutInflater.from(p0.context)
+                    .inflate(R.layout.vendor_item_layout, p0, false)
                 //context = p0.context
                 genericViewHolder = Rv_TaskAdapter.TaskViewHolder(v)
             }
             NATIVE_AD_VIEW_TYPE -> {
-                val v = LayoutInflater.from(p0?.context)
-                    .inflate(com.example.newevent2.R.layout.native_ad_layout, p0, false)
+                val v = LayoutInflater.from(p0.context)
+                    .inflate(R.layout.native_ad_layout, p0, false)
                 //context = p0.context
                 genericViewHolder = Rv_TaskAdapter.NativeAdViewHolder(v)
             }
@@ -72,7 +63,7 @@ class Rv_VendorAdapter(val contactlist: ArrayList<VendorPayment>, val context: C
 
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         when (p0) {
-            is Rv_VendorAdapter.VendorViewHolder -> {
+            is VendorViewHolder -> {
                 p0.contactname.text = contactlist[p1].vendor.name
                 p0.paymentscount.text = contactlist[p1].amountlist.size.toString()
                 p0.paymentsamount.text = sumStrings(contactlist[p1].amountlist)
@@ -98,13 +89,13 @@ class Rv_VendorAdapter(val contactlist: ArrayList<VendorPayment>, val context: C
                     context.startActivity(vendordetail)
                 }
             }
-            is Rv_VendorAdapter.NativeAdViewHolder -> {
+            is NativeAdViewHolder -> {
                 val adLoader = AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110")
                     .forNativeAd {
 //                        NativeAd.OnNativeAdLoadedListener {
                         Log.d("AD1015", it.responseInfo.toString())
                         Log.d("AD1015", it.mediaContent.toString())
-                        populateNativeAdView(it, p0.nativeAdView!!)
+                        populateNativeAdView(it, p0.nativeAdView)
 //                            p0.nativeAdView!!.visibility=View.VISIBLE
 //                            p0.nativeAdView!!.setNativeAd(it)
 //                        }
@@ -123,7 +114,7 @@ class Rv_VendorAdapter(val contactlist: ArrayList<VendorPayment>, val context: C
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
         // Set the media view.
-        adView.mediaView = adView.findViewById<MediaView>(R.id.ad_media)
+        adView.mediaView = adView.findViewById(R.id.ad_media)
 
         // The headline and mediaContent are guaranteed to be in every NativeAd.
         //(adView.headlineView as TextView).text = nativeAd.headline
@@ -138,12 +129,12 @@ class Rv_VendorAdapter(val contactlist: ArrayList<VendorPayment>, val context: C
     class VendorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val contactname = itemView.findViewById<TextView>(R.id.contactname)!!
         val contactavatar = itemView.findViewById<AvatarView>(R.id.contactavatar)!!
-        val paymentscount: TextView = itemView.findViewById<TextView>(R.id.paymentscount)
-        val paymentsamount: TextView = itemView.findViewById<TextView>(R.id.paymentsamount)
+        val paymentscount: TextView = itemView.findViewById(R.id.paymentscount)
+        val paymentsamount: TextView = itemView.findViewById(R.id.paymentsamount)
     }
 
     class NativeAdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nativeAdView: NativeAdView? = itemView.findViewById(R.id.nativeAd) as NativeAdView
+        val nativeAdView: NativeAdView = itemView.findViewById(R.id.nativeAd) as NativeAdView
     }
 
     override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
@@ -177,8 +168,6 @@ class Rv_VendorAdapter(val contactlist: ArrayList<VendorPayment>, val context: C
     }
 
     companion object {
-        const val DELETEACTION = "delete"
         const val TAG = "Rv_VendorAdapter"
-        const val CALLER = "none"
     }
 }

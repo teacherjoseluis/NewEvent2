@@ -3,7 +3,6 @@ package com.example.newevent2
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -18,21 +17,18 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.newevent2.Functions.*
+import com.example.newevent2.Functions.addGuest
+import com.example.newevent2.Functions.deleteGuest
+import com.example.newevent2.Functions.editGuest
 import com.example.newevent2.Model.Guest
-import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.ui.TextValidate
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.nordan.dialog.Animation
-import com.nordan.dialog.NordanAlertDialog
 import kotlinx.android.synthetic.main.new_guest.*
 
 
 class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
 
-    private var uri: Uri? = null
     private var chiptextvalue: String? = null
     private var categoryrsvp: String = ""
     private var categorycompanions: String = ""
@@ -54,7 +50,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val apptitle = findViewById<TextView>(R.id.appbartitle)
-        apptitle.text = "New Guest"
+        apptitle.text = getString(R.string.new_guest)
 
         loadingview = findViewById(R.id.loadingscreen)
         withdataview = findViewById(R.id.withdata)
@@ -201,11 +197,11 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                     .setTitle("Delete entry")
                     .setMessage("Are you sure you want to delete this entry?") // Specifying a listener allows you to take an action before dismissing the dialog.
                     // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton(android.R.string.yes,
-                        DialogInterface.OnClickListener { dialog, which ->
-                            deleteGuest(this, guestitem)
-                            finish()
-                        }) // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setPositiveButton(android.R.string.yes
+                    ) { dialog, which ->
+                        deleteGuest(this, guestitem)
+                        finish()
+                    } // A null listener allows the button to dismiss the dialog and take no further action.
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
@@ -232,7 +228,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         }
 
         id = companionsgroup.checkedChipId
-        chipselected = companionsgroup.findViewById<Chip>(id)
+        chipselected = companionsgroup.findViewById(id)
         chiptextvalue = chipselected.text.toString()
         categorycompanions = when (chiptextvalue) {
             "Adult" -> "adult"
@@ -263,7 +259,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
 
     companion object {
         //Permission code
-        internal val PERMISSION_CODE = 1001
+        internal const val PERMISSION_CODE = 1001
         const val CALLER = "guest"
     }
 

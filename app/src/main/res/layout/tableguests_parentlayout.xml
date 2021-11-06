@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
@@ -18,7 +17,7 @@
                 style="@style/JournalDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Table: "
+                android:text="@string/table_twopoints"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +27,7 @@
                 style="@style/JournalDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Table"
+                android:text="@string/table"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@id/tablelabel"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -39,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="- "
+                android:text="@string/hypen"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@id/table"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -50,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="Count"
+                android:text="@string/count"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@id/countlabel"
                 app:layout_constraintTop_toTopOf="parent" />

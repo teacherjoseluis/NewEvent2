@@ -3,9 +3,7 @@ package com.example.newevent2.Model
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.example.newevent2.CoRAddEditGuest
 import com.example.newevent2.CoRAddEditVendor
-import com.example.newevent2.CoRDeleteGuest
 import com.example.newevent2.CoRDeleteVendor
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -34,7 +32,7 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Vendor").orderByChild("name")
-        var vendorList = ArrayList<Vendor>()
+        val vendorList = ArrayList<Vendor>()
 
         val vendorListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -56,33 +54,7 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
         postRef.addValueEventListener(vendorListenerActive)
     }
 
-    fun getVendordetail(
-        userid: String,
-        eventid: String,
-        vendorid: String,
-        dataFetched: FirebaseSuccessVendor
-    ) {
-        val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Vendor").child(vendorid)
-
-        val vendorListenerActive = object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onDataChange(p0: DataSnapshot) {
-                val vendoritem = p0.getValue(Vendor::class.java)!!
-                vendoritem!!.key = p0.key.toString()
-                Log.d(TAG, "Detail retrieved for guest ${vendoritem.key}")
-                dataFetched.onVendor(vendoritem)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
-            }
-        }
-        postRef.addValueEventListener(vendorListenerActive)
-    }
-
-    fun addVendor(
+    private fun addVendor(
         userid: String,
         eventid: String,
         vendor: Vendor,
@@ -125,7 +97,7 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
             }
     }
 
-    fun editVendor(
+    private fun editVendor(
         userid: String,
         eventid: String,
         vendor: Vendor,
@@ -156,7 +128,7 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
             }
     }
 
-    fun deleteVendor(
+    private fun deleteVendor(
         userid: String,
         eventid: String,
         vendor: Vendor,
@@ -214,10 +186,6 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
                     }
                 }
             })
-    }
-
-    interface FirebaseSuccessVendor {
-        fun onVendor(vendor: Vendor)
     }
 
     interface FirebaseAddEditVendorSuccess {

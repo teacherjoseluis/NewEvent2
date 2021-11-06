@@ -1,11 +1,5 @@
 //package com.example.newevent2
 
-import android.content.Context
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-
 // class NewTask_PagerAdapter(
 //    private val myContext: Context,
 //    fm: FragmentManager,

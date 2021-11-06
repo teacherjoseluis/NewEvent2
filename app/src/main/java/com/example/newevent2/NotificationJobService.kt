@@ -7,15 +7,9 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
-import com.google.gson.Gson
-import java.util.concurrent.Executors
 
 
 private const val NOTIF_CHANNEL_ID = "primary_notification_channel"
@@ -31,14 +25,12 @@ class NotificationJobService : JobService() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Create Notification Channel if device OS >= Android O
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel(
-                NOTIF_CHANNEL_ID,
-                NOTIF_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).let {
-                notificationManager.createNotificationChannel(it)
-            }
+        NotificationChannel(
+            NOTIF_CHANNEL_ID,
+            NOTIF_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).let {
+            notificationManager.createNotificationChannel(it)
         }
 
         // Create PendingIntent with empty Intent
@@ -48,10 +40,10 @@ class NotificationJobService : JobService() {
         myintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         val pendingIntent =
-            PendingIntent.getActivity(this, 0, myintent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivity(this, 0, myintent, PendingIntent.FLAG_IMMUTABLE)
 
         val notificationtitle = params!!.extras.getString("title")
-        val notificationbody = params!!.extras.getString("body")
+        val notificationbody = params.extras.getString("body")
 //        val gson = Gson()
 //        val task = gson.fromJson(json, Task::class.java)
 
