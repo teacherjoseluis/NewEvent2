@@ -32,6 +32,10 @@ internal fun converttoString(date: Date, style: Int): String {
     return dateFormatter.format(date)
 }
 
+internal fun getlocale() : String {
+    return Locale.getDefault().toString()
+}
+
 internal fun daystoDate(date: Date): Int {
     val toDate = Date()
     val diff = date.time - toDate.time

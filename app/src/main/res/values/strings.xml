@@ -6,11 +6,11 @@
     <string name="newevent_eventlocationinput_en">Select Event location</string>
     <string name="title_activity_maps">Map</string>
 
-    <string name="privacypolicy">https://brides-grooms.flycricket.io/privacy.html</string>
-    <string name="termsandconditions">https://brides-grooms.flycricket.io/terms.html</string>
+    <string name="privacypolicy" translatable="false">https://brides-grooms.flycricket.io/privacy.html</string>
+    <string name="termsandconditions" translatable="false">https://brides-grooms.flycricket.io/terms.html</string>
 
-    <string name="facebook_app_id">420436362323049</string>
-    <string name="fb_login_protocol_scheme">fb420436362323049</string>
+    <string name="facebook_app_id" translatable="false">420436362323049</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb420436362323049</string>
     <string name="success_email_login">Successful Email Login</string>
     <string name="notverified_email_login">Your email account has not been verified</string>
     <string name="success_sn_login">Successful Login with Social Network</string>
@@ -81,7 +81,7 @@
     <string name="categoryimage">Category Image</string>
     <string name="category">Category</string>
     <string name="taskpendingimage">Task Pending Image</string>
-    <string name="_0">0</string>
+    <string name="_0" translatable="false">0</string>
     <string name="taskdoneimage">Task Done Image</string>
     <string name="taskbudgetimage">Task Budget Image</string>
     <string name="card_title">Card Title</string>
@@ -192,7 +192,7 @@
     <string name="placeimage">Place Image</string>
     <string name="your_progress">Your Progress</string>
     <string name="table_twopoints">Table:</string>
-    <string name="hypen">-</string>
+    <string name="hypen" translatable="false">-</string>
     <string name="count">Count</string>
     <string name="taskname">Task Name</string>
     <string name="taskbudget">Task Budget</string>
@@ -202,8 +202,8 @@
     <string name="complete_task">Complete Task</string>
     <string name="delete_task">Delete Task</string>
     <string name="vendor_name">Vendor Name</string>
-    <string name="_0_0">0.0</string>
-    <string name="_10">10</string>
+    <string name="_0_0" translatable="false">0.0</string>
+    <string name="_10" translatable="false">10</string>
     <string name="floatingactionbuttonvendor">Floating Action Button Vendor</string>
     <string name="newvendorbutton">Fab New Vendor Button</string>
     <string name="fabcontactvendor">Fab Contact Vendor Button</string>
@@ -216,8 +216,8 @@
     <string name="blog_title">Blog Title</string>
     <string name="author">Author</string>
     <string name="time">Time</string>
-    <string name="leftparenthesis">(</string>
-    <string name="rightparenthesis">)</string>
+    <string name="leftparenthesis" translatable="false">(</string>
+    <string name="rightparenthesis" translatable="false">)</string>
     <string name="eventdetails">Event Details</string>
 
     <string-array name="role" >

@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newevent2.Functions.getlocale
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.TaskDBHelper
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -34,7 +35,12 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        p0.categorytitle?.text = categorylist[p1].en_name
+        if(getlocale().substring(0,2) == "es")
+        {//Getting the right substring depending the default language
+            p0.categorytitle?.text = categorylist[p1].es_name
+        } else {
+            p0.categorytitle?.text = categorylist[p1].en_name
+        }
         //Adds the image associated for each category
         val resourceId = context.resources.getIdentifier(categorylist[p1].drawable, "drawable",
             context.packageName)

@@ -11,17 +11,19 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
     private var activefragment = ""
     private var mContext: Context
 
-    private var fragmentVA: VendorsAllPresenter = fragment
-    private var fragmentVP: VendorPaymentPresenter = fragment
+    private lateinit var fragmentVA: VendorsAllPresenter
+    private lateinit var fragmentVP: VendorPaymentPresenter
 
     private lateinit var cachevendor: Cache<Vendor>
 
     constructor(context: Context, fragment: VendorsAllPresenter) {
+        fragmentVA = fragment
         mContext = context
         activefragment = "VA"
     }
 
     constructor(context: Context, fragment: VendorPaymentPresenter) {
+        fragmentVP = fragment
         mContext = context
         activefragment = "VP"
     }

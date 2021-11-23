@@ -11,8 +11,12 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.converttoString
+import com.example.newevent2.Functions.getlocale
 import com.example.newevent2.Model.TaskJournal
 import java.text.DateFormat
+import java.util.*
+import java.util.Locale.getDefault
+import kotlin.collections.ArrayList
 
 class Rv_TaskDatesAdapter(
     private val taskjournalList: ArrayList<TaskJournal>
@@ -35,8 +39,15 @@ class Rv_TaskDatesAdapter(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         val stringdate = converttoString(taskjournalList[p1].date, DateFormat.MEDIUM)
-        p0.journaldate?.text =
-            stringdate.substring(0, stringdate.lastIndexOf(',')).trim()
+        if(getlocale().substring(0,2) == "es")
+        {//Getting the right substring depending the default language
+            p0.journaldate?.text =
+                stringdate.substring(0, stringdate.lastIndexOf('.')).trim()
+        } else {
+            p0.journaldate?.text =
+                stringdate.substring(0, stringdate.lastIndexOf(',')).trim()
+        }
+
         p0.recyclerView?.apply {
             layoutManager = LinearLayoutManager(p0.recyclerView.context).apply {
                 stackFromEnd = true

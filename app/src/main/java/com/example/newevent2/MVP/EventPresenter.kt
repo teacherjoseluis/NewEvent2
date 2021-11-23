@@ -3,33 +3,40 @@ package com.example.newevent2.MVP
 import Application.Cache
 import android.content.Context
 import android.os.Build
+import android.view.View
 import androidx.annotation.RequiresApi
 import com.example.newevent2.MainActivity
+import com.example.newevent2.MainEventView_clone
+
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.EventModel
+import com.example.newevent2.Model.Guest
 
 class EventPresenter : Cache.EventItemCacheData {
 
     private var activefragment = ""
     private var mContext: Context
 
-    private var fragmentES: EventSummaryPresenter = fragment
-    private var fragmentMA: MainActivity = fragment
-    private var fragmentDE: DashboardEventPresenter = fragment
+    //private lateinit var fragmentES: EventSummaryPresenter
+    private lateinit var fragmentMA: MainActivity
+    private lateinit var fragmentDE: DashboardEventPresenter
 
     private lateinit var cacheevent: Cache<Event>
 
-    constructor(context: Context, fragment: EventSummaryPresenter) {
-        mContext = context
-        activefragment = "ES"
-    }
+//    constructor(context: Context, fragment: EventSummaryPresenter) {
+//        fragmentES = fragment
+//        mContext = context
+//        activefragment = "ES"
+//    }
 
     constructor(context: Context, fragment: MainActivity) {
+        fragmentMA = fragment
         mContext = context
         activefragment = "MA"
     }
 
     constructor(context: Context, fragment: DashboardEventPresenter) {
+        fragmentDE = fragment
         mContext = context
         activefragment = "DE"
     }
@@ -43,7 +50,7 @@ class EventPresenter : Cache.EventItemCacheData {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onEvent(item: Event) {
         when (activefragment) {
-            "ES" -> fragmentES.onEvent(item)
+            //"ES" -> fragmentES.onEvent(item)
             "MA" -> fragmentMA.onEvent(item)
             "DE" -> fragmentDE.onEvent(item)
         }
@@ -51,7 +58,7 @@ class EventPresenter : Cache.EventItemCacheData {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onEventError() {
-        val user = com.example.newevent2.Functions.getUserSession(mContext)
+        val user = com.example.newevent2.Functions.getUserSession(mContext!!)
         val event = EventModel()
         event.getEventdetail(
             user.key,
@@ -61,7 +68,7 @@ class EventPresenter : Cache.EventItemCacheData {
                 override fun onEvent(event: Event) {
                     cacheevent.save(event)
                     when (activefragment) {
-                        "ES" -> fragmentES.onEvent(event)
+                        //"ES" -> fragmentES.onEvent(event)
                         "MA" -> fragmentMA.onEvent(event)
                         "DE" -> fragmentDE.onEvent(event)
                     }
@@ -70,7 +77,7 @@ class EventPresenter : Cache.EventItemCacheData {
         )
 
         when (activefragment) {
-            "ES" -> fragmentES.onEventError(ERRCODEEVENTS)
+            //"ES" -> fragmentES.onEventError(ERRCODEEVENTS)
             "MA" -> fragmentMA.onEventError(ERRCODEEVENTS)
             "DE" -> fragmentDE.onEventError(ERRCODEEVENTS)
         }

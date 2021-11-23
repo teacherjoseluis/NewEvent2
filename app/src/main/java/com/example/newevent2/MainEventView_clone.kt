@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 
-class MainEventView_clone : Fragment() {
+class MainEventView_clone() : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,13 +20,12 @@ class MainEventView_clone : Fragment() {
         val tablayout = inf.findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = inf.findViewById<View>(R.id.pager) as ViewPager
         val userSession =
-            com.example.newevent2.Functions.getUserSession(requireActivity().applicationContext)
+            com.example.newevent2.Functions.getUserSession(activity!!.applicationContext)
 
         // Declare adapter and pass key, eventid and language as parameters
         val adapter = MainEventPagerAdapter(
             userSession.key,
             userSession.eventid,
-            userSession.language,
             childFragmentManager,
             tablayout.tabCount
         )

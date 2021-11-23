@@ -17,7 +17,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.login0.*
-import kotlinx.android.synthetic.main.onboarding.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 

@@ -13,23 +13,26 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
     private var activefragment = ""
     private var mContext: Context
 
-    private var fragmentDE: DashboardEventPresenter = fragment
-    private var fragmentDA: DashboardActivityPresenter = fragment
-    private var fragmentTPT: TaskPaymentTasksPresenter = fragment
+    private lateinit var fragmentDE: DashboardEventPresenter
+    private lateinit var fragmentDA: DashboardActivityPresenter
+    private lateinit var fragmentTPT: TaskPaymentTasksPresenter
 
     private lateinit var cachetask: Cache<Task>
 
     constructor(context: Context, fragment: DashboardEventPresenter) {
+        fragmentDE = fragment
         mContext = context
         activefragment = "DE"
     }
 
     constructor(context: Context, fragment: DashboardActivityPresenter) {
+        fragmentDA = fragment
         mContext = context
         activefragment = "DA"
     }
 
     constructor(context: Context, fragment: TaskPaymentTasksPresenter) {
+        fragmentTPT = fragment
         mContext = context
         activefragment = "TPT"
     }

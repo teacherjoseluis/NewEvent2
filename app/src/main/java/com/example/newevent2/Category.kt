@@ -3,20 +3,21 @@ package com.example.newevent2
 enum class Category(
     val code: String,
     val en_name: String,
+    val es_name: String,
     val drawable: String,
     val colorbackground: String,
     val colorforeground: String
 ) {
-    Venue("venue", "Venue", "venue","#DB5ABA","#FFFFFF"),
-    Photo("photo", "Photo & Video", "photo","#C455A8", "#FFFFFF"),
-    Entertainment("entertainment", "Entertainment", "entertainment","#CF8BA3", "#000000"),
-    Flowers("flowers", "Flowers & Deco", "flowers","#D7A6B3","#000000"),
-    Transportation("transport", "Transportation", "transportation","#E5CDC8","#000000"),
-    Ceremony("ceremony", "Ceremony", "ceremony","#D94A98","#FFFFFF"),
-    Accesories("accessories", "Attire & Accessories", "attire","#F285C1", "#FFFFFF"),
-    Beauty("beauty", "Health & Beauty", "beauty","#F2B3D6","#000000"),
-    Food("food", "Food & Drink", "food","#1D3973","#FFFFFF"),
-    Guests("guests", "Guests", "guests","#F2D8D5","#000000");
+    Venue("venue", "Venue", "Lugar","venue","#DB5ABA","#FFFFFF"),
+    Photo("photo", "Photo & Video", "Foto & Video","photo","#C455A8", "#FFFFFF"),
+    Entertainment("entertainment", "Entertainment", "Entretenimiento", "entertainment","#CF8BA3", "#000000"),
+    Flowers("flowers", "Flowers & Deco","Flores & Decoracion", "flowers","#D7A6B3","#000000"),
+    Transportation("transport", "Transportation","Transportacion", "transportation","#E5CDC8","#000000"),
+    Ceremony("ceremony", "Ceremony", "Ceremonia","ceremony","#D94A98","#FFFFFF"),
+    Accesories("accessories", "Attire & Accessories", "Vestidos & Accessorios","attire","#F285C1", "#FFFFFF"),
+    Beauty("beauty", "Health & Beauty", "Salud & Belleza","beauty","#F2B3D6","#000000"),
+    Food("food", "Food & Drink", "Comida & Bebida","food","#1D3973","#FFFFFF"),
+    Guests("guests", "Guests", "Invitados","guests","#F2D8D5","#000000");
 
     companion object {
         fun getCategory(code: String): Category {

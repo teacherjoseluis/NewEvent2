@@ -16,29 +16,33 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
     private var activefragment = ""
     private var mContext: Context
 
-    private var fragmentDE: DashboardEventPresenter = fragment
-    private var fragmentGA: GuestsAllPresenter = fragment
-    private var fragmentCA: ContactsAllPresenter = fragment
-    private var fragmentTG: TableGuestsActivityPresenter = fragment
+    private lateinit var fragmentDE: DashboardEventPresenter
+    private lateinit var fragmentGA: GuestsAllPresenter
+    private lateinit var fragmentCA: ContactsAllPresenter
+    private lateinit var fragmentTG: TableGuestsActivityPresenter
 
     private lateinit var cacheguest: Cache<Guest>
 
     constructor(context: Context, fragment: DashboardEventPresenter) {
+        fragmentDE = fragment
         mContext = context
         activefragment = "DE"
     }
 
     constructor(context: Context, fragment: GuestsAllPresenter) {
+        fragmentGA = fragment
         mContext = context
         activefragment = "GA"
     }
 
     constructor(context: Context, fragment: ContactsAllPresenter) {
+        fragmentCA = fragment
         mContext = context
         activefragment = "CA"
     }
 
     constructor(context: Context, fragment: TableGuestsActivityPresenter) {
+        fragmentTG = fragment
         mContext = context
         activefragment = "TG"
     }

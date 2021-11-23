@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/alert_icon_rosachillon.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/circle_rosachillon.xml" value="0.169921875" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.302734375" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/invoice.xml" value="0.169921875" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/lets_plan_together.xml" value="0.169921875" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/person.xml" value="0.169921875" />
@@ -46,7 +47,7 @@
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/note_item_layout.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/onboarding_event.xml" value="0.17421875" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/onboarding_name.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/payment_editdetail.xml" value="0.1" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/payment_editdetail.xml" value="0.22" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/payment_item_layout.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/settings.xml" value="0.22" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/splashscreen.xml" value="0.1" />
@@ -56,7 +57,7 @@
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingprogress.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguestsactivity.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_editdetail.xml" value="0.1" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_editdetail.xml" value="0.2" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_item_layout.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_item_layout2.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/taskpayment_list.xml" value="0.1" />
@@ -72,6 +73,7 @@
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/menu/menu_navview.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/menu/notes_menu.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/menu/vendors_menu.xml" value="0.1" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.113671875" />
       </map>
     </option>
   </component>

@@ -14,17 +14,19 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
     private var activefragment = ""
     private var mContext: Context
 
-    private var fragmentDE: DashboardEventPresenter = fragment
-    private var fragmentTPP: TaskPaymentPaymentsPresenter = fragment
+    private lateinit var fragmentDE: DashboardEventPresenter
+    private lateinit var fragmentTPP: TaskPaymentPaymentsPresenter
 
     private lateinit var cachepayment: Cache<Payment>
 
     constructor(context: Context, fragment: DashboardEventPresenter) {
+        fragmentDE = fragment
         mContext = context
         activefragment = "DE"
     }
 
     constructor(context: Context, fragment: TaskPaymentPaymentsPresenter) {
+        fragmentTPP = fragment
         mContext = context
         activefragment = "TPP"
     }

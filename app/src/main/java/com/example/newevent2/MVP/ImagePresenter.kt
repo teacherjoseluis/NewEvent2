@@ -16,7 +16,7 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     private var activefragment = ""
 
     @SuppressLint("StaticFieldLeak")
-    private var inflatedView: View = view
+    private lateinit var inflatedView: View
 
     @SuppressLint("StaticFieldLeak")
     private var mContext: Context
@@ -29,12 +29,15 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     var placeId = ""
 
     constructor(context: Context, fragment: MainActivity) {
+        fragmentMA = fragment
         //inflatedView = view
         mContext = context
         activefragment = "MA"
     }
 
     constructor(context: Context, fragment: DashboardEvent, view: View) {
+        fragmentDE = fragment
+        inflatedView = view
         mContext = context
         activefragment = "DE"
     }

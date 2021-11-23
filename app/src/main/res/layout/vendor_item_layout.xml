@@ -21,7 +21,7 @@
     <!--        app:layout_constraintTop_toTopOf="parent"-->
     <!--        tools:srcCompat="@tools:sample/avatars"/>-->
 
-    <ImageView
+    <com.redmadrobot.acronymavatar.AvatarView
         android:id="@+id/contactavatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
