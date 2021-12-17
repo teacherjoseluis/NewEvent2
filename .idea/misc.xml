@@ -28,7 +28,7 @@
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/event_detail.xml" value="0.14" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/event_summary.xml" value="0.18" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/eventform_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/guest_item_layout.xml" value="0.1" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/guest_item_layout.xml" value="0.22" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/header_navview.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/journal_parentlayout.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/login0.xml" value="0.33" />
@@ -55,8 +55,8 @@
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingguests.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddinglocation.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingprogress.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguestsactivity.xml" value="0.1" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.18" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguestsactivity.xml" value="0.18" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_editdetail.xml" value="0.2" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_item_layout.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_item_layout2.xml" value="0.1" />

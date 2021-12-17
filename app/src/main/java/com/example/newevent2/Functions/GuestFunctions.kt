@@ -69,11 +69,13 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
         MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDGUEST", bundle)
         //------------------------------------------------
 
-        Toast.makeText(context, "Guest was created successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.successaddguest), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.erroraddguest)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying create the guest ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }
@@ -110,11 +112,13 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("DELETEGUEST", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Guest was deleted successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.successdeleteguest), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.errordeleteguest)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying delete the guest ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }
@@ -145,11 +149,13 @@ internal fun editGuest(context: Context, guestitem: Guest) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITGUEST", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Guest was edited successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.successeditguest), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.erroreditguest)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying edit the guest ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }

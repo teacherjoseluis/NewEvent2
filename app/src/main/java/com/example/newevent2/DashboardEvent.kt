@@ -113,7 +113,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         val user = com.example.newevent2.Functions.getUserSession(requireContext())
 
         //Load with the achievements obtained by the user -------------------------------------------
-        val stepsBeanList = user.onboardingprogress()
+        val stepsBeanList = user.onboardingprogress(context!!)
         val stepview = inf.findViewById<HorizontalStepView>(R.id.step_view)
         stepview
             .setStepViewTexts(stepsBeanList)//总步骤
@@ -251,7 +251,10 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             val action2Button = duenextcard.findViewById<Button>(R.id.action2)
 
             cardname.text = getString(R.string.duenext)
-            cardsecondarytext.text = "${task.name} due by ${task.date}"
+            //cardsecondarytext.text = "${task.name} due by ${task.date}"
+            val cardmsg = StringBuilder()
+            cardmsg.append(task.name).append(getString(R.string.dueby)).append(task.date)
+            cardsecondarytext.text = cardmsg
             action1Button.text = getString(R.string.view)
             action2Button.visibility = View.INVISIBLE
 
@@ -421,7 +424,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflatedview.findViewById<TextView>(R.id.eventfulladdress).text = event.address
 
         val daysleft = daystoDate(converttoDate(event.date))
-        inflatedview.findViewById<TextView>(R.id.deadline).text = "$daysleft days left!"
+        inflatedview.findViewById<TextView>(R.id.deadline).text = daysleft.toString().plus(getString(
+                    R.string.daysleft))
 
         // Load thumbnail
         imagePresenter = ImagePresenter(context, this, inflatedview)

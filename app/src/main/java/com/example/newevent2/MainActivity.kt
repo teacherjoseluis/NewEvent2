@@ -70,7 +70,9 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
             if (!p1) {
                 val validationmessage = TextValidate(taskname).namefieldValidate()
                 if (validationmessage != "") {
-                    eventname.error = "Error in Event name: $validationmessage"
+                    val errormsg = getString(R.string.error_eventname)
+                    errormsg.plus(validationmessage)
+                    eventname.error = errormsg
                 }
             }
         }
@@ -98,25 +100,27 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
         savebutton.setOnClickListener {
             var inputvalflag = true
             if (eventname.text.toString().isEmpty()) {
-                eventname.error = "Event name is required!"
+                eventname.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             } else {
                 val validationmessage = TextValidate(eventname).namefieldValidate()
                 if (validationmessage != "") {
-                    eventname.error = "Error in Event name: $validationmessage"
+                    val errormsg = getString(R.string.error_eventname)
+                    errormsg.plus(validationmessage)
+                    eventname.error = errormsg
                     inputvalflag = false
                 }
             }
             if (eventdate.text.toString().isEmpty()) {
-                eventdate.error = "Event date is required!"
+                eventdate.error = getString(R.string.error_taskdateinput)
                 inputvalflag = false
             }
             if (eventtime.text.toString().isEmpty()) {
-                eventtime.error = "Event time is required!"
+                eventtime.error = getString(R.string.error_timeinput)
                 inputvalflag = false
             }
             if (eventlocation.text.toString().isEmpty()) {
-                eventlocation.error = "Event location is required!"
+                eventlocation.error = getString(R.string.error_locationinput)
                 inputvalflag = false
             }
             if (inputvalflag) {
@@ -132,7 +136,7 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
                     val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
                     eventdate.setText(selectedDate)
                 } else {
-                    eventdate.error = "Event date is invalid!"
+                    eventdate.error = getString(R.string.error_invaliddate)
                 }
             }))
         newFragment.show(supportFragmentManager, "datePicker")
@@ -186,7 +190,7 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
                     showImagePickerDialog()
                 } else {
                     //permission from popup denied
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.permissiondenied), Toast.LENGTH_SHORT).show()
                 }
             }
         }

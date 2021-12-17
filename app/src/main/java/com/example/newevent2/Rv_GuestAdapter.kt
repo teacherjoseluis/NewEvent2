@@ -3,6 +3,7 @@ package com.example.newevent2
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,9 +33,9 @@ class Rv_GuestAdapter(
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.contactname.text = contactlist[p1].name
         p0.rsvp.text = when (contactlist[p1].rsvp) {
-            "y" -> "Yes"
-            "n" -> "No"
-            else -> "Pending"
+            "y" -> context.getString(R.string.yes)
+            "n" -> context.getString(R.string.no)
+            else -> context.getString(R.string.pending)
         }
 //        try {
 //            p0.contactavatar.setImageDrawable(
@@ -54,7 +55,13 @@ class Rv_GuestAdapter(
         } catch (e: Exception) {
             p0.contactavatar.setImageResource(R.drawable.avatar2)
         }
-        p0.companions.text = contactlist[p1].companion
+        p0.companions.text = when (contactlist[p1].companion) {
+            "adult" -> context.getString(R.string.adult)
+            "child" -> context.getString(R.string.child)
+            "baby" -> context.getString(R.string.baby)
+            "none" -> context.getString(R.string.none)
+            else -> context.getString(R.string.none)
+        }
 //        p0.table.text = contactlist[p1].table
 
         p0.itemView.setOnClickListener {

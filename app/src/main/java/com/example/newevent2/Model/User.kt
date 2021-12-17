@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import android.provider.Settings.Global.getString
 import android.util.Log
 import android.widget.Toast
 import com.baoyachi.stepview.bean.StepBean
@@ -314,13 +315,13 @@ class User(
             }
     }
 
-    fun onboardingprogress(): ArrayList<StepBean> {
+    fun onboardingprogress(context: Context): ArrayList<StepBean> {
         val stepsBeanList = arrayListOf<StepBean>()
-        val stepBean0 = StepBean("event", if (this.hasevent == "Y") 1 else -1)
-        val stepBean1 = StepBean("task", if (this.hastask == "Y") 1 else -1)
-        val stepBean2 = StepBean("payment", if (this.haspayment == "Y") 1 else -1)
-        val stepBean3 = StepBean("guest", if (this.hasguest == "Y") 1 else -1)
-        val stepBean4 = StepBean("vendor", if (this.hasvendor == "Y") 1 else -1)
+        val stepBean0 = StepBean(context.getString(R.string.event), if (this.hasevent == "Y") 1 else -1)
+        val stepBean1 = StepBean(context.getString(R.string.task), if (this.hastask == "Y") 1 else -1)
+        val stepBean2 = StepBean(context.getString(R.string.payment), if (this.haspayment == "Y") 1 else -1)
+        val stepBean3 = StepBean(context.getString(R.string.guest), if (this.hasguest == "Y") 1 else -1)
+        val stepBean4 = StepBean(context.getString(R.string.vendor), if (this.hasvendor == "Y") 1 else -1)
 
         stepsBeanList.add(stepBean0)
         stepsBeanList.add(stepBean1)

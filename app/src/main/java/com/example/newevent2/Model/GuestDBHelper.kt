@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.*
+import com.example.newevent2.Functions.getlocale
 import kotlin.collections.ArrayList
 
 class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {

@@ -6,11 +6,8 @@ import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.widget.Toast
-import com.example.newevent2.CoRAddEditVendor
-import com.example.newevent2.CoRDeleteVendor
-import com.example.newevent2.ContactsAll
+import com.example.newevent2.*
 import com.example.newevent2.Model.*
-import com.example.newevent2.VendorCreateEdit
 
 var vendormodel = VendorModel()
 lateinit var vendordbhelper: VendorDBHelper
@@ -69,11 +66,13 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDVENDOR", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Vendor was created successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.successaddvendor), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.erroraddvendor)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying create the vendor ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }
@@ -110,11 +109,13 @@ internal fun deleteVendor(context: Context, vendoritem: Vendor) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("DELETEVENDOR", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "vendor was deleted successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.successdeletevendor), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.errordeletevendor)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying delete the vendor ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }
@@ -145,11 +146,13 @@ internal fun editVendor(context: Context, vendoritem: Vendor) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITVENDOR", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Vendor was edited successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.successeditvendor), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.erroreditvendor)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying edit the vendor ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }

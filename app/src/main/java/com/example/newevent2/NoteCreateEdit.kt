@@ -87,11 +87,11 @@ class NoteCreateEdit : AppCompatActivity() {
         button.setOnClickListener {
             var inputvalflag = true
             if (notetitle.text.toString().isEmpty()) {
-                notetitle.error = "Note name is required!"
+                notetitle.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             }
             if (editTextTextMultiLine.text.toString().isEmpty()) {
-                editTextTextMultiLine.error = "Note body is required!"
+                editTextTextMultiLine.error = getString(R.string.error_bodyinput)
                 inputvalflag = false
             }
             if (inputvalflag) {
@@ -111,7 +111,7 @@ class NoteCreateEdit : AppCompatActivity() {
             ) {
                 Toast.makeText(
                     this,
-                    "Not possible to share the Note as either the title or body are missing",
+                    getString(R.string.errorsharenote),
                     Toast.LENGTH_LONG
                 ).show()
                 return@setOnMenuItemClickListener true
@@ -125,11 +125,11 @@ class NoteCreateEdit : AppCompatActivity() {
 
                 val intent = Intent(Intent.ACTION_SEND)
                 val shareBody =
-                    "Title:" + notetitle.text.toString() + " Note:" + editTextTextMultiLine.text.toString()
+                    getString(R.string.title)+": " + notetitle.text.toString() + getString(R.string.note)+": " + editTextTextMultiLine.text.toString()
                 intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Note")
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.note))
                 intent.putExtra(Intent.EXTRA_TEXT, shareBody)
-                startActivity(Intent.createChooser(intent, "Share using"))
+                startActivity(Intent.createChooser(intent, getString(R.string.shareusing)))
                 return@setOnMenuItemClickListener true
             }
         }
@@ -165,11 +165,13 @@ class NoteCreateEdit : AppCompatActivity() {
             try {
                 notedb.insert(noteitem)
                 MyNotes.notescreated_flag = 1
-                Toast.makeText(this, "Note was created successully", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.successaddnote), Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
+                val errormsg = getString(R.string.erroraddnote)
+                errormsg.plus(e.message)
                 Toast.makeText(
                     this,
-                    "There was an error trying to create the note ${e.message}",
+                    errormsg,
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -177,11 +179,13 @@ class NoteCreateEdit : AppCompatActivity() {
             try {
                 notedb.update(noteitem)
                 MyNotes.notescreated_flag = 1
-                Toast.makeText(this, "Note was edited successully", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.successeditnote), Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
+                val errormsg = getString(R.string.erroreditnote)
+                errormsg.plus(e.message)
                 Toast.makeText(
                     this,
-                    "There was an error trying to edit the note ${e.message}",
+                    errormsg,
                     Toast.LENGTH_LONG
                 ).show()
             }

@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.example.newevent2.R
 import java.util.*
 
 
@@ -46,7 +47,7 @@ class TimePickerFragment(private val tv: TextView) : DialogFragment(), TimePicke
 
     // When user cancel the time picker dialog
     override fun onCancel(dialog: DialogInterface) {
-        Toast.makeText(activity,"Picker Canceled.",Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity,getString(R.string.pickercanceled),Toast.LENGTH_SHORT).show()
         super.onCancel(dialog)
     }
 

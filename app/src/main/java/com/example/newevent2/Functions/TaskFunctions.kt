@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.Model.*
+import com.example.newevent2.R
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var calendarevent : CalendarEvent
@@ -50,11 +51,13 @@ internal fun addTask(context: Context, taskitem: Task) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDTASK", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Task was created successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.successaddtask), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.erroraddtask)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying create the task ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }
@@ -95,11 +98,13 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("DELETETASK", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Task was deleted successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.successdeletetask), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.errordeletetask)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying delete the task ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }
@@ -129,11 +134,13 @@ internal fun editTask(context: Context, taskitem: Task) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITTASK", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Task was edited successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.successedittask), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.erroredittask)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying edit the task ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }

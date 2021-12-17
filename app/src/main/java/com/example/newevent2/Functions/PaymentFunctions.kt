@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.example.newevent2.CoRAddEditPayment
 import com.example.newevent2.CoRDeletePayment
 import com.example.newevent2.Model.*
+import com.example.newevent2.R
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var calendarevent : CalendarEvent
@@ -50,11 +51,13 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDPAYMENT", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Payment was created successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.succesfulpayment), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.failedpayment)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying create the payment ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }
@@ -95,11 +98,13 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("DELETEPAYMENT", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Payment was deleted successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.succesfuldeletepayment), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.faileddeletepayment)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying delete the payment ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }
@@ -131,11 +136,13 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
         bundle.putString("COUNTRY", user.country)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITPAYMENT", bundle)
         //------------------------------------------------
-        Toast.makeText(context, "Payment was edited successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.succesfuleditpayment), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        val errormsg = context.getString(R.string.failededitpayment)
+        errormsg.plus(e.message)
         Toast.makeText(
             context,
-            "There was an error trying edit the payment ${e.message}",
+            errormsg,
             Toast.LENGTH_LONG
         ).show()
     }

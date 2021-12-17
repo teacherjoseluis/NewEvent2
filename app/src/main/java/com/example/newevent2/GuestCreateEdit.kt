@@ -100,7 +100,9 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
             if (!p1) {
                 val validationmessage = TextValidate(nameinputedit).namefieldValidate()
                 if (validationmessage != "") {
-                    nameinputedit.error = "Error in Guest name: $validationmessage"
+                    val errormsg = getString(R.string.error_guestname)
+                    errormsg.plus(validationmessage)
+                    nameinputedit.error = errormsg
                 }
             }
         }
@@ -136,12 +138,12 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                     val intent = Intent(Intent.ACTION_SENDTO)
                     intent.data = Uri.parse("mailto:") // only email apps should handle this
                     intent.putExtra(Intent.EXTRA_EMAIL, mailinputedit.text.toString())
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "App feedback")
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.genericmessage))
                     startActivity(intent)
                 } catch (ex: ActivityNotFoundException) {
                     Toast.makeText(
                         this,
-                        "There are no email client installed on your device.",
+                        getString(R.string.error_noemailclient),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -155,23 +157,23 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         button.setOnClickListener {
             var inputvalflag = true
             if (nameinputedit.text.toString().isEmpty()) {
-                nameinputedit.error = "Guest name is required!"
+                nameinputedit.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             }
             if (phoneinputedit.text.toString().isEmpty()) {
-                phoneinputedit.error = "Guest phone is required!"
+                phoneinputedit.error = getString(R.string.error_vendorphoneinput)
                 inputvalflag = false
             }
             if (rsvpgroup.checkedChipId == -1) {
-                Toast.makeText(this, "RSVP is required!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_rsvpinput), Toast.LENGTH_SHORT).show()
                 inputvalflag = false
             }
             if (companionsgroup.checkedChipId == -1) {
-                Toast.makeText(this, "Companion info is required!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_companioninput), Toast.LENGTH_SHORT).show()
                 inputvalflag = false
             }
             if (tableinputedit.text.toString().isEmpty()) {
-                Toast.makeText(this, "Table info is required!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_tableinput), Toast.LENGTH_SHORT).show()
                 inputvalflag = false
             }
             if (inputvalflag) {
@@ -194,10 +196,11 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         return when (item.itemId) {
             R.id.remove_guest -> {
                 AlertDialog.Builder(this)
-                    .setTitle("Delete entry")
-                    .setMessage("Are you sure you want to delete this entry?") // Specifying a listener allows you to take an action before dismissing the dialog.
+                    .setTitle(getString(R.string.delete_message))
+                    .setMessage(getString(R.string.delete_entry)) // Specifying a listener allows you to take an action before dismissing the dialog.
                     // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton(android.R.string.yes
+                    .setPositiveButton(
+                        android.R.string.yes
                     ) { dialog, which ->
                         deleteGuest(this, guestitem)
                         finish()
@@ -221,9 +224,9 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         var chipselected = rsvpgroup.findViewById<Chip>(id)
         chiptextvalue = chipselected.text.toString()
         categoryrsvp = when (chiptextvalue) {
-            "Yes" -> "y"
-            "No" -> "n"
-            "Pending" -> "pending"
+            getString(R.string.yes) -> "y"
+            getString(R.string.no) -> "n"
+            getString(R.string.pending) -> "pending"
             else -> "pending"
         }
 
@@ -231,10 +234,10 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         chipselected = companionsgroup.findViewById(id)
         chiptextvalue = chipselected.text.toString()
         categorycompanions = when (chiptextvalue) {
-            "Adult" -> "adult"
-            "Child" -> "child"
-            "Baby" -> "baby"
-            "None" -> "none"
+            getString(R.string.adult) -> "adult"
+            getString(R.string.child) -> "child"
+            getString(R.string.baby) -> "baby"
+            getString(R.string.none) -> "none"
             else -> "none"
         }
 

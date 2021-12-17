@@ -219,6 +219,57 @@
     <string name="leftparenthesis" translatable="false">(</string>
     <string name="rightparenthesis" translatable="false">)</string>
     <string name="eventdetails">Event Details</string>
+    <string name="daysleft">days left!</string>
+    <string name="dueby"> due by </string>
+    <string name="event">event</string>
+    <string name="guest">guest</string>
+    <string name="succesfulpayment">Payment was created successully</string>
+    <string name="failedpayment">There was an error trying create the payment </string>
+    <string name="succesfuldeletepayment">Payment was deleted successfully</string>
+    <string name="faileddeletepayment">There was an error trying delete the payment </string>
+    <string name="succesfuleditpayment">Payment was edited successfully</string>
+    <string name="failededitpayment">There was an error trying edit the payment</string>
+    <string name="error_rsvpinput">RSVP is required</string>
+    <string name="error_companioninput">Companion info is required</string>
+    <string name="error_tableinput">Table info is required</string>
+    <string name="error_guestname">Error in Guest name: </string>
+    <string name="genericmessage">Subject</string>
+    <string name="successaddvendor">Vendor was created successully</string>
+    <string name="erroraddvendor">There was an error trying create the vendor </string>
+    <string name="successdeletevendor">Vendor was deleted successfully</string>
+    <string name="errordeletevendor">There was an error trying delete the vendor </string>
+    <string name="successeditvendor">Vendor was edited successfully</string>
+    <string name="erroreditvendor">There was an error trying edit the task \</string>
+    <string name="successaddtask">Task was created successully</string>
+    <string name="erroraddtask">There was an error trying create the task </string>
+    <string name="successdeletetask">Task was deleted successfully</string>
+    <string name="errordeletetask">There was an error trying delete the task </string>
+    <string name="successedittask">Task was edited successfully</string>
+    <string name="erroredittask">There was an error trying edit the task </string>
+    <string name="permissiondenied">Permission denied</string>
+    <string name="successaddnote">Note was created successully</string>
+    <string name="erroraddnote">There was an error trying to create the note </string>
+    <string name="successeditnote">Note was edited successully</string>
+    <string name="erroreditnote">There was an error trying to edit the note </string>
+    <string name="errorsharenote">Not possible to share the Note as either the title or body are missing</string>
+    <string name="error_bodyinput">Body is required</string>
+    <string name="shareusing">Share using</string>
+    <string name="error_eventname">Error in Event name: </string>
+    <string name="error_timeinput">Time is required</string>
+    <string name="error_locationinput">Location is required</string>
+    <string name="pickercanceled">Picker Canceled.</string>
+    <string name="successaddguest">Guest was created successully</string>
+    <string name="erroraddguest">There was an error trying create the guest </string>
+    <string name="successdeleteguest">Guest was deleted successully</string>
+    <string name="errordeleteguest">There was an error trying delete the guest </string>
+    <string name="successeditguest">Guest was edited successully</string>
+    <string name="erroreditguest">There was an error trying edit the guest </string>
+    <string name="successadduser">User was created successully</string>
+    <string name="erroradduser">There was an error trying create the user </string>
+    <string name="successdeleteuser">User was deleted successully</string>
+    <string name="errordeleteuser">There was an error trying delete the user </string>
+    <string name="successedituser">User was edited successully</string>
+    <string name="erroredituser">There was an error trying edit the user </string>
 
     <string-array name="role" >
         <item>Bride</item>
