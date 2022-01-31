@@ -16,8 +16,11 @@ import com.example.newevent2.Functions.addUser
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.User
 import kotlinx.android.synthetic.main.onboarding_name.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class OnboardingView : AppCompatActivity()
+class OnboardingView(override val coroutineContext: CoroutineContext) : AppCompatActivity(), CoroutineScope
 {
 
     private val autocompletePlaceCode = 1
@@ -136,8 +139,10 @@ class OnboardingView : AppCompatActivity()
                             //show popup to request runtime permission
                             requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
                         } else {
-                            addUser(this, userSession)
-                            addEvent(this, event)
+                            launch {
+                                addUser(this@OnboardingView, userSession)
+                                addEvent(this@OnboardingView, event)
+                            }
                         }
                         val resultIntent = Intent()
                         setResult(Activity.RESULT_OK, resultIntent)

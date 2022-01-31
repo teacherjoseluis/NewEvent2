@@ -41,7 +41,7 @@ class LoginPresenter(
                         val userModel = UserModel(userid)
                         userModel.getUser(object : UserModel.FirebaseSuccessUser {
                             override fun onUserexists(user: User) {
-                                if (user.eventid != "") {
+                                if (user.hasevent == "Y") {
                                     //save user into local storage
                                     user.saveUserSession(activity)
                                     viewLogin.onLoginSuccess()

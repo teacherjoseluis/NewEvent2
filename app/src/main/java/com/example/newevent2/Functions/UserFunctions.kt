@@ -11,16 +11,18 @@ import com.example.newevent2.R
 
 private lateinit var usermodel: UserModel
 
-internal fun addUser(context: Context, useritem: User) {
+internal suspend fun addUser(context: Context, useritem: User) {
     try {
         // Updating User information in Firebase
         usermodel = UserModel(useritem.key)
         //------------------------------------------------
-        val chainofcommand = orderChainAdd(usermodel)
-        chainofcommand.onAddEditUser(useritem)
+        //val chainofcommand = orderChainAdd(usermodel)
+        //chainofcommand.onAddEditUser(useritem)
+
+        val useritemupdated = usermodel.addUser2(useritem)
         //------------------------------------------------
         // Updating User information in Session
-        useritem.saveUserSession(context)
+        useritemupdated!!.saveUserSession(context)
         //------------------------------------------------
         // ------- Analytics call ----------------
         val bundle = Bundle()
@@ -47,8 +49,8 @@ internal fun editUser(context: Context, useritem: User) {
         // Updating User information in Firebase
         usermodel = UserModel(useritem.key)
         //------------------------------------------------
-        val chainofcommand = orderChainEdit(usermodel)
-        chainofcommand.onAddEditUser(useritem)
+        //val chainofcommand = orderChainEdit(usermodel)
+        //chainofcommand.onAddEditUser(useritem)
         //------------------------------------------------
         // Updating User information in Session
         useritem.saveUserSession(context)
@@ -73,16 +75,16 @@ internal fun editUser(context: Context, useritem: User) {
 }
 
 
-private fun orderChainAdd(
-    userModel: UserModel
-): CoRAddEditUser {
-    userModel.nexthandleru
-    return userModel
-}
+//private fun orderChainAdd(
+//    userModel: UserModel
+//): CoRAddEditUser {
+//    userModel.nexthandleru
+//    return userModel
+//}
 
-private fun orderChainEdit(
-    userModel: UserModel
-): CoRAddEditUser {
-    userModel.nexthandleru
-    return userModel
-}
+//private fun orderChainEdit(
+//    userModel: UserModel
+//): CoRAddEditUser {
+//    userModel.nexthandleru
+//    return userModel
+//}

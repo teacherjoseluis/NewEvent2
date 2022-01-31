@@ -18,7 +18,8 @@ class DashboardView_clone : Fragment() {
         val viewPager = inf.findViewById<View>(R.id.dashboardpager) as ViewPager
 
         //Getting the user currently loaded
-        val userSession=com.example.newevent2.Functions.getUserSession(requireActivity().applicationContext)
+        val userSession =
+            com.example.newevent2.Functions.getUserSession(requireActivity().applicationContext)
 
         //Setting up the pager adapter for this view
         val adapter =
@@ -41,9 +42,24 @@ class DashboardView_clone : Fragment() {
             override fun onTabSelected(p0: TabLayout.Tab?) {
                 viewPager.currentItem = p0!!.position
             }
+
             override fun onTabUnselected(p0: TabLayout.Tab?) {}
             override fun onTabReselected(p0: TabLayout.Tab?) {}
         })
         return inf
+    }
+
+    override fun onDestroyView() {
+        val childFragments = childFragmentManager.fragments
+        if (childFragments.isNotEmpty()) {
+            val fragmentTransaction = childFragmentManager.beginTransaction()
+            childFragments.forEach {
+                if (it != null) {
+                    fragmentTransaction.remove(it)
+                }
+            }
+            fragmentTransaction.commitAllowingStateLoss()
+        }
+        super.onDestroyView()
     }
 }

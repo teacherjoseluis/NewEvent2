@@ -6,11 +6,12 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.CoRAddEditEvent
+import com.example.newevent2.Functions.getUserSession
 
 class EventDBHelper(val context: Context) : CoRAddEditEvent {
 
     private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
-    private var nexthandlere: CoRAddEditEvent? = null
+    var nexthandlere: CoRAddEditEvent? = null
 
     fun insert(event: Event) {
         val values = ContentValues()
@@ -27,6 +28,10 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent {
         values.put("location", event.location)
         db.insert("EVENT", null, values)
         Log.d(TAG, "Event record inserted")
+
+        val user = getUserSession(context)
+        user.eventid = event.key
+        user.saveUserSession(context)
     }
 
     private fun getEventexists(key: String): Boolean {
@@ -108,7 +113,7 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent {
         const val TAG = "EventDBHelper"
     }
 
-    override fun onAddEditEvent(event: Event) {
+    override suspend fun onAddEditEvent(event: Event) {
         if (!getEventexists(event.key)) {
             insert(event)
         } else {

@@ -17,7 +17,8 @@ var eventmodel = EventModel()
 lateinit var eventdbhelper: EventDBHelper
 private lateinit var usermodel: UserModel
 
-internal fun addEvent(context: Context, eventitem: Event) {
+//Need to convert this one into a suspend function
+internal suspend fun addEvent(context: Context, eventitem: Event) {
     try {
         //------------------------------------------------
         // Adding Calendar Event

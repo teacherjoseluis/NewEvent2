@@ -246,7 +246,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
         nexthandlerpdel?.onDeletePayment(payment)
     }
 
-    override fun onAddEditEvent(event: Event) {
+    override suspend fun onAddEditEvent(event: Event) {
         addEvent(event)
         event.eventid = getNewEventId().toString()
         nexthandlere?.onAddEditEvent(event)

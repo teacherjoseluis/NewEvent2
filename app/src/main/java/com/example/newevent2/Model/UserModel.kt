@@ -10,16 +10,20 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import java.text.DateFormat
 
 class UserModel(
     //This user creates and edits Users into Firebase
     val key: String
-) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest, CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor, CoRAddEditUser {
+) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
+    CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor{
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     private val postRef = myRef.child("User").child(this.key)
+    private var firebaseUser = User(key)
     var tasksactive = 0
     var paymentsactive = 0
     var guestsactive = 0
@@ -34,15 +38,22 @@ class UserModel(
     var nexthandlerdelg: CoRDeleteGuest? = null
     var nexthandlerv: CoRAddEditVendor? = null
     var nexthandlerdelv: CoRDeleteVendor? = null
+    var nexthandlere: CoRAddEditEvent? = null
 
     fun getUser(dataFetched: FirebaseSuccessUser) {
-        val firebaseUser = User(key)
+        //firebaseUser = User(key)
         val userListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     firebaseUser.apply {
-                        eventid = p0.child("eventid").getValue(String::class.java)!!
+                        if (p0.child("eventid").getValue(String::class.java)!! == "") {
+                            if (p0.hasChild("Event")) {
+
+                            }
+                        } else {
+                            eventid = p0.child("eventid").getValue(String::class.java)!!
+                        }
                         shortname = p0.child("shortname").getValue(String::class.java)!!
                         email = p0.child("email").getValue(String::class.java)!!
                         country = p0.child("country").getValue(String::class.java)!!
@@ -51,18 +62,25 @@ class UserModel(
                         authtype = p0.child("authtype").getValue(String::class.java)!!
                         imageurl = p0.child("imageurl").getValue(String::class.java)!!
                         role = p0.child("role").getValue(String::class.java)!!
-                        hasevent = p0.child("hasevent").getValue(String::class.java)!!
+                        hasevent = if (p0.hasChild("Event")) {
+                            "Y"
+                        } else {
+                            "N"
+                        }
                         hastask = p0.child("hastask").getValue(String::class.java)!!
                         haspayment = p0.child("haspayment").getValue(String::class.java)!!
                         hasguest = p0.child("hasguest").getValue(String::class.java)!!
                         hasvendor = p0.child("hasvendor").getValue(String::class.java)!!
                         tasksactive = p0.child("tasksactive").getValue(Int::class.java)!!
-                        taskscompleted= p0.child("taskscompleted").getValue(Int::class.java)!!
-                        payments= p0.child("payments").getValue(Int::class.java)!!
-                        guests= p0.child("guests").getValue(Int::class.java)!!
-                        vendors= p0.child("vendors").getValue(Int::class.java)!!
+                        taskscompleted = p0.child("taskscompleted").getValue(Int::class.java)!!
+                        payments = p0.child("payments").getValue(Int::class.java)!!
+                        guests = p0.child("guests").getValue(Int::class.java)!!
+                        vendors = p0.child("vendors").getValue(Int::class.java)!!
 
-                        Log.d(TAG, "Data associated to User $key ($email) has been retrieved from Firebase")
+                        Log.d(
+                            TAG,
+                            "Data associated to User $key ($email) has been retrieved from Firebase"
+                        )
                     }
                 }
                 dataFetched.onUserexists(firebaseUser)
@@ -126,7 +144,7 @@ class UserModel(
 
     private fun editUserGuestflag(flag: String) {
         postRef.child("hasguest").setValue(flag)
-        Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
+        Log.d(TAG, "Flag hasguest for the User has been set to $flag")
     }
 
     private fun editUserVendorflag(flag: String) {
@@ -134,6 +152,7 @@ class UserModel(
         Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
     }
 
+    // This is the function that needs to be converted to coroutine
     private fun addUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
         val userfb = hashMapOf(
             "eventid" to user.eventid,
@@ -170,35 +189,65 @@ class UserModel(
         }
     }
 
-//    override fun onAddEditEvent(event: Event) {
-//        editUserAddEvent(event.key)
-//        editUserEventflag("Y")
-//        nexthandlere?.onAddEditEvent(event)
-//    }
-
-    override fun onAddEditUser(user: User) {
-        if (user.eventid == "") {
-            addUser(
-                user,
-                object : FirebaseSaveSuccess {
-                    override fun onSaveSuccess(flag: Boolean) {
-                        if (flag) {
-                            nexthandleru?.onAddEditUser(user)
-                        }
-                    }
-                })
-        } else if (user.eventid != "") {
-            editUser(
-                user,
-                object : FirebaseSaveSuccess {
-                    override fun onSaveSuccess(flag: Boolean) {
-                        if (flag) {
-                            nexthandleru?.onAddEditUser(user)
-                        }
-                    }
-                })
+    // Example of an function using coroutines
+    suspend fun addUser2(user: User) : User? {
+        val userfb = hashMapOf(
+            "eventid" to user.eventid,
+            "shortname" to user.shortname,
+            "email" to user.email,
+            "country" to user.country,
+            "language" to user.language,
+            "createdatetime" to converttoString(currentDateTime, DateFormat.MEDIUM),
+            "authtype" to user.authtype,
+            "imageurl" to "",
+            "role" to user.role,
+            "hasevent" to user.hasevent,
+            "hastask" to "",
+            "haspayment" to "",
+            "hasguest" to "",
+            "hasvendor" to "",
+            "tasksactive" to 0,
+            "taskscompleted" to 0,
+            "payments" to 0,
+            "guests" to 0,
+            "status" to "A",
+            "vendors" to 0
+        )
+        return try {
+            postRef.setValue(userfb as Map<String, Any>).await()
+            user.key = postRef.key.toString()
+            Log.d(TAG, "User was saved successfully")
+            return user
+        } catch (e: Exception) {
+            Log.e(TAG, "There was an error saving the User (${e.message})")
+            return null
         }
     }
+
+//    override fun onAddEditUser(user: User) {
+//        if (user.eventid == "") {
+//            addUser(
+//                user,
+//                object : FirebaseSaveSuccess {
+//                    // Let's assume it's returning always true so I don't have to depend on callbacks
+//                    override fun onSaveSuccess(flag: Boolean) {
+//                        if (flag) {
+//                            nexthandleru?.onAddEditUser(user)
+//                        }
+//                    }
+//                })
+//        } else if (user.eventid != "") {
+//            editUser(
+//                user,
+//                object : FirebaseSaveSuccess {
+//                    override fun onSaveSuccess(flag: Boolean) {
+//                        if (flag) {
+//                            nexthandleru?.onAddEditUser(user)
+//                        }
+//                    }
+//                })
+//        }
+//    }
 
     override fun onAddEditTask(task: Task) {
         editUserTaskflag(TaskModel.ACTIVEFLAG)
@@ -250,10 +299,7 @@ class UserModel(
         fun onSaveSuccess(flag: Boolean)
     }
 
-    companion object{
+    companion object {
         const val TAG = "UserModel"
     }
-
-
-
 }

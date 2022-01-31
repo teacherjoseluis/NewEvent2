@@ -53,7 +53,8 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".MainActivity"
-            android:label="NewEvent2">
+            android:label="NewEvent2"
+            android:theme="@style/AppTheme">
             <!--Default Intent Filter-->
         </activity>
         <activity
@@ -78,7 +79,8 @@
         <activity android:name=".MyContacts" />
         <activity android:name=".GuestCreateEdit"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".VendorCreateEdit" />
+        <activity android:name=".VendorCreateEdit"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".Guest_EditDetail" />
         <activity android:name=".NewVendor" />
         <activity android:name=".Vendor_EditDetail" />
@@ -88,7 +90,8 @@
             android:theme="@style/AppTheme"/>
         <activity android:name=".Settings" />
         <activity android:name=".MainEventView" />
-        <activity android:name=".DashboardView"/>
+        <activity android:name=".DashboardView"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".ActivityContainer"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -108,7 +111,8 @@
             android:theme="@style/AppTheme"/>
         <activity android:name=".PaymentCreateEdit"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".ContactsAll" />
+        <activity android:name=".ContactsAll"
+            android:theme="@style/AppTheme"/>
 
 
         <meta-data

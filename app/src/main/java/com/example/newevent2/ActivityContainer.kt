@@ -33,6 +33,8 @@ class ActivityContainer : AppCompatActivity() {
     private var usersession = User()
     private var clickNavItem = 0
 
+    private lateinit var headershortname:TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activitycontainer)
@@ -42,38 +44,38 @@ class ActivityContainer : AppCompatActivity() {
         val sidenavView = findViewById<NavigationView>(R.id.sidenav)
 
         //If session is empty the user gets redirected to the login screen
-        usersession = com.example.newevent2.Functions.getUserSession(this)
-        if (usersession.key == "") {
-            val loginactivity =
-                Intent(this, LoginView::class.java)
-            startActivity(loginactivity)
-        } else {
+//        usersession = com.example.newevent2.Functions.getUserSession(this)
+//        if (usersession.key == "") {
+//            val loginactivity =
+//                Intent(this, LoginView::class.java)
+//            startActivity(loginactivity)
+//        } else {
             //Short name is shown in the sidebar header
-            val headershortname =
+            headershortname =
                 sidenavView.getHeaderView(0).findViewById<TextView>(R.id.headershortname)
-            headershortname.text = usersession.shortname
-        }
+         //   headershortname.text = usersession.shortname
+        //}
 
         //Fragment container is initialized with Dashboard fragment
-        var activefragment = fm.findFragmentById(R.id.fragment_container)
-        if (activefragment == null) {
-            activefragment = DashboardView_clone()
-            fm.beginTransaction()
-                .add(R.id.fragment_container, activefragment, "DashboardView")
-                .commit()
-        }
+//        var activefragment = fm.findFragmentById(R.id.fragment_container)
+//        if (activefragment == null) {
+//            activefragment = DashboardView_clone()
+//            fm.beginTransaction()
+//                .add(R.id.fragment_container, activefragment, "DashboardView")
+//                .commit()
+//        }
 
         //If today is the day of the event, the user will get a notification to congratulate him/her
-        if (isEventDate(this) == 0) {
-            NordanAlertDialog.Builder(this)
-                .setAnimation(Animation.SLIDE)
-                .isCancellable(false)
-                .setTitle(getString(R.string.congratulations))
-                .setMessage(getString(R.string.weddingday))
-                .setIcon(R.drawable.love_animated_gif_2018_8, true)
-                .setPositiveBtnText(getString(R.string.great))
-                .build().show()
-        }
+//        if (isEventDate(this) == 0) {
+//            NordanAlertDialog.Builder(this)
+//                .setAnimation(Animation.SLIDE)
+//                .isCancellable(false)
+//                .setTitle(getString(R.string.congratulations))
+//                .setMessage(getString(R.string.weddingday))
+//                .setIcon(R.drawable.love_animated_gif_2018_8, true)
+//                .setPositiveBtnText(getString(R.string.great))
+//                .build().show()
+//        }
 
         // Declare the toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -240,5 +242,36 @@ class ActivityContainer : AppCompatActivity() {
 
         val dialog = builder.create()
         dialog.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //If session is empty the user gets redirected to the login screen
+        usersession = com.example.newevent2.Functions.getUserSession(this)
+        if (usersession.key == "") {
+            val loginactivity =
+                Intent(this, LoginView::class.java)
+            startActivity(loginactivity)
+        } else {
+            headershortname.text = usersession.shortname
+            if (isEventDate(this) == 0) {
+                NordanAlertDialog.Builder(this)
+                    .setAnimation(Animation.SLIDE)
+                    .isCancellable(false)
+                    .setTitle(getString(R.string.congratulations))
+                    .setMessage(getString(R.string.weddingday))
+                    .setIcon(R.drawable.love_animated_gif_2018_8, true)
+                    .setPositiveBtnText(getString(R.string.great))
+                    .build().show()
+            }
+
+            var activefragment = fm.findFragmentById(R.id.fragment_container)
+            if (activefragment == null) {
+                activefragment = DashboardView_clone()
+                fm.beginTransaction()
+                    .add(R.id.fragment_container, activefragment, "DashboardView")
+                    .commit()
+            }
+        }
     }
 }

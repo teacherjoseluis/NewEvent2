@@ -16,7 +16,7 @@ public class ViewAnimation {
                     }
                 })
                 .rotation(rotate ? 135f : 0f);
-        return !rotate;
+        return rotate;
     }
 
     public static void showIn(final View v) {

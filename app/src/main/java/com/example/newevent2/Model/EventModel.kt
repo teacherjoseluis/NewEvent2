@@ -2,14 +2,18 @@ package com.example.newevent2.Model
 
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.newevent2.CoRAddEditEvent
+import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.saveImgtoStorage
 import com.example.newevent2.MVP.ImagePresenter
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class EventModel : CoRAddEditEvent {
 
@@ -20,6 +24,7 @@ class EventModel : CoRAddEditEvent {
     var userid = ""
     lateinit var event: Event
 
+    //Need to convert this one into a suspend function
     private fun addEvent(
         userid: String,
         event: Event,
@@ -55,6 +60,38 @@ class EventModel : CoRAddEditEvent {
                     savesuccessflag.onSaveSuccess(postRef.key.toString())
                 }
             }
+        }
+    }
+
+    private suspend fun addEvent2(
+        userid: String,
+        event: Event,
+        uri: Uri?
+    ) : Event? {
+        val postRef = myRef.child("User").child(userid).child("Event").push()
+        val eventmap = hashMapOf(
+            "imageurl" to event.imageurl,
+            "placeid" to event.placeid,
+            "latitude" to event.latitude,
+            "longitude" to event.longitude,
+            "address" to event.address,
+            "name" to event.name,
+            "date" to event.date,
+            "time" to event.time,
+            "about" to event.eventid,
+            "location" to event.location
+        )
+        return try {
+            postRef.setValue(eventmap as Map<String, Any>).await()
+            val eventid = postRef.key.toString()
+            if (uri != null) {
+                saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)
+            }
+            Log.d(UserModel.TAG, "Event was saved successfully")
+            return event
+        } catch (e: Exception) {
+            Log.e(UserModel.TAG, "There was an error saving the Event (${e.message})")
+            return null
         }
     }
 
@@ -110,17 +147,11 @@ class EventModel : CoRAddEditEvent {
         fun onEvent(event: Event)
     }
 
-    override fun onAddEditEvent(event: Event) {
-        addEvent(
-            userid,
-            event,
-            null,
-            object : FirebaseSaveSuccess {
-                override fun onSaveSuccess(eventid: String) {
-                    if (eventid != "") {
-                        nexthandlere?.onAddEditEvent(event)
-                    }
-                }
-            })
+    interface FirebaseSuccessListenerEventKey {
+        fun onEvent(eventkey: String)
+    }
+
+    override suspend fun onAddEditEvent(event: Event) {
+        addEvent2(userid,event,null)
     }
 }
