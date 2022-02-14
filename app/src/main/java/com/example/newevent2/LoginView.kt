@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,15 +9,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.MVP.LoginPresenter
 import com.example.newevent2.Model.User
+import com.example.newevent2.Model.UserDBHelper
+import com.example.newevent2.Model.UserModel
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.login0.*
+import kotlinx.coroutines.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -24,7 +29,8 @@ import java.util.regex.Pattern
 class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.SignUpActivity {
 
     private lateinit var mCallbackManager: CallbackManager
-    private lateinit var presenter: LoginPresenter
+    private val scope = CoroutineScope(Job() + Dispatchers.Main)
+    //private lateinit var presenter: LoginPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +70,20 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                 if (inputvalflag) {
                     val userEmail = editEmaillogin.text.toString()
                     val userPassword = editPasswordlogin.text.toString()
-                    presenter =
-                        LoginPresenter(this, this, "email", userEmail, userPassword, null)
+
+                    val scope = CoroutineScope(Job() + Dispatchers.Main)
+
+                    scope.launch {
+                        loginUser(this@LoginView, "email", userEmail, userPassword, null)
+                        // I think this should only keep the async work here and later use it outside the scope
+                    }
+//                    runBlocking {
+//                        launch {
+//                            loginUser(this@LoginView, "email", userEmail, userPassword, null)
+//                        }
+//                    }
+//                    presenter =
+//                        LoginPresenter(this, this, "email", userEmail, userPassword, null)
                 }
             }
 
@@ -94,14 +112,18 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                         override fun onSuccess(result: LoginResult?) {
                             val fbtoken = result!!.accessToken
                             val credential = FacebookAuthProvider.getCredential(fbtoken.token)
-                            presenter = LoginPresenter(
-                                this@LoginView,
-                                this@LoginView,
-                                "facebook",
-                                null,
-                                null,
-                                credential
-                            )
+//                            presenter = LoginPresenter(
+//                                this@LoginView,
+//                                this@LoginView,
+//                                "facebook",
+//                                null,
+//                                null,
+//                                credential
+//                            )
+                            val scope = CoroutineScope(Job() + Dispatchers.Main)
+                            scope.launch {
+                                loginUser(this@LoginView, "facebook", null, null, credential)
+                            }
                         }
 
                         override fun onCancel() {
@@ -159,6 +181,12 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+    }
+
+    @ExperimentalCoroutinesApi
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data)
         // Pass the activity result back to the Facebook SDK
@@ -169,14 +197,18 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             try {
                 val account = task.getResult(ApiException::class.java)
                 val credential = GoogleAuthProvider.getCredential(account!!.idToken, null)
-                presenter = LoginPresenter(
-                    this,
-                    this@LoginView,
-                    "google",
-                    null,
-                    null,
-                    credential
-                )
+//                presenter = LoginPresenter(
+//                    this,
+//                    this@LoginView,
+//                    "google",
+//                    null,
+//                    null,
+//                    credential
+//                )
+
+                scope.launch {
+                    loginUser(this@LoginView, "google", null, null, credential)
+                }
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)
             }
@@ -187,6 +219,37 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         private const val TAG = "GoogleActivity"
         private const val TAGF = "FacebookLogin"
         private const val RC_SIGN_IN = 9001
+    }
+
+    @ExperimentalCoroutinesApi
+    private suspend fun loginUser(
+        activity: Activity,
+        authtype: String,
+        username: String?,
+        password: String?,
+        credential: AuthCredential?
+    ) {
+        val user = User()
+        //Login and retrieve the confirmation the user exists in FB
+        val firebaseUser = user.login(activity, authtype, username, password, credential)
+        //Get local information from the user
+        val userDBHelper = UserDBHelper(this)
+        val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
+        //Let's compare what Firebase returns against what's loaded (It should be the same)
+        if (userlocal.key != firebaseUser!!.uid) {
+            //It's not the same so let's get what's loaded in Firebase. Fingers crossed
+            val userremote = UserModel(firebaseUser!!.uid).getUser()
+            //For future logins let's save wat we get to the local DB
+            // This is failing because it's being called for a null user
+            userDBHelper.insert(userremote)
+            if (userremote!!.hasevent == "Y") {
+                //At this moment we are going to trust on what this attribute contains.
+                // Assuming there is already an event associated
+                onLoginSuccess()
+            } else {
+                onOnboarding(firebaseUser!!.uid, firebaseUser!!.email!!, authtype)
+            }
+        }
     }
 
     override fun onLoginSuccess() {

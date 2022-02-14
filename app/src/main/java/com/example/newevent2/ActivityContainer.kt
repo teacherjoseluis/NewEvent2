@@ -234,7 +234,7 @@ class ActivityContainer : AppCompatActivity() {
             }
             //Logoff from Firebase
             usersession.logout(this@ActivityContainer)
-            usersession.deleteUserSession(this@ActivityContainer)
+            //usersession.deleteUserSession(this@ActivityContainer)
             finish()
         }
         builder.setNegativeButton("Cancel"

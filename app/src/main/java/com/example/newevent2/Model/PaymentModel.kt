@@ -246,6 +246,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
 
     companion object {
         const val ACTIVEFLAG = "Y"
+        const val INACTIVEFLAG = "N"
         const val TAG = "PaymentModel"
     }
 

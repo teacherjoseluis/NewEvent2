@@ -6,19 +6,29 @@ import androidx.annotation.RequiresApi
 import com.example.newevent2.*
 import com.example.newevent2.Functions.converttoString
 import com.example.newevent2.Functions.currentDateTime
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.text.DateFormat
+import androidx.annotation.NonNull
+import com.google.firebase.FirebaseException
+import com.google.firebase.database.*
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.util.concurrent.Flow
+import kotlin.coroutines.resumeWithException
+import com.google.firebase.database.DatabaseError
+
+import com.google.firebase.database.DataSnapshot
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlin.coroutines.resume
+
 
 class UserModel(
     //This user creates and edits Users into Firebase
     val key: String
 ) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
-    CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor{
+    CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor, CoRAddEditUser {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
@@ -41,7 +51,6 @@ class UserModel(
     var nexthandlere: CoRAddEditEvent? = null
 
     fun getUser(dataFetched: FirebaseSuccessUser) {
-        //firebaseUser = User(key)
         val userListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
@@ -91,6 +100,20 @@ class UserModel(
             }
         }
         postRef.addValueEventListener(userListenerActive)
+    }
+
+    @ExperimentalCoroutinesApi
+    suspend fun getUser(): User? {
+        return try {
+            postRef.awaitsSingle()?.getValue(User::class.java)
+        } catch (e: Exception) {
+            Log.d(
+                TAG,
+                "Data associated to User cannot ben retrieved from Firebase"
+            )
+            null
+        }
+
     }
 
     private fun editUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
@@ -152,7 +175,6 @@ class UserModel(
         Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
     }
 
-    // This is the function that needs to be converted to coroutine
     private fun addUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
         val userfb = hashMapOf(
             "eventid" to user.eventid,
@@ -190,7 +212,7 @@ class UserModel(
     }
 
     // Example of an function using coroutines
-    suspend fun addUser2(user: User) : User? {
+    suspend fun addUser2(user: User, savesuccessflag: FirebaseSaveSuccess): User? {
         val userfb = hashMapOf(
             "eventid" to user.eventid,
             "shortname" to user.shortname,
@@ -224,30 +246,30 @@ class UserModel(
         }
     }
 
-//    override fun onAddEditUser(user: User) {
-//        if (user.eventid == "") {
-//            addUser(
-//                user,
-//                object : FirebaseSaveSuccess {
-//                    // Let's assume it's returning always true so I don't have to depend on callbacks
-//                    override fun onSaveSuccess(flag: Boolean) {
-//                        if (flag) {
-//                            nexthandleru?.onAddEditUser(user)
-//                        }
-//                    }
-//                })
-//        } else if (user.eventid != "") {
-//            editUser(
-//                user,
-//                object : FirebaseSaveSuccess {
-//                    override fun onSaveSuccess(flag: Boolean) {
-//                        if (flag) {
-//                            nexthandleru?.onAddEditUser(user)
-//                        }
-//                    }
-//                })
-//        }
-//    }
+
+    @ExperimentalCoroutinesApi
+    suspend fun DatabaseReference.awaitsSingle(): DataSnapshot? =
+        suspendCancellableCoroutine { continuation ->
+            val listener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        continuation.resume(snapshot)
+                    } catch (exception: Exception) {
+                        continuation.resumeWithException(exception)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    val exception = when (error.toException()) {
+                        is FirebaseException -> error.toException()
+                        else -> Exception("The Firebase call for reference $this was cancelled")
+                    }
+                    continuation.resumeWithException(exception)
+                }
+            }
+            continuation.invokeOnCancellation { this.removeEventListener(listener) }
+            this.addListenerForSingleValueEvent(listener)
+        }
 
     override fun onAddEditTask(task: Task) {
         editUserTaskflag(TaskModel.ACTIVEFLAG)
@@ -291,6 +313,10 @@ class UserModel(
         nexthandlerdelv?.onDeleteVendor(vendor)
     }
 
+    override fun onAddEditUser(user: User) {
+        TODO("Not yet implemented")
+    }
+
     interface FirebaseSuccessUser {
         fun onUserexists(user: User)
     }
@@ -299,7 +325,13 @@ class UserModel(
         fun onSaveSuccess(flag: Boolean)
     }
 
+    interface CoroutineValueEventListener {
+        fun onDataChange(snapshot: DataSnapshot)
+        fun onCancelled(error: DatabaseError)
+    }
+
     companion object {
         const val TAG = "UserModel"
     }
+
 }

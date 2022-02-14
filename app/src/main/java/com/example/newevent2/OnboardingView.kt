@@ -18,6 +18,7 @@ import com.example.newevent2.Model.User
 import kotlinx.android.synthetic.main.onboarding_name.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
 
 class OnboardingView(override val coroutineContext: CoroutineContext) : AppCompatActivity(), CoroutineScope
@@ -139,7 +140,7 @@ class OnboardingView(override val coroutineContext: CoroutineContext) : AppCompa
                             //show popup to request runtime permission
                             requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
                         } else {
-                            launch {
+                            runBlocking {
                                 addUser(this@OnboardingView, userSession)
                                 addEvent(this@OnboardingView, event)
                             }

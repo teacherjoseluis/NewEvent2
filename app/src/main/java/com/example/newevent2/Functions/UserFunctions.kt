@@ -4,26 +4,24 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import com.example.newevent2.CoRAddEditUser
-import com.example.newevent2.Model.MyFirebaseApp
-import com.example.newevent2.Model.User
-import com.example.newevent2.Model.UserModel
+import com.example.newevent2.Model.*
 import com.example.newevent2.R
 
 private lateinit var usermodel: UserModel
+lateinit var userdbhelper: UserDBHelper
 
-internal suspend fun addUser(context: Context, useritem: User) {
+internal fun addUser(context: Context, useritem: User) {
     try {
+        // Adding a new record in Local DB
+        userdbhelper = UserDBHelper(context)
+        //------------------------------------------------
         // Updating User information in Firebase
         usermodel = UserModel(useritem.key)
         //------------------------------------------------
-        //val chainofcommand = orderChainAdd(usermodel)
-        //chainofcommand.onAddEditUser(useritem)
+        val chainofcommand = orderChainAdd(usermodel,userdbhelper)
+        chainofcommand.onAddEditUser(useritem)
+        //------------------------------------------------
 
-        val useritemupdated = usermodel.addUser2(useritem)
-        //------------------------------------------------
-        // Updating User information in Session
-        useritemupdated!!.saveUserSession(context)
-        //------------------------------------------------
         // ------- Analytics call ----------------
         val bundle = Bundle()
         bundle.putString("AUTHTYPE", useritem.authtype)
@@ -32,7 +30,6 @@ internal suspend fun addUser(context: Context, useritem: User) {
         MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDUSER", bundle)
         //------------------------------------------------
         Toast.makeText(context, context.getString(R.string.successadduser), Toast.LENGTH_LONG).show()
-        //addEvent(context, eventitem)
     } catch (e: Exception) {
         val errormsg = context.getString(R.string.erroradduser)
         errormsg.plus(e.message)
@@ -46,15 +43,16 @@ internal suspend fun addUser(context: Context, useritem: User) {
 
 internal fun editUser(context: Context, useritem: User) {
     try {
+        // Adding a new record in Local DB
+        userdbhelper = UserDBHelper(context)
+        //------------------------------------------------
         // Updating User information in Firebase
         usermodel = UserModel(useritem.key)
         //------------------------------------------------
-        //val chainofcommand = orderChainEdit(usermodel)
-        //chainofcommand.onAddEditUser(useritem)
+        val chainofcommand = orderChainEdit(usermodel,userdbhelper)
+        chainofcommand.onAddEditUser(useritem)
         //------------------------------------------------
-        // Updating User information in Session
-        useritem.saveUserSession(context)
-        //------------------------------------------------
+
         // ------- Analytics call ----------------
         val bundle = Bundle()
         bundle.putString("AUTHTYPE", useritem.authtype)
@@ -75,16 +73,18 @@ internal fun editUser(context: Context, useritem: User) {
 }
 
 
-//private fun orderChainAdd(
-//    userModel: UserModel
-//): CoRAddEditUser {
-//    userModel.nexthandleru
-//    return userModel
-//}
+private fun orderChainAdd(
+    userModel: UserModel,
+    userDBHelper: UserDBHelper
+): CoRAddEditUser {
+    userModel.nexthandleru = userDBHelper
+    return userModel
+}
 
-//private fun orderChainEdit(
-//    userModel: UserModel
-//): CoRAddEditUser {
-//    userModel.nexthandleru
-//    return userModel
-//}
+private fun orderChainEdit(
+    userModel: UserModel,
+    userDBHelper: UserDBHelper
+): CoRAddEditUser {
+    userModel.nexthandleru = userDBHelper
+    return userModel
+}

@@ -54,9 +54,9 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
         //chainofcommand.onAddEditGuest(guestitem)
         //------------------------------------------------
         // Updating User information in Session
-        user.vendors = user.vendors + 1
-        user.hasvendor = VendorModel.ACTIVEFLAG
-        user.saveUserSession(context)
+//        user.vendors = user.vendors + 1
+//        user.hasvendor = VendorModel.ACTIVEFLAG
+//        user.saveUserSession(context)
         //------------------------------------------------
         // It's fair to believe that asynchronous calls were already executed at this point
         // ------- Analytics call ----------------
@@ -94,9 +94,9 @@ internal fun deleteVendor(context: Context, vendoritem: Vendor) {
         usermodel.vendorsactive = user.vendors
         //------------------------------------------------
         // Updating User information in Session
-        user.vendors = user.vendors - 1
-        if (user.vendors == 0) user.hasvendor = VendorModel.INACTIVEFLAG
-        user.saveUserSession(context)
+//        user.vendors = user.vendors - 1
+//        if (user.vendors == 0) user.hasvendor = VendorModel.INACTIVEFLAG
+//        user.saveUserSession(context)
 
         val chainofcommand =
             orderChainDel(usermodel, vendordbhelper, vendormodel)

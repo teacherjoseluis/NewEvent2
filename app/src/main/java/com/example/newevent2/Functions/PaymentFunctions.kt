@@ -22,8 +22,12 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //------------------------------------------------
+        // Updating User information in Local DB
+        userdbhelper = UserDBHelper(context)
+        //------------------------------------------------
+
         // Adding a new record in Firebase
-        val user = getUserSession(context)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         paymentmodel.userid = user.key
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -32,18 +36,15 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         paymentdbhelper = PaymentDBHelper(context)
         //taskdbhelper.task = taskitem
         //------------------------------------------------
+
         // Updating User information in Firebase
         usermodel = UserModel(user.key)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
-        val chainofcommand = orderChainAdd(calendarevent, paymentmodel, paymentdbhelper, usermodel)
+        val chainofcommand = orderChainAdd(calendarevent, paymentmodel, paymentdbhelper, userdbhelper, usermodel)
         chainofcommand.onAddEditPayment(paymentitem)
         //------------------------------------------------
-        // Updating User information in Session
-        user.payments = user.payments + 1
-        user.haspayment = PaymentModel.ACTIVEFLAG
-        user.saveUserSession(context)
-        //------------------------------------------------
+
         // ------- Analytics call ----------------
         val bundle = Bundle()
         bundle.putString("CATEGORY", paymentitem.category)
@@ -69,7 +70,11 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //------------------------------------------------
-        val user = getUserSession(context)
+        // Updating User information in Local DB
+        userdbhelper = UserDBHelper(context)
+        //------------------------------------------------
+
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         paymentmodel.userid = user.key
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -78,17 +83,15 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
         paymentdbhelper = PaymentDBHelper(context)
         paymentdbhelper.payment = paymentitem
         //------------------------------------------------
+
+
         // Updating User information in Firebase
         usermodel = UserModel(user.key)
         usermodel.paymentsactive = user.payments
         //------------------------------------------------
-        // Updating User information in Session
-        user.payments = user.payments - 1
-        if (user.payments == 0) user.haspayment = TaskModel.INACTIVEFLAG
-        user.saveUserSession(context)
 
         val chainofcommand =
-            orderChainDel(calendarevent, usermodel, paymentdbhelper, paymentmodel)
+            orderChainDel(calendarevent, userdbhelper, usermodel, paymentdbhelper, paymentmodel)
         chainofcommand.onDeletePayment(paymentitem)
         //------------------------------------------------
         // ------- Analytics call ----------------
@@ -152,21 +155,25 @@ private fun orderChainAdd(
     calendarEvent: CalendarEvent,
     paymentModel: PaymentModel,
     paymentDBHelper: PaymentDBHelper,
+    userdbhelper: UserDBHelper,
     userModel: UserModel
 ): CoRAddEditPayment {
     calendarEvent.nexthandlerp = paymentModel
     paymentModel.nexthandler = paymentDBHelper
-    paymentDBHelper.nexthandler = userModel
+    paymentDBHelper.nexthandler = userdbhelper
+    userdbhelper.nexthandleru = userModel
     return calendarEvent
 }
 
 private fun orderChainDel(
     calendarEvent: CalendarEvent,
+    userdbhelper: UserDBHelper,
     userModel: UserModel,
     paymentDBHelper: PaymentDBHelper,
     paymentModel: PaymentModel
 ): CoRDeletePayment {
-    calendarEvent.nexthandlerpdel = userModel
+    calendarEvent.nexthandlerpdel = userdbhelper
+    userdbhelper.nexthandleru = userModel
     userModel.nexthandlerdelp = paymentDBHelper
     paymentDBHelper.nexthandlerdel = paymentModel
     return calendarEvent

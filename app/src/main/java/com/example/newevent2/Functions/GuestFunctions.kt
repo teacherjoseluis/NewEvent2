@@ -20,8 +20,11 @@ private lateinit var guestCreateEdit: GuestCreateEdit
 internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
     try {
         //------------------------------------------------
+        // Updating User information in Local DB
+        userdbhelper = UserDBHelper(context)
+        //------------------------------------------------
         // Adding a new record in Firebase
-        val user = getUserSession(context)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         guestmodel.userid = user.key
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -37,16 +40,16 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
         if (caller == "contact"){
         contactsAll = ContactsAll()
         contactsAll.mContext = context
-            val chainofcommand = orderChainAddContact(guestmodel, guestdbhelper, usermodel, contactsAll)
+            val chainofcommand = orderChainAddContact(guestmodel, guestdbhelper, userdbhelper, usermodel, contactsAll)
             chainofcommand.onAddEditGuest(guestitem)
 
         } else if (caller == "guest") {
             guestCreateEdit = GuestCreateEdit()
             guestCreateEdit.mContext = context
-            val chainofcommand = orderChainAddGuest(guestmodel, guestdbhelper, usermodel, guestCreateEdit)
+            val chainofcommand = orderChainAddGuest(guestmodel, guestdbhelper, userdbhelper, usermodel, guestCreateEdit)
             chainofcommand.onAddEditGuest(guestitem)
         } else if (caller == "none") {
-            val chainofcommand = orderChainAddNone(guestmodel, guestdbhelper, usermodel)
+            val chainofcommand = orderChainAddNone(guestmodel, guestdbhelper, userdbhelper, usermodel)
             chainofcommand.onAddEditGuest(guestitem)
         }
         //------------------------------------------------
@@ -55,9 +58,9 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
         //chainofcommand.onAddEditGuest(guestitem)
         //------------------------------------------------
         // Updating User information in Session
-        user.guests = user.guests + 1
-        user.hasguest = GuestModel.ACTIVEFLAG
-        user.saveUserSession(context)
+//        user.guests = user.guests + 1
+//        user.hasguest = GuestModel.ACTIVEFLAG
+//        user.saveUserSession(context)
         //------------------------------------------------
         // It's fair to believe that asynchronous calls were already executed at this point
 
@@ -83,7 +86,10 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
 
 internal fun deleteGuest(context: Context, guestitem: Guest) {
     try {
-        val user = getUserSession(context)
+        // Updating User information in Local DB
+        userdbhelper = UserDBHelper(context)
+        //------------------------------------------------
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         guestmodel.userid = user.key
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -97,12 +103,12 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
         usermodel.guestsactive = user.guests
         //------------------------------------------------
         // Updating User information in Session
-        user.guests = user.guests - 1
-        if (user.guests == 0) user.hasguest = GuestModel.INACTIVEFLAG
-        user.saveUserSession(context)
+//        user.guests = user.guests - 1
+//        if (user.guests == 0) user.hasguest = GuestModel.INACTIVEFLAG
+//        user.saveUserSession(context)
 
         val chainofcommand =
-            orderChainDel(usermodel, guestdbhelper, guestmodel)
+            orderChainDel(usermodel, userdbhelper, guestdbhelper, guestmodel)
         chainofcommand.onDeleteGuest(guestitem)
         //------------------------------------------------
         // ------- Analytics call ----------------
@@ -126,8 +132,10 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
 
 internal fun editGuest(context: Context, guestitem: Guest) {
     try {
+        // Updating User information in Local DB
+        userdbhelper = UserDBHelper(context)
         //---------------------------------------------------
-        val user = getUserSession(context)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         guestmodel.userid = user.key
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -239,11 +247,13 @@ internal fun contacttoGuest(context: Context, contactid: String): Guest {
 private fun orderChainAddContact(
     guestModel: GuestModel,
     guestDBHelper: GuestDBHelper,
+    userdbhelper: UserDBHelper,
     userModel: UserModel,
     contactsAll: ContactsAll
 ): CoRAddEditGuest {
     guestModel.nexthandler = guestDBHelper
-    guestDBHelper.nexthandler = userModel
+    guestDBHelper.nexthandler = userdbhelper
+    userdbhelper.nexthandleru = userModel
     userModel.nexthandlerg = contactsAll
     return guestModel
 }
@@ -251,11 +261,13 @@ private fun orderChainAddContact(
 private fun orderChainAddGuest(
     guestModel: GuestModel,
     guestDBHelper: GuestDBHelper,
+    userdbhelper: UserDBHelper,
     userModel: UserModel,
     guestCreateEdit: GuestCreateEdit
 ): CoRAddEditGuest {
     guestModel.nexthandler = guestDBHelper
-    guestDBHelper.nexthandler = userModel
+    guestDBHelper.nexthandler = userdbhelper
+    userdbhelper.nexthandleru = userModel
     userModel.nexthandlerg = guestCreateEdit
     return guestModel
 }
@@ -264,19 +276,23 @@ private fun orderChainAddGuest(
 private fun orderChainAddNone(
     guestModel: GuestModel,
     guestDBHelper: GuestDBHelper,
+    userdbhelper: UserDBHelper,
     userModel: UserModel
 ): CoRAddEditGuest {
     guestModel.nexthandler = guestDBHelper
-    guestDBHelper.nexthandler = userModel
+    guestDBHelper.nexthandler = userdbhelper
+    userdbhelper.nexthandleru = userModel
     return guestModel
 }
 
 private fun orderChainDel(
     userModel: UserModel,
+    userdbhelper: UserDBHelper,
     guestDBHelper: GuestDBHelper,
     guestModel: GuestModel
 ): CoRDeleteGuest {
-    userModel.nexthandlerdelg = guestDBHelper
+    userModel.nexthandlerdelg = userdbhelper
+    userdbhelper.nexthandlerdelg = guestDBHelper
     guestDBHelper.nexthandlerdel = guestModel
     return userModel
 }

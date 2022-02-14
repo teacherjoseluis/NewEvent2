@@ -31,7 +31,7 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent {
 
         val user = getUserSession(context)
         user.eventid = event.key
-        user.saveUserSession(context)
+//        user.saveUserSession(context)
     }
 
     private fun getEventexists(key: String): Boolean {
