@@ -7,11 +7,13 @@ import androidx.annotation.RequiresApi
 import com.example.newevent2.CoRAddEditEvent
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.saveImgtoStorage
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.MVP.ImagePresenter
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
@@ -25,73 +27,49 @@ class EventModel : CoRAddEditEvent {
     lateinit var event: Event
 
     //Need to convert this one into a suspend function
-    private fun addEvent(
-        userid: String,
-        event: Event,
-        uri: Uri?,
-        savesuccessflag: FirebaseSaveSuccess
-    ) {
-        val postRef = myRef.child("User").child(userid).child("Event").push()
-        val eventmap = hashMapOf(
-            "imageurl" to event.imageurl,
-            "placeid" to event.placeid,
-            "latitude" to event.latitude,
-            "longitude" to event.longitude,
-            "address" to event.address,
-            "name" to event.name,
-            "date" to event.date,
-            "time" to event.time,
-            "about" to event.eventid,
-            "location" to event.location
-        )
-
-        postRef.setValue(
-            eventmap as Map<String, Any>
-        ) { error, _ ->
-            if (error != null) {
-                //Se loggea un error al guardar el usuario TODO databaseError.getMessage()
-                savesuccessflag.onSaveSuccess("")
-            } else {
-                // Saving in the log the new creation of the event
-                val eventid = postRef.key.toString()
-                //Save Event image in Storage
-                if (uri != null) {
-                    saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)
-                    savesuccessflag.onSaveSuccess(postRef.key.toString())
-                }
-            }
-        }
-    }
-
-    private suspend fun addEvent2(
-        userid: String,
+    private suspend fun addEvent(
+        //userid: String,
         event: Event,
         uri: Uri?
-    ) : Event? {
-        val postRef = myRef.child("User").child(userid).child("Event").push()
-        val eventmap = hashMapOf(
-            "imageurl" to event.imageurl,
-            "placeid" to event.placeid,
-            "latitude" to event.latitude,
-            "longitude" to event.longitude,
-            "address" to event.address,
-            "name" to event.name,
-            "date" to event.date,
-            "time" to event.time,
-            "about" to event.eventid,
-            "location" to event.location
-        )
-        return try {
-            postRef.setValue(eventmap as Map<String, Any>).await()
+        //savesuccessflag: FirebaseSaveSuccess
+    ) {
+        coroutineScope {
+            val postRef = myRef.child("User").child(this@EventModel.userid).child("Event").push()
+            val eventmap = hashMapOf(
+                "imageurl" to event.imageurl,
+                "placeid" to event.placeid,
+                "latitude" to event.latitude,
+                "longitude" to event.longitude,
+                "address" to event.address,
+                "name" to event.name,
+                "date" to event.date,
+                "time" to event.time,
+                "about" to event.eventid,
+                "location" to event.location
+            )
+
+            postRef.setValue(
+                eventmap as Map<String, Any>
+            ).await()
             val eventid = postRef.key.toString()
+            //Save Event image in Storage
             if (uri != null) {
                 saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)
             }
-            Log.d(UserModel.TAG, "Event was saved successfully")
-            return event
-        } catch (e: Exception) {
-            Log.e(UserModel.TAG, "There was an error saving the Event (${e.message})")
-            return null
+//            { error, _ ->
+//                if (error != null) {
+//                    //Se loggea un error al guardar el usuario TODO databaseError.getMessage()
+//                    savesuccessflag.onSaveSuccess("")
+//                } else {
+//                    // Saving in the log the new creation of the event
+//                    val eventid = postRef.key.toString()
+//                    //Save Event image in Storage
+//                    if (uri != null) {
+//                        saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)
+//                        savesuccessflag.onSaveSuccess(postRef.key.toString())
+//                    }
+//                }
+//            }
         }
     }
 
@@ -152,6 +130,7 @@ class EventModel : CoRAddEditEvent {
     }
 
     override suspend fun onAddEditEvent(event: Event) {
-        addEvent2(userid,event,null)
+        addEvent(event, null)
+        nexthandlere?.onAddEditEvent(event)
     }
 }

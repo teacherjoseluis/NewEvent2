@@ -16,13 +16,10 @@ import com.example.newevent2.Functions.addUser
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.User
 import kotlinx.android.synthetic.main.onboarding_name.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class OnboardingView(override val coroutineContext: CoroutineContext) : AppCompatActivity(), CoroutineScope
-{
+class OnboardingView() : AppCompatActivity() {
 
     private val autocompletePlaceCode = 1
 
@@ -32,6 +29,7 @@ class OnboardingView(override val coroutineContext: CoroutineContext) : AppCompa
     private var eventaddress: String? = null
 
     private lateinit var userSession: User
+    private val scope = CoroutineScope(Job() + Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,8 +138,10 @@ class OnboardingView(override val coroutineContext: CoroutineContext) : AppCompa
                             //show popup to request runtime permission
                             requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
                         } else {
-                            runBlocking {
+                            scope.launch {
+                                //addUser - Remote & Local
                                 addUser(this@OnboardingView, userSession)
+                                //addEvent - Remote & Local
                                 addEvent(this@OnboardingView, event)
                             }
                         }
@@ -181,5 +181,4 @@ class OnboardingView(override val coroutineContext: CoroutineContext) : AppCompa
         newFragment.show(supportFragmentManager, "Time Picker")
 
     }
-
 }

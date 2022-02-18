@@ -74,16 +74,28 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                     val scope = CoroutineScope(Job() + Dispatchers.Main)
 
                     scope.launch {
-                        loginUser(this@LoginView, "email", userEmail, userPassword, null)
-                        // I think this should only keep the async work here and later use it outside the scope
+                        val user = User()
+                        val firebaseUser =
+                            user.login(this@LoginView, "email", userEmail, userPassword, null)
+                        //------------------------------------------------------
+                        val userDBHelper = UserDBHelper(this@LoginView)
+                        val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
+                        //------------------------------------------------------
+                        if (userlocal.key == "") {
+                            val userremote = UserModel(firebaseUser.uid).getUser()
+                            if (userremote == null) {
+                                onOnboarding(
+                                    firebaseUser.uid,
+                                    firebaseUser.email!!,
+                                    "email"
+                                )
+                            } else {
+                                onLoginSuccess()
+                            }
+                        } else {
+                            onLoginSuccess()
+                        }
                     }
-//                    runBlocking {
-//                        launch {
-//                            loginUser(this@LoginView, "email", userEmail, userPassword, null)
-//                        }
-//                    }
-//                    presenter =
-//                        LoginPresenter(this, this, "email", userEmail, userPassword, null)
                 }
             }
 
@@ -112,17 +124,28 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                         override fun onSuccess(result: LoginResult?) {
                             val fbtoken = result!!.accessToken
                             val credential = FacebookAuthProvider.getCredential(fbtoken.token)
-//                            presenter = LoginPresenter(
-//                                this@LoginView,
-//                                this@LoginView,
-//                                "facebook",
-//                                null,
-//                                null,
-//                                credential
-//                            )
-                            val scope = CoroutineScope(Job() + Dispatchers.Main)
                             scope.launch {
-                                loginUser(this@LoginView, "facebook", null, null, credential)
+                                val user = User()
+                                val firebaseUser =
+                                    user.login(this@LoginView, "facebook", null, null, credential)
+                                //------------------------------------------------------
+                                val userDBHelper = UserDBHelper(this@LoginView)
+                                val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
+                                //------------------------------------------------------
+                                if (userlocal.key == "") {
+                                    val userremote = UserModel(firebaseUser.uid).getUser()
+                                    if (userremote == null) {
+                                        onOnboarding(
+                                            firebaseUser.uid,
+                                            firebaseUser.email!!,
+                                            "facebook"
+                                        )
+                                    } else {
+                                        onLoginSuccess()
+                                    }
+                                } else {
+                                    onLoginSuccess()
+                                }
                             }
                         }
 
@@ -197,17 +220,25 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             try {
                 val account = task.getResult(ApiException::class.java)
                 val credential = GoogleAuthProvider.getCredential(account!!.idToken, null)
-//                presenter = LoginPresenter(
-//                    this,
-//                    this@LoginView,
-//                    "google",
-//                    null,
-//                    null,
-//                    credential
-//                )
 
                 scope.launch {
-                    loginUser(this@LoginView, "google", null, null, credential)
+                    //loginUser(this@LoginView, "google", null, null, credential)
+                    val user = User()
+                    val firebaseUser = user.login(this@LoginView, "google", null, null, credential)
+                    //------------------------------------------------------
+                    val userDBHelper = UserDBHelper(this@LoginView)
+                    val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
+                    //------------------------------------------------------
+                    if (userlocal.key == "") {
+                        val userremote = UserModel(firebaseUser.uid).getUser()
+                        if (userremote == null) {
+                            onOnboarding(firebaseUser.uid, firebaseUser.email!!, "google")
+                        } else {
+                            onLoginSuccess()
+                        }
+                    } else {
+                        onLoginSuccess()
+                    }
                 }
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)
@@ -219,37 +250,6 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         private const val TAG = "GoogleActivity"
         private const val TAGF = "FacebookLogin"
         private const val RC_SIGN_IN = 9001
-    }
-
-    @ExperimentalCoroutinesApi
-    private suspend fun loginUser(
-        activity: Activity,
-        authtype: String,
-        username: String?,
-        password: String?,
-        credential: AuthCredential?
-    ) {
-        val user = User()
-        //Login and retrieve the confirmation the user exists in FB
-        val firebaseUser = user.login(activity, authtype, username, password, credential)
-        //Get local information from the user
-        val userDBHelper = UserDBHelper(this)
-        val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
-        //Let's compare what Firebase returns against what's loaded (It should be the same)
-        if (userlocal.key != firebaseUser!!.uid) {
-            //It's not the same so let's get what's loaded in Firebase. Fingers crossed
-            val userremote = UserModel(firebaseUser!!.uid).getUser()
-            //For future logins let's save wat we get to the local DB
-            // This is failing because it's being called for a null user
-            userDBHelper.insert(userremote)
-            if (userremote!!.hasevent == "Y") {
-                //At this moment we are going to trust on what this attribute contains.
-                // Assuming there is already an event associated
-                onLoginSuccess()
-            } else {
-                onOnboarding(firebaseUser!!.uid, firebaseUser!!.email!!, authtype)
-            }
-        }
     }
 
     override fun onLoginSuccess() {
@@ -269,8 +269,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         ).show()
 
         val onboarding =
-            Intent(this, OnboardingView::class.java)
-        //OnboardingView pasando userid como parametro
+            Intent(this@LoginView, OnboardingView::class.java)
         onboarding.putExtra("userid", userid)
         onboarding.putExtra("email", email)
         onboarding.putExtra("authtype", authtype)

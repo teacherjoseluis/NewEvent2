@@ -10,7 +10,7 @@ import com.example.newevent2.R
 private lateinit var usermodel: UserModel
 lateinit var userdbhelper: UserDBHelper
 
-internal fun addUser(context: Context, useritem: User) {
+internal suspend fun addUser(context: Context, useritem: User) {
     try {
         // Adding a new record in Local DB
         userdbhelper = UserDBHelper(context)
@@ -41,7 +41,7 @@ internal fun addUser(context: Context, useritem: User) {
     }
 }
 
-internal fun editUser(context: Context, useritem: User) {
+internal suspend fun editUser(context: Context, useritem: User) {
     try {
         // Adding a new record in Local DB
         userdbhelper = UserDBHelper(context)

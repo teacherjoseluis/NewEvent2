@@ -4,5 +4,5 @@ import com.example.newevent2.Model.User
 
 
 interface CoRAddEditUser {
-    fun onAddEditUser(user: User)
+    suspend fun onAddEditUser(user: User)
 }

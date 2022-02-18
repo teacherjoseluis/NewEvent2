@@ -11,16 +11,17 @@ import java.lang.Exception
 import java.text.DateFormat
 import androidx.annotation.NonNull
 import com.google.firebase.FirebaseException
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.Flow
 import kotlin.coroutines.resumeWithException
 import com.google.firebase.database.DatabaseError
 
 import com.google.firebase.database.DataSnapshot
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlin.coroutines.resume
 
 
@@ -34,6 +35,8 @@ class UserModel(
     private var myRef = database.reference
     private val postRef = myRef.child("User").child(this.key)
     private var firebaseUser = User(key)
+    private val firebaseAuth = FirebaseAuth.getInstance()
+
     var tasksactive = 0
     var paymentsactive = 0
     var guestsactive = 0
@@ -175,77 +178,45 @@ class UserModel(
         Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
     }
 
-    private fun addUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
-        val userfb = hashMapOf(
-            "eventid" to user.eventid,
-            "shortname" to user.shortname,
-            "email" to user.email,
-            "country" to user.country,
-            "language" to user.language,
-            "createdatetime" to converttoString(currentDateTime, DateFormat.MEDIUM),
-            "authtype" to user.authtype,
-            "imageurl" to "",
-            "role" to user.role,
-            "hasevent" to user.hasevent,
-            "hastask" to "",
-            "haspayment" to "",
-            "hasguest" to "",
-            "hasvendor" to "",
-            "tasksactive" to 0,
-            "taskscompleted" to 0,
-            "payments" to 0,
-            "guests" to 0,
-            "status" to "A",
-            "vendors" to 0
-        )
-        postRef.setValue(
-            userfb as Map<String, Any>
-        ) { error, _ ->
-            if (error != null) {
-                Log.e(TAG, "There was an error saving the User (${error.message})")
-                savesuccessflag.onSaveSuccess(false)
-            } else {
-                Log.d(TAG, "User was saved successfully")
-                savesuccessflag.onSaveSuccess(true)
-            }
+    private suspend fun addUser(user: User) {
+        coroutineScope {
+            val userfb = hashMapOf(
+                "eventid" to user.eventid,
+                "shortname" to user.shortname,
+                "email" to user.email,
+                "country" to user.country,
+                "language" to user.language,
+                "createdatetime" to converttoString(currentDateTime, DateFormat.MEDIUM),
+                "authtype" to user.authtype,
+                "imageurl" to "",
+                "role" to user.role,
+                "hasevent" to user.hasevent,
+                "hastask" to "",
+                "haspayment" to "",
+                "hasguest" to "",
+                "hasvendor" to "",
+                "tasksactive" to 0,
+                "taskscompleted" to 0,
+                "payments" to 0,
+                "guests" to 0,
+                "status" to "A",
+                "vendors" to 0
+            )
+            postRef.setValue(
+                userfb as Map<String, Any>
+            ).await()
         }
     }
-
-    // Example of an function using coroutines
-    suspend fun addUser2(user: User, savesuccessflag: FirebaseSaveSuccess): User? {
-        val userfb = hashMapOf(
-            "eventid" to user.eventid,
-            "shortname" to user.shortname,
-            "email" to user.email,
-            "country" to user.country,
-            "language" to user.language,
-            "createdatetime" to converttoString(currentDateTime, DateFormat.MEDIUM),
-            "authtype" to user.authtype,
-            "imageurl" to "",
-            "role" to user.role,
-            "hasevent" to user.hasevent,
-            "hastask" to "",
-            "haspayment" to "",
-            "hasguest" to "",
-            "hasvendor" to "",
-            "tasksactive" to 0,
-            "taskscompleted" to 0,
-            "payments" to 0,
-            "guests" to 0,
-            "status" to "A",
-            "vendors" to 0
-        )
-        return try {
-            postRef.setValue(userfb as Map<String, Any>).await()
-            user.key = postRef.key.toString()
-            Log.d(TAG, "User was saved successfully")
-            return user
-        } catch (e: Exception) {
-            Log.e(TAG, "There was an error saving the User (${e.message})")
-            return null
-        }
-    }
-
+    //        { error, _ ->
+//            if (error != null) {
+//                Log.e(TAG, "There was an error saving the User (${error.message})")
+//                //savesuccessflag.onSaveSuccess(false)
+//            } else {
+//                Log.d(TAG, "User was saved successfully")
+//                //savesuccessflag.onSaveSuccess(true)
+//            }
+//        }
+//    }
 
     @ExperimentalCoroutinesApi
     suspend fun DatabaseReference.awaitsSingle(): DataSnapshot? =
@@ -270,6 +241,33 @@ class UserModel(
             continuation.invokeOnCancellation { this.removeEventListener(listener) }
             this.addListenerForSingleValueEvent(listener)
         }
+
+//    inline fun <T> safeCall(action: () -> Resource<T>): Resource<T> {
+//        return try {
+//            action()
+//        } catch (e: Exception) {
+//            Resource.Error(e.message ?: "An unknown Error Occurred")
+//        }
+//    }
+
+//    sealed class Resource<T>(val data: T? = null, val message: String? = null) {
+//        class Success<T>(data: T) : Resource<T>(data)
+//        class Loading<T>(data: T? = null) : Resource<T>(data)
+//        class Error<T>(message: String, data: T? = null) : Resource<T>(data, message)
+//    }
+
+//    suspend fun createUser(userName: String, userEmailAddress: String, userPhoneNum: String, userLoginPassword: String): Resource<AuthResult> {
+//        return withContext(Dispatchers.IO) {
+//            safeCall {
+//                val registrationResult = firebaseAuth.createUserWithEmailAndPassword(userEmailAddress, userLoginPassword).await()
+//
+//                val userId = registrationResult.user?.uid!!
+//                val newUser = User(userName, userEmailAddress, userPhoneNum)
+//                postRef.child(userId).setValue(newUser).await()
+//                Resource.Success(registrationResult)
+//            }
+//        }
+//    }
 
     override fun onAddEditTask(task: Task) {
         editUserTaskflag(TaskModel.ACTIVEFLAG)
@@ -313,8 +311,9 @@ class UserModel(
         nexthandlerdelv?.onDeleteVendor(vendor)
     }
 
-    override fun onAddEditUser(user: User) {
-        TODO("Not yet implemented")
+    override suspend fun onAddEditUser(user: User) {
+        addUser(user)
+        nexthandleru?.onAddEditUser(user)
     }
 
     interface FirebaseSuccessUser {
@@ -323,11 +322,6 @@ class UserModel(
 
     interface FirebaseSaveSuccess {
         fun onSaveSuccess(flag: Boolean)
-    }
-
-    interface CoroutineValueEventListener {
-        fun onDataChange(snapshot: DataSnapshot)
-        fun onCancelled(error: DatabaseError)
     }
 
     companion object {

@@ -171,7 +171,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         const val TAG = "UserDBHelper"
     }
 
-    override fun onAddEditUser(user: User) {
+    override suspend fun onAddEditUser(user: User) {
         if (!getUserexists(user.key)) {
             insert(user)
         } else {
