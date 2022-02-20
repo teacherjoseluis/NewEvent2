@@ -55,10 +55,8 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     private fun getUserexists(key: String): Boolean {
         var existsflag = false
         val cursor: Cursor = db.rawQuery("SELECT * FROM USER WHERE userid = '$key'", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                existsflag = true
-            }
+        if (cursor.count > 0) {
+            existsflag = true
         }
         cursor.close()
         return existsflag
@@ -67,10 +65,8 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     fun getUserKey(): String {
         var key = ""
         val cursor: Cursor = db.rawQuery("SELECT userid FROM USER", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                key = cursor.getString(cursor.getColumnIndex("userid"))
-            }
+        if (cursor.count > 0) {
+            key = cursor.getString(cursor.getColumnIndex("userid"))
         }
         cursor.close()
         return key
@@ -79,56 +75,54 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     fun getUser(key: String): User {
         var user = User()
         val cursor: Cursor = db.rawQuery("SELECT * FROM USER WHERE userid = '$key'", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                do {
-                    val userid = cursor.getString(cursor.getColumnIndex("userid"))
-                    val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
-                    val shortname = cursor.getString(cursor.getColumnIndex("shortname"))
-                    val email = cursor.getString(cursor.getColumnIndex("email"))
-                    val country = cursor.getString(cursor.getColumnIndex("country"))
-                    val language = cursor.getString(cursor.getColumnIndex("language"))
-                    val createdatetime = cursor.getString(cursor.getColumnIndex("createdatetime"))
-                    val authtype = cursor.getString(cursor.getColumnIndex("authtype"))
-                    val status = cursor.getString(cursor.getColumnIndex("status"))
-                    val imageurl = cursor.getString(cursor.getColumnIndex("imageurl"))
-                    val role = cursor.getString(cursor.getColumnIndex("role"))
-                    val hasevent = cursor.getString(cursor.getColumnIndex("hasevent"))
-                    val hastask = cursor.getString(cursor.getColumnIndex("hastask"))
-                    val haspayment = cursor.getString(cursor.getColumnIndex("haspayment"))
-                    val hasguest = cursor.getString(cursor.getColumnIndex("hasguest"))
-                    val hasvendor = cursor.getString(cursor.getColumnIndex("hasvendor"))
-                    val tasksactive = cursor.getInt(cursor.getColumnIndex("tasksactive"))
-                    val taskscompleted = cursor.getInt(cursor.getColumnIndex("taskscompleted"))
-                    val payments = cursor.getInt(cursor.getColumnIndex("payments"))
-                    val guests = cursor.getInt(cursor.getColumnIndex("guests"))
-                    user =
-                        User(
-                            userid,
-                            eventid,
-                            shortname,
-                            email,
-                            country,
-                            language,
-                            createdatetime,
-                            authtype,
-                            status,
-                            imageurl,
-                            role,
-                            hasevent,
-                            hastask,
-                            haspayment,
-                            hasguest,
-                            hasvendor,
-                            tasksactive,
-                            taskscompleted,
-                            payments,
-                            guests
-                        )
-                    Log.d(TAG, "User $userid record obtained from local DB")
-                } while (cursor.moveToNext())
-            }
+        if (cursor.count > 0) {
+            cursor.moveToFirst()
+            do {
+                val userid = cursor.getString(cursor.getColumnIndex("userid"))
+                val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
+                val shortname = cursor.getString(cursor.getColumnIndex("shortname"))
+                val email = cursor.getString(cursor.getColumnIndex("email"))
+                val country = cursor.getString(cursor.getColumnIndex("country"))
+                val language = cursor.getString(cursor.getColumnIndex("language"))
+                val createdatetime = cursor.getString(cursor.getColumnIndex("createdatetime"))
+                val authtype = cursor.getString(cursor.getColumnIndex("authtype"))
+                val status = cursor.getString(cursor.getColumnIndex("status"))
+                val imageurl = cursor.getString(cursor.getColumnIndex("imageurl"))
+                val role = cursor.getString(cursor.getColumnIndex("role"))
+                val hasevent = cursor.getString(cursor.getColumnIndex("hasevent"))
+                val hastask = cursor.getString(cursor.getColumnIndex("hastask"))
+                val haspayment = cursor.getString(cursor.getColumnIndex("haspayment"))
+                val hasguest = cursor.getString(cursor.getColumnIndex("hasguest"))
+                val hasvendor = cursor.getString(cursor.getColumnIndex("hasvendor"))
+                val tasksactive = cursor.getInt(cursor.getColumnIndex("tasksactive"))
+                val taskscompleted = cursor.getInt(cursor.getColumnIndex("taskscompleted"))
+                val payments = cursor.getInt(cursor.getColumnIndex("payments"))
+                val guests = cursor.getInt(cursor.getColumnIndex("guests"))
+                user =
+                    User(
+                        userid,
+                        eventid,
+                        shortname,
+                        email,
+                        country,
+                        language,
+                        createdatetime,
+                        authtype,
+                        status,
+                        imageurl,
+                        role,
+                        hasevent,
+                        hastask,
+                        haspayment,
+                        hasguest,
+                        hasvendor,
+                        tasksactive,
+                        taskscompleted,
+                        payments,
+                        guests
+                    )
+                Log.d(TAG, "User $userid record obtained from local DB")
+            } while (cursor.moveToNext())
         }
         cursor.close()
         return user

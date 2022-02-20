@@ -17,7 +17,6 @@ import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.User
 import kotlinx.android.synthetic.main.onboarding_name.*
 import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
 
 class OnboardingView() : AppCompatActivity() {
 

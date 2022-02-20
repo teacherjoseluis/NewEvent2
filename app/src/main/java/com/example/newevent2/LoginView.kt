@@ -1,6 +1,5 @@
 package com.example.newevent2
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +16,6 @@ import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.login0.*
@@ -30,7 +28,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
 
     private lateinit var mCallbackManager: CallbackManager
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
-    //private lateinit var presenter: LoginPresenter
+    val user = User()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +72,6 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                     val scope = CoroutineScope(Job() + Dispatchers.Main)
 
                     scope.launch {
-                        val user = User()
                         val firebaseUser =
                             user.login(this@LoginView, "email", userEmail, userPassword, null)
                         //------------------------------------------------------
@@ -125,7 +122,6 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                             val fbtoken = result!!.accessToken
                             val credential = FacebookAuthProvider.getCredential(fbtoken.token)
                             scope.launch {
-                                val user = User()
                                 val firebaseUser =
                                     user.login(this@LoginView, "facebook", null, null, credential)
                                 //------------------------------------------------------
@@ -222,8 +218,6 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                 val credential = GoogleAuthProvider.getCredential(account!!.idToken, null)
 
                 scope.launch {
-                    //loginUser(this@LoginView, "google", null, null, credential)
-                    val user = User()
                     val firebaseUser = user.login(this@LoginView, "google", null, null, credential)
                     //------------------------------------------------------
                     val userDBHelper = UserDBHelper(this@LoginView)

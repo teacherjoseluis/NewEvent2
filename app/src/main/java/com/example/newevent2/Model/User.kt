@@ -75,200 +75,36 @@ class User(
         var authResultUser: FirebaseUser? = null
         when (authtype) {
             "email" -> {
-                val authResult = loginWithEmail(mAuth, UserEmail!!, UserPassword!!)
-                if (authResult != null) {
-                    if (authResult!!.user!!.isEmailVerified) {
-                        authResultUser = authResult.user
-//                        val userid = authResult.user?.uid
-//                        val email = authResult.user?.email.toString()
-                        Toast.makeText(
-                            activity,
-                            activity.getString(R.string.success_email_login),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            activity,
-                            activity.getString(R.string.notverified_email_login),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } else {
-                    //We are lacking a lot of possible exception errors that may be worth retrieving from loginWithEmail
+                val authResult = loginWithEmail(mAuth, UserEmail!!, UserPassword!!)!!
+                if (authResult.user!!.isEmailVerified) {
+                    authResultUser = authResult.user
                     Toast.makeText(
                         activity,
-                        activity.getString(R.string.failed_email_login),
+                        activity.getString(R.string.success_email_login),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        activity,
+                        activity.getString(R.string.notverified_email_login),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-//                mAuth.signInWithEmailAndPassword(UserEmail!!, UserPassword!!)
-//                    .addOnCompleteListener(activity) { task ->
-//                        if (task.isSuccessful) {
-//                            if (mAuth.currentUser!!.isEmailVerified) {
-//                                Toast.makeText(
-//                                    activity,
-//                                    activity.getString(R.string.success_email_login),
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                                //Upon login pass UserId to the Presenter
-//                                dataFetched.onUserId(mAuth.currentUser!!.uid, UserEmail)
-//                            } else {
-//                                Toast.makeText(
-//                                    activity,
-//                                    activity.getString(R.string.notverified_email_login),
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                            }
-//                        } else {
-//                            try {
-//                                throw task.exception!!
-//                            } catch (e: FirebaseAuthInvalidUserException) {
-//                                //ERROR_USER_NOT_FOUND
-//                                Toast.makeText(
-//                                    activity,
-//                                    activity.getString(R.string.error_emailaccountnotfound),
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                            } catch (e: FirebaseAuthInvalidCredentialsException) {
-//                                //ERROR_WRONG_PASSWORD
-//                                Toast.makeText(
-//                                    activity,
-//                                    activity.getString(R.string.error_emailpasswordincorrect),
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                            } catch (e: Exception) {
-//                                Toast.makeText(
-//                                    activity,
-//                                    activity.getString(R.string.failed_email_login),
-//                                    //e.message, //There are several errors that can be caught at this point
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                            }
-//                        }
-//                    }
             }
             else -> {
                 //Trying to implement coroutines here. Email authentication will also need it
-                val authResult = loginWithSocialNetwork(mAuth, credential!!)
-                if (authResult != null) {
-                    //Need to do something about these guys so they returned or used somewhere
-                    authResultUser = authResult.user
-                    val userid = authResult.user?.uid
-                    val email = authResult.user?.email.toString()
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.success_sn_login),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.failure_sn_login),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-//                mAuth.signInWithCredential(credential!!)
-//                    .addOnCompleteListener(activity) { task ->
-//                        if (task.isSuccessful) {
-//                            Toast.makeText(
-//                                activity,
-//                                activity.getString(R.string.success_sn_login),
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                            //Upon login pass UserId to the Presenter
-//                            dataFetched.onUserId(
-//                                mAuth.currentUser!!.uid,
-//                                mAuth.currentUser!!.email.toString()
-//                            )
-//                        } else {
-//                            try {
-//                                throw task.exception!!
-//                            } catch (e: Exception) {
-//                                Toast.makeText(
-//                                    activity,
-//                                    activity.getString(R.string.failure_sn_login),
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                            }
-//                        }
-//                    }
+                val authResult = loginWithSocialNetwork(mAuth, credential!!)!!
+                //Need to do something about these guys so they returned or used somewhere
+                authResultUser = authResult.user
+                Toast.makeText(
+                    activity,
+                    activity.getString(R.string.success_sn_login),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         return authResultUser
     }
-
-//    fun saveUserSession(activity: Activity) {
-//        // Clearing User Session
-//        activity.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).edit().clear().apply()
-//
-//        //Creating User Session
-//        val usersession =
-//            activity.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
-//
-//        val sessionEditor = usersession!!.edit()
-//        sessionEditor.putString("key", key)
-//        sessionEditor.putString("email", email)
-//        sessionEditor.putString("authtype", authtype)
-//        sessionEditor.putString("eventid", eventid)
-//        sessionEditor.putString("shortname", shortname)
-//        sessionEditor.putString("country", country)
-//        sessionEditor.putString("language", language)
-//        sessionEditor.putString("createdatetime", createdatetime)
-//        sessionEditor.putString("status", status)
-//        sessionEditor.putString("imageurl", imageurl)
-//        sessionEditor.putString("role", role)
-//        sessionEditor.putString("hasevent", hasevent)
-//        sessionEditor.putString("hastask", hastask)
-//        sessionEditor.putString("haspayment", haspayment)
-//        sessionEditor.putString("hasguest", hasguest)
-//        sessionEditor.putString("hasvendor", hasvendor)
-//        sessionEditor.putInt("tasksactive", tasksactive)
-//        sessionEditor.putInt("taskscompleted", taskscompleted)
-//        sessionEditor.putInt("payments", payments)
-//        sessionEditor.putInt("guests", guests)
-//        sessionEditor.putInt("vendors", vendors)
-//        sessionEditor.apply()
-//        Log.d(TAG, "Session for User $key has been updated")
-//    }
-
-//    fun saveUserSession(context: Context) {
-//        // Clearing User Session
-//        context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).edit().clear().apply()
-//
-//        //Creating User Session
-//        val usersession =
-//            context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
-//
-//        val sessionEditor = usersession!!.edit()
-//        sessionEditor.putString("key", key)
-//        sessionEditor.putString("email", email)
-//        sessionEditor.putString("authtype", authtype)
-//        sessionEditor.putString("eventid", eventid)
-//        sessionEditor.putString("shortname", shortname)
-//        sessionEditor.putString("country", country)
-//        sessionEditor.putString("language", language)
-//        sessionEditor.putString("createdatetime", createdatetime)
-//        sessionEditor.putString("status", status)
-//        sessionEditor.putString("imageurl", imageurl)
-//        sessionEditor.putString("role", role)
-//        sessionEditor.putString("hasevent", hasevent)
-//        sessionEditor.putString("hastask", hastask)
-//        sessionEditor.putString("haspayment", haspayment)
-//        sessionEditor.putString("hasguest", hasguest)
-//        sessionEditor.putString("hasvendor", hasvendor)
-//        sessionEditor.putInt("tasksactive", tasksactive)
-//        sessionEditor.putInt("taskscompleted", taskscompleted)
-//        sessionEditor.putInt("payments", payments)
-//        sessionEditor.putInt("guests", guests)
-//        sessionEditor.putInt("vendors", vendors)
-//        sessionEditor.apply()
-//        Log.d(TAG, "Session for User $key has been updated")
-//    }
-
-//    fun deleteUserSession(context: Context) {
-//        context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).edit().clear().apply()
-//    }
 
     fun logout(activity: Activity) {
         mAuth.signOut()
@@ -277,7 +113,6 @@ class User(
     }
 
     fun signup(view: LoginView, activity: Activity, UserEmail: String, UserPassword: String) {
-        //viewLogin = LoginView()
         viewLogin = view
         mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
             .addOnCompleteListener(activity) { task ->
@@ -388,7 +223,7 @@ class User(
         return stepsBeanList
     }
 
-    suspend fun loginWithEmail(
+    private suspend fun loginWithEmail(
         mAuth: FirebaseAuth,
         UserEmail: String,
         UserPassword: String
@@ -400,7 +235,7 @@ class User(
         }
     }
 
-    suspend fun loginWithSocialNetwork(
+    private suspend fun loginWithSocialNetwork(
         mAuth: FirebaseAuth,
         credential: AuthCredential
     ): AuthResult? {
@@ -409,10 +244,6 @@ class User(
         } catch (e: Exception) {
             return null
         }
-    }
-
-    interface FirebaseUserId {
-        fun onUserId(userid: String, email: String)
     }
 
     interface SignUpActivity {

@@ -1,5 +1,6 @@
 package com.example.newevent2.Functions
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
@@ -8,6 +9,7 @@ import com.example.newevent2.Model.*
 import com.example.newevent2.R
 
 private lateinit var usermodel: UserModel
+@SuppressLint("StaticFieldLeak")
 lateinit var userdbhelper: UserDBHelper
 
 internal suspend fun addUser(context: Context, useritem: User) {
@@ -71,7 +73,6 @@ internal suspend fun editUser(context: Context, useritem: User) {
         ).show()
     }
 }
-
 
 private fun orderChainAdd(
     userModel: UserModel,

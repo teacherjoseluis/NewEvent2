@@ -24,8 +24,11 @@ internal suspend fun addEvent(context: Context, eventitem: Event) {
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //------------------------------------------------
+        // Updating User information in Local DB
+        userdbhelper = UserDBHelper(context)
+        //------------------------------------------------
         // Adding a new record in Firebase
-        val user = getUserSession(context)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         eventmodel.userid = user.key
         //------------------------------------------------
         // Adding a new record in Local DB

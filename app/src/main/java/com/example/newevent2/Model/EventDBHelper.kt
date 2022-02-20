@@ -37,10 +37,8 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent {
     private fun getEventexists(key: String): Boolean {
         var existsflag = false
         val cursor: Cursor = db.rawQuery("SELECT * FROM EVENT WHERE eventid = '$key'", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                existsflag = true
-            }
+        if (cursor.count > 0) {
+            existsflag = true
         }
         cursor.close()
         return existsflag
@@ -50,27 +48,25 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent {
 //        val list = ArrayList<Event>()
         var event = Event()
         val cursor: Cursor = db.rawQuery("SELECT * FROM EVENT", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                do {
-                    val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
-                    val imageurl = cursor.getString(cursor.getColumnIndex("imageurl"))
-                    val placeid = cursor.getString(cursor.getColumnIndex("placeid"))
-                    val latitude = cursor.getDouble(cursor.getColumnIndex("latitude"))
-                    val longitude = cursor.getDouble(cursor.getColumnIndex("longitude"))
-                    val address = cursor.getString(cursor.getColumnIndex("address"))
-                    val name = cursor.getString(cursor.getColumnIndex("name"))
-                    val date = cursor.getString(cursor.getColumnIndex("date"))
-                    val time = cursor.getString(cursor.getColumnIndex("time"))
-                    val about = cursor.getString(cursor.getColumnIndex("about"))
-                    val location = cursor.getString(cursor.getColumnIndex("location"))
-                    event =
-                        Event(eventid, imageurl, placeid, latitude, longitude, address, name, date, time, about,location)
+        if (cursor.count > 0) {
+            cursor.moveToFirst()
+            do {
+                val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
+                val imageurl = cursor.getString(cursor.getColumnIndex("imageurl"))
+                val placeid = cursor.getString(cursor.getColumnIndex("placeid"))
+                val latitude = cursor.getDouble(cursor.getColumnIndex("latitude"))
+                val longitude = cursor.getDouble(cursor.getColumnIndex("longitude"))
+                val address = cursor.getString(cursor.getColumnIndex("address"))
+                val name = cursor.getString(cursor.getColumnIndex("name"))
+                val date = cursor.getString(cursor.getColumnIndex("date"))
+                val time = cursor.getString(cursor.getColumnIndex("time"))
+                val about = cursor.getString(cursor.getColumnIndex("about"))
+                val location = cursor.getString(cursor.getColumnIndex("location"))
+                event =
+                    Event(eventid, imageurl, placeid, latitude, longitude, address, name, date, time, about,location)
 //                    list.add(event)
-                    Log.d(TAG, "Event $eventid record obtained from local DB")
-                } while (cursor.moveToNext())
-            }
+                Log.d(TAG, "Event $eventid record obtained from local DB")
+            } while (cursor.moveToNext())
         }
         cursor.close()
         return event

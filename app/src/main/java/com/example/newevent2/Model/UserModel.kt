@@ -116,7 +116,6 @@ class UserModel(
             )
             null
         }
-
     }
 
     private fun editUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
@@ -241,33 +240,6 @@ class UserModel(
             continuation.invokeOnCancellation { this.removeEventListener(listener) }
             this.addListenerForSingleValueEvent(listener)
         }
-
-//    inline fun <T> safeCall(action: () -> Resource<T>): Resource<T> {
-//        return try {
-//            action()
-//        } catch (e: Exception) {
-//            Resource.Error(e.message ?: "An unknown Error Occurred")
-//        }
-//    }
-
-//    sealed class Resource<T>(val data: T? = null, val message: String? = null) {
-//        class Success<T>(data: T) : Resource<T>(data)
-//        class Loading<T>(data: T? = null) : Resource<T>(data)
-//        class Error<T>(message: String, data: T? = null) : Resource<T>(data, message)
-//    }
-
-//    suspend fun createUser(userName: String, userEmailAddress: String, userPhoneNum: String, userLoginPassword: String): Resource<AuthResult> {
-//        return withContext(Dispatchers.IO) {
-//            safeCall {
-//                val registrationResult = firebaseAuth.createUserWithEmailAndPassword(userEmailAddress, userLoginPassword).await()
-//
-//                val userId = registrationResult.user?.uid!!
-//                val newUser = User(userName, userEmailAddress, userPhoneNum)
-//                postRef.child(userId).setValue(newUser).await()
-//                Resource.Success(registrationResult)
-//            }
-//        }
-//    }
 
     override fun onAddEditTask(task: Task) {
         editUserTaskflag(TaskModel.ACTIVEFLAG)
