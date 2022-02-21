@@ -11,6 +11,7 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.Functions.addEvent
 import com.example.newevent2.Functions.addUser
 import com.example.newevent2.Model.Event
@@ -137,7 +138,7 @@ class OnboardingView() : AppCompatActivity() {
                             //show popup to request runtime permission
                             requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
                         } else {
-                            scope.launch {
+                            lifecycleScope.launch {
                                 //addUser - Remote & Local
                                 addUser(this@OnboardingView, userSession)
                                 //addEvent - Remote & Local

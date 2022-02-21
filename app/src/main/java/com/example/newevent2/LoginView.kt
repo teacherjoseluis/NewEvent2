@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.MVP.LoginPresenter
 import com.example.newevent2.Model.User
 import com.example.newevent2.Model.UserDBHelper
@@ -17,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FacebookAuthProvider
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.login0.*
 import kotlinx.coroutines.*
@@ -216,24 +218,31 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             try {
                 val account = task.getResult(ApiException::class.java)
                 val credential = GoogleAuthProvider.getCredential(account!!.idToken, null)
+                var userAccount = User()
+                var uid = ""
+                var email = ""
 
-                scope.launch {
-                    val firebaseUser = user.login(this@LoginView, "google", null, null, credential)
+                lifecycleScope.launch {
+                    var firebaseUser: FirebaseUser? =
+                        user.login(this@LoginView, "google", null, null, credential)
+                    uid = firebaseUser!!.uid
+                    email = firebaseUser.email!!
                     //------------------------------------------------------
-                    val userDBHelper = UserDBHelper(this@LoginView)
-                    val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
+                    userAccount = UserDBHelper(this@LoginView).getUser(firebaseUser!!.uid)
                     //------------------------------------------------------
-                    if (userlocal.key == "") {
-                        val userremote = UserModel(firebaseUser.uid).getUser()
-                        if (userremote == null) {
-                            onOnboarding(firebaseUser.uid, firebaseUser.email!!, "google")
-                        } else {
-                            onLoginSuccess()
-                        }
+                    if (userAccount.key == "") {
+                        userAccount = UserModel(firebaseUser!!.uid).getUser()!!
+                    }
+                }
+
+                if (uid != "" && email != "") {
+                    if (userAccount.key == "") {
+                        onOnboarding(uid, email, "google")
                     } else {
                         onLoginSuccess()
                     }
                 }
+
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)
             }

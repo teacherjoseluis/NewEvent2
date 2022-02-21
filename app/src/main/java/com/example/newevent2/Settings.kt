@@ -101,7 +101,7 @@ class Settings : Fragment() {
             }
             if (inputvalflag) {
                 //savesettings()
-                editUser(requireContext(), usersession)
+                //editUser(requireContext(), usersession)
             }
         }
 
