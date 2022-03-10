@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.newevent2.CoRAddEditEvent
+import com.example.newevent2.CoROnboardUser
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.saveImgtoStorage
 import com.example.newevent2.Functions.userdbhelper
@@ -17,24 +18,25 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
-class EventModel : CoRAddEditEvent {
+class EventModel : CoRAddEditEvent, CoROnboardUser {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     var nexthandlere: CoRAddEditEvent? = null
+    var nexthandleron: CoROnboardUser? = null
 
     var userid = ""
     lateinit var event: Event
 
     //Need to convert this one into a suspend function
     private suspend fun addEvent(
-        //userid: String,
+        user: User,
         event: Event,
         uri: Uri?
         //savesuccessflag: FirebaseSaveSuccess
     ) {
-        coroutineScope {
-            val postRef = myRef.child("User").child(this@EventModel.userid).child("Event").push()
+//        coroutineScope {
+            val postRef = myRef.child("User").child(user.key).child("Event").push()
             val eventmap = hashMapOf(
                 "imageurl" to event.imageurl,
                 "placeid" to event.placeid,
@@ -70,7 +72,7 @@ class EventModel : CoRAddEditEvent {
 //                    }
 //                }
 //            }
-        }
+//        }
     }
 
     fun editEvent(
@@ -130,7 +132,12 @@ class EventModel : CoRAddEditEvent {
     }
 
     override suspend fun onAddEditEvent(event: Event) {
-        addEvent(event, null)
+        //addEvent(event, null)
         nexthandlere?.onAddEditEvent(event)
+    }
+
+    override suspend fun onOnboardUser(user: User, event: Event) {
+        addEvent(user, event, null)
+        nexthandleron?.onOnboardUser(user, event)
     }
 }

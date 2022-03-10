@@ -10,7 +10,7 @@ import com.example.newevent2.Functions.userdbhelper
 
 class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
     CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
-    CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor {
+    CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor, CoROnboardUser {
 
     private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
     var nexthandleru: CoRAddEditUser? = null
@@ -22,6 +22,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     var nexthandlerdelg: CoRDeleteGuest? = null
     var nexthandlerv: CoRAddEditVendor? = null
     var nexthandlerdelv: CoRDeleteVendor? = null
+    var nexthandleron: CoROnboardUser? = null
 
     private lateinit var user: User
 
@@ -64,9 +65,12 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
 
     fun getUserKey(): String {
         var key = ""
-        val cursor: Cursor = db.rawQuery("SELECT userid FROM USER", null)
+        val cursor: Cursor = db.rawQuery("SELECT userid FROM USER LIMIT 1", null)
         if (cursor.count > 0) {
-            key = cursor.getString(cursor.getColumnIndex("userid"))
+            cursor.moveToFirst()
+            do {
+                key = cursor.getString(cursor.getColumnIndex("userid"))
+            } while (cursor.moveToNext())
         }
         cursor.close()
         return key
@@ -181,7 +185,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         user.hastask = TaskModel.ACTIVEFLAG
         update(user)
 
-        Log.d(TAG,"There are currently ${user.tasksactive} active tasks associated to the User")
+        Log.d(TAG, "There are currently ${user.tasksactive} active tasks associated to the User")
         Log.d(TAG, "Flag hastask for the User has been set to ${TaskModel.ACTIVEFLAG}")
 
         nexthandlert?.onAddEditTask(task)
@@ -244,5 +248,14 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         update(user)
 
         nexthandlerdelv?.onDeleteVendor(vendor)
+    }
+
+    override suspend fun onOnboardUser(user: User, event: Event) {
+        if (!getUserexists(user.key)) {
+            insert(user)
+        } else {
+            update(user)
+        }
+        nexthandleron?.onOnboardUser(user, event)
     }
 }

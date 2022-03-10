@@ -29,7 +29,7 @@ class UserModel(
     //This user creates and edits Users into Firebase
     val key: String
 ) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
-    CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor, CoRAddEditUser {
+    CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor, CoRAddEditUser, CoROnboardUser {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
@@ -52,6 +52,7 @@ class UserModel(
     var nexthandlerv: CoRAddEditVendor? = null
     var nexthandlerdelv: CoRDeleteVendor? = null
     var nexthandlere: CoRAddEditEvent? = null
+    var nexthandleron: CoROnboardUser? = null
 
     fun getUser(dataFetched: FirebaseSuccessUser) {
         val userListenerActive = object : ValueEventListener {
@@ -106,15 +107,15 @@ class UserModel(
     }
 
     @ExperimentalCoroutinesApi
-    suspend fun getUser(): User? {
+    suspend fun getUser(): User {
         return try {
-            postRef.awaitsSingle()?.getValue(User::class.java)
+            postRef.awaitsSingle()?.getValue(User::class.java)!!
         } catch (e: Exception) {
             Log.d(
                 TAG,
                 "Data associated to User cannot ben retrieved from Firebase"
             )
-            null
+            User()
         }
     }
 
@@ -298,6 +299,11 @@ class UserModel(
 
     companion object {
         const val TAG = "UserModel"
+    }
+
+    override suspend fun onOnboardUser(user: User, event: Event) {
+        addUser(user)
+        nexthandleron?.onOnboardUser(user, event)
     }
 
 }

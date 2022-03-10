@@ -14,11 +14,12 @@ import com.example.newevent2.Functions.converttoDate
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.Payment
 import com.example.newevent2.Model.Task
+import com.example.newevent2.Model.User
 import java.util.*
 
 
 class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment,
-    CoRDeletePayment, CoRAddEditEvent {
+    CoRDeletePayment, CoRAddEditEvent, CoROnboardUser {
 
     private lateinit var calendaruri: String
     private lateinit var begindate: Calendar
@@ -31,6 +32,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
     var nexthandlertdel: CoRDeleteTask? = null
     var nexthandlerp: CoRAddEditPayment? = null
     var nexthandlerpdel: CoRDeletePayment? = null
+    var nexthandleron: CoROnboardUser? = null
 
     val cr: ContentResolver = context.contentResolver
 
@@ -250,6 +252,12 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
         addEvent(event)
         event.eventid = getNewEventId().toString()
         nexthandlere?.onAddEditEvent(event)
+    }
+
+    override suspend fun onOnboardUser(user: User, event: Event) {
+        addEvent(event)
+        event.eventid = getNewEventId().toString()
+        nexthandleron?.onOnboardUser(user, event)
     }
 }
 

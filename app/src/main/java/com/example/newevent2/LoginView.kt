@@ -218,7 +218,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             try {
                 val account = task.getResult(ApiException::class.java)
                 val credential = GoogleAuthProvider.getCredential(account!!.idToken, null)
-                var userAccount = User()
+                var userAccount: User
                 var uid = ""
                 var email = ""
 
@@ -231,18 +231,17 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                     userAccount = UserDBHelper(this@LoginView).getUser(firebaseUser!!.uid)
                     //------------------------------------------------------
                     if (userAccount.key == "") {
-                        userAccount = UserModel(firebaseUser!!.uid).getUser()!!
+                        userAccount = UserModel(firebaseUser!!.uid).getUser()
+                    }
+
+                    if (uid != "" && email != "") {
+                        if (userAccount.key == "") {
+                            onOnboarding(uid, email, "google")
+                        } else {
+                            onLoginSuccess()
+                        }
                     }
                 }
-
-                if (uid != "" && email != "") {
-                    if (userAccount.key == "") {
-                        onOnboarding(uid, email, "google")
-                    } else {
-                        onLoginSuccess()
-                    }
-                }
-
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)
             }

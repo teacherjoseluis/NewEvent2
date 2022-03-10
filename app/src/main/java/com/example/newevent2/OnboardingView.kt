@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.Functions.addEvent
 import com.example.newevent2.Functions.addUser
+import com.example.newevent2.Functions.onBoarding
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.User
 import kotlinx.android.synthetic.main.onboarding_name.*
@@ -140,9 +141,15 @@ class OnboardingView() : AppCompatActivity() {
                         } else {
                             lifecycleScope.launch {
                                 //addUser - Remote & Local
-                                addUser(this@OnboardingView, userSession)
+
+                                //2/26/2022 -- We need to merge the functionality to create the event within add user
+                                //as the whole flow for creating the user works but I cannot say the same for the event
+                                //this will make a pretty long chain of responsibility but otherwise this won't be working
+                                //addUser(this@OnboardingView, userSession)
                                 //addEvent - Remote & Local
-                                addEvent(this@OnboardingView, event)
+                                //addEvent(this@OnboardingView, event)
+
+                                onBoarding(this@OnboardingView, userSession, event)
                             }
                         }
                         val resultIntent = Intent()

@@ -1,14 +1,23 @@
 package com.example.newevent2.Functions
 
+import Application.CalendarEvent
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import com.example.newevent2.CoRAddEditUser
+import com.example.newevent2.CoROnboardUser
+import com.example.newevent2.MVP.EventPresenter
 import com.example.newevent2.Model.*
 import com.example.newevent2.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
 
 private lateinit var usermodel: UserModel
+private lateinit var calendarevent : CalendarEvent
 @SuppressLint("StaticFieldLeak")
 lateinit var userdbhelper: UserDBHelper
 
@@ -32,6 +41,41 @@ internal suspend fun addUser(context: Context, useritem: User) {
         MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDUSER", bundle)
         //------------------------------------------------
         Toast.makeText(context, context.getString(R.string.successadduser), Toast.LENGTH_LONG).show()
+    } catch (e: Exception) {
+        val errormsg = context.getString(R.string.erroradduser)
+        errormsg.plus(e.message)
+        Toast.makeText(
+            context,
+            errormsg,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+}
+
+internal suspend fun onBoarding(context: Context, useritem: User, eventitem: Event) = withContext(Dispatchers.IO){
+    try {
+        //------------------------------------------------
+        // Adding Calendar Event
+        calendarevent = CalendarEvent(context)
+        //------------------------------------------------
+        // Adding a new record in Local DB
+        userdbhelper = UserDBHelper(context)
+        //------------------------------------------------
+        // Adding a new record in Firebase
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        eventmodel.userid = user.key
+        //------------------------------------------------
+        // Adding a new record in Local DB
+        eventdbhelper = EventDBHelper(context)
+        //------------------------------------------------
+        // Updating User information in Firebase
+        usermodel = UserModel(useritem.key)
+        //------------------------------------------------
+        val chainofcommand = orderChainOnboard(usermodel,userdbhelper,calendarevent, eventmodel, eventdbhelper)
+        chainofcommand.onOnboardUser(useritem, eventitem)
+        //------------------------------------------------
+        Toast.makeText(context, context.getString(R.string.successadduser), Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "Event was created successully", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         val errormsg = context.getString(R.string.erroradduser)
         errormsg.plus(e.message)
@@ -87,5 +131,19 @@ private fun orderChainEdit(
     userDBHelper: UserDBHelper
 ): CoRAddEditUser {
     userModel.nexthandleru = userDBHelper
+    return userModel
+}
+
+private fun orderChainOnboard(
+    userModel: UserModel,
+    userDBHelper: UserDBHelper,
+    calendarEvent: CalendarEvent,
+    eventModel: EventModel,
+    eventDBHelper: EventDBHelper
+): CoROnboardUser {
+    userModel.nexthandleron = userDBHelper
+    userDBHelper.nexthandleron = calendarEvent
+    calendarEvent.nexthandleron = eventModel
+    eventModel.nexthandleron = eventDBHelper
     return userModel
 }

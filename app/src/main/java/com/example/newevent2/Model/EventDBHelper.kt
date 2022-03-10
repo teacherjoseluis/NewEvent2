@@ -6,12 +6,14 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.CoRAddEditEvent
+import com.example.newevent2.CoROnboardUser
 import com.example.newevent2.Functions.getUserSession
 
-class EventDBHelper(val context: Context) : CoRAddEditEvent {
+class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
 
     private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
     var nexthandlere: CoRAddEditEvent? = null
+    var nexthandleron: CoROnboardUser? = null
 
     fun insert(event: Event) {
         val values = ContentValues()
@@ -116,5 +118,14 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent {
             update(event)
         }
         nexthandlere?.onAddEditEvent(event)
+    }
+
+    override suspend fun onOnboardUser(user: User, event: Event) {
+        if (!getEventexists(event.key)) {
+            insert(event)
+        } else {
+            update(event)
+        }
+        nexthandleron?.onOnboardUser(user, event)
     }
 }
