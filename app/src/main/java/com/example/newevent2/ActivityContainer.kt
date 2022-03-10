@@ -12,12 +12,15 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.newevent2.Functions.isEventDate
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.User
+import com.example.newevent2.Model.UserDBHelper
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseUser
 import com.nordan.dialog.Animation
 import com.nordan.dialog.NordanAlertDialog
 import kotlinx.android.synthetic.main.header_navview.*
@@ -247,7 +250,9 @@ class ActivityContainer : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         //If session is empty the user gets redirected to the login screen
-        usersession = com.example.newevent2.Functions.getUserSession(this)
+        //usersession = com.example.newevent2.Functions.getUserSession(this)
+        userdbhelper = UserDBHelper(this)
+        usersession = userdbhelper.getUser(userdbhelper.getUserKey())
         if (usersession.key == "") {
             val loginactivity =
                 Intent(this, LoginView::class.java)
