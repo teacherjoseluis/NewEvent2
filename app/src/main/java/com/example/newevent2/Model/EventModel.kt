@@ -34,7 +34,7 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         event: Event,
         uri: Uri?
         //savesuccessflag: FirebaseSaveSuccess
-    ) {
+    ) : String {
 //        coroutineScope {
             val postRef = myRef.child("User").child(user.key).child("Event").push()
             val eventmap = hashMapOf(
@@ -73,6 +73,7 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
 //                }
 //            }
 //        }
+        return eventid
     }
 
     fun editEvent(
@@ -137,7 +138,7 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
     }
 
     override suspend fun onOnboardUser(user: User, event: Event) {
-        addEvent(user, event, null)
+        event.key =  addEvent(user, event, null)
         nexthandleron?.onOnboardUser(user, event)
     }
 }
