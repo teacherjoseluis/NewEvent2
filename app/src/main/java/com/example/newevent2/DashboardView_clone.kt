@@ -1,12 +1,15 @@
 package com.example.newevent2
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import com.example.newevent2.Functions.userdbhelper
+import com.example.newevent2.Model.UserDBHelper
 import com.google.android.material.tabs.TabLayout
 
-class DashboardView_clone : Fragment() {
+class DashboardView_clone() : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -18,8 +21,8 @@ class DashboardView_clone : Fragment() {
         val viewPager = inf.findViewById<View>(R.id.dashboardpager) as ViewPager
 
         //Getting the user currently loaded
-        val userSession =
-            com.example.newevent2.Functions.getUserSession(requireActivity().applicationContext)
+        userdbhelper = UserDBHelper(activity!!.applicationContext)
+        val userSession = userdbhelper.getUser(userdbhelper.getUserKey())
 
         //Setting up the pager adapter for this view
         val adapter =

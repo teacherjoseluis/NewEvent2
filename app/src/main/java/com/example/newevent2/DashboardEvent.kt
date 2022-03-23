@@ -99,8 +99,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             azulmasClaro,
             palodeRosa
         )
-        //-------------------------------------------------------------------------
-    }
+ }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
