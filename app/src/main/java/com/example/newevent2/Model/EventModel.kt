@@ -10,13 +10,15 @@ import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.saveImgtoStorage
 import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.MVP.ImagePresenter
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.FirebaseException
+import com.google.firebase.database.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class EventModel : CoRAddEditEvent, CoROnboardUser {
 
@@ -120,6 +122,54 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         postRef.addValueEventListener(eventListenerActive)
     }
 
+    @ExperimentalCoroutinesApi
+    suspend fun getEventChildrenflag(
+        userid: String,
+        eventid: String
+    ): Boolean {
+        var existsflag=false
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+          try {
+              existsflag = when {
+                  postRef.awaitsSingle()?.hasChild("Task") == true -> true
+                  postRef.awaitsSingle()?.hasChild("Payment") == true -> true
+                  else -> false
+              }
+        } catch (e: Exception) {
+            Log.d(
+                TAG,
+                "Data associated to Event cannot ben retrieved from Firebase"
+            )
+            false
+        }
+        return existsflag
+    }
+
+    @ExperimentalCoroutinesApi
+    suspend fun DatabaseReference.awaitsSingle(): DataSnapshot? =
+        suspendCancellableCoroutine { continuation ->
+            val listener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        continuation.resume(snapshot)
+                    } catch (exception: Exception) {
+                        continuation.resumeWithException(exception)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    val exception = when (error.toException()) {
+                        is FirebaseException -> error.toException()
+                        else -> Exception("The Firebase call for reference $this was cancelled")
+                    }
+                    continuation.resumeWithException(exception)
+                }
+            }
+            continuation.invokeOnCancellation { this.removeEventListener(listener) }
+            this.addListenerForSingleValueEvent(listener)
+        }
+
     interface FirebaseSaveSuccess {
         fun onSaveSuccess(eventid: String)
     }
@@ -140,5 +190,9 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
     override suspend fun onOnboardUser(user: User, event: Event) {
         event.key =  addEvent(user, event, null)
         nexthandleron?.onOnboardUser(user, event)
+    }
+
+    companion object {
+        const val TAG = "EventModel"
     }
 }

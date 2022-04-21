@@ -9,8 +9,10 @@ import com.example.newevent2.MainActivity
 import com.example.newevent2.MainEventView_clone
 
 import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.EventDBHelper
 import com.example.newevent2.Model.EventModel
 import com.example.newevent2.Model.Guest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class EventPresenter : Cache.EventItemCacheData {
 
@@ -45,6 +47,22 @@ class EventPresenter : Cache.EventItemCacheData {
     fun getEventDetail() {
         cacheevent = Cache(mContext, this)
         cacheevent.loadarraylist(Event::class)
+    }
+
+    @ExperimentalCoroutinesApi
+    suspend fun getEventChildrenflag(eventkey: String): Boolean {
+        var eventchilderenflag = false
+        val eventdbhelper = EventDBHelper(mContext)
+        if (!eventdbhelper.getEventChildrenflag(eventkey)) {
+            val user = com.example.newevent2.Functions.getUserSession(mContext!!)
+            val eventmodel = EventModel()
+            if (eventmodel.getEventChildrenflag(user.key, eventkey)) {
+                eventchilderenflag = true
+            }
+        } else {
+            eventchilderenflag = true
+        }
+        return eventchilderenflag
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

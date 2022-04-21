@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.baoyachi.stepview.HorizontalStepView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -57,6 +58,8 @@ import kotlinx.android.synthetic.main.dashboardcharts.view.withnodata
 import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlinx.android.synthetic.main.summary_weddingguests.view.*
 import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import kotlin.collections.ArrayList
 
@@ -101,6 +104,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         )
  }
 
+    @ExperimentalCoroutinesApi
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreateView(
@@ -150,6 +154,10 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
         //Calling the presenter that will pull of the data I need for this view
         presentertask = DashboardEventPresenter(requireContext(), this, inf)
+        lifecycleScope.launch {
+        //this needs to evaluate if it's true to continue the process, else it will stop it
+            presentertask.getEventchildrenflag()
+        }
         return inf
     }
 

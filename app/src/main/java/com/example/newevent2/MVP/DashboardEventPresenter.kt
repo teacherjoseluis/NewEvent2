@@ -2,16 +2,17 @@ package com.example.newevent2.MVP
 
 import android.content.Context
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.DashboardEvent
 import com.example.newevent2.MVP.PaymentPresenter.Companion.ERRCODEPAYMENTS
 import com.example.newevent2.MVP.TaskPresenter.Companion.ERRCODETASKS
-import com.example.newevent2.Model.Event
-import com.example.newevent2.Model.Guest
-import com.example.newevent2.Model.Payment
-import com.example.newevent2.Model.Task
+import com.example.newevent2.Model.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent, val view: View) :
-    TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList, EventPresenter.EventItem {
+    TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList,
+    EventPresenter.EventItem {
 
     private var presentertask: TaskPresenter = TaskPresenter(context, this)
     private var presenterpayment: PaymentPresenter = PaymentPresenter(context, this)
@@ -21,8 +22,13 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 
     private var paymentsumbudget = 0.0F
 
-    init {
-        presentertask.getTasksList()
+    @ExperimentalCoroutinesApi
+    suspend fun getEventchildrenflag(): Boolean {
+        //This function needs to return a boolean
+        //presentertask.getTasksList()
+        val eventdbhelper = EventDBHelper(context)
+        val event = eventdbhelper.getEvent()
+        return presenterevent.getEventChildrenflag(event.key)
     }
 
     override fun onTaskList(list: ArrayList<Task>) {
@@ -154,11 +160,9 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
     }
 
     interface EventInterface {
-        fun onEvent(context:Context, inflatedview: View, event: Event)
+        fun onEvent(context: Context, inflatedview: View, event: Event)
         fun onEventError(inflatedview: View, errorcode: String)
     }
-
-
 
 
 }

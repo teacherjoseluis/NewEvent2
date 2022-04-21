@@ -74,6 +74,23 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
         return event
     }
 
+    fun getEventChildrenflag(key: String): Boolean {
+        var existsflag = false
+        var cursor: Cursor = db.rawQuery("SELECT * FROM TASK WHERE eventid = '$key'", null)
+        if (cursor.count > 0) {
+            existsflag = true
+        }
+        cursor.close()
+        if (!existsflag) {
+            cursor = db.rawQuery("SELECT * FROM PAYMENT WHERE eventid = '$key'", null)
+            if (cursor.count > 0) {
+                existsflag = true
+            }
+            cursor.close()
+        }
+        return existsflag
+    }
+
     fun update(event: Event) {
         val values = ContentValues()
         values.put("eventid", event.key)
