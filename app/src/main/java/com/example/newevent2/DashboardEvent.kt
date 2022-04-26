@@ -203,10 +203,13 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                     Toast.LENGTH_SHORT
                 ).show()
                 Log.i("EventSummary.TAG", "No data was obtained from the Event")
-                val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
-                val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
-                loadingscreen.visibility = ConstraintLayout.GONE
-                drawerlayout.visibility = ConstraintLayout.VISIBLE
+//                val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
+//                val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
+//                loadingscreen.visibility = ConstraintLayout.GONE
+//                drawerlayout.visibility = ConstraintLayout.VISIBLE
+                inf.withdata.visibility = ConstraintLayout.GONE
+                inf.withnodata.visibility = ConstraintLayout.VISIBLE
+
             }
         }
         return inf

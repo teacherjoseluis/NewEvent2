@@ -134,17 +134,16 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <include
-                android:id="@+id/withnodata"
-                layout="@layout/empty_state"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="invisible"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="26dp" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <include
+        android:id="@+id/withnodata"
+        layout="@layout/empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="26dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
