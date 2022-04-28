@@ -210,6 +210,11 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 inf.withdata.visibility = ConstraintLayout.GONE
                 inf.withnodata.visibility = ConstraintLayout.VISIBLE
 
+                inf.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
+                inf.withnodata.newtaskbutton.setOnClickListener {
+                    val newtask = Intent(activity, TaskCreateEdit::class.java)
+                    startActivity(newtask)
+                }
             }
         }
         return inf

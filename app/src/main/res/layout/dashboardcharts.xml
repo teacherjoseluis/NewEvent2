@@ -67,6 +67,7 @@
 
             <include
                 android:id="@+id/taskchart"
+                android:visibility="invisible"
                 layout="@layout/chartcard_layouttask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,7 +77,20 @@
                 app:layout_constraintTop_toBottomOf="@+id/weddingprogress" />
 
             <include
+                android:id="@+id/taskchartnodata"
+                android:visibility="visible"
+                layout="@layout/chartcard_emptystate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/weddingprogress" />
+
+
+            <include
                 android:id="@+id/paymentchart"
+                android:visibility="invisible"
                 layout="@layout/chartcard_layoutpayment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,8 +100,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/weddingprogress" />
 
             <include
-                android:id="@+id/weddinglocation2"
+                android:id="@+id/paymentchartnodata"
+                android:visibility="visible"
+                layout="@layout/chartcard_emptystate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/weddingprogress" />
 
+
+            <include
+                android:id="@+id/weddinglocation2"
                 layout="@layout/summary_weddinglocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
