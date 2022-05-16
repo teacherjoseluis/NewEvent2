@@ -8,6 +8,7 @@ import android.util.Log
 import com.example.newevent2.CoRAddEditEvent
 import com.example.newevent2.CoROnboardUser
 import com.example.newevent2.Functions.getUserSession
+import com.example.newevent2.Functions.userdbhelper
 
 class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
 
@@ -31,8 +32,11 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
         db.insert("EVENT", null, values)
         Log.d(TAG, "Event record inserted")
 
+        //updating eventid in user
         val user = getUserSession(context)
         user.eventid = event.key
+        userdbhelper = UserDBHelper(context)
+        userdbhelper.update(user)
 //        user.saveUserSession(context)
     }
 

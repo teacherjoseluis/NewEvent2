@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -271,7 +272,8 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
     override fun onVAVendorsError(errcode: String) {
         //This absolutely needs to be handled as it has been generating very nasty exceptions
-        TODO("Not yet implemented")
+        val actv = findViewById<LinearLayout>(R.id.vendorpaymentsection)
+        actv.visibility = View.GONE
     }
 
     companion object {

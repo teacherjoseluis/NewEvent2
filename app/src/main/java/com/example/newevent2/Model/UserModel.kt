@@ -190,7 +190,7 @@ class UserModel(
                 "authtype" to user.authtype,
                 "imageurl" to "",
                 "role" to user.role,
-                "hasevent" to user.hasevent,
+                "hasevent" to "Y",
                 "hastask" to "",
                 "haspayment" to "",
                 "hasguest" to "",

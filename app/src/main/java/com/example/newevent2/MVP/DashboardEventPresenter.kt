@@ -22,13 +22,27 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 
     private var paymentsumbudget = 0.0F
 
-    @ExperimentalCoroutinesApi
-    suspend fun getEventchildrenflag(): Boolean {
+    fun getEventchildrenflag(): Boolean {
         //This function needs to return a boolean
-        //presentertask.getTasksList()
         val eventdbhelper = EventDBHelper(context)
         val event = eventdbhelper.getEvent()
         return presenterevent.getEventChildrenflag(event.key)
+    }
+
+    fun getTaskList(){
+        presentertask.getTasksList()
+    }
+
+    fun getPaymentList(){
+        presenterpayment.getPaymentsList()
+    }
+
+    fun getEvent(){
+        presenterevent.getEventDetail()
+    }
+
+    fun getGuestList(){
+        presenterguest.getGuestList()
     }
 
     override fun onTaskList(list: ArrayList<Task>) {
@@ -53,8 +67,6 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
         })
         val nextactivetask = nextactive(list)
         fragment.onTasksStats(view, countactive, countcompleted, sumbudget, nextactivetask)
-        paymentsumbudget = sumbudget
-        presenterpayment.getPaymentsList()
     }
 
     private fun nextactive(list: ArrayList<Task>): Task {
@@ -70,7 +82,6 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 
     override fun onTaskListError(errcode: String) {
         fragment.onTaskStatsError(view, ERRCODETASKS)
-        presenterpayment.getPaymentsList()
     }
 
     override fun onPaymentList(list: ArrayList<Payment>) {
@@ -85,12 +96,10 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
             countpayment += 1
         }
         fragment.onPaymentsStats(view, countpayment, sumpayment, paymentsumbudget)
-        presenterguest.getGuestList()
     }
 
     override fun onPaymentListError(errcode: String) {
         fragment.onPaymentsStatsError(view, ERRCODEPAYMENTS)
-        presenterguest.getGuestList()
     }
 
     override fun onGuestList(list: ArrayList<Guest>) {

@@ -60,7 +60,7 @@ class TaskCreateEdit : AppCompatActivity() {
         //coming populated we can assume it's coming from an existing task which in this case
         //loads taskitem
         val extras = intent.extras
-        taskitem = if (extras!!.containsKey("task")) {
+        taskitem = if (extras?.containsKey("task") == true) {
             intent.getParcelableExtra("task")!!
         } else {
             Task()

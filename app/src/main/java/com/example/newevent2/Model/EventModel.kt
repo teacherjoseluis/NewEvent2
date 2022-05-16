@@ -122,29 +122,29 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         postRef.addValueEventListener(eventListenerActive)
     }
 
-    @ExperimentalCoroutinesApi
-    suspend fun getEventChildrenflag(
-        userid: String,
-        eventid: String
-    ): Boolean {
-        var existsflag=false
-        val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
-          try {
-              existsflag = when {
-                  postRef.awaitsSingle()?.hasChild("Task") == true -> true
-                  postRef.awaitsSingle()?.hasChild("Payment") == true -> true
-                  else -> false
-              }
-        } catch (e: Exception) {
-            Log.d(
-                TAG,
-                "Data associated to Event cannot ben retrieved from Firebase"
-            )
-            false
-        }
-        return existsflag
-    }
+//    @ExperimentalCoroutinesApi
+//    suspend fun getEventChildrenflag(
+//        userid: String,
+//        eventid: String
+//    ): Boolean {
+//        var existsflag=false
+//        val postRef =
+//            myRef.child("User").child(userid).child("Event").child(eventid)
+//          try {
+//              existsflag = when {
+//                  postRef.awaitsSingle()?.hasChild("Task") == true -> true
+//                  postRef.awaitsSingle()?.hasChild("Payment") == true -> true
+//                  else -> false
+//              }
+//        } catch (e: Exception) {
+//            Log.d(
+//                TAG,
+//                "Data associated to Event cannot ben retrieved from Firebase"
+//            )
+//            false
+//        }
+//        return existsflag
+//    }
 
     @ExperimentalCoroutinesApi
     suspend fun DatabaseReference.awaitsSingle(): DataSnapshot? =

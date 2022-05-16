@@ -38,6 +38,7 @@ import com.bumptech.glide.request.target.Target
 import com.example.newevent2.Functions.converttoDate
 import com.example.newevent2.Functions.daystoDate
 import com.example.newevent2.Functions.getImgfromPlaces
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.MVP.DashboardEventPresenter
 import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
@@ -69,7 +70,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
     private lateinit var BandG_Colors: ArrayList<Int>
     private lateinit var BandG_Colors2: ArrayList<Int>
-    private lateinit var presentertask: DashboardEventPresenter
+    private lateinit var dashboardEP: DashboardEventPresenter
     private lateinit var imagePresenter: ImagePresenter
 
     private var placeid = ""
@@ -113,108 +114,117 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     ): View? {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.dashboardcharts, container, false)
-        val user = com.example.newevent2.Functions.getUserSession(requireContext())
-
-        //Load with the achievements obtained by the user -------------------------------------------
-        val stepsBeanList = user.onboardingprogress(context!!)
-        val stepview = inf.findViewById<HorizontalStepView>(R.id.step_view)
-        stepview
-            .setStepViewTexts(stepsBeanList)//总步骤
-            .setTextSize(12)//set textSize
-            .setStepsViewIndicatorCompletedLineColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.azulmasClaro
-                )
-            )//设置StepsViewIndicator完成线的颜色
-            .setStepsViewIndicatorUnCompletedLineColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.rosaChillon
-                )
-            )//设置StepsViewIndicator未完成线的颜色
-            .setStepViewComplectedTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.azulmasClaro
-                )
-            )//设置StepsView text完成线的颜色
-            .setStepViewUnComplectedTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.rosaChillon
-                )
-            )//设置StepsView text未完成线的颜色
-            .setStepsViewIndicatorCompleteIcon(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.icons8_checked_rosachillon
-                )
-            )//设置StepsViewIndicator CompleteIcon
-            .setStepsViewIndicatorDefaultIcon(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.circle_rosachillon
-                )
-            )//设置StepsViewIndicator DefaultIcon
-            .setStepsViewIndicatorAttentionIcon(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.alert_icon_rosachillon
-                )
-            )//设置StepsViewIndicator AttentionIcon
-        //--------------------------------------------------------------------------------------------
-
-        val weddingphotodetail = inf.findViewById<ConstraintLayout>(R.id.weddingphotodetail)
-        weddingphotodetail.setOnClickListener {
-            // ------- Analytics call ----------------
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "EDITEVENT")
-            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
-            //----------------------------------------
-            val editevent = Intent(context, MainActivity::class.java)
-            startActivityForResult(editevent, SUCCESS_RETURN)
-        }
-
-        val weddingprogress = inf.findViewById<ConstraintLayout>(R.id.weddingprogress)
-        weddingprogress.setOnClickListener {
-            // ------- Analytics call ----------------
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "MYPROGRESS")
-            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
-            //----------------------------------------
-        }
 
         //Calling the presenter that will pull of the data I need for this view
-        presentertask = DashboardEventPresenter(requireContext(), this, inf)
-        lifecycleScope.launch {
-            //this needs to evaluate if it's true to continue the process, else it will stop it
-            if (presentertask.getEventchildrenflag()) {
-                //There were children coming out from the Event. Success
-                //This section could potentially start launching the next calls
-            } else {
-                //Noting to do here. The whole process must end and we need to show a layout
-                //expressing that there is nothing to see here.
-                Toast.makeText(
-                    context,
-                    getString(R.string.error_gettingdata),
-                    Toast.LENGTH_SHORT
-                ).show()
-                Log.i("EventSummary.TAG", "No data was obtained from the Event")
-//                val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
-//                val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
-//                loadingscreen.visibility = ConstraintLayout.GONE
-//                drawerlayout.visibility = ConstraintLayout.VISIBLE
-                inf.withdata.visibility = ConstraintLayout.GONE
-                inf.withnodata.visibility = ConstraintLayout.VISIBLE
+        dashboardEP = DashboardEventPresenter(requireContext(), this, inf)
+        //this needs to evaluate if it's true to continue the process, else it will stop it
+        if (dashboardEP.getEventchildrenflag()) {
 
-                inf.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
-                inf.withnodata.newtaskbutton.setOnClickListener {
-                    val newtask = Intent(activity, TaskCreateEdit::class.java)
-                    startActivity(newtask)
-                }
+            inf.withnodata.visibility = ConstraintLayout.GONE
+            inf.withdata.visibility = ConstraintLayout.VISIBLE
+            //----------------------------------------------------------------------------------
+            val user = userdbhelper.getUser(userdbhelper.getUserKey())
+
+            //Load with the achievements obtained by the user -------------------------------------------
+            val stepsBeanList = user.onboardingprogress(context!!)
+            val stepview = inf.findViewById<HorizontalStepView>(R.id.step_view)
+            stepview
+                .setStepViewTexts(stepsBeanList)//总步骤
+                .setTextSize(12)//set textSize
+                .setStepsViewIndicatorCompletedLineColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.azulmasClaro
+                    )
+                )//设置StepsViewIndicator完成线的颜色
+                .setStepsViewIndicatorUnCompletedLineColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.rosaChillon
+                    )
+                )//设置StepsViewIndicator未完成线的颜色
+                .setStepViewComplectedTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.azulmasClaro
+                    )
+                )//设置StepsView text完成线的颜色
+                .setStepViewUnComplectedTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.rosaChillon
+                    )
+                )//设置StepsView text未完成线的颜色
+                .setStepsViewIndicatorCompleteIcon(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.icons8_checked_rosachillon
+                    )
+                )//设置StepsViewIndicator CompleteIcon
+                .setStepsViewIndicatorDefaultIcon(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.circle_rosachillon
+                    )
+                )//设置StepsViewIndicator DefaultIcon
+                .setStepsViewIndicatorAttentionIcon(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.alert_icon_rosachillon
+                    )
+                )//设置StepsViewIndicator AttentionIcon
+            //--------------------------------------------------------------------------------------------
+
+            val weddingphotodetail = inf.findViewById<ConstraintLayout>(R.id.weddingphotodetail)
+            weddingphotodetail.setOnClickListener {
+                // ------- Analytics call ----------------
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "EDITEVENT")
+                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+                MyFirebaseApp.mFirebaseAnalytics.logEvent(
+                    FirebaseAnalytics.Event.SELECT_ITEM,
+                    bundle
+                )
+                //----------------------------------------
+                val editevent = Intent(context, MainActivity::class.java)
+                startActivityForResult(editevent, SUCCESS_RETURN)
+            }
+
+            val weddingprogress = inf.findViewById<ConstraintLayout>(R.id.weddingprogress)
+            weddingprogress.setOnClickListener {
+                // ------- Analytics call ----------------
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "MYPROGRESS")
+                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+                MyFirebaseApp.mFirebaseAnalytics.logEvent(
+                    FirebaseAnalytics.Event.SELECT_ITEM,
+                    bundle
+                )
+                //----------------------------------------
+            }
+
+            //There were children coming out from the Event. Success
+            //This section could potentially start launching the next calls
+            dashboardEP.getTaskList()
+            dashboardEP.getPaymentList()
+            dashboardEP.getEvent()
+            dashboardEP.getGuestList()
+        } else {
+            //Noting to do here. The whole process must end and we need to show a layout
+            //expressing that there is nothing to see here.
+            Toast.makeText(
+                context,
+                getString(R.string.error_gettingdata),
+                Toast.LENGTH_SHORT
+            ).show()
+            Log.i("EventSummary.TAG", "No data was obtained from the Event")
+            inf.withdata.visibility = ConstraintLayout.GONE
+            inf.withnodata.visibility = ConstraintLayout.VISIBLE
+
+            inf.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
+            inf.withnodata.newtaskbutton.setOnClickListener {
+                val newtask = Intent(activity, TaskCreateEdit::class.java)
+                startActivity(newtask)
             }
         }
         return inf
@@ -228,7 +238,11 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         sumbudget: Float,
         task: Task
     ) {
+        val cardlayoutinvisible = inflatedView.findViewById<View>(R.id.taskchartnodata)
+        cardlayoutinvisible.visibility = View.GONE
+
         val cardlayout = inflatedView.findViewById<View>(R.id.taskchart)
+        cardlayout.visibility = View.VISIBLE
         val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
         val charttask = cardlayout.findViewById<PieChart>(R.id.charttask)
 
@@ -342,14 +356,13 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     }
 
     override fun onTaskStatsError(inflatedView: View, errcode: String) {
-        inflatedView.withdata.visibility = ConstraintLayout.GONE
-        inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
-
-        inflatedView.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
-        inflatedView.withnodata.newtaskbutton.setOnClickListener {
-            val newtask = Intent(activity, TaskCreateEdit::class.java)
-            startActivity(newtask)
-        }
+        inflatedView.withdata.taskchart.visibility = ConstraintLayout.GONE
+        inflatedView.withdata.taskchartnodata.visibility = ConstraintLayout.VISIBLE
+//        inflatedView.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
+//        inflatedView.withnodata.newtaskbutton.setOnClickListener {
+//            val newtask = Intent(activity, TaskCreateEdit::class.java)
+//            startActivity(newtask)
+//        }
     }
 
     override fun onPaymentsStats(
@@ -358,6 +371,9 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         sumpayment: Float,
         sumbudget: Float
     ) {
+        val cardlayoutinvisible = inflatedView.findViewById<View>(R.id.paymentchartnodata)
+        cardlayoutinvisible.visibility = View.GONE
+
         val cardlayout = inflatedView.findViewById<View>(R.id.paymentchart)
         val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
         val chartpayment = cardlayout.findViewById<PieChart>(R.id.chartpayment)
@@ -426,22 +442,11 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
         }
-
-        val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
-        val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
-        loadingscreen.visibility = ConstraintLayout.GONE
-        drawerlayout.visibility = ConstraintLayout.VISIBLE
     }
 
     override fun onPaymentsStatsError(inflatedView: View, errcode: String) {
-        val paymentlayout = inflatedView.findViewById<View>(R.id.paymentchart)
-        paymentlayout.visibility =
-            View.INVISIBLE
-
-        val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
-        val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
-        loadingscreen.visibility = ConstraintLayout.GONE
-        drawerlayout.visibility = ConstraintLayout.VISIBLE
+        inflatedView.withdata.paymentchart.visibility = ConstraintLayout.GONE
+        inflatedView.withdata.paymentchartnodata.visibility = ConstraintLayout.VISIBLE
     }
 
     class myPercentageFormatter : ValueFormatter() {
@@ -462,6 +467,9 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         rejected: Int,
         pending: Int
     ) {
+        val cardlayoutinvisible = inflatedView.findViewById<View>(R.id.noguestlayout)
+        cardlayoutinvisible.visibility = View.GONE
+
         inflatedView.guestlayout.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
@@ -477,7 +485,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     }
 
     override fun onGuestConfirmationError(inflatedView: View, errcode: String) {
-        inflatedView.guestlayout.visibility = ConstraintLayout.INVISIBLE
+        inflatedView.guestlayout.visibility = ConstraintLayout.GONE
         inflatedView.noguestlayout.visibility = ConstraintLayout.VISIBLE
     }
 
