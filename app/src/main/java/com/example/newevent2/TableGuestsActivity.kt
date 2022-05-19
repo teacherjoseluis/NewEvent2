@@ -19,7 +19,6 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.dashboardactivity.noactivity
 import kotlinx.android.synthetic.main.tableguestsactivity.*
 import kotlinx.android.synthetic.main.tableguestsactivity.view.*
 import kotlinx.android.synthetic.main.tableguestsactivity.view.adView
@@ -125,8 +124,8 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
     }
 
     override fun onTableGuestListError(errcode: String) {
-        tableguestsparentrv.visibility = View.GONE
-        noactivity.visibility = View.VISIBLE
+        withdata.visibility = View.GONE
+        withnodata.visibility = View.VISIBLE
     }
 }
 

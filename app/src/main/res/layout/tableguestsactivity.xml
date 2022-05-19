@@ -21,60 +21,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="30dp"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <!--
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:padding="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-
-                <TextView
-                    android:id="@+id/journaldate"
-                    style="@style/Heading5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Date"
-                    android:textColor="@color/rosaChillon"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-                    -->
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tableguestsparentrv"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-        <!--
-        <TextView
-            android:id="@+id/emptyrecyclerview"
-            style="@style/Heading6"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:text="There is currently no activity to show"
-            app:layout_constraintBottom_toBottomOf="@+id/recentactivityrv"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-        </TextView>
-        -->
-        <!--</androidx.constraintlayout.widget.ConstraintLayout>
-        -->
-    </androidx.core.widget.NestedScrollView>
+            <!--
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:padding="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <TextView
+                        android:id="@+id/journaldate"
+                        style="@style/Heading5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date"
+                        android:textColor="@color/rosaChillon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                        -->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tableguestsparentrv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <!--
+            <TextView
+                android:id="@+id/emptyrecyclerview"
+                style="@style/Heading6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="There is currently no activity to show"
+                app:layout_constraintBottom_toBottomOf="@+id/recentactivityrv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </TextView>
+            -->
+            <!--</androidx.constraintlayout.widget.ConstraintLayout>
+            -->
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.gms.ads.AdView
@@ -87,22 +88,22 @@
         app:adUnitId="ca-app-pub-3940256099942544/6300978111"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/NewTaskActionButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:clickable="true"-->
-<!--        app:backgroundTint="@color/azulmasClaro"-->
-<!--        app:fabSize="normal"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:maxImageSize="24dp"-->
-<!--        app:srcCompat="@drawable/ic_icons8_plus_white"-->
-<!--        app:tint="@color/white" />-->
+    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--        android:id="@+id/NewTaskActionButton"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginEnd="16dp"-->
+    <!--        android:layout_marginBottom="16dp"-->
+    <!--        android:clickable="true"-->
+    <!--        app:backgroundTint="@color/azulmasClaro"-->
+    <!--        app:fabSize="normal"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:maxImageSize="24dp"-->
+    <!--        app:srcCompat="@drawable/ic_icons8_plus_white"-->
+    <!--        app:tint="@color/white" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonGuestTG"
@@ -111,14 +112,14 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="55dp"
         android:clickable="true"
+        android:contentDescription="@string/floatingactionbuttonguest"
         app:backgroundTint="@color/azulmasClaro"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="24dp"
         app:srcCompat="@drawable/ic_icons8_plus_white"
-        app:tint="@color/white"
-        android:contentDescription="@string/floatingactionbuttonguest" />
+        app:tint="@color/white" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/NewGuestTG"
@@ -135,6 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:contentDescription="@string/floatingactionbuttonguest"
             android:elevation="2dp"
             android:outlineAmbientShadowColor="@color/secondaryText"
             android:src="@drawable/task_done_outline"
@@ -146,7 +148,6 @@
             app:maxImageSize="24dp"
             app:rippleColor="@color/white"
             app:tint="@color/white"
-            android:contentDescription="@string/floatingactionbuttonguest"
             tools:targetApi="p" />
 
         <TextView
@@ -181,6 +182,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:contentDescription="@string/fabcontactguest"
             android:elevation="2dp"
             android:outlineAmbientShadowColor="@color/secondaryText"
             android:src="@drawable/invoice"
@@ -192,7 +194,6 @@
             app:maxImageSize="24dp"
             app:rippleColor="@color/white"
             app:tint="@color/white"
-            android:contentDescription="@string/fabcontactguest"
             tools:targetApi="p" />
 
         <TextView

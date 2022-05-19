@@ -3,6 +3,7 @@ package com.example.newevent2
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,12 +16,31 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Registry
+import com.bumptech.glide.annotation.GlideModule
 import com.example.newevent2.Functions.Blog
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.ui.Functions.texttrimming
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.storage.FirebaseStorage
+import com.firebase.ui.storage.images.FirebaseImageLoader
 
+import com.google.firebase.storage.StorageReference
+
+import com.bumptech.glide.module.AppGlideModule
+import java.io.InputStream
+
+
+@GlideModule
+class MyAppGlideModule : AppGlideModule() {
+    override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
+        // Register FirebaseImageLoader to handle StorageReference
+        registry.append(
+            StorageReference::class.java, InputStream::class.java,
+            FirebaseImageLoader.Factory()
+        )
+    }
+}
 
 class Rv_BlogAdapter(private val blogList: ArrayList<Blog>) :
     RecyclerView.Adapter<Rv_BlogAdapter.ViewHolder>() {
@@ -50,10 +70,11 @@ class Rv_BlogAdapter(private val blogList: ArrayList<Blog>) :
         val storageRef =
             storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/blog/${blogList[p1].imageurl}")
 
-        Glide.with(p0.blogimage!!.context)
+        GlideApp.with(p0.blogimage!!.context)
             .load(storageRef)
-            .centerCrop()
+            //.centerCrop()
             .into(p0.blogimage)
+
         Log.i("Image Loaded", "Image Loaded")
 
 

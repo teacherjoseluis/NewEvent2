@@ -14,6 +14,10 @@ class BlogPresenter(
     var language: String
 ) {
     init {
+        language = when (language) {
+            "US" -> "en"
+            else -> "es"
+        }
         getBlog(language, object : FirebaseGetBlogSuccess {
             override fun onGetBlogSuccess(bloglist: java.util.ArrayList<Blog>) {
                 if (bloglist.isNotEmpty()) {
