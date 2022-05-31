@@ -8,6 +8,8 @@ import android.provider.ContactsContract
 import android.widget.Toast
 import com.example.newevent2.*
 import com.example.newevent2.Model.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 var guestmodel = GuestModel()
 lateinit var guestdbhelper: GuestDBHelper
@@ -17,7 +19,7 @@ private lateinit var contactsAll: ContactsAll
 @SuppressLint("StaticFieldLeak")
 private lateinit var guestCreateEdit: GuestCreateEdit
 
-internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
+internal suspend fun addGuest(context: Context, guestitem: Guest, caller: String) {
     try {
         //------------------------------------------------
         // Updating User information in Local DB
@@ -40,9 +42,13 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
         if (caller == "contact"){
         contactsAll = ContactsAll()
         contactsAll.mContext = context
-            val chainofcommand = orderChainAddContact(guestmodel, guestdbhelper, userdbhelper, usermodel, contactsAll)
-            chainofcommand.onAddEditGuest(guestitem)
-
+                val chainofcommand = orderChainAddContact(
+                    guestmodel,
+                    guestdbhelper,
+                    userdbhelper,
+                    usermodel
+                )
+                chainofcommand.onAddEditGuest(guestitem)
         } else if (caller == "guest") {
             guestCreateEdit = GuestCreateEdit()
             guestCreateEdit.mContext = context
@@ -130,7 +136,7 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
     }
 }
 
-internal fun editGuest(context: Context, guestitem: Guest) {
+internal suspend fun editGuest(context: Context, guestitem: Guest) {
     try {
         // Updating User information in Local DB
         userdbhelper = UserDBHelper(context)
@@ -248,13 +254,11 @@ private fun orderChainAddContact(
     guestModel: GuestModel,
     guestDBHelper: GuestDBHelper,
     userdbhelper: UserDBHelper,
-    userModel: UserModel,
-    contactsAll: ContactsAll
+    userModel: UserModel
 ): CoRAddEditGuest {
     guestModel.nexthandler = guestDBHelper
     guestDBHelper.nexthandler = userdbhelper
     userdbhelper.nexthandleru = userModel
-    userModel.nexthandlerg = contactsAll
     return guestModel
 }
 

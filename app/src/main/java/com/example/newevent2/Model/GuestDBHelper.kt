@@ -96,7 +96,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         db.close()
     }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override suspend fun onAddEditGuest(guest: Guest) {
         if (!getGuestexists(guest.key)) {
             insert(guest)
         } else {

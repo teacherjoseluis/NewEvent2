@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.Functions.addGuest
 import com.example.newevent2.Functions.deleteGuest
 import com.example.newevent2.Functions.editGuest
@@ -25,6 +26,7 @@ import com.example.newevent2.ui.TextValidate
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.new_guest.*
+import kotlinx.coroutines.launch
 
 
 class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
@@ -177,7 +179,9 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                 inputvalflag = false
             }
             if (inputvalflag) {
-                saveguest()
+                lifecycleScope.launch {
+                    saveguest()
+                }
             }
         }
     }
@@ -216,7 +220,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         }
     }
 
-    private fun saveguest() {
+    private suspend fun saveguest() {
         loadingview.visibility = ConstraintLayout.VISIBLE
         withdataview.visibility = ConstraintLayout.GONE
 
@@ -266,7 +270,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         const val CALLER = "guest"
     }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override suspend fun onAddEditGuest(guest: Guest) {
         (mContext as GuestCreateEdit).loadingview.visibility = ConstraintLayout.GONE
         (mContext as GuestCreateEdit).withdataview.visibility = ConstraintLayout.VISIBLE
         GuestsAll.guestcreated_flag = 1

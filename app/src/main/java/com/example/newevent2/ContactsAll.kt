@@ -5,11 +5,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.*
@@ -24,6 +26,8 @@ import com.example.newevent2.Model.Vendor
 import kotlinx.android.synthetic.main.contacts_all.*
 import kotlinx.android.synthetic.main.contacts_all.view.*
 import kotlinx.android.synthetic.main.vendors_all.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -152,15 +156,18 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                             guestmenu.isEnabled = true
                             guestmenu.setOnMenuItemClickListener {
                                 //Enabling a loading view to allow the async call to comeback
-                                loadingview.visibility = ConstraintLayout.VISIBLE
-                                withdataview.visibility = ConstraintLayout.GONE
+                                //31-May - turning off
+                                //loadingview.visibility = ConstraintLayout.VISIBLE
+                                //withdataview.visibility = ConstraintLayout.GONE
                                 when (it.itemId) {
                                     R.id.add_guest -> {
                                         for (ind in countselected) {
                                             //Converting whatever contacts we selected to Guest items
                                             val guest =
                                                 contacttoGuest(context, contactlist[ind].key)
-                                            addGuest(context, guest, CALLER)
+                                            lifecycleScope.launch {
+                                                addGuest(context, guest, CALLER)
+                                            }
                                         }
                                         apptitle.text = getString(R.string.title_contacts)
                                         rvAdapter.onClearSelected()
@@ -218,7 +225,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         TODO("Not yet implemented")
     }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override suspend fun onAddEditGuest(guest: Guest) {
         //Callbacks whenever adding the Guest ends,
         // this will hide the loading view and return to the normal layout
         (mContext as ContactsAll).loadingview.visibility = ConstraintLayout.GONE

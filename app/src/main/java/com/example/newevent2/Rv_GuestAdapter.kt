@@ -105,7 +105,7 @@ class Rv_GuestAdapter(
                 .setAction("UNDO") {
                     contactlist.add(guestbackup)
                     notifyItemInserted(contactlist.lastIndex)
-                    addGuest(context, guestbackup, CALLER)
+                    //addGuest(context, guestbackup, CALLER)
                 }
                 .show()
         }

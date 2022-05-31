@@ -218,7 +218,8 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         nexthandlerdelp?.onDeletePayment(payment)
     }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override suspend fun onAddEditGuest(guest: Guest) {
+        val user = getUser(userdbhelper.getUserKey())
         user.guests = user.guests + 1
         user.hasguest = GuestModel.ACTIVEFLAG
         update(user)
@@ -227,6 +228,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override fun onDeleteGuest(guest: Guest) {
+        val user = getUser(userdbhelper.getUserKey())
         user.guests = user.guests - 1
         if (user.guests == 0) user.hasguest = GuestModel.INACTIVEFLAG
         update(user)

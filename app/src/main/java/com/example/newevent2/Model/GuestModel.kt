@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.tasks.await
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,15 +56,14 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun addGuest(
+    private suspend fun addGuest(
         userid: String,
         eventid: String,
-        guest: Guest,
-        guestaddedflag: FirebaseAddEditGuestSuccess
+        guest: Guest
     ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Guest").push()
+                .child("Guest")
 
         //---------------------------------------
         // Getting the time and date to record in the recently created guest
@@ -84,25 +84,56 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
         )
 
         postRef.setValue(guestadd as Map<String, Any>)
-            .addOnSuccessListener {
-                guest.key = postRef.key.toString()
-                guestaddedflag.onGuestAddedEdited(true, guest)
-                Log.d(
-                    TAG,
-                    "Guest ${guest.name} successfully added on ${sdf.format(guestdatetime)}")
-            }
-            .addOnFailureListener {
-
-                guestaddedflag.onGuestAddedEdited(false, guest)
-                Log.e(TAG, "Guest ${guest.name} failed to be added")
-            }
+            .await()
     }
 
-    private fun editGuest(
+//    @SuppressLint("SimpleDateFormat")
+//    private fun addGuest(
+//        userid: String,
+//        eventid: String,
+//        guest: Guest,
+//        guestaddedflag: FirebaseAddEditGuestSuccess
+//    ) {
+//        val postRef =
+//            myRef.child("User").child(userid).child("Event").child(eventid)
+//                .child("Guest").push()
+//
+//        //---------------------------------------
+//        // Getting the time and date to record in the recently created guest
+//        val timestamp = Time(System.currentTimeMillis())
+//        val guestdatetime = Date(timestamp.time)
+//        val sdf = SimpleDateFormat("MM/dd/yyyy h:mm:ss a")
+//        //---------------------------------------
+//
+//        val guestadd = hashMapOf(
+//            "name" to guest.name,
+//            "rsvp" to guest.rsvp,
+//            "companion" to guest.companion,
+//            "table" to guest.table,
+//            "phone" to guest.phone,
+//            "email" to guest.email,
+//            "createdatetime" to sdf.format(guestdatetime)
+//
+//        )
+//
+//        postRef.setValue(guestadd as Map<String, Any>)
+//            .addOnSuccessListener {
+//                guest.key = postRef.key.toString()
+//                guestaddedflag.onGuestAddedEdited(true, guest)
+//                Log.d(
+//                    TAG,
+//                    "Guest ${guest.name} successfully added on ${sdf.format(guestdatetime)}")
+//            }
+//            .addOnFailureListener {
+//                guestaddedflag.onGuestAddedEdited(false, guest)
+//                Log.e(TAG, "Guest ${guest.name} failed to be added")
+//            }
+//    }
+
+    private suspend fun editGuest(
         userid: String,
         eventid: String,
-        guest: Guest,
-        guesteditedflag: FirebaseAddEditGuestSuccess
+        guest: Guest
     ) {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
@@ -118,14 +149,7 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
         )
 
         postRef.setValue(guestedit as Map<String, Any>)
-            .addOnSuccessListener {
-                guesteditedflag.onGuestAddedEdited(true, guest)
-                Log.d(TAG, "Guest ${guest.name} successfully edited")
-            }
-            .addOnFailureListener {
-                guesteditedflag.onGuestAddedEdited(false, guest)
-                Log.e(TAG, "Guest ${guest.name} failed to be edited")
-            }
+            .await()
     }
 
     private fun deleteGuest(
@@ -148,29 +172,13 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
                 }
     }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override suspend fun onAddEditGuest(guest: Guest) {
         if (guest.key == "") {
-            addGuest(
-                userid,
-                eventid,
-                guest,
-                object : FirebaseAddEditGuestSuccess {
-                    override fun onGuestAddedEdited(flag: Boolean, guest: Guest) {
-                        if (flag) {
-                            nexthandler?.onAddEditGuest(guest)
-                        }
-                    }
-                })
+            addGuest(userid,eventid,guest)
+            nexthandler?.onAddEditGuest(guest)
         } else if (guest.key != "") {
-            editGuest(
-                userid, eventid, guest, object : FirebaseAddEditGuestSuccess {
-                    override fun onGuestAddedEdited(flag: Boolean, guest: Guest) {
-                        if (flag) {
-                            nexthandler?.onAddEditGuest(guest)
-                        }
-                    }
-                }
-            )
+            editGuest(userid, eventid, guest)
+            nexthandler?.onAddEditGuest(guest)
         }
     }
 

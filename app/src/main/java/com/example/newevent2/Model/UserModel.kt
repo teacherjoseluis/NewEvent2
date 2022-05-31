@@ -264,7 +264,7 @@ class UserModel(
         nexthandlerdelp?.onDeletePayment(payment)
     }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override suspend fun onAddEditGuest(guest: Guest) {
         editUserGuestflag(GuestModel.ACTIVEFLAG)
         editUserAddGuest(guestsactive + 1)
         nexthandlerg?.onAddEditGuest(guest)

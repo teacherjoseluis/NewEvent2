@@ -3,7 +3,7 @@ package com.example.newevent2
 import com.example.newevent2.Model.Guest
 
 interface CoRAddEditGuest {
-    fun onAddEditGuest(guest: Guest)
+    suspend fun onAddEditGuest(guest: Guest)
 }
 
 interface CoRDeleteGuest {
