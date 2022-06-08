@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.newevent2.Functions.clone
 import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.Model.Guest
@@ -80,12 +81,12 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
         inf = inflater.inflate(R.layout.guests_all, container, false)
 
-//        val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
+        val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
 
-//        pulltoRefresh.setOnRefreshListener {
-//            presenterguest = GuestsAllPresenter(context!!, this, inf)
-//            pullToRefresh.isRefreshing = false
-//        }
+        pulltoRefresh.setOnRefreshListener {
+            presenterguest = GuestsAllPresenter(requireContext(), this, inf)
+            pullToRefresh.isRefreshing = false
+        }
 
         recyclerViewAllGuests = inf.recyclerViewGuests
         recyclerViewAllGuests.apply {
@@ -150,36 +151,36 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         return inf
     }
 
-    override fun onResume() {
-        super.onResume()
-////Just want to enter here after a new guest was added not every time. I don't like this.
-
-        if (guestcreated_flag == 1){
-//            presenterguest = GuestsAllPresenter(context!!, this, inf)
-
-            val guestdb = GuestDBHelper(requireContext())
-            val guestlist = guestdb.getAllGuests()
-
-            rvAdapter = Rv_GuestAdapter(guestlist, requireContext())
-
-//            recyclerViewAllGuests.adapter = null
-            recyclerViewAllGuests.adapter = rvAdapter
-            contactlist = clone(guestlist)
-
-//            swipeController = SwipeControllerTasks(
-//                context!!,
-//                rvAdapter,
-//                recyclerViewAllGuests,
-//                null,
-//                RIGHTACTION
-//            )
-//            val itemTouchHelper = ItemTouchHelper(swipeController)
-//            itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
-
-            guestcreated_flag = 0
-        }
-
-    }
+//    override fun onResume() {
+//        super.onResume()
+//////Just want to enter here after a new guest was added not every time. I don't like this.
+//
+//        if (guestcreated_flag == 1){
+////            presenterguest = GuestsAllPresenter(context!!, this, inf)
+//
+//            val guestdb = GuestDBHelper(requireContext())
+//            val guestlist = guestdb.getAllGuests()
+//
+//            rvAdapter = Rv_GuestAdapter(guestlist, requireContext())
+//
+////            recyclerViewAllGuests.adapter = null
+//            recyclerViewAllGuests.adapter = rvAdapter
+//            contactlist = clone(guestlist)
+//
+////            swipeController = SwipeControllerTasks(
+////                context!!,
+////                rvAdapter,
+////                recyclerViewAllGuests,
+////                null,
+////                RIGHTACTION
+////            )
+////            val itemTouchHelper = ItemTouchHelper(swipeController)
+////            itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
+//
+//            guestcreated_flag = 0
+//        }
+//
+//    }
 
     private fun filter(models: ArrayList<Guest>, query: String?): List<Guest> {
         val lowerCaseQuery = query!!.toLowerCase(Locale.ROOT)
@@ -205,7 +206,9 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //            }
 //        }
         rvAdapter = Rv_GuestAdapter(list, requireContext())
+        rvAdapter.notifyDataSetChanged()
 
+        recyclerViewAllGuests.adapter = null
         recyclerViewAllGuests.adapter = rvAdapter
         contactlist = clone(list)
 

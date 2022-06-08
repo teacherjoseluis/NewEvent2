@@ -23,17 +23,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-<!--        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-<!--            android:id="@+id/pullToRefresh"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent">-->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ScrollView
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/pullToRefresh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="30dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -44,8 +44,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:stackFromEnd="true" />
-            </ScrollView>
-<!--        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </ScrollView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -57,14 +58,14 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="55dp"
         android:clickable="true"
+        android:contentDescription="@string/floatingactionbuttonguest"
         app:backgroundTint="@color/azulmasClaro"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="24dp"
         app:srcCompat="@drawable/ic_icons8_plus_white"
-        app:tint="@color/white"
-        android:contentDescription="@string/floatingactionbuttonguest" />
+        app:tint="@color/white" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/NewGuest"
@@ -81,6 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:contentDescription="@string/newguestbutton"
             android:elevation="2dp"
             android:outlineAmbientShadowColor="@color/secondaryText"
             android:src="@drawable/task_done_outline"
@@ -92,7 +94,6 @@
             app:maxImageSize="24dp"
             app:rippleColor="@color/white"
             app:tint="@color/white"
-            android:contentDescription="@string/newguestbutton"
             tools:targetApi="p" />
 
         <TextView
@@ -127,6 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:contentDescription="@string/fabcontactguest"
             android:elevation="2dp"
             android:outlineAmbientShadowColor="@color/secondaryText"
             android:src="@drawable/invoice"
@@ -138,7 +140,6 @@
             app:maxImageSize="24dp"
             app:rippleColor="@color/white"
             app:tint="@color/white"
-            android:contentDescription="@string/fabcontactguest"
             tools:targetApi="p" />
 
         <TextView
