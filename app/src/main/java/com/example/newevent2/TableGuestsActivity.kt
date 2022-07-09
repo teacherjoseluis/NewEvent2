@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.TableGuestsActivityPresenter
+import com.example.newevent2.Model.Guest
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.TableGuests
 import com.example.newevent2.ui.ViewAnimation
@@ -29,6 +31,9 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
     private lateinit var recyclerViewActivity: RecyclerView
     private lateinit var presenterguest: TableGuestsActivityPresenter
     private var isRotate = false
+
+    private val REQUEST_CODE_CONTACTS = 1 //ContactsAll
+    private val REQUEST_CODE_GUESTS = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,13 +81,13 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
         inf.fabNewGuestTG.setOnClickListener {
             val newguest = Intent(context, GuestCreateEdit::class.java)
             newguest.putExtra("userid", "")
-            startActivity(newguest)
+            startActivityForResult(newguest, REQUEST_CODE_GUESTS)
         }
 
         inf.fabContactGuestTG.setOnClickListener {
             val newguest = Intent(context, ContactsAll::class.java)
             newguest.putExtra("guestid", "")
-            startActivity(newguest)
+            startActivityForResult(newguest, REQUEST_CODE_CONTACTS)
         }
 
         inf.adView.adListener = object : AdListener() {
@@ -126,6 +131,14 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
     override fun onTableGuestListError(errcode: String) {
         withdata.visibility = View.GONE
         withnodata.visibility = View.VISIBLE
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_CONTACTS && resultCode == Activity.RESULT_OK) {
+            //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
+            presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+        }
     }
 }
 

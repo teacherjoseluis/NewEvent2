@@ -3,6 +3,7 @@ package com.example.newevent2
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -35,6 +36,8 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
     CoRAddEditVendor {
 
     private var contactlist = ArrayList<Contact>()
+    private var guestlist = ArrayList<Guest>()
+
     private lateinit var activitymenu: Menu
     private lateinit var recyclerViewAllContacts: RecyclerView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
@@ -165,6 +168,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                                             //Converting whatever contacts we selected to Guest items
                                             val guest =
                                                 contacttoGuest(context, contactlist[ind].key)
+                                            guestlist.add(guest)
                                             lifecycleScope.launch {
                                                 addGuest(context, guest, CALLER)
                                             }
@@ -262,6 +266,15 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    override fun finish() {
+        val returnintent = Intent()
+        val returnbundle = Bundle()
+        returnbundle.putSerializable("guests", guestlist)
+        returnintent.putExtras(returnbundle)
+        setResult(RESULT_OK, returnintent)
+        super.finish()
     }
 
     companion object {

@@ -1,7 +1,9 @@
 package com.example.newevent2
 
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
@@ -22,6 +24,8 @@ import kotlinx.android.synthetic.main.guests_all.*
 import kotlinx.android.synthetic.main.guests_all.view.*
 import java.util.*
 import kotlin.collections.ArrayList
+import android.widget.Toast
+
 
 class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
@@ -34,6 +38,9 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
     private lateinit var inf: View
     private lateinit var rvAdapter: Rv_GuestAdapter
     private lateinit var swipeController: SwipeControllerTasks
+
+    private val REQUEST_CODE_CONTACTS = 1 //ContactsAll
+    private val REQUEST_CODE_GUESTS = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,7 +140,8 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
             val newguest = Intent(context, GuestCreateEdit::class.java)
             newguest.putExtra("userid", "")
-            startActivity(newguest)
+
+            startActivityForResult(newguest, REQUEST_CODE_GUESTS)
         }
 
         inf.fabContactGuest.setOnClickListener {
@@ -146,7 +154,9 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
             val newguest = Intent(context, ContactsAll::class.java)
             newguest.putExtra("guestid", "")
-            startActivity(newguest)
+            //startActivity(newguest)
+
+            startActivityForResult(newguest, REQUEST_CODE_CONTACTS)
         }
         return inf
     }
@@ -206,7 +216,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //            }
 //        }
         rvAdapter = Rv_GuestAdapter(list, requireContext())
-        rvAdapter.notifyDataSetChanged()
+        //rvAdapter.notifyDataSetChanged()
 
         recyclerViewAllGuests.adapter = null
         recyclerViewAllGuests.adapter = rvAdapter
@@ -251,6 +261,16 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //            itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
 //        }
 //    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_CONTACTS && resultCode == RESULT_OK) {
+            val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
+        }
+    }
+
+    // deal with the item yourself
+
 
     companion object {
         const val RIGHTACTION = "delete"
