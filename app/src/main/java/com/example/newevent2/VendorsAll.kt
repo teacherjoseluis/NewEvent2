@@ -133,18 +133,20 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     ) {
         // There are vendors obtained from the presenter and these are passed to the recyclerview
         rvAdapter = Rv_VendorAdapter(vendorpaymentlist, requireContext())
+
+        recyclerViewAllVendor.adapter = null
         recyclerViewAllVendor.adapter = rvAdapter
 
-        swipeController = SwipeControllerTasks(
-            inflatedView.context,
-            rvAdapter,
-            recyclerViewAllVendor,
-            null,
-            RIGHTACTION
-        )
-        // Adding the Swipe capabilities to the recyclerview
-        val itemTouchHelper = ItemTouchHelper(swipeController)
-        itemTouchHelper.attachToRecyclerView(recyclerViewAllVendor)
+//        swipeController = SwipeControllerTasks(
+//            inflatedView.context,
+//            rvAdapter,
+//            recyclerViewAllVendor,
+//            null,
+//            RIGHTACTION
+//        )
+//        // Adding the Swipe capabilities to the recyclerview
+//        val itemTouchHelper = ItemTouchHelper(swipeController)
+//        itemTouchHelper.attachToRecyclerView(recyclerViewAllVendor)
     }
 
     override fun onVAVendorsError(inflatedView: View, errcode: String) {

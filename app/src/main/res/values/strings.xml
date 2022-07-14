@@ -65,7 +65,7 @@
     <string name="done">Done</string>
     <string name="duenext">Due next task</string>
     <string name="view">view</string>
-    <string name="payments">Payments</string>
+    <string name="payments">Payments: </string>
     <string name="payment">Payment</string>
     <string name="tasks">Tasks</string>
     <string name="spent">Spent</string>
@@ -197,7 +197,7 @@
     <string name="taskname">Task Name</string>
     <string name="taskbudget">Task Budget</string>
     <string name="task_due_date">Task Due Date</string>
-    <string name="amount">Amount</string>
+    <string name="amount">Amount: </string>
     <string name="status">Status</string>
     <string name="complete_task">Complete Task</string>
     <string name="delete_task">Delete Task</string>

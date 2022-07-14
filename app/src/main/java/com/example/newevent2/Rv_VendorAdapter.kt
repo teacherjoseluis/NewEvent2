@@ -43,13 +43,13 @@ class Rv_VendorAdapter(private val contactlist: ArrayList<VendorPayment>, val co
                 val v = LayoutInflater.from(p0.context)
                     .inflate(R.layout.vendor_item_layout, p0, false)
                 //context = p0.context
-                genericViewHolder = Rv_TaskAdapter.TaskViewHolder(v)
+                genericViewHolder = VendorViewHolder(v)
             }
             NATIVE_AD_VIEW_TYPE -> {
                 val v = LayoutInflater.from(p0.context)
                     .inflate(R.layout.native_ad_layout, p0, false)
                 //context = p0.context
-                genericViewHolder = Rv_TaskAdapter.NativeAdViewHolder(v)
+                genericViewHolder = NativeAdViewHolder(v)
             }
         }
         return genericViewHolder

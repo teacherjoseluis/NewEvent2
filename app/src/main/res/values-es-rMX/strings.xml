@@ -11,7 +11,7 @@
     <string name="add_as_vendor">Agregar como Proveedor</string>
     <string name="adult">Adulto</string>
     <string name="already_have_an_account_login">Ya tienes cuenta? Conéctate</string>
-    <string name="amount">Monto</string>
+    <string name="amount">Monto: </string>
     <string name="error_taskbudgetinput">Monto es requerido!</string>
     <string name="are_you_bride_groom">Eres Novio/Novia?</string>
     <string name="clearvendor_warning">Estás seguro(a) de quitar al proveedor de este pago?</string>
@@ -120,7 +120,7 @@
     <string name="fabpayment">Botón de Pago</string>
     <string name="payment_detail">Detalles del Pago</string>
     <string name="payment_due_date">Fecha límite de pago</string>
-    <string name="payments">Pagos</string>
+    <string name="payments">Pagos: </string>
     <string name="pending">Pendiente</string>
     <string name="pendingicon">Ícono de Pendiente</string>
     <string name="personal_details">Detalles Personales</string>
