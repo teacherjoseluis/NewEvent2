@@ -207,15 +207,15 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                         android.R.string.yes
                     ) { dialog, which ->
                         deleteGuest(this, guestitem)
-                        finish()
+                        //finish()
                     } // A null listener allows the button to dismiss the dialog and take no further action.
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
-                true
+                super.onOptionsItemSelected(item);
             }
             else -> {
-                true
+                super.onOptionsItemSelected(item);
             }
         }
     }
@@ -262,6 +262,12 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    override fun finish() {
+        val returnintent = Intent()
+        setResult(RESULT_OK, returnintent)
+        super.finish()
     }
 
     companion object {

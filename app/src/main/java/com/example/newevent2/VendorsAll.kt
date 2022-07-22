@@ -37,6 +37,8 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 
     private var contactlist = ArrayList<Vendor>()
 
+    private val REQUEST_CODE_VENDOR = 3
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -96,7 +98,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
             // Call to the form to create vendors
             val newvendor = Intent(context, VendorCreateEdit::class.java)
             newvendor.putExtra("userid", "")
-            startActivity(newvendor)
+            startActivityForResult(newvendor, REQUEST_CODE_VENDOR)
         }
 
         inf.fabContactVendor.setOnClickListener {

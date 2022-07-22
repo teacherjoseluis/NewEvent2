@@ -215,16 +215,16 @@ class TaskCreateEdit : AppCompatActivity() {
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
-                true
+                super.onOptionsItemSelected(item);
             }
             R.id.complete_task -> {
                 taskitem.status = Rv_TaskAdapter.COMPLETETASK
                 editTask(this, taskitem)
                 finish()
-                true
+                super.onOptionsItemSelected(item);
             }
             else -> {
-                true
+                super.onOptionsItemSelected(item);
             }
         }
     }

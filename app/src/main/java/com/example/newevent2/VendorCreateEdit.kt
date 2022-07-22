@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.Functions.*
 import com.example.newevent2.Model.PaymentDBHelper
@@ -47,8 +48,9 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_vendor)
 
-        // Toolbar
-        setSupportActionBar(findViewById(R.id.toolbar))
+        // Declaring and enabling the toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -187,7 +189,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                         // in order to proceed
                         if (paymentdb.hasVendorPayments(vendoritem.key) == 0) {
                             deleteVendor(this, vendoritem)
-                            finish()
+//                            finish()
                         } else {
                             //If there are payments associated we will not be able to delete the vendor
                             Toast.makeText(
@@ -202,10 +204,12 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
-                true
+                //true
+                super.onOptionsItemSelected(item);
             }
             else -> {
-                true
+                //true
+                super.onOptionsItemSelected(item);
             }
         }
     }

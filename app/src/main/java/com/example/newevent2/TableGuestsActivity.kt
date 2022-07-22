@@ -107,7 +107,10 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "ADOPENED")
                 bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-                MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+                MyFirebaseApp.mFirebaseAnalytics.logEvent(
+                    FirebaseAnalytics.Event.SELECT_ITEM,
+                    bundle
+                )
                 //----------------------------------------
             }
 
@@ -135,7 +138,7 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_CONTACTS && resultCode == Activity.RESULT_OK) {
+        if (((requestCode == REQUEST_CODE_CONTACTS) || (requestCode == REQUEST_CODE_GUESTS)) && resultCode == Activity.RESULT_OK) {
             //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
             presenterguest = TableGuestsActivityPresenter(requireContext(), this)
         }
