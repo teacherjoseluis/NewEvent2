@@ -6,8 +6,10 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.Model.User
+import com.example.newevent2.Model.UserDBHelper
 import com.google.android.material.tabs.TabLayout
 import java.util.*
 import kotlin.collections.ArrayList
@@ -25,12 +27,14 @@ class TaskPaymentList : AppCompatActivity() {
         //I assume user data is needed to pass to Task and Payments classes in charge
         // of displaying data. As TaskPaymentList doesn't get user as parameter, we better
         // get it here.
-        usersession = com.example.newevent2.Functions.getUserSession(this)
-        if (usersession.key == "") {
-            val loginactivity =
-                Intent(this, LoginView::class.java)
-            startActivity(loginactivity)
-        }
+//        usersession = com.example.newevent2.Functions.getUserSession(this)
+//        if (usersession.key == "") {
+//            val loginactivity =
+//                Intent(this, LoginView::class.java)
+//            startActivity(loginactivity)
+//        }
+        userdbhelper = UserDBHelper(this)
+        usersession = userdbhelper.getUser(userdbhelper.getUserKey())
 
         val passedcategory = intent.getStringExtra("category").toString()
 

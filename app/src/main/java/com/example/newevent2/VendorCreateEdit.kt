@@ -238,6 +238,12 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         return true
     }
 
+    override fun finish() {
+        val returnintent = Intent()
+        setResult(RESULT_OK, returnintent)
+        super.finish()
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

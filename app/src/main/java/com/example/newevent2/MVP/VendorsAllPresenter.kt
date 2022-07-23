@@ -9,8 +9,7 @@ import com.example.newevent2.VendorsAll
 
 class VendorsAllPresenter(
     val context: Context,
-    val fragment: VendorsAll,
-    val view: View
+    val fragment: VendorsAll
 ) :
     VendorPresenter.VendorList {
 
@@ -27,19 +26,18 @@ class VendorsAllPresenter(
             val amountlist = paymentDB.getVendorPayments(vendor.key)
             vendorpaymentlist.add(VendorPayment(vendor, amountlist))
         }
-        fragment.onVAVendors(view, vendorpaymentlist)
+        fragment.onVAVendors(vendorpaymentlist)
     }
 
     override fun onVendorListError(errcode: String) {
-        fragment.onVAVendorsError(view, VendorPresenter.ERRCODEVENDORS)
+        fragment.onVAVendorsError(VendorPresenter.ERRCODEVENDORS)
     }
 
     interface VAVendors {
         fun onVAVendors(
-            inflatedView: View,
             vendorpaymentlist: ArrayList<VendorPayment>
         )
 
-        fun onVAVendorsError(inflatedView: View, errcode: String)
+        fun onVAVendorsError(errcode: String)
     }
 }

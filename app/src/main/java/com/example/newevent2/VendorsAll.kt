@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.clone
+import com.example.newevent2.MVP.TableGuestsActivityPresenter
 import com.example.newevent2.MVP.VendorsAllPresenter
 import com.example.newevent2.Model.*
 import com.example.newevent2.ui.ViewAnimation
@@ -37,6 +38,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 
     private var contactlist = ArrayList<Vendor>()
 
+    private val REQUEST_CODE_CONTACTS = 1
     private val REQUEST_CODE_VENDOR = 3
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +71,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         }
 
         // Invoking the presenter that will populate the recyclerview
-        presentervendor = VendorsAllPresenter(requireContext(), this, inf)
+        presentervendor = VendorsAllPresenter(requireContext(), this)
 
         //This is for the Add button, Vendors can be added from scratch or from the contact list
         ViewAnimation.init(inf.NewVendor)
@@ -111,7 +113,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
             // Call to the contact list from which vendors can added from the contacts in the phone
             val newvendor = Intent(context, ContactsAll::class.java)
             newvendor.putExtra("vendorid", "")
-            startActivity(newvendor)
+            startActivityForResult(newvendor, REQUEST_CODE_CONTACTS)
         }
         return inf
     }
@@ -130,7 +132,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     }
 
     override fun onVAVendors(
-        inflatedView: View,
+        //inflatedView: View,
         vendorpaymentlist: ArrayList<VendorPayment>
     ) {
         // There are vendors obtained from the presenter and these are passed to the recyclerview
@@ -151,10 +153,10 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 //        itemTouchHelper.attachToRecyclerView(recyclerViewAllVendor)
     }
 
-    override fun onVAVendorsError(inflatedView: View, errcode: String) {
+    override fun onVAVendorsError(errcode: String) {
         // No vendors coming, the regular layout is hidden and the emptystate one is shown
-        inflatedView.withdatav.visibility = ConstraintLayout.GONE
-        inflatedView.withnodatav.visibility = ConstraintLayout.VISIBLE
+        withdatav.visibility = ConstraintLayout.GONE
+        withnodatav.visibility = ConstraintLayout.VISIBLE
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -185,6 +187,10 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 //            newvendor.putExtra("userrating", userrating)
 //            newvendor.putExtra("source", "google")
 //            startActivity(newvendor)
+        }
+        if (((requestCode == REQUEST_CODE_CONTACTS) || (requestCode == REQUEST_CODE_VENDOR)) && resultCode == Activity.RESULT_OK) {
+            //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
+            presentervendor = VendorsAllPresenter(requireContext(), this)
         }
     }
 
