@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newevent2.MVP.DashboardActivityPresenter
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.ui.ViewAnimation
@@ -23,6 +25,7 @@ class EventCategories : Fragment() {
 
     private lateinit var recyclerViewCategory: RecyclerView
     private var isRotate = false
+    private val REQUEST_CODE_TASK = 4
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +86,7 @@ class EventCategories : Fragment() {
             // As it's a new task, the value userid comes empty
             val newtask = Intent(context, TaskCreateEdit::class.java)
             newtask.putExtra("userid", "")
-            startActivity(newtask)
+            startActivityForResult(newtask, REQUEST_CODE_TASK)
         }
 
         inf.fabPayment.setOnClickListener {
@@ -132,5 +135,17 @@ class EventCategories : Fragment() {
             }
         }
         return inf
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if ((requestCode == REQUEST_CODE_TASK) && resultCode == Activity.RESULT_OK){
+            // Getting the list of categories that I'm actually going to show from the local DB
+            val taskdb = TaskDBHelper(requireContext())
+            val list = taskdb.getActiveCategories()
+
+            val rvAdapter = rvCategoryAdapter(list)
+            recyclerViewCategory.adapter = rvAdapter
+        }
     }
 }

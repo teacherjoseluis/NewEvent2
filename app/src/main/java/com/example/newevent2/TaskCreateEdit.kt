@@ -48,7 +48,7 @@ class TaskCreateEdit : AppCompatActivity() {
         setContentView(R.layout.task_editdetail)
 
         //This call checks the status of Firebase connection
-        checkFirebaseconnection()
+        //checkFirebaseconnection()
 
         //Declaring and enabling the toolbar for this view
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -317,28 +317,34 @@ class TaskCreateEdit : AppCompatActivity() {
 
     //Not sure about kkeping with this function as I think is not very useful.
     // Simply checks if there is connectivity with Firebase and sends a notification to the user
-    private fun checkFirebaseconnection() {
-        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
-        connectedRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val connected = snapshot.getValue(Boolean::class.java) ?: false
-                if (connected) {
-                    Log.d(TaskModel.TAG, "connected")
-                } else {
-                    val notification = Notification()
-                    notification.sendnotification(
-                        baseContext,
-                        "No connectivity",
-                        "Connectivity to Internet was lost"
-                    )
-                    Log.d(TaskModel.TAG, "not connected")
-                }
-            }
+//    private fun checkFirebaseconnection() {
+//        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
+//        connectedRef.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val connected = snapshot.getValue(Boolean::class.java) ?: false
+//                if (connected) {
+//                    Log.d(TaskModel.TAG, "connected")
+//                } else {
+//                    val notification = Notification()
+//                    notification.sendnotification(
+//                        baseContext,
+//                        "No connectivity",
+//                        "Connectivity to Internet was lost"
+//                    )
+//                    Log.d(TaskModel.TAG, "not connected")
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                Log.w(TaskModel.TAG, "Listener was cancelled")
+//            }
+//        })
+//    }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.w(TaskModel.TAG, "Listener was cancelled")
-            }
-        })
+    override fun finish() {
+        val returnintent = Intent()
+        setResult(RESULT_OK, returnintent)
+        super.finish()
     }
 
     companion object {

@@ -10,8 +10,7 @@ import com.example.newevent2.Model.TaskJournal
 
 class DashboardActivityPresenter(
     val context: Context,
-    val fragment: DashboardActivity,
-    val view: View
+    val fragment: DashboardActivity
 ) :
     TaskPresenter.TaskList {
 
@@ -49,20 +48,19 @@ class DashboardActivityPresenter(
             if (o1.date == null || o2.date == null) 0 else o1.date
                 .compareTo(o2.date)
         })
-        fragment.onTaskJournal(view, taskjournal)
+        fragment.onTaskJournal(taskjournal)
     }
 
     override fun onTaskListError(errcode: String) {
-        fragment.onTaskJournalError(view, ERRCODETASKS)
+        fragment.onTaskJournalError(ERRCODETASKS)
     }
 
     interface TaskJournalInterface {
         fun onTaskJournal(
-            inflatedView: View,
             list: ArrayList<TaskJournal>
         )
 
-        fun onTaskJournalError(inflatedView: View, errcode: String)
+        fun onTaskJournalError(errcode: String)
     }
 }
 
