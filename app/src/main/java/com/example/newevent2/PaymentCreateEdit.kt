@@ -8,10 +8,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.newevent2.Functions.addPayment
@@ -97,23 +94,23 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         }
 
         //This is simply to clear the vendor in case the user clicks on this field
-        vendorautocomplete.setOnClickListener {
+//        vendorautocomplete.setOnClickListener {
             // Here it is where the text clearing takes place
-            if (vendorautocomplete.text.toString().isNotEmpty()) {
-                AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.clearvendor))
-                    .setMessage(getString(R.string.clearvendor_warning)) // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton(android.R.string.yes
-                    ) { _, _ ->
-                        vendorautocomplete.setText("")
-                        finish()
-                    } // A null listener allows the button to dismiss the dialog and take no further action.
-                    .setNegativeButton(android.R.string.no, null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show()
-            }
-        }
+//            if (vendorautocomplete.text.toString().isNotEmpty()) {
+//                AlertDialog.Builder(this)
+//                    .setTitle(getString(R.string.clearvendor))
+//                    .setMessage(getString(R.string.clearvendor_warning)) // Specifying a listener allows you to take an action before dismissing the dialog.
+//                    // The dialog is automatically dismissed when a dialog button is clicked.
+//                    .setPositiveButton(android.R.string.yes
+//                    ) { _, _ ->
+//                        vendorautocomplete.setText("")
+//                        finish()
+//                    } // A null listener allows the button to dismiss the dialog and take no further action.
+//                    .setNegativeButton(android.R.string.no, null)
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .show()
+//            }
+//        }
 
         if (paymentitem.key != "") {
             paymentname.setText(paymentitem.name)
@@ -149,16 +146,16 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                 inputvalflag = false
             }
             // Check that if the vendor is set, that vendor exists
-            if (vendorautocomplete.text.toString().isNotEmpty()) {
-                val vendordb = VendorDBHelper(this)
-                val vendorid = vendordb.getVendorIdByName(vendorautocomplete.text.toString())
-                if (vendorid == "") {
-                    Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT).show()
-                    inputvalflag = false
-                } else {
-                    paymentitem.vendorid = vendorid
-                }
-            }
+//            if (vendorautocomplete.text.toString().isNotEmpty()) {
+//                val vendordb = VendorDBHelper(this)
+//                val vendorid = vendordb.getVendorIdByName(vendorautocomplete.text.toString())
+//                if (vendorid == "") {
+//                    Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT).show()
+//                    inputvalflag = false
+//                } else {
+//                    paymentitem.vendorid = vendorid
+//                }
+//            }
             if (inputvalflag) {
                 savePayment()
             }
@@ -263,11 +260,11 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
     }
 
     override fun onVAVendors(list: ArrayList<String>) {
-        val adapteractv = ArrayAdapter<String>(this, android.R.layout.select_dialog_item, list)
-        val actv = findViewById<AutoCompleteTextView>(R.id.vendorautocomplete)
-        actv.threshold = 1
-        actv.setAdapter(adapteractv)
-        actv.setTextColor(Color.RED)
+        val actv = findViewById<Spinner>(R.id.vendorspinner)
+        val adapteractv = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list)
+
+        actv.adapter = adapteractv
+        //actv.setTextColor(Color.RED)
     }
 
     override fun onVAVendorsError(errcode: String) {

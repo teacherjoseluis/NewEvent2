@@ -156,12 +156,11 @@
                 android:text="@string/vendor"
                 android:textAppearance="@style/Body2" />
 
-        <AutoCompleteTextView
-            android:id="@+id/vendorautocomplete"
+        <Spinner
+            android:id="@+id/vendorspinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            tools:ignore="LabelFor" />
+            android:layout_marginTop="5dp"/>
 
         </LinearLayout>
 
