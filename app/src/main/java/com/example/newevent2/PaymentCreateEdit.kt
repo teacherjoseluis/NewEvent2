@@ -146,16 +146,18 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                 inputvalflag = false
             }
             // Check that if the vendor is set, that vendor exists
-//            if (vendorautocomplete.text.toString().isNotEmpty()) {
-//                val vendordb = VendorDBHelper(this)
-//                val vendorid = vendordb.getVendorIdByName(vendorautocomplete.text.toString())
-//                if (vendorid == "") {
-//                    Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT).show()
-//                    inputvalflag = false
-//                } else {
-//                    paymentitem.vendorid = vendorid
-//                }
-//            }
+
+            val actv = findViewById<Spinner>(R.id.vendorspinner)
+            if (actv.selectedItem.toString()!="") {
+                val vendordb = VendorDBHelper(this)
+                val vendorid = vendordb.getVendorIdByName(actv.selectedItem.toString())
+                if (vendorid == "") {
+                    Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT).show()
+                    inputvalflag = false
+                } else {
+                    paymentitem.vendorid = vendorid
+                }
+            }
             if (inputvalflag) {
                 savePayment()
             }
@@ -260,9 +262,9 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
     }
 
     override fun onVAVendors(list: ArrayList<String>) {
+        list.add("")
         val actv = findViewById<Spinner>(R.id.vendorspinner)
         val adapteractv = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list)
-
         actv.adapter = adapteractv
         //actv.setTextColor(Color.RED)
     }
