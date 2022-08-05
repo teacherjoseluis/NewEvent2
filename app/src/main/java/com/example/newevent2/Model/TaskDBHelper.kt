@@ -74,7 +74,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
     fun getActiveCategories(): ArrayList<Category> {
         val list = ArrayList<Category>()
         val cursor: Cursor =
-            db.rawQuery("SELECT DISTINCT category FROM TASK WHERE status = 'A'", null)
+            db.rawQuery("SELECT DISTINCT category FROM (SELECT category FROM TASK WHERE status = 'A' UNION ALL SELECT category FROM PAYMENT)", null)
         if (cursor != null) {
             if (cursor.count > 0) {
                 cursor.moveToFirst()
