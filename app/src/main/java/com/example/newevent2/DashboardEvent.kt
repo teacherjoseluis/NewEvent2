@@ -44,13 +44,15 @@ import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Task
+import com.example.newevent2.ui.CurrencyValueFormatter
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -375,29 +377,49 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         cardlayoutinvisible.visibility = View.GONE
 
         val cardlayout = inflatedView.findViewById<View>(R.id.paymentchart)
+        cardlayout.visibility = View.VISIBLE
         val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
-        val chartpayment = cardlayout.findViewById<PieChart>(R.id.chartpayment)
+        val chartpayment = cardlayout.findViewById<BarChart>(R.id.chartpayment)
+        chartpayment.description.isEnabled = false
 
         val chartcolors = ArrayList<Int>()
         for (c in BandG_Colors2) chartcolors.add(c)
-
         cardtitle.text = getString(R.string.payments)
 
-        val paymententries = ArrayList<PieEntry>()
-        paymententries.add(PieEntry(sumpayment, getString(R.string.spent)))
-        paymententries.add(PieEntry(sumbudget - sumpayment, getString(R.string.available)))
+//        val paymententries = ArrayList<PieEntry>()
+//        paymententries.add(PieEntry(sumpayment, getString(R.string.spent)))
+//        paymententries.add(PieEntry(sumbudget - sumpayment, getString(R.string.available)))
 
-        val dataSetpayment = PieDataSet(paymententries, "").apply {
-            setDrawIcons(false)
-            sliceSpace = 3f //separation between slices
-            iconsOffset =
-                MPPointF(0f, 20f) //position of labels to slices. 40f seems too much
-            colors = chartcolors
-            xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+        val paymententries1 = ArrayList<BarEntry>()
+        paymententries1.add(BarEntry(0f, sumpayment))
+
+        val paymententries2 = ArrayList<BarEntry>()
+        paymententries2.add(BarEntry(1f, sumbudget))
+
+        val dataSetpayment1 = BarDataSet(paymententries1, getString(R.string.payments)).apply {
+            //setDrawIcons(false)
+            //sliceSpace = 3f //separation between slices
+            //iconsOffset = MPPointF(0f, 20f) //position of labels to slices. 40f seems too much
+            color = ContextCompat.getColor(requireContext(), R.color.azulmasClaro)
+            //xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
         }
 
-        val datapayment = PieData(dataSetpayment).apply {
-            setValueFormatter(myPercentageFormatter())
+        val dataSetpayment2 = BarDataSet(paymententries2, getString(R.string.budget)).apply {
+            //setDrawIcons(false)
+            //sliceSpace = 3f //separation between slices
+            //iconsOffset = MPPointF(0f, 20f) //position of labels to slices. 40f seems too much
+            color = ContextCompat.getColor(requireContext(), R.color.rosapalido)
+            //xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+        }
+
+        val dataSetpayment = ArrayList<BarDataSet>()
+        dataSetpayment.add(dataSetpayment1)
+        dataSetpayment.add(dataSetpayment2)
+
+
+        val datapayment = BarData(dataSetpayment as List<IBarDataSet>?).apply {
+            //setValueFormatter(CurrencyValueFormatter())
+            barWidth = 0.5f
             setValueTextSize(14f)
             setValueTextColor(ContextCompat.getColor(requireContext(), R.color.secondaryText))
             setValueTypeface(tfRegular)
@@ -405,6 +427,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
         chartpayment.legend.apply {
             form = Legend.LegendForm.CIRCLE
+            isEnabled = true
             horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
             verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
             textSize = 12.0f
@@ -417,20 +440,23 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
 
         chartpayment.apply {
-            setDrawEntryLabels(false)
-            setUsePercentValues(true)
-            description.isEnabled = false
-            setExtraOffsets(5f, -5f, -45f, 0f) //apparently this is padding
-            dragDecelerationFrictionCoef = 0.95f
-            isDrawHoleEnabled = false
-            rotationAngle = 0f
-            isRotationEnabled = false
-            isHighlightPerTapEnabled = true
-            setEntryLabelColor(ContextCompat.getColor(requireContext(), R.color.secondaryText))
-            setEntryLabelTypeface(tfRegular)
-            setEntryLabelTextSize(14f)
+            //setUsePercentValues(true)
+            //description.isEnabled = false
+            //setExtraOffsets(5f, -5f, -20f, 15f) //apparently this is padding
+            //dragDecelerationFrictionCoef = 0.95f
+            //isDrawHoleEnabled = false
+            //rotationAngle = 0f
+            //isRotationEnabled = false
+            //isHighlightPerTapEnabled = true
+            //setEntryLabelColor(ContextCompat.getColor(requireContext(), R.color.secondaryText))
+            //setEntryLabelTypeface(tfRegular)
+            //setEntryLabelTextSize(14f)
+            axisRight.isEnabled = false
+            axisLeft.isEnabled = false
+            xAxis.isEnabled = false
             data = datapayment
-            highlightValues(null)
+            setFitBars(true)
+            //highlightValues(null)
             invalidate()
         }
 

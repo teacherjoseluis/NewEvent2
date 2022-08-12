@@ -60,6 +60,7 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
                 countcompleted += 1
             }
         }
+        paymentsumbudget = sumbudget
 
         list.sortWith(Comparator { o1, o2 ->
             if (o1.date == null || o2.date == null) 0 else o1.date

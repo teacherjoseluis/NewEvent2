@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/eventname"
-        style="@style/BodyBold"
+        style="@style/BodyBold2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -45,24 +45,33 @@
 
         <TextView
             android:id="@+id/eventdate"
-            style="@style/BodySmall"
+            style="@style/BodyXSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/date"
             android:textColor="@color/azulmasClaro"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/deadline"
+            android:id="@+id/hyphen"
             style="@style/BodySmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" - "
+            android:textColor="@color/azulmasClaro"
+            app:layout_constraintStart_toEndOf="@id/eventdate"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/deadline"
+            style="@style/BodyXSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/deadline"
             android:textColor="@color/azulmasClaro"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eventdate" />
+            app:layout_constraintStart_toEndOf="@+id/hyphen"
+            app:layout_constraintTop_toTopOf="@+id/eventdate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

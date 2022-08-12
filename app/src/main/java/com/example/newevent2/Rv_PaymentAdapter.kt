@@ -127,7 +127,7 @@ class Rv_PaymentAdapter(
     class PaymentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val paymentname: TextView? = itemView.findViewById(R.id.paymentname)
         val paymentdate: TextView? = itemView.findViewById(R.id.paymentdate)
-        val paymentamount: TextView? = itemView.findViewById(R.id.paymentamount)
+        val paymentamount: TextView? = itemView.findViewById(R.id.paymentamounts)
         val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
     }
 
