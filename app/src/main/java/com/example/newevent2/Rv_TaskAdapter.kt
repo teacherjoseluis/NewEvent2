@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Category.Companion.getCategory
 import com.example.newevent2.Functions.deleteTask
@@ -26,6 +27,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 
 class Rv_TaskAdapter(val taskList: MutableList<Task>) :
@@ -105,7 +107,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
                     getCategory(taskList[p1].category).drawable, "drawable",
                     context.packageName
                 )
-                //p0.categoryavatar?.setImageResource(resourceId)
+                p0.categoryavatar?.setImageResource(resourceId)
 
                 p0.itemView.setOnClickListener {
                     val taskdetail = Intent(context, TaskCreateEdit::class.java)
@@ -155,7 +157,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
         val taskcategory: TextView? = itemView.findViewById(R.id.taskcategory)
         val taskdate: TextView? = itemView.findViewById(R.id.taskdate)
         val taskbudget: TextView? = itemView.findViewById(R.id.taskbudgets)
-        //val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
+        val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
     }
 
     class NativeAdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -201,7 +203,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
         if (action == DELETEACTION) {
             taskList.removeAt(position)
             notifyItemRemoved(position)
-            deleteTask(context, taskswift)
+                deleteTask(context, taskswift)
 
             val snackbar = Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
 //                .setAction("UNDO") {

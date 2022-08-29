@@ -197,7 +197,7 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
     }
 
     private fun saveEvent() {
-        val user = getUserSession(applicationContext)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val event = Event().apply {
             key = eventkey
             placeid = eventplaceid

@@ -4,6 +4,7 @@ import Application.Cache
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskModel
 import kotlin.collections.ArrayList
@@ -63,7 +64,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
     }
 
     override fun onEmptyListT() {
-        val user = com.example.newevent2.Functions.getUserSession(mContext)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         // This is when I receive an empty list of Tasks from the cache
         val task = TaskModel()
         task.getAllTasksList(

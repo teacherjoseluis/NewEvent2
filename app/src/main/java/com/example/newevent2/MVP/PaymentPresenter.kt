@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build.VERSION_CODES
 import androidx.annotation.RequiresApi
 import com.example.newevent2.*
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Payment
 import kotlin.collections.ArrayList
@@ -138,7 +139,7 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
     }
 
     override fun onEmptyListP() {
-        val user = com.example.newevent2.Functions.getUserSession(mContext)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val payment = PaymentModel()
         payment.getPaymentsList(
             user.key,

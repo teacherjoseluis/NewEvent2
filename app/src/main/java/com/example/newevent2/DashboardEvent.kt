@@ -451,6 +451,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             //setEntryLabelColor(ContextCompat.getColor(requireContext(), R.color.secondaryText))
             //setEntryLabelTypeface(tfRegular)
             //setEntryLabelTextSize(14f)
+            axisLeft.axisMinimum = 0f
+            axisRight.axisMinimum = 0f
             axisRight.isEnabled = false
             axisLeft.isEnabled = false
             xAxis.isEnabled = false

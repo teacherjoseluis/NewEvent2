@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
+import com.example.newevent2.Functions.saveUserSession
 import com.example.newevent2.MVP.LoginPresenter
 import com.example.newevent2.Model.User
 import com.example.newevent2.Model.UserDBHelper
@@ -238,6 +239,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                         if (userAccount.key == "") {
                             onOnboarding(uid, email, "google")
                         } else {
+                            saveUserSession(this@LoginView, email)
                             onLoginSuccess()
                         }
                     }

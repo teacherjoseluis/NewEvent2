@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import com.example.newevent2.Functions.editUser
 import com.example.newevent2.Functions.getUserSession
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.User
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -27,7 +28,7 @@ class Settings : Fragment() {
         val inf = inflater.inflate(R.layout.settings, container, false)
 
         //Get information about the logged user
-        usersession = getUserSession(requireContext())
+        usersession = userdbhelper.getUser(userdbhelper.getUserKey())
 
         //Load the spinner with whatever comes from the user role
         inf.textinput.setText(usersession.shortname)

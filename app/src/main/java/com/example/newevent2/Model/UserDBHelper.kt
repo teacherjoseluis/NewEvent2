@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.*
+import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.userdbhelper
 
 class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
@@ -25,6 +26,11 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     var nexthandleron: CoROnboardUser? = null
 
     private lateinit var user: User
+    private var useremail: String
+
+    init {
+        useremail = getUserSession(context)
+    }
 
     fun insert(user: User?) {
         val values = ContentValues()
@@ -65,7 +71,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
 
     fun getUserKey(): String {
         var key = ""
-        val cursor: Cursor = db.rawQuery("SELECT userid FROM USER LIMIT 1", null)
+        val cursor: Cursor = db.rawQuery("SELECT userid FROM USER WHERE email = '$useremail'", null)
         if (cursor.count > 0) {
             cursor.moveToFirst()
             do {
@@ -192,6 +198,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override fun onDeleteTask(task: Task) {
+        val user = getUser(userdbhelper.getUserKey())
         user.tasksactive = user.tasksactive - 1
         if (user.tasksactive == 0) user.hastask = TaskModel.INACTIVEFLAG
         update(user)
@@ -200,6 +207,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override fun onAddEditPayment(payment: Payment) {
+        val user = getUser(userdbhelper.getUserKey())
         user.payments = user.payments + 1
         user.haspayment = PaymentModel.ACTIVEFLAG
         update(user)
@@ -211,6 +219,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override fun onDeletePayment(payment: Payment) {
+        val user = getUser(userdbhelper.getUserKey())
         user.payments = user.payments - 1
         if (user.payments == 0) user.haspayment = PaymentModel.INACTIVEFLAG
         update(user)
@@ -237,6 +246,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override fun onAddEditVendor(vendor: Vendor) {
+        val user = getUser(userdbhelper.getUserKey())
         user.vendors = user.vendors + 1
         user.hasvendor = VendorModel.ACTIVEFLAG
         update(user)
@@ -245,6 +255,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override fun onDeleteVendor(vendor: Vendor) {
+        val user = getUser(userdbhelper.getUserKey())
         user.vendors = user.vendors - 1
         if (user.vendors == 0) user.hasvendor = VendorModel.INACTIVEFLAG
         update(user)

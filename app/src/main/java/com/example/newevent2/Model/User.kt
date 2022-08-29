@@ -8,6 +8,7 @@ import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import com.baoyachi.stepview.bean.StepBean
+import com.example.newevent2.Functions.deleteUserSession
 import com.example.newevent2.LoginView
 import com.example.newevent2.R
 import com.google.firebase.auth.*
@@ -108,6 +109,7 @@ class User(
 
     fun logout(activity: Activity) {
         mAuth.signOut()
+        deleteUserSession(activity)
         Toast.makeText(activity, activity.getString(R.string.success_logout), Toast.LENGTH_SHORT)
             .show()
     }

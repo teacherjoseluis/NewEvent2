@@ -44,6 +44,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
                 event.put(Events.TITLE, item.name)
                 event.put(Events.DESCRIPTION, item.address)
+                //event.put(Events.UID_2445, item.key)
             }
             is Task -> {
                 val taskdate = converttoDate(item.date)
@@ -51,6 +52,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
                 event.put(Events.TITLE, item.name)
                 event.put(Events.DESCRIPTION, "Task for the ${item.category} category")
+                //event.put(Events.UID_2445, item.key)
             }
             is Payment -> {
                 val paymentdate = converttoDate(item.date)
@@ -58,6 +60,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
                 event.put(Events.TITLE, item.name)
                 event.put(Events.DESCRIPTION, "Payment for the ${item.category} category")
+                //event.put(Events.UID_2445, item.key)
             }
         }
         event.put(Events.CALENDAR_ID, getCalendarId(context))

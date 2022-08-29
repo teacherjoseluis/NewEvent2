@@ -10,7 +10,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
+import com.example.newevent2.Functions.getUserSession
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.User
+import com.example.newevent2.Model.UserDBHelper
 import com.google.android.material.tabs.TabLayout
 
 class DashboardView : AppCompatActivity() {
@@ -46,7 +49,8 @@ class DashboardView : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        usersession = com.example.newevent2.Functions.getUserSession(this)
+        userdbhelper = UserDBHelper(this)
+        usersession = userdbhelper.getUser(userdbhelper.getUserKey())
         if (usersession.key == "") {
             val loginactivity =
                 Intent(this, LoginView::class.java)

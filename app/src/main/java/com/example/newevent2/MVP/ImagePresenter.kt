@@ -9,6 +9,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import com.example.newevent2.DashboardEvent
 import com.example.newevent2.Functions.getImgfromStorage
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.MainActivity
 
 class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
@@ -69,7 +70,7 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     }
 
     override fun onEmptyEventImage(errorcode: String) {
-        val user = com.example.newevent2.Functions.getUserSession(mContext)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val storageRef =
             getImgfromStorage(EVENTIMAGE, user.key, user.eventid)
         cacheimage.save(EVENTIMAGE, storageRef)

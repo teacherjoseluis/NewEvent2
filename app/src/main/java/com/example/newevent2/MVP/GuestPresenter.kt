@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import android.provider.ContactsContract
 import androidx.annotation.RequiresApi
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.Contact
 
 import com.example.newevent2.Model.Guest
@@ -91,7 +92,7 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
     }
 
     override fun onEmptyListG() {
-        val user = com.example.newevent2.Functions.getUserSession(mContext)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val guest = GuestModel()
         guest.getAllGuestList(
             user.key,

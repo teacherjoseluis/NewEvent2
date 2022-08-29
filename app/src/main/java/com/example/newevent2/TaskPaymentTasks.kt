@@ -21,6 +21,7 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
     private lateinit var presentertask: TaskPaymentTasksPresenter
     private var category: String = ""
     private var status: String = ""
+    private lateinit var inf: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,7 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
+        inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
         //Calling the presenter
         presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
         return inf
@@ -108,6 +109,11 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         //We are showing the empty state layout and hiding the one that will load with task data
         inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
         inflatedView.scrollviewt.visibility = ConstraintLayout.GONE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
     }
 
     companion object {

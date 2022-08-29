@@ -119,7 +119,7 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //---------------------------------------------------
-        val user = getUserSession(context)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         paymentmodel.userid = user.key
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem

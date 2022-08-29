@@ -4,6 +4,7 @@ import Application.Cache
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.*
 
 class VendorPresenter : Cache.VendorArrayListCacheData {
@@ -45,7 +46,7 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
     }
 
     override fun onEmptyListV() {
-        val user = com.example.newevent2.Functions.getUserSession(mContext)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val vendor = VendorModel()
         vendor.getAllVendorList(
             user.key,

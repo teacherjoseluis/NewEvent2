@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.Functions.*
 import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Task
@@ -36,6 +37,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.task_editdetail.*
+import kotlinx.coroutines.launch
 import java.util.*
 
 class TaskCreateEdit : AppCompatActivity() {
@@ -207,7 +209,9 @@ class TaskCreateEdit : AppCompatActivity() {
                     // The dialog is automatically dismissed when a dialog button is clicked.
                     .setPositiveButton(android.R.string.yes
                     ) { _, _ ->
-                        deleteTask(this, taskitem)
+                        lifecycleScope.launch {
+                            deleteTask(this@TaskCreateEdit, taskitem)
+                        }
                         finish()
                     }
                     // A null listener allows the button to dismiss the dialog and take no
@@ -308,6 +312,7 @@ class TaskCreateEdit : AppCompatActivity() {
         } else {
             Log.d(TAG, "The rewarded ad wasn't ready yet.")
         }
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {

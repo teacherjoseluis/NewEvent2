@@ -67,7 +67,7 @@ class EventPresenter : Cache.EventItemCacheData {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onEventError() {
-        val user = com.example.newevent2.Functions.getUserSession(mContext!!)
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val event = EventModel()
         event.getEventdetail(
             user.key,
