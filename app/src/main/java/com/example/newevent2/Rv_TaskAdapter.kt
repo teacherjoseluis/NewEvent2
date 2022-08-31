@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.R.attr
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -28,6 +29,10 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import android.R.attr.data
+
+
+
 
 
 class Rv_TaskAdapter(val taskList: MutableList<Task>) :

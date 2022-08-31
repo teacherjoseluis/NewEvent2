@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,15 +14,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newevent2.MVP.TaskPaymentTasksPresenter
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskModel
+import androidx.databinding.DataBindingUtil.setContentView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.newevent2.Functions.clone
+import com.example.newevent2.MVP.GuestsAllPresenter
+import com.example.newevent2.Model.VendorDBHelper
+import kotlinx.android.synthetic.main.guests_all.*
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
-import kotlinx.android.synthetic.main.taskpayment_tasks.view.scrollviewt
+
 
 class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
+
+    private lateinit var recyclerViewActive: RecyclerView
+    private lateinit var recyclerViewComplete: RecyclerView
 
     private lateinit var presentertask: TaskPaymentTasksPresenter
     private var category: String = ""
     private var status: String = ""
     private lateinit var inf: View
+    private lateinit var rvAdapter: Rv_TaskAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,10 +55,36 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
     ): View? {
         inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
         //Calling the presenter
+
+//        val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
+//        pulltoRefresh.setOnRefreshListener {
+//            presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
+//            pullToRefresh.isRefreshing = false
+//        }
+
+        //Tasks are Active and associated to an Active Recyclerview
+        recyclerViewActive = inf.ActiveTasksRecyclerView
+        recyclerViewActive.apply {
+            layoutManager = LinearLayoutManager(inf.context).apply {
+                stackFromEnd = true
+                reverseLayout = true
+            }
+        }
+
+        //These are completed tasks that are associated to this recyclerview
+        recyclerViewComplete = inf.ActiveTasksRecyclerView
+        recyclerViewComplete.apply {
+            layoutManager = LinearLayoutManager(inf.context).apply {
+                stackFromEnd = true
+                reverseLayout = true
+            }
+        }
+
         presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
         return inf
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onTPTasks(
         inflatedView: View,
         list: ArrayList<Task>
@@ -54,15 +92,8 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         if (list.size != 0) {
             // Tasks are retrieved from the presenter
             if (status == TaskModel.ACTIVESTATUS) {
-                //Tasks are Active and associated to an Active Recyclerview
-                val recyclerViewActive = inflatedView.ActiveTasksRecyclerView
-                recyclerViewActive.apply {
-                    layoutManager = LinearLayoutManager(inflatedView.context).apply {
-                        stackFromEnd = true
-                        reverseLayout = true
-                    }
-                }
-                val rvAdapter = Rv_TaskAdapter(list)
+                rvAdapter = Rv_TaskAdapter(list)
+                recyclerViewActive.adapter = null
                 recyclerViewActive.adapter = rvAdapter
 
                 // Both left and right swipe are enabled for this particular recyclerview
@@ -76,15 +107,8 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
                 val itemTouchHelperA = ItemTouchHelper(swipeController)
                 itemTouchHelperA.attachToRecyclerView(recyclerViewActive)
             } else if (status == TaskModel.COMPLETESTATUS) {
-                //These are completed tasks that are associated to this recyclerview
-                val recyclerViewComplete = inflatedView.ActiveTasksRecyclerView
-                recyclerViewComplete.apply {
-                    layoutManager = LinearLayoutManager(inflatedView.context).apply {
-                        stackFromEnd = true
-                        reverseLayout = true
-                    }
-                }
-                val rvAdapter = Rv_TaskAdapter(list)
+                rvAdapter = Rv_TaskAdapter(list)
+                recyclerViewComplete.adapter = null
                 recyclerViewComplete.adapter = rvAdapter
 
                 //Only right behavior is allowed for the Swipe
@@ -111,9 +135,12 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         inflatedView.scrollviewt.visibility = ConstraintLayout.GONE
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
         presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
+        recyclerViewActive.adapter = null
+        recyclerViewActive.adapter = rvAdapter
     }
 
     companion object {

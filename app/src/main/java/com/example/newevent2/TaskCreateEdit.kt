@@ -44,6 +44,7 @@ class TaskCreateEdit : AppCompatActivity() {
 
     private lateinit var taskitem: Task
     private var mRewardedAd: RewardedAd? = null
+    private lateinit var optionsmenu:Menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -194,6 +195,7 @@ class TaskCreateEdit : AppCompatActivity() {
     // cannot happen when the tasks is brand new
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (taskitem.key != "") {
+            optionsmenu = menu
             menuInflater.inflate(R.menu.tasks_menu, menu)
         }
         return true
@@ -207,12 +209,19 @@ class TaskCreateEdit : AppCompatActivity() {
                     .setMessage(getString(R.string.delete_entry))
                     // Specifying a listener allows you to take an action before dismissing the dialog.
                     // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton(android.R.string.yes
+                    .setPositiveButton(
+                        android.R.string.yes
                     ) { _, _ ->
                         lifecycleScope.launch {
                             deleteTask(this@TaskCreateEdit, taskitem)
                         }
-                        finish()
+                        // disable controls
+                        taskname.isEnabled = false
+                        taskbudget.isEnabled = false
+                        taskdate.isEnabled = false
+                        groupedittask.isEnabled = false
+                        savebuttontask.isEnabled = false
+                        optionsmenu.clear()
                     }
                     // A null listener allows the button to dismiss the dialog and take no
                     // further action.
@@ -223,8 +232,16 @@ class TaskCreateEdit : AppCompatActivity() {
             }
             R.id.complete_task -> {
                 taskitem.status = Rv_TaskAdapter.COMPLETETASK
-                editTask(this, taskitem)
-                finish()
+                lifecycleScope.launch {
+                    editTask(this@TaskCreateEdit, taskitem)
+                }
+                // disable controls
+                taskname.isEnabled = false
+                taskbudget.isEnabled = false
+                taskdate.isEnabled = false
+                groupedittask.isEnabled = false
+                savebuttontask.isEnabled = false
+                optionsmenu.clear()
                 super.onOptionsItemSelected(item);
             }
             else -> {
