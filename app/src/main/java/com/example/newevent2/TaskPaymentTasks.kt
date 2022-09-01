@@ -139,8 +139,8 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
     override fun onResume() {
         super.onResume()
         presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
-        recyclerViewActive.adapter = null
-        recyclerViewActive.adapter = rvAdapter
+//        recyclerViewActive.adapter = null
+//        recyclerViewActive.adapter = rvAdapter
     }
 
     companion object {
