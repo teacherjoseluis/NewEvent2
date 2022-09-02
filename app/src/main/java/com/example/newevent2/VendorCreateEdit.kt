@@ -25,8 +25,14 @@ import com.example.newevent2.Model.PaymentDBHelper
 import com.example.newevent2.Model.Vendor
 import com.example.newevent2.ui.TextValidate
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.android.synthetic.main.new_guest.*
 import kotlinx.android.synthetic.main.new_vendor.*
 import kotlinx.android.synthetic.main.new_vendor.button
+import kotlinx.android.synthetic.main.new_vendor.mailimage
+import kotlinx.android.synthetic.main.new_vendor.mailinputedit
+import kotlinx.android.synthetic.main.new_vendor.nameinputedit
+import kotlinx.android.synthetic.main.new_vendor.phoneimage
+import kotlinx.android.synthetic.main.new_vendor.phoneinputedit
 import kotlinx.android.synthetic.main.vendor_googlecard.view.*
 
 class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
@@ -205,6 +211,11 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
                 //true
+                //Disable all controls in the view
+                nameinputedit.isEnabled = false
+                phoneinputedit.isEnabled = false
+                mailinputedit.isEnabled = false
+                button.isEnabled = false
                 super.onOptionsItemSelected(item);
             }
             else -> {

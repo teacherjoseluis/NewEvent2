@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.clone
+import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.MVP.TableGuestsActivityPresenter
 import com.example.newevent2.MVP.VendorsAllPresenter
 import com.example.newevent2.Model.*
@@ -118,17 +120,25 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         return inf
     }
 
+//    override fun onResume() {
+//        super.onResume()
+//        // Not really sure about keeping with this option. This is suppose
+//        // to refresh the list whenever the user comes back but I think it's not working properly
+//        if (vendorcreated_flag == 1){
+//            val vendordb = VendorDBHelper(requireContext())
+//            val vendorlist = vendordb.getAllVendors()
+//            recyclerViewAllVendor.adapter = rvAdapter
+//            contactlist = clone(vendorlist)
+//            vendorcreated_flag = 0
+//        }
+//    }
+
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        // Not really sure about keeping with this option. This is suppose
-        // to refresh the list whenever the user comes back but I think it's not working properly
-        if (vendorcreated_flag == 1){
-            val vendordb = VendorDBHelper(requireContext())
-            val vendorlist = vendordb.getAllVendors()
-            recyclerViewAllVendor.adapter = rvAdapter
-            contactlist = clone(vendorlist)
-            vendorcreated_flag = 0
-        }
+        presentervendor = VendorsAllPresenter(requireContext(), this)
+//        recyclerViewActive.adapter = null
+//        recyclerViewActive.adapter = rvAdapter
     }
 
     override fun onVAVendors(

@@ -26,6 +26,7 @@ import com.example.newevent2.ui.TextValidate
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.new_guest.*
+import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.coroutines.launch
 
 
@@ -212,6 +213,13 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
+                //Disable all controls in the view
+                nameinputedit.isEnabled = false
+                phoneinputedit.isEnabled = false
+                mailinputedit.isEnabled = false
+                rsvpgroup.isEnabled = false
+                companionsgroup.isEnabled = false
+                button.isEnabled = false
                 super.onOptionsItemSelected(item);
             }
             else -> {

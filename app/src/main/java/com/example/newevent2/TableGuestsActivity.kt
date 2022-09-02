@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
@@ -12,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.MVP.TableGuestsActivityPresenter
 import com.example.newevent2.Model.Guest
 import com.example.newevent2.Model.MyFirebaseApp
@@ -128,12 +130,19 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
 
     override fun onTableGuestList(list: ArrayList<TableGuests>) {
         val rvAdapter = Rv_TableGuestsAdapter(list)
+        recyclerViewActivity.adapter = null
         recyclerViewActivity.adapter = rvAdapter
     }
 
     override fun onTableGuestListError(errcode: String) {
         withdata.visibility = View.GONE
         withnodata.visibility = View.VISIBLE
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onResume() {
+        super.onResume()
+        presenterguest = TableGuestsActivityPresenter(requireContext(), this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

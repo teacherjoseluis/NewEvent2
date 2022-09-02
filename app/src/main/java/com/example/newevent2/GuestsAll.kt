@@ -1,6 +1,7 @@
 package com.example.newevent2
 
 
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.Intent.getIntent
@@ -25,6 +26,7 @@ import kotlinx.android.synthetic.main.guests_all.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 import android.widget.Toast
+import com.example.newevent2.MVP.TaskPaymentTasksPresenter
 
 
 class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
@@ -267,6 +269,14 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         if (requestCode == REQUEST_CODE_CONTACTS && resultCode == RESULT_OK) {
             val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onResume() {
+        super.onResume()
+        presenterguest = GuestsAllPresenter(requireContext(), this, inf)
+//        recyclerViewActive.adapter = null
+//        recyclerViewActive.adapter = rvAdapter
     }
 
     // deal with the item yourself
