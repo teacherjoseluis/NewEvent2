@@ -38,7 +38,7 @@ class Rv_NoteAdapter(private val noteList: MutableList<Note>) :
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.notetitle?.text = noteList[p1].title
         p0.notedatetime?.text = noteList[p1].lastupdateddatetime
-        p0.notesummary?.text = noteList[p1].title
+        p0.notesummary?.text = noteList[p1].body
 
         try {
             p0.itemView.background.setTint(noteList[p1].color.toColorInt())

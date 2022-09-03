@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newevent2.MVP.NotePresenter
+import com.example.newevent2.MVP.VendorsAllPresenter
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Note
 import com.example.newevent2.Model.NoteDBHelper
@@ -22,12 +24,15 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
     private lateinit var presenternote: NotePresenter
     private lateinit var rvAdapter: Rv_NoteAdapter
     private var recyclerView = recyclerViewNotes
+    private lateinit var inf: View
+
+    private val REQUEST_CODE_NOTES = 4
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val inf = inflater.inflate(R.layout.my_notes, container, false)
+        inf = inflater.inflate(R.layout.my_notes, container, false)
 
         recyclerView = inf.recyclerViewNotes
         recyclerView.apply {
@@ -48,23 +53,32 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
 
             val newnote = Intent(context, NoteCreateEdit::class.java)
             newnote.putExtra("userid", "")
-            startActivity(newnote)
+            startActivityForResult(newnote, REQUEST_CODE_NOTES)
         }
         return inf
     }
 
     override fun onResume() {
         super.onResume()
-        if (notescreated_flag== 1) {
-            val notedb = NoteDBHelper(requireContext())
-            val notelist = notedb.getAllNotes()
-            if (notelist.size == 0) {
-                this.withdata.visibility = ConstraintLayout.GONE
-                this.withnodata.visibility = ConstraintLayout.VISIBLE
-            }
-            rvAdapter = Rv_NoteAdapter(notelist)
-            recyclerView.adapter = rvAdapter
-            notescreated_flag = 0
+//        if (notescreated_flag== 1) {
+//            val notedb = NoteDBHelper(requireContext())
+//            val notelist = notedb.getAllNotes()
+//            if (notelist.size == 0) {
+//                this.withdata.visibility = ConstraintLayout.GONE
+//                this.withnodata.visibility = ConstraintLayout.VISIBLE
+//            }
+//            rvAdapter = Rv_NoteAdapter(notelist)
+//            recyclerView.adapter = rvAdapter
+//            notescreated_flag = 0
+//        }
+//        presenternote = NotePresenter(requireContext(), this, inf)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if ((requestCode == REQUEST_CODE_NOTES) && (resultCode == Activity.RESULT_OK)) {
+            //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
+            presenternote = NotePresenter(requireContext(), this, inf)
         }
     }
 

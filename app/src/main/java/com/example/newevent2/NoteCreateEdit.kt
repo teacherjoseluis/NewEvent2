@@ -193,6 +193,13 @@ class NoteCreateEdit : AppCompatActivity() {
 
         loadingview.visibility = ConstraintLayout.GONE
         withdataview.visibility = ConstraintLayout.VISIBLE
+        finish()
+    }
+
+    override fun finish() {
+        val returnintent = Intent()
+        setResult(RESULT_OK, returnintent)
+        super.finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {
