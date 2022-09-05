@@ -56,6 +56,20 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         return vendorid
     }
 
+    fun getVendorNameById(id: String): String {
+        var name = ""
+        val cursor: Cursor =
+            db.rawQuery("SELECT name FROM VENDOR WHERE vendorid = '$id' LIMIT 1", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                name = cursor.getString(cursor.getColumnIndex("name"))
+            }
+        }
+        cursor.close()
+        return name
+    }
+
     fun getAllVendors(): ArrayList<Vendor> {
         val list = ArrayList<Vendor>()
         val cursor: Cursor = db.rawQuery("SELECT * FROM VENDOR ORDER BY name ASC", null)

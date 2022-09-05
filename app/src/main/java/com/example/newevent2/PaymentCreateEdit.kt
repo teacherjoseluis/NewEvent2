@@ -45,9 +45,6 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-       //Calling the presenter for Vendors that will be used to associate the Payment to a Vendor
-        presentervendor = VendorPaymentPresenter(this, this)
-
         //Paymentitem will be blank if nothing comes in the extras
         // but if something comes it will assume this is an edit
         val extras = intent.extras
@@ -56,6 +53,9 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         } else {
             Payment()
         }
+
+       //Calling the presenter for Vendors that will be used to associate the Payment to a Vendor
+        presentervendor = VendorPaymentPresenter(this, this)
 
         //We are making sure that only valid text is entered in the name of the payment
         paymentname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
@@ -266,6 +266,11 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         val actv = findViewById<Spinner>(R.id.vendorspinner)
         val adapteractv = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list)
         actv.adapter = adapteractv
+        try {
+        val vendordb = VendorDBHelper(this)
+        val vendorname = vendordb.getVendorNameById(paymentitem.vendorid)
+            actv.setSelection(list.indexOf(vendorname))
+        } catch(e: Exception) {}
         //actv.setTextColor(Color.RED)
     }
 
