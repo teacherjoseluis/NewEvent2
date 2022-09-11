@@ -120,7 +120,7 @@
     <string name="fabpayment">Botón de Pago</string>
     <string name="payment_detail">Detalles del Pago</string>
     <string name="payment_due_date">Fecha límite de pago</string>
-    <string name="payments">Pagos: </string>
+    <string name="payments">Pagos</string>
     <string name="pending">Pendiente</string>
     <string name="pendingicon">Ícono de Pendiente</string>
     <string name="personal_details">Detalles Personales</string>

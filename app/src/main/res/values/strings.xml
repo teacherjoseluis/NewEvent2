@@ -65,7 +65,7 @@
     <string name="done">Done</string>
     <string name="duenext">Due next task</string>
     <string name="view">view</string>
-    <string name="payments">Payments: </string>
+    <string name="payments">Payments</string>
     <string name="payment">Payment</string>
     <string name="tasks">Tasks</string>
     <string name="spent">Spent</string>

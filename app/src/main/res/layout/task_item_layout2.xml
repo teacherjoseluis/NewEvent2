@@ -30,7 +30,7 @@
 
             <TextView
                 android:id="@+id/taskname"
-                style="@style/BodyBold2"
+                style="@style/Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/task"
