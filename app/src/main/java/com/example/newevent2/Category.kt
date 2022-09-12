@@ -6,18 +6,20 @@ enum class Category(
     val es_name: String,
     val drawable: String,
     val colorbackground: String,
-    val colorforeground: String
+    val colorforeground: String,
+    val colorinactivebackground: String,
+    val colorinactiveforeground: String
 ) {
-    Venue("venue", "Venue", "Lugar","venue","#DB5ABA","#FFFFFF"),
-    Photo("photo", "Photo & Video", "Foto & Video","photo","#C455A8", "#FFFFFF"),
-    Entertainment("entertainment", "Entertainment", "Entretenimiento", "entertainment","#CF8BA3", "#000000"),
-    Flowers("flowers", "Flowers & Deco","Flores & Decoracion", "flowers","#D7A6B3","#000000"),
-    Transportation("transport", "Transportation","Transportacion", "transportation","#E5CDC8","#000000"),
-    Ceremony("ceremony", "Ceremony", "Ceremonia","ceremony","#D94A98","#FFFFFF"),
-    Accesories("accessories", "Attire & Accessories", "Vestidos & Accessorios","attire","#F285C1", "#FFFFFF"),
-    Beauty("beauty", "Health & Beauty", "Salud & Belleza","beauty","#F2B3D6","#000000"),
-    Food("food", "Food & Drink", "Comida & Bebida","food","#1D3973","#FFFFFF"),
-    Guests("guests", "Guests", "Invitados","guests","#F2D8D5","#000000");
+    Venue("venue", "Venue", "Lugar","venue","#DB5ABA","#FFFFFF","#f4ceea", "#b3b3b3"),
+    Photo("photo", "Photo & Video", "Foto & Video","photo","#C455A8", "#FFFFFF", "#edcce5", "#b3b3b3"),
+    Entertainment("entertainment", "Entertainment", "Entretenimiento", "entertainment","#CF8BA3", "#000000","#ecd1da","#b3b3b3"),
+    Flowers("flowers", "Flowers & Deco","Flores & Decoracion", "flowers","#D7A6B3","#000000", "#e7cad1","#b3b3b3"),
+    Transportation("transport", "Transportation","Transportacion", "transportation","#E5CDC8","#000000", "#eddcd9","#b3b3b3"),
+    Ceremony("ceremony", "Ceremony", "Ceremonia","ceremony","#D94A98","#FFFFFF", "#ead7d3","#b3b3b3"),
+    Accesories("accessories", "Attire & Accessories", "Vestidos & Accessorios","attire","#F285C1", "#FFFFFF", "#f7d1e6","#b3b3b3"),
+    Beauty("beauty", "Health & Beauty", "Salud & Belleza","beauty","#F2B3D6","#000000","#f7d1e6","#b3b3b3"),
+    Food("food", "Food & Drink", "Comida & Bebida","food","#1D3973","#FFFFFF", "#e8ebf1","#b3b3b3"),
+    Guests("guests", "Guests", "Invitados","guests","#F2D8D5","#000000", "#f6e4e2","#b3b3b3");
 
     companion object {
         fun getCategory(code: String): Category {

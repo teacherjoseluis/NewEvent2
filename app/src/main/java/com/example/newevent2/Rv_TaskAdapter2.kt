@@ -40,11 +40,25 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.taskname?.text = taskList[p1].name
-        p0.taskname?.setTextColor(getCategory(taskList[p1].category).colorforeground.toColorInt())
+        p0.taskname?.setTextColor(when(taskList[p1].status) {
+            "C" -> getCategory(taskList[p1].category).colorinactiveforeground.toColorInt()
+            else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
+        })
         p0.taskcategory?.text = taskList[p1].category
-        p0.taskcategory?.setTextColor(getCategory(taskList[p1].category).colorforeground.toColorInt())
-        p0.itemView.taskcard.setCardBackgroundColor(getCategory(taskList[p1].category).colorbackground.toColorInt())
-        p0.taskstatus?.setTextColor(getCategory(taskList[p1].category).colorforeground.toColorInt())
+        p0.taskcategory?.setTextColor(when(taskList[p1].status) {
+            "C" -> getCategory(taskList[p1].category).colorinactiveforeground.toColorInt()
+            else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
+        })
+        //p0.itemView.taskcard.setCardBackgroundColor(getCategory(taskList[p1].category).colorbackground.toColorInt())
+        p0.itemView.taskcard.setCardBackgroundColor(when(taskList[p1].status) {
+            "C" -> getCategory(taskList[p1].category).colorinactivebackground.toColorInt()
+            else -> getCategory(taskList[p1].category).colorbackground.toColorInt()
+        })
+        //p0.taskstatus?.setTextColor(getCategory(taskList[p1].category).colorforeground.toColorInt())
+        p0.taskstatus?.setTextColor(when(taskList[p1].status) {
+            "C" -> getCategory(taskList[p1].category).colorinactiveforeground.toColorInt()
+            else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
+        })
         p0.taskstatus?.text = when(taskList[p1].status) {
             "A" -> "active"
             "C" -> "completed"
@@ -59,9 +73,11 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
 //        p0.categoryavatar?.setImageResource(resourceId)
 
         p0.itemView.setOnClickListener {
-            val taskdetail = Intent(context, TaskCreateEdit::class.java)
-            taskdetail.putExtra("task", taskList[p1])
-            context.startActivity(taskdetail)
+            if(taskList[p1].status == "A") {
+                val taskdetail = Intent(context, TaskCreateEdit::class.java)
+                taskdetail.putExtra("task", taskList[p1])
+                context.startActivity(taskdetail)
+            }
         }
     }
 
