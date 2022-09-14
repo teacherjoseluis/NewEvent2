@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newevent2.MVP.NotePresenter
@@ -36,9 +37,8 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
 
         recyclerView = inf.recyclerViewNotes
         recyclerView.apply {
-            layoutManager = LinearLayoutManager(inf.context).apply {
-                stackFromEnd = true
-                reverseLayout = false
+            layoutManager = GridLayoutManager(inf.context, 2).apply {
+                reverseLayout = true
             }
         }
         presenternote = NotePresenter(requireContext(), this, inf)

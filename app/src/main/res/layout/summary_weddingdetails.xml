@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/eventname"
-        style="@style/BodyBold2"
+        style="@style/JournalDate2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,8 +61,8 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
             else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
         })
         p0.taskstatus?.text = when(taskList[p1].status) {
-            "A" -> "active"
-            "C" -> "completed"
+            "A" -> context.getString(R.string.todo)
+            "C" -> context.getString(R.string.done)
             else -> "unknown"
         }
 

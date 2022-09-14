@@ -69,6 +69,11 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="JournalDate2" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="BodyItalic" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolightitalic</item>
         <item name="android:textSize">18sp</item>
