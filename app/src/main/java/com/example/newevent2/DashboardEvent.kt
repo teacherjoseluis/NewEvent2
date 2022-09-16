@@ -335,7 +335,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             cardname.text = getString(R.string.duenext)
             //cardsecondarytext.text = "${task.name} due by ${task.date}"
             val cardmsg = StringBuilder()
-            cardmsg.append(task.name).append(getString(R.string.dueby)).append(task.date)
+            cardmsg.append(task.name).append(" ").append(getString(R.string.dueby)).append(" ").append(task.date)
             cardsecondarytext.text = cardmsg
             action1Button.text = getString(R.string.view)
             action2Button.visibility = View.INVISIBLE
@@ -527,7 +527,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflatedview.findViewById<TextView>(R.id.eventfulladdress).text = event.address
 
         val daysleft = daystoDate(converttoDate(event.date))
-        inflatedview.findViewById<TextView>(R.id.deadline).text = daysleft.toString().plus(
+        inflatedview.findViewById<TextView>(R.id.deadline).text = daysleft.toString().plus(" ").plus(
             getString(
                 R.string.daysleft
             )

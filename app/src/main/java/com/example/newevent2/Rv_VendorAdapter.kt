@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.sumStrings
 import com.example.newevent2.Model.VendorPayment
+import com.example.newevent2.ui.LetterAvatar
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -77,7 +78,16 @@ class Rv_VendorAdapter(private val contactlist: ArrayList<VendorPayment>, val co
 //                    10
 //                )
 //            )
-                    p0.contactavatar.setText(p0.contactname.text.toString())
+                    p0.contactavatar.apply {
+                        setImageDrawable(
+                            LetterAvatar(
+                                context,
+                                context.getColor(R.color.azulmasClaro),
+                                p0.contactname.text.toString().substring(0, 2),
+                                10
+                            )
+                        )
+                    }
 
                 } catch (e: Exception) {
                     p0.contactavatar.setImageResource(R.drawable.avatar2)

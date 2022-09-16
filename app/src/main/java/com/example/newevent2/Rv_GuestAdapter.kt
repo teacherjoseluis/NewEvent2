@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.addGuest
 import com.example.newevent2.Functions.deleteGuest
 import com.example.newevent2.Model.Guest
+import com.example.newevent2.ui.LetterAvatar
 import com.google.android.material.snackbar.Snackbar
 import com.redmadrobot.acronymavatar.AvatarView
 
@@ -50,8 +51,17 @@ class Rv_GuestAdapter(
 //            p0.contactavatar.setImageResource(R.drawable.avatar2)
 //        }
         try {
-            p0.contactavatar.setText(p0.contactname.text.toString())
-
+            //p0.contactavatar.setText(p0.contactname.text.toString())
+            p0.contactavatar.apply {
+                setImageDrawable(
+                    LetterAvatar(
+                        context,
+                        context.getColor(R.color.azulmasClaro),
+                        p0.contactname.text.toString().substring(0, 2),
+                        10
+                    )
+                )
+            }
         } catch (e: Exception) {
             p0.contactavatar.setImageResource(R.drawable.avatar2)
         }

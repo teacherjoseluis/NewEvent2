@@ -25,10 +25,38 @@ class Rv_TaskDatesAdapter(
     lateinit var context: Context
     private val viewPool = RecyclerView.RecycledViewPool()
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        val v = LayoutInflater.from(p0.context).inflate(R.layout.journal_parentlayout, p0, false)
-        context = p0.context
-        return ViewHolder(v)
+    private val EVEN = 1
+    private val ODD = 2
+
+    //--------------------------------------------------
+    override fun getItemViewType(position: Int): Int {
+        if (position % 2 == 0) {
+            return EVEN
+        }
+        return ODD
+    }
+    //--------------------------------------------------
+
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): Rv_TaskDatesAdapter.ViewHolder {
+//        val v = LayoutInflater.from(p0.context).inflate(R.layout.journal_parentlayout, p0, false)
+//        context = p0.context
+//        return ViewHolder(v)
+        lateinit var genericViewHolder: Rv_TaskDatesAdapter.ViewHolder
+        when (p1) {
+            EVEN -> {
+                val v = LayoutInflater.from(p0.context)
+                    .inflate(R.layout.journal_parentlayout, p0, false)
+                context = p0.context
+                genericViewHolder = ViewHolder(v)
+            }
+            ODD -> {
+                val v = LayoutInflater.from(p0.context)
+                    .inflate(R.layout.journal_parentlayout2, p0, false)
+                context = p0.context
+                genericViewHolder = ViewHolder(v)
+            }
+        }
+        return genericViewHolder
     }
 
     override fun getItemCount(): Int {

@@ -42,6 +42,11 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="BodySmallItallic" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:fontFamily">@font/robotolightitalic</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="BodyXSmall" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/robotolight</item>
         <item name="android:textSize">12sp</item>
