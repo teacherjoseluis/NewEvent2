@@ -115,7 +115,7 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
         } else {
             Log.d(TAG, "Event ${event.key} not updated")
         }
-        db.close()
+        //db.close()
     }
 
     fun delete(event: Event) {
@@ -125,7 +125,7 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
         } else {
             Log.d(TAG, "Event ${event.key} not deleted")
         }
-        db.close()
+        //db.close()
     }
 
     companion object {

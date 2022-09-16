@@ -148,7 +148,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } else {
             Log.d(TAG, "Task ${task.key} not updated")
         }
-        db.close()
+        //db.close()
     }
 
     fun delete(task: Task) {
@@ -158,7 +158,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } else {
             Log.d(TAG, "Task ${task.key} not deleted")
         }
-        db.close()
+        //db.close()
     }
 
     override fun onAddEditTask(task: Task) {

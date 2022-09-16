@@ -72,14 +72,20 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     fun getUserKey(): String {
         var key = ""
         val cursor: Cursor = db.rawQuery("SELECT userid FROM USER WHERE email = '$useremail'", null)
-        if (cursor.count > 0) {
-            cursor.moveToFirst()
-            do {
-                key = cursor.getString(cursor.getColumnIndex("userid"))
-            } while (cursor.moveToNext())
+        try {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    key = cursor.getString(cursor.getColumnIndex("userid"))
+                } while (cursor.moveToNext())
+            }
+            return key
         }
-        cursor.close()
-        return key
+        finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     fun getUser(key: String): User {
@@ -168,7 +174,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         } else {
             Log.d(TAG, "User ${user.key} not updated")
         }
-        db.close()
+        //db.close()
     }
 
     companion object {

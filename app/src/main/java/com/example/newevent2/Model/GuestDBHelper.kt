@@ -83,7 +83,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         } else {
             Log.d(TAG, "Guest ${guest.key} not updated")
         }
-        db.close()
+        //db.close()
     }
 
     fun delete(guest: Guest) {
@@ -93,7 +93,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         } else {
             Log.d(TAG, "Guest ${guest.key} not deleted")
         }
-        db.close()
+        //db.close()
     }
 
     override suspend fun onAddEditGuest(guest: Guest) {

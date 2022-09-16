@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.Functions.editUser
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.userdbhelper
@@ -16,6 +17,7 @@ import com.example.newevent2.Model.User
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.settings.*
 import kotlinx.android.synthetic.main.settings.view.*
+import kotlinx.coroutines.launch
 
 class Settings : Fragment() {
 
@@ -40,12 +42,12 @@ class Settings : Fragment() {
         inf.spinner.setSelection(position)
 
         //Load the spinner with the language selected for the user
-        val language = when (usersession.language) {
-            "en" -> 0
-            "es" -> 1
-            else -> 0
-        }
-        inf.spinner4.setSelection(language)
+//        val language = when (usersession.language) {
+//            "en" -> 0
+//            "es" -> 1
+//            else -> 0
+//        }
+//        inf.spinner4.setSelection(language)
 
         inf.textinput.setOnClickListener()
         {
@@ -68,30 +70,30 @@ class Settings : Fragment() {
         }
 
         //When the user selects via the spinner English or Spanish, that will be saved in his/her profile
-        inf.spinner4.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                usersession.language = when (inf.spinner4.selectedItemPosition) {
-                    0 -> "en"
-                    1 -> "es"
-                    else -> "en"
-                }
-                // ------- Analytics call ----------------
-                val bundle = Bundle()
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "LANGUAGE")
-                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, usersession.language)
-                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-                MyFirebaseApp.mFirebaseAnalytics.logEvent(
-                    FirebaseAnalytics.Event.SELECT_ITEM,
-                    bundle
-                )
-                //----------------------------------------
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-        }
+//        inf.spinner4.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//
+//            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+//                usersession.language = when (inf.spinner4.selectedItemPosition) {
+//                    0 -> "en"
+//                    1 -> "es"
+//                    else -> "en"
+//                }
+//                // ------- Analytics call ----------------
+//                val bundle = Bundle()
+//                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "LANGUAGE")
+//                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, usersession.language)
+//                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+//                MyFirebaseApp.mFirebaseAnalytics.logEvent(
+//                    FirebaseAnalytics.Event.SELECT_ITEM,
+//                    bundle
+//                )
+//                //----------------------------------------
+//            }
+//
+//            override fun onNothingSelected(p0: AdapterView<*>?) {
+//                TODO("Not yet implemented")
+//            }
+//        }
 
         inf.settingsbutton.setOnClickListener()
         {
@@ -99,10 +101,14 @@ class Settings : Fragment() {
             if (inf.textinput.text.toString().isEmpty()) {
                 inf.textinput.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
+            } else {
+                usersession.shortname = inf.textinput.text.toString()
             }
             if (inputvalflag) {
                 //savesettings()
-                //editUser(requireContext(), usersession)
+                lifecycleScope.launch {
+                    editUser(requireContext(), usersession)
+                }
             }
         }
 
@@ -135,7 +141,6 @@ class Settings : Fragment() {
             intents.putExtras(b)
             requireContext().startActivity(intents)
         }
-
         return inf
     }
 }

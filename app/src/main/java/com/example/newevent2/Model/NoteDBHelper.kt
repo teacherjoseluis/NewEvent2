@@ -69,7 +69,7 @@ class NoteDBHelper(context: Context) {
         } else {
             Log.d(TAG, "Guest ${note.noteid} not updated")
         }
-        db.close()
+        //db.close()
     }
 
     fun delete(note: Note) {
@@ -79,7 +79,7 @@ class NoteDBHelper(context: Context) {
         } else {
             Log.d(TAG, "Note ${note.noteid} not deleted")
         }
-        db.close()
+        //db.close()
     }
 
     companion object {

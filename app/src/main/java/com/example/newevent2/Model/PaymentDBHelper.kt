@@ -132,7 +132,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         } else {
             Log.d(TAG, "Payment ${payment.key} not updated")
         }
-        db.close()
+        //db.close()
     }
 
     fun delete(payment: Payment) {
@@ -142,7 +142,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         } else {
             Log.d(TAG, "Payment ${payment.key} not deleted")
         }
-        db.close()
+        //db.close()
     }
 
     override fun onAddEditPayment(payment: Payment) {

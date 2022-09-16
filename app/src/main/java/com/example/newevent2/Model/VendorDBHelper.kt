@@ -114,7 +114,7 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         } else {
             Log.d(TAG, "Vendor ${vendor.key} not updated")
         }
-        db.close()
+        //db.close()
     }
 
     fun delete(vendor: Vendor) {
@@ -124,7 +124,7 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         } else {
             Log.d(TAG, "Vendor ${vendor.key} not deleted")
         }
-        db.close()
+        //db.close()
     }
 
     override fun onAddEditVendor(vendor: Vendor) {

@@ -257,4 +257,15 @@
     <string name="errordeleteuser">Hubo un error al intentar borrar al usuario </string>
     <string name="successedituser">Usuario editado exitósamente</string>
     <string name="erroredituser">Hubo un error al intentar editar al usuario </string>
+
+    <string-array name="role" >
+        <item>Novia</item>
+        <item>Novio</item>
+    </string-array>
+
+    <string-array name="language" >
+        <item>English</item>
+        <item>Español</item>
+    </string-array>
+
 </resources>
