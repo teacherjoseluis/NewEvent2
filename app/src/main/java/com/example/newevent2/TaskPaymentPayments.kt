@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newevent2.Model.Payment
 import kotlinx.android.synthetic.main.taskpayment_payments.view.*
+import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 
 class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments {
 
@@ -59,7 +60,8 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments 
                 val itemTouchHelper = ItemTouchHelper(swipeController)
                 itemTouchHelper.attachToRecyclerView(recyclerView)
         } else if (list.size == 0) {
-            inflatedView.activepaymentslayout.visibility = ConstraintLayout.INVISIBLE
+            inflatedView.activepaymentslayout.visibility = ConstraintLayout.GONE
+            inflatedView.withnodatataskpaymentp.visibility = ConstraintLayout.VISIBLE
         }
     }
 

@@ -29,7 +29,7 @@
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/event_detail.xml" value="0.14" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/event_summary.xml" value="0.18" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/eventform_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/guest_item_layout.xml" value="0.22" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/guest_item_layout.xml" value="0.5" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/guests_all.xml" value="0.14517980107115533" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/header_navview.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/journal_parentlayout.xml" value="0.18" />
@@ -58,12 +58,13 @@
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingguests.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddinglocation.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingprogress.xml" value="0.18" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.18" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.22" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguestsactivity.xml" value="0.18" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_editdetail.xml" value="0.2" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_item_layout.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_item_layout2.xml" value="0.22" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/taskpayment_list.xml" value="0.1" />
+        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/taskpayment_tasks.xml" value="0.11247130833970925" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/vendor_editdetail.xml" value="0.16484375" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/vendor_googlecard.xml" value="0.1" />
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/vendor_item_layout.xml" value="0.1" />

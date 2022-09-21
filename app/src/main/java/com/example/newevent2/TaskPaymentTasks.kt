@@ -125,7 +125,8 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
             }
         } else if (list.size == 0) {
             //If no tasks are retrieved from the presenter the component is marked as invisible
-            inflatedView.activetaskslayout.visibility = ConstraintLayout.INVISIBLE
+            inflatedView.activetaskslayout.visibility = ConstraintLayout.GONE
+            inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
         }
     }
 

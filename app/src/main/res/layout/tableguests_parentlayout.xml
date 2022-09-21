@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
@@ -17,8 +18,9 @@
                 style="@style/JournalDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="130dp"
                 android:text="@string/table_twopoints"
-                android:textColor="@color/black"
+                android:textColor="@color/rosaChillon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,9 +29,10 @@
                 style="@style/JournalDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
                 android:text="@string/table"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toEndOf="@id/tablelabel"
+                android:textColor="@color/rosaChillon"
+                app:layout_constraintStart_toEndOf="@+id/tablelabel"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -37,10 +40,10 @@
                 style="@style/JournalDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="3dp"
                 android:text="@string/hypen"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toEndOf="@id/table"
+                android:textColor="@color/rosaChillon"
+                app:layout_constraintStart_toEndOf="@+id/table"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -48,10 +51,10 @@
                 style="@style/JournalDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="3dp"
                 android:text="@string/count"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toEndOf="@id/countlabel"
+                android:textColor="@color/rosaChillon"
+                app:layout_constraintStart_toEndOf="@+id/countlabel"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
