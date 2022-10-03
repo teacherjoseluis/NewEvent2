@@ -47,14 +47,14 @@ class EventPresenter : Cache.EventItemCacheData {
         cacheevent.loadarraylist(Event::class)
     }
 
-    fun getEventChildrenflag(eventkey: String): Boolean {
-        var eventchilderenflag = false
-        val eventdbhelper = EventDBHelper(mContext)
-        if (eventdbhelper.getEventChildrenflag(eventkey)) {
-            eventchilderenflag = true
-        }
-        return eventchilderenflag
-    }
+//    fun getEventChildrenflag(eventkey: String): Boolean {
+//        var eventchilderenflag = false
+//        val eventdbhelper = EventDBHelper(mContext)
+//        if (eventdbhelper.getEventChildrenflag(eventkey)) {
+//            eventchilderenflag = true
+//        }
+//        return eventchilderenflag
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onEvent(item: Event) {

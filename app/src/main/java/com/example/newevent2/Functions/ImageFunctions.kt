@@ -1,7 +1,9 @@
 package com.example.newevent2.Functions
 
+import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
@@ -10,11 +12,14 @@ import android.os.Build
 import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.example.newevent2.ContactsAll
+import com.example.newevent2.MVP.ContactsAllPresenter
 import com.example.newevent2.R
 import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.places.api.Places
@@ -112,6 +117,7 @@ fun getImgfromPlaces(
                                 return false
                             }
 
+                            @RequiresApi(Build.VERSION_CODES.R)
                             override fun onResourceReady(
                                 resource: Drawable?,
                                 model: Any?,
@@ -161,6 +167,7 @@ fun saveURLImgtoSD(category: String, uri: Uri?, context: Context) {
     Log.d("ImageFunctions", "Download $category image from Firebase to Local Storage")
 }
 
+@RequiresApi(Build.VERSION_CODES.R)
 fun saveBitmaptoSD(context: Context, category: String, bitmap: Bitmap) {
     val imagepath = Paths.get(
         context.getExternalFilesDir(null)?.absolutePath, "Images"
@@ -197,4 +204,3 @@ fun createemptyBitmap(w: Int, h: Int): Bitmap? {
     val conf = Bitmap.Config.ARGB_8888
     return Bitmap.createBitmap(w, h, conf)
 }
-

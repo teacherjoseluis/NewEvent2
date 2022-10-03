@@ -15,7 +15,7 @@ class BlogPresenter(
 ) {
     init {
         language = when (language) {
-            "US" -> "en"
+            "en" -> "en"
             else -> "es"
         }
         getBlog(language, object : FirebaseGetBlogSuccess {

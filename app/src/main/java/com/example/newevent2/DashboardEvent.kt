@@ -1,9 +1,11 @@
 package com.example.newevent2
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
@@ -39,6 +41,7 @@ import com.example.newevent2.Functions.converttoDate
 import com.example.newevent2.Functions.daystoDate
 import com.example.newevent2.Functions.getImgfromPlaces
 import com.example.newevent2.Functions.userdbhelper
+import com.example.newevent2.MVP.ContactsAllPresenter
 import com.example.newevent2.MVP.DashboardEventPresenter
 import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
@@ -81,6 +84,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     private var tfRegular: Typeface? = null
     private var tfLight: Typeface? = null
 
+    private lateinit var inflatedView: View
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,21 +120,22 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val inf = inflater.inflate(R.layout.dashboardcharts, container, false)
+        inflatedView = inflater.inflate(R.layout.dashboardcharts, container, false)
 
         //Calling the presenter that will pull of the data I need for this view
-        dashboardEP = DashboardEventPresenter(requireContext(), this, inf)
+        dashboardEP = DashboardEventPresenter(requireContext(), this, inflatedView)
         //this needs to evaluate if it's true to continue the process, else it will stop it
-        if (dashboardEP.getEventchildrenflag()) {
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())
 
-            inf.withnodata.visibility = ConstraintLayout.GONE
-            inf.withdata.visibility = ConstraintLayout.VISIBLE
+        if (user.hastask == "Y" || user.haspayment == "Y") {
+            inflatedView.withnodata.visibility = ConstraintLayout.GONE
+            inflatedView.withdata.visibility = ConstraintLayout.VISIBLE
             //----------------------------------------------------------------------------------
-            val user = userdbhelper.getUser(userdbhelper.getUserKey())
+
 
             //Load with the achievements obtained by the user -------------------------------------------
             val stepsBeanList = user.onboardingprogress(context!!)
-            val stepview = inf.findViewById<HorizontalStepView>(R.id.step_view)
+            val stepview = inflatedView.findViewById<HorizontalStepView>(R.id.step_view)
             stepview
                 .setStepViewTexts(stepsBeanList)//总步骤
                 .setTextSize(12)//set textSize
@@ -177,7 +183,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 )//设置StepsViewIndicator AttentionIcon
             //--------------------------------------------------------------------------------------------
 
-            val weddingphotodetail = inf.findViewById<ConstraintLayout>(R.id.weddingphotodetail)
+            val weddingphotodetail = inflatedView.findViewById<ConstraintLayout>(R.id.weddingphotodetail)
             weddingphotodetail.setOnClickListener {
                 // ------- Analytics call ----------------
                 val bundle = Bundle()
@@ -192,7 +198,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 startActivityForResult(editevent, SUCCESS_RETURN)
             }
 
-            val weddingprogress = inf.findViewById<ConstraintLayout>(R.id.weddingprogress)
+            val weddingprogress = inflatedView.findViewById<ConstraintLayout>(R.id.weddingprogress)
             weddingprogress.setOnClickListener {
                 // ------- Analytics call ----------------
                 val bundle = Bundle()
@@ -220,16 +226,16 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 Toast.LENGTH_SHORT
             ).show()
             Log.i("EventSummary.TAG", "No data was obtained from the Event")
-            inf.withdata.visibility = ConstraintLayout.GONE
-            inf.withnodata.visibility = ConstraintLayout.VISIBLE
+            inflatedView.withdata.visibility = ConstraintLayout.GONE
+            inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
 
-            inf.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
-            inf.withnodata.newtaskbutton.setOnClickListener {
+            inflatedView.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
+            inflatedView.withnodata.newtaskbutton.setOnClickListener {
                 val newtask = Intent(activity, TaskCreateEdit::class.java)
                 startActivity(newtask)
             }
         }
-        return inf
+        return inflatedView
     }
 
     @SuppressLint("SetTextI18n")
@@ -335,7 +341,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             cardname.text = getString(R.string.duenext)
             //cardsecondarytext.text = "${task.name} due by ${task.date}"
             val cardmsg = StringBuilder()
-            cardmsg.append(task.name).append(" ").append(getString(R.string.dueby)).append(" ").append(task.date)
+            cardmsg.append(task.name).append(" ").append(getString(R.string.dueby)).append(" ")
+                .append(task.date)
             cardsecondarytext.text = cardmsg
             action1Button.text = getString(R.string.view)
             action2Button.visibility = View.INVISIBLE
@@ -527,11 +534,12 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflatedview.findViewById<TextView>(R.id.eventfulladdress).text = event.address
 
         val daysleft = daystoDate(converttoDate(event.date))
-        inflatedview.findViewById<TextView>(R.id.deadline).text = daysleft.toString().plus(" ").plus(
-            getString(
-                R.string.daysleft
+        inflatedview.findViewById<TextView>(R.id.deadline).text =
+            daysleft.toString().plus(" ").plus(
+                getString(
+                    R.string.daysleft
+                )
             )
-        )
 
         // Load thumbnail
         imagePresenter = ImagePresenter(context, this, inflatedview)
@@ -609,14 +617,29 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflatedView!!.placesimage.setImageBitmap(image)
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onEmptyPlaceImageSD(inflatedView: View?) {
-        getImgfromPlaces(
-            requireContext(),
-            placeid,
-            resources.getString(R.string.google_maps_key),
-            ImagePresenter.PLACEIMAGE,
-            inflatedView!!.placesimage
-        )
+        //Checking for permissions to read the contacts information
+        if (ContextCompat.checkSelfPermission(
+                activity!!.applicationContext,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) ==
+            PackageManager.PERMISSION_DENIED
+        ) {
+            //permission denied
+            val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            //show popup to request runtime permission
+            requestPermissions(permissions, PERMISSION_CODE)
+        } else {
+            //permission already granted
+            getImgfromPlaces(
+                requireContext(),
+                placeid,
+                resources.getString(R.string.google_maps_key),
+                ImagePresenter.PLACEIMAGE,
+                inflatedView!!.placesimage
+            )
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -635,8 +658,33 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED
+                ) {
+                    //permission from popup granted
+                    getImgfromPlaces(
+                        requireContext(),
+                        placeid,
+                        resources.getString(R.string.google_maps_key),
+                        ImagePresenter.PLACEIMAGE,
+                        inflatedView!!.placesimage
+                    )
+                }
+            }
+        }
+    }
+
     companion object {
         const val SUCCESS_RETURN = 1
+        internal const val PERMISSION_CODE = 1001
     }
 }
 

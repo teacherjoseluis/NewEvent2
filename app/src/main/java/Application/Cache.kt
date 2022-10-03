@@ -103,7 +103,7 @@ class Cache<T : Any> {
         }
     }
 
-    fun save(context: Context, category: String, bitmap: Bitmap){
+    fun save(context: Context, category: String, bitmap: Bitmap) {
         saveBitmaptoSD(context, category, bitmap)
     }
 

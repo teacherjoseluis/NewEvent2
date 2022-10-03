@@ -22,12 +22,12 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 
     private var paymentsumbudget = 0.0F
 
-    fun getEventchildrenflag(): Boolean {
-        //This function needs to return a boolean
-        val eventdbhelper = EventDBHelper(context)
-        val event = eventdbhelper.getEvent()
-        return presenterevent.getEventChildrenflag(event.key)
-    }
+//    fun getEventchildrenflag(): Boolean {
+//        //This function needs to return a boolean
+//        val eventdbhelper = EventDBHelper(context)
+//        val event = eventdbhelper.getEvent()
+//        return presenterevent.getEventChildrenflag(event.key)
+//    }
 
     fun getTaskList(){
         presentertask.getTasksList()
@@ -40,6 +40,10 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
     fun getEvent(){
         presenterevent.getEventDetail()
     }
+
+//    fun getEventChildrenflag(){
+//        presenterevent.getEventDetail()
+//    }
 
     fun getGuestList(){
         presenterguest.getGuestList()

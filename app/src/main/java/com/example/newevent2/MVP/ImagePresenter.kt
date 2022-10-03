@@ -98,6 +98,7 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onEmptyPlaceImage(errorcode: String) {
         when (activefragment) {
             "DE" -> fragmentDE.onEmptyPlaceImageSD(inflatedView)

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeleteTask
+import com.example.newevent2.Functions.userdbhelper
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -314,9 +315,11 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
     }
 
     override fun onAddEditTask(task: Task) {
+        //val user = userdbhelper.getUser(userdbhelper.getUserKey())
         if (task.key == "") {
             addTask(
-                userid,
+                //userid,
+                userdbhelper.getUserKey(),
                 eventid,
                 task,
                 object : FirebaseAddEditTaskSuccess {
@@ -328,7 +331,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
                 })
         } else if (task.key != "") {
             editTask(
-                userid, eventid, task, object : FirebaseAddEditTaskSuccess {
+                userdbhelper.getUserKey(), eventid, task, object : FirebaseAddEditTaskSuccess {
                     override fun onTaskAddedEdited(flag: Boolean, task: Task) {
                         if (flag) {
                             nexthandler?.onAddEditTask(task)
@@ -341,7 +344,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
 
     override fun onDeleteTask(task: Task) {
         deleteTask(
-            userid,
+            userdbhelper.getUserKey(),
             eventid,
             task,
             object : FirebaseDeleteTaskSuccess {

@@ -231,18 +231,27 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                     //------------------------------------------------------
                     userAccount = UserDBHelper(this@LoginView).getUser(firebaseUser!!.uid)
                     //------------------------------------------------------
-                    if (userAccount.key == "") {
+                    if (userAccount.email == "") {
                         userAccount = UserModel(firebaseUser!!.uid).getUser()
-                    }
-
-                    if (uid != "" && email != "") {
-                        if (userAccount.key == "") {
+                        if (userAccount == null) {
                             onOnboarding(uid, email, "google")
                         } else {
-                            saveUserSession(this@LoginView, email)
+                            UserDBHelper(this@LoginView).insert(userAccount)
                             onLoginSuccess()
                         }
+                    } else {
+                        onLoginSuccess()
                     }
+
+//                    if (uid != "" && email != "") {
+//                        if (userAccount.email == "") {
+//                            onOnboarding(uid, email, "google")
+//                        } else {
+//                            //saveUserSession(this@LoginView, email)
+//                            UserModel(uid).getUser()
+//                            onLoginSuccess()
+//                        }
+//                    }
                 }
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)

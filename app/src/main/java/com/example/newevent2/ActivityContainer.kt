@@ -254,7 +254,7 @@ class ActivityContainer : AppCompatActivity() {
         //usersession = com.example.newevent2.Functions.getUserSession(this)
         userdbhelper = UserDBHelper(this)
         usersession = userdbhelper.getUser(userdbhelper.getUserKey())
-        if (usersession.key == "") {
+        if (usersession.email == "") {
             val loginactivity =
                 Intent(this, LoginView::class.java)
             startActivity(loginactivity)
