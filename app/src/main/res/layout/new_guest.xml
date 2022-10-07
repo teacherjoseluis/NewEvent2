@@ -242,10 +242,11 @@
                         android:id="@+id/companionsgroup"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:checkedChip="@id/chip7"
+                        app:checkedChip="@id/chipnone"
                         app:singleSelection="true">
 
                         <com.google.android.material.chip.Chip
+                            android:id="@+id/chipadult"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
@@ -253,6 +254,7 @@
                             android:theme="@style/Theme.MaterialComponents.Light" />
 
                         <com.google.android.material.chip.Chip
+                            android:id="@+id/chipchild"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
@@ -260,6 +262,7 @@
                             android:theme="@style/Theme.MaterialComponents.Light" />
 
                         <com.google.android.material.chip.Chip
+                            android:id="@+id/chipbaby"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
@@ -267,7 +270,7 @@
                             android:theme="@style/Theme.MaterialComponents.Light" />
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/chip7"
+                            android:id="@+id/chipnone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"

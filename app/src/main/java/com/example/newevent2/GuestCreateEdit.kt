@@ -28,6 +28,7 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.new_guest.*
 import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
@@ -93,10 +94,16 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
 //                })
 //        }
 
-        if (guestitem.key != "") {
+        if (guestitem.name != "") {
             nameinputedit.setText(guestitem.name)
             phoneinputedit.setText(guestitem.phone)
             tableinputedit.setText(guestitem.table)
+            when (guestitem.companion) {
+                "adult" -> companionsgroup.check(chipadult.id)
+                "child" -> companionsgroup.check(chipchild.id)
+                "baby" -> companionsgroup.check(chipbaby.id)
+                else -> companionsgroup.check(chipnone.id)
+            }
         }
 
         nameinputedit.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
@@ -172,11 +179,13 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                 inputvalflag = false
             }
             if (companionsgroup.checkedChipId == -1) {
-                Toast.makeText(this, getString(R.string.error_companioninput), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_companioninput), Toast.LENGTH_SHORT)
+                    .show()
                 inputvalflag = false
             }
             if (tableinputedit.text.toString().isEmpty()) {
-                Toast.makeText(this, getString(R.string.error_tableinput), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_tableinput), Toast.LENGTH_SHORT)
+                    .show()
                 inputvalflag = false
             }
             if (inputvalflag) {
