@@ -7,7 +7,6 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.MainActivity
-import com.example.newevent2.MainEventView_clone
 import com.example.newevent2.Model.*
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi

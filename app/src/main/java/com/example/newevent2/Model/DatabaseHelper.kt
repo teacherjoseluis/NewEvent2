@@ -19,7 +19,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context,
     private val createguesttable =
         "CREATE TABLE GUEST (guestid TEXT, name TEXT, phone TEXT, email TEXT, rsvp TEXT, companion TEXT, tableguest TEXT)"
     private val createvendortable =
-        "CREATE TABLE VENDOR (vendorid TEXT, name TEXT, phone TEXT, email TEXT, category TEXT, eventid TEXT, placeid TEXT, location TEXT)"
+        "CREATE TABLE VENDOR (vendorid TEXT, name TEXT, phone TEXT, email TEXT, category TEXT, eventid TEXT, placeid TEXT, location TEXT, googlevendorname TEXT, ratingnumber FLOAT, reviews FLOAT, rating TEXT)"
     private val createnotetable =
         "CREATE TABLE NOTE (noteid INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, color TEXT, lastupdateddatetime TEXT)"
 

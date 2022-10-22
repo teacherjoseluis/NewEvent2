@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -26,6 +27,10 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         values.put("eventid", vendor.eventid)
         values.put("placeid", vendor.placeid)
         values.put("location", vendor.location)
+        values.put("googlevendorname", vendor.googlevendorname)
+        values.put("ratingnumber", vendor.ratingnumber)
+        values.put("reviews", vendor.reviews)
+        values.put("rating", vendor.rating)
         db.insert("VENDOR", null, values)
         Log.d(TAG, "Vendor record inserted")
     }
@@ -42,6 +47,7 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         return existsflag
     }
 
+    @SuppressLint("Range")
     fun getVendorIdByName(name: String): String {
         var vendorid = ""
         val cursor: Cursor =
@@ -56,6 +62,7 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         return vendorid
     }
 
+    @SuppressLint("Range")
     fun getVendorNameById(id: String): String {
         var name = ""
         val cursor: Cursor =
@@ -70,6 +77,7 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         return name
     }
 
+    @SuppressLint("Range")
     fun getAllVendors(): ArrayList<Vendor> {
         val list = ArrayList<Vendor>()
         val cursor: Cursor = db.rawQuery("SELECT * FROM VENDOR ORDER BY name ASC", null)
@@ -85,9 +93,13 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
                     val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
                     val placeid = cursor.getString(cursor.getColumnIndex("placeid"))
                     val location = cursor.getString(cursor.getColumnIndex("location"))
+                    val googlevendorname = cursor.getString(cursor.getColumnIndex("googlevendorname"))
+                    val ratingnumber = cursor.getFloat(cursor.getColumnIndex("ratingnumber"))
+                    val reviews = cursor.getFloat(cursor.getColumnIndex("reviews"))
+                    val rating = cursor.getString(cursor.getColumnIndex("rating"))
 
                     val vendor =
-                        Vendor(vendorid, name, phone, email, category, eventid, placeid, location)
+                        Vendor(vendorid, name, phone, email, category, eventid, placeid, location, googlevendorname, ratingnumber, reviews, rating)
                     list.add(vendor)
                     Log.d(TAG, "Vendor $vendorid record obtained from local DB")
                 } while (cursor.moveToNext())
@@ -107,6 +119,10 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         values.put("eventid", vendor.eventid)
         values.put("placeid", vendor.placeid)
         values.put("location", vendor.location)
+        values.put("googlevendorname", vendor.googlevendorname)
+        values.put("ratingnumber", vendor.ratingnumber)
+        values.put("reviews", vendor.reviews)
+        values.put("rating", vendor.rating)
 
         val retVal = db.update("VENDOR", values, "vendorid = '${vendor.key}'", null)
         if (retVal >= 1) {

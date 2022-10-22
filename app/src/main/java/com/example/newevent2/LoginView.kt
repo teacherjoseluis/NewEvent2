@@ -208,7 +208,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         scope.cancel()
     }
 
-    @ExperimentalCoroutinesApi
+
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data)
         // Pass the activity result back to the Facebook SDK

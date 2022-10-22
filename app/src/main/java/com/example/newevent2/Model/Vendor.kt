@@ -12,7 +12,11 @@ open class Vendor(
     var eventid: String = "",
     var placeid: String = "",
     var location: String = "",
-    var createdatetime: String = ""
+    //var createdatetime: String = "",
+    var googlevendorname: String = "",
+    var ratingnumber: Float = 0F,
+    var reviews: Float = 0F,
+    var rating: String = ""
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this() {
@@ -24,7 +28,11 @@ open class Vendor(
         eventid = parcel.readString().toString()
         placeid = parcel.readString().toString()
         location = parcel.readString().toString()
-        createdatetime = parcel.readString().toString()
+        //createdatetime = parcel.readString().toString()
+        googlevendorname = parcel.readString().toString()
+        ratingnumber = parcel.readFloat()
+        reviews = parcel.readFloat()
+        rating = parcel.readString().toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -36,7 +44,11 @@ open class Vendor(
         parcel.writeString(eventid)
         parcel.writeString(placeid)
         parcel.writeString(location)
-        parcel.writeString(createdatetime)
+        //parcel.writeString(createdatetime)
+        parcel.writeString(googlevendorname)
+        parcel.writeFloat(ratingnumber)
+        parcel.writeFloat(reviews)
+        parcel.writeString(rating)
     }
 
     override fun describeContents(): Int {

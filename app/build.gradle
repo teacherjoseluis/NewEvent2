@@ -7,13 +7,16 @@ apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.2"
 
     defaultConfig {
+        configurations.all{
+            resolutionStrategy {force 'androidx.core:core-ktx:1.6.0'}
+        }
         applicationId "com.example.newevent2"
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         // Required ONLY when setting minSdkVersion to 20 or lower
@@ -97,7 +100,7 @@ dependencies {
     //implementation 'com.github.kizitonwose:CalendarView:1.0.0'
     implementation 'com.applandeo:material-calendar-view:1.7.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation platform('com.google.firebase:firebase-bom:30.4.1')
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'

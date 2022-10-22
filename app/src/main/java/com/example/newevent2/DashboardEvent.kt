@@ -112,7 +112,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         )
     }
 
-    @ExperimentalCoroutinesApi
+
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreateView(

@@ -1,7 +1,10 @@
 package com.example.newevent2
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -11,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.isEventDate
 import com.example.newevent2.Functions.userdbhelper
@@ -26,6 +30,7 @@ import com.nordan.dialog.Animation
 import com.nordan.dialog.NordanAlertDialog
 import kotlinx.android.synthetic.main.header_navview.*
 import kotlinx.android.synthetic.main.header_navview.view.*
+import java.lang.Exception
 
 class ActivityContainer : AppCompatActivity() {
 
@@ -37,7 +42,7 @@ class ActivityContainer : AppCompatActivity() {
     private var usersession = User()
     private var clickNavItem = 0
 
-    private lateinit var headershortname:TextView
+    private lateinit var headershortname: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,10 +59,10 @@ class ActivityContainer : AppCompatActivity() {
 //                Intent(this, LoginView::class.java)
 //            startActivity(loginactivity)
 //        } else {
-            //Short name is shown in the sidebar header
-            headershortname =
-                sidenavView.getHeaderView(0).findViewById<TextView>(R.id.headershortname)
-         //   headershortname.text = usersession.shortname
+        //Short name is shown in the sidebar header
+        headershortname =
+            sidenavView.getHeaderView(0).findViewById<TextView>(R.id.headershortname)
+        //   headershortname.text = usersession.shortname
         //}
 
         //Fragment container is initialized with Dashboard fragment
@@ -107,12 +112,12 @@ class ActivityContainer : AppCompatActivity() {
         sidenavView.setNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.event_fragment -> {
-                    clickNavItem = R.id.event_fragment
-                    newfragment = MainEventView_clone()
+//                    clickNavItem = R.id.event_fragment
+//                    newfragment = MainEventView_clone()
                 }
                 R.id.task_fragment -> {
-                    clickNavItem = R.id.task_fragment
-                    newfragment = EventCategories()
+//                    clickNavItem = R.id.task_fragment
+//                    newfragment = EventCategories()
                 }
                 R.id.vendor_fragment -> {
                     clickNavItem = R.id.vendor_fragment
@@ -134,42 +139,43 @@ class ActivityContainer : AppCompatActivity() {
         //Creation of the navigation bar and the different calls it makes.
         //In this section, the fragments are indeed invoked and called
         val navView = findViewById<BottomNavigationView>(R.id.bottomnav)
-        navView.setOnNavigationItemSelectedListener { p0 ->
-            when (p0.itemId) {
-                R.id.home -> {
-                    val newfragment = DashboardView_clone()
-                    fm.beginTransaction()
-                        .replace(R.id.fragment_container, newfragment)
-                        .commit()
+            navView.setOnNavigationItemSelectedListener { p0 ->
+                when (p0.itemId) {
+                    R.id.home -> {
+                        val newfragment = DashboardView_clone()
+                        fm.beginTransaction()
+                            .replace(R.id.fragment_container, newfragment)
+                            .commit()
+                    }
+                    R.id.events -> {
+                        val newfragment = EventCategories()
+                        fm.beginTransaction()
+                            .replace(R.id.fragment_container, newfragment)
+                            .commit()
+                    }
+                    R.id.tasks -> {
+                        val newfragment = DashboardActivity()
+                        fm.beginTransaction()
+                            .replace(R.id.fragment_container, newfragment)
+                            .commit()
+                    }
+                    R.id.guests -> {
+                        val newfragment = TableGuestsActivity()
+                        fm.beginTransaction()
+                            .replace(R.id.fragment_container, newfragment)
+                            .commit()
+                    }
+                    R.id.notes -> {
+                        val newfragment = MyNotes()
+                        fm.beginTransaction()
+                            .replace(R.id.fragment_container, newfragment)
+                            .commit()
+                    }
                 }
-                R.id.events -> {
-                    val newfragment = MainEventView_clone()
-                    fm.beginTransaction()
-                        .replace(R.id.fragment_container, newfragment)
-                        .commit()
-                }
-                R.id.tasks -> {
-                    val newfragment = DashboardActivity()
-                    fm.beginTransaction()
-                        .replace(R.id.fragment_container, newfragment)
-                        .commit()
-                }
-                R.id.guests -> {
-                    val newfragment = TableGuestsActivity()
-                    fm.beginTransaction()
-                        .replace(R.id.fragment_container, newfragment)
-                        .commit()
-                }
-                R.id.notes -> {
-                    val newfragment = MyNotes()
-                    fm.beginTransaction()
-                        .replace(R.id.fragment_container, newfragment)
-                        .commit()
-                }
+                true
             }
-            true
-        }
         navView.menu.getItem(0).isChecked = true
+
 
         // Whatever option has been selected for the sidebar it's invoked here and the fragment is
         // created
@@ -185,9 +191,13 @@ class ActivityContainer : AppCompatActivity() {
                             .commit()
                     }
                     R.id.task_fragment -> {
-                        fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
-                            .commit()
+                        if (newfragment.isAdded) {
+                            fm.beginTransaction().show(newfragment)
+                        } else {
+                            fm.beginTransaction()
+                                .replace(R.id.fragment_container, newfragment)
+                                .commit()
+                        }
                     }
                     R.id.vendor_fragment -> {
                         fm.beginTransaction()
@@ -201,8 +211,20 @@ class ActivityContainer : AppCompatActivity() {
                     }
                 }
             }
+
             override fun onDrawerStateChanged(newState: Int) {}
         })
+    }
+
+
+
+    private fun loadFragment(fragment: Fragment) {
+        if (fm.findFragmentByTag(fragment.javaClass.name)==null) {
+            val transaction = fm.beginTransaction()
+            transaction.replace(R.id.fragment_container, fragment, fragment.javaClass.name)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
     }
 
     // This catches the back option in Android, if the sidebar is displayed, then it gets closed
@@ -221,7 +243,8 @@ class ActivityContainer : AppCompatActivity() {
         builder.setTitle(getString(R.string.logoff))
         builder.setMessage(getString(R.string.logoff_question))
 
-        builder.setPositiveButton(getString(R.string.accept)
+        builder.setPositiveButton(
+            getString(R.string.accept)
         ) { _, _ ->
             when (usersession.authtype) {
                 //Logoff in case the user was logged in with Google
@@ -241,7 +264,8 @@ class ActivityContainer : AppCompatActivity() {
             //usersession.deleteUserSession(this@ActivityContainer)
             finish()
         }
-        builder.setNegativeButton("Cancel"
+        builder.setNegativeButton(
+            "Cancel"
         ) { p0, _ -> p0!!.dismiss() }
 
         val dialog = builder.create()

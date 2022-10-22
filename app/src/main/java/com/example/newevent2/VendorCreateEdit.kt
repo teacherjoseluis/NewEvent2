@@ -81,6 +81,25 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             nameinputedit.setText(vendoritem.name)
             phoneinputedit.setText(vendoritem.phone)
             mailinputedit.setText(vendoritem.email)
+
+            if (vendoritem.googlevendorname != "") {
+                googlecard.visibility = ConstraintLayout.VISIBLE
+                googlecard.googlevendorname.text = vendoritem.googlevendorname
+                googlecard.ratingnumber.text = vendoritem.ratingnumber.toString()
+                googlecard.reviews.text =
+                    "(" + vendoritem.reviews.toString() + ")"
+                googlecard.rating.rating = vendoritem.rating!!.toFloat()
+                googlecard.location.text = vendoritem.location
+                googlecard.setOnClickListener {
+                    val uris =
+                        Uri.parse("https://www.google.com/maps/place/?q=place_id:" + vendoritem.placeid)
+                    val intents = Intent(Intent.ACTION_VIEW, uris)
+                    val b = Bundle()
+                    b.putBoolean("new_window", true)
+                    intents.putExtras(b)
+                    startActivity(intents)
+                }
+            }
         }
 
         //This is to validate the vendor's name after the focus shifts somewhere else
@@ -188,7 +207,8 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                     .setMessage(getString(R.string.delete_confirmation))
                     // Specifying a listener allows you to take an action before dismissing the dialog.
                     // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton(android.R.string.yes
+                    .setPositiveButton(
+                        android.R.string.yes
                     ) { _, _ ->
                         val paymentdb = PaymentDBHelper(this)
                         // Let's make sure that there are no payments associated to the vendor

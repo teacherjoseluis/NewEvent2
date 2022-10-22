@@ -79,7 +79,11 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
             "eventid" to vendor.eventid,
             "placeid" to vendor.placeid,
             "location" to vendor.location,
-            "createdatetime" to sdf.format(vendordatetime)
+            "createdatetime" to sdf.format(vendordatetime),
+            "googlevendorname" to vendor.googlevendorname,
+            "ratingnumber" to vendor.ratingnumber,
+            "reviews" to vendor.reviews,
+            "rating" to vendor.rating
         )
 
         postRef.setValue(vendoradd as Map<String, Any>)
@@ -114,7 +118,11 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
             "category" to vendor.category,
             "eventid" to vendor.eventid,
             "placeid" to vendor.placeid,
-            "location" to vendor.location
+            "location" to vendor.location,
+            "googlevendorname" to vendor.googlevendorname,
+            "ratingnumber" to vendor.ratingnumber,
+            "reviews" to vendor.reviews,
+            "rating" to vendor.rating
         )
 
         postRef.setValue(vendoredit as Map<String, Any>)

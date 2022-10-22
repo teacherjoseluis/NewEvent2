@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.NotePresenter
 import com.example.newevent2.MVP.VendorsAllPresenter
 import com.example.newevent2.Model.MyFirebaseApp
@@ -24,9 +25,8 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
 
     private lateinit var presenternote: NotePresenter
     private lateinit var rvAdapter: Rv_NoteAdapter
-    private var recyclerView = recyclerViewNotes
     private lateinit var inf: View
-
+    private lateinit var recyclerView: RecyclerView
     private val REQUEST_CODE_NOTES = 4
 
     override fun onCreateView(
@@ -104,7 +104,7 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
 
     companion object {
         const val RIGHTACTION = "delete"
-            var notescreated_flag = 0
+        var notescreated_flag = 0
     }
 }
 

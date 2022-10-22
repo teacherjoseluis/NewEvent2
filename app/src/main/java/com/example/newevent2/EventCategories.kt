@@ -30,7 +30,7 @@ class EventCategories : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // This instruction intends to keep the state of the fragment and don't reload when the user returns
-        retainInstance = true
+        //retainInstance = true
     }
 
     override fun onCreateView(
