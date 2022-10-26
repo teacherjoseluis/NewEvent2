@@ -304,7 +304,6 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             vendoritem.ratingnumber = data?.getDoubleExtra("place_rating", 0.0).toFloat()
             vendoritem.reviews = data?.getIntExtra("place_userrating", 0).toFloat()
 
-
             //The card allows to click on it and go to Google Maps
             googlecard.setOnClickListener {
                 val gmmIntentUri =
