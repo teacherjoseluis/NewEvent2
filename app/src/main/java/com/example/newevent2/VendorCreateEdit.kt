@@ -92,7 +92,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                 googlecard.location.text = vendoritem.location
                 googlecard.setOnClickListener {
                     val uris =
-                        Uri.parse("https://www.google.com/maps/place/?q=place_id:" + vendoritem.placeid)
+                        Uri.parse("https://www.google.com/maps/place/?q=" + vendoritem.googlevendorname)
                     val intents = Intent(Intent.ACTION_VIEW, uris)
                     val b = Bundle()
                     b.putBoolean("new_window", true)
@@ -297,6 +297,13 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             placelatitude = data.getDoubleExtra("place_latitude", 0.0)
             placelongitude = data.getDoubleExtra("place_longitude", 0.0)
             placelocation = data.getStringExtra("place_name")!!
+
+            vendoritem.placeid = data?.getStringExtra("place_id")!!
+            vendoritem.googlevendorname = data?.getStringExtra("place_name")!!
+            vendoritem.rating = data?.getDoubleExtra("place_rating", 0.0)!!.toFloat().toString()
+            vendoritem.ratingnumber = data?.getDoubleExtra("place_rating", 0.0).toFloat()
+            vendoritem.reviews = data?.getIntExtra("place_userrating", 0).toFloat()
+
 
             //The card allows to click on it and go to Google Maps
             googlecard.setOnClickListener {
