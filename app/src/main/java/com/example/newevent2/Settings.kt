@@ -10,7 +10,6 @@ import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.Functions.editUser
-import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.User
@@ -19,7 +18,7 @@ import kotlinx.android.synthetic.main.settings.*
 import kotlinx.android.synthetic.main.settings.view.*
 import kotlinx.coroutines.launch
 
-class Settings : Fragment() {
+class Settings : Fragment(), IOnBackPressed {
 
     lateinit var usersession: User
 
@@ -142,5 +141,9 @@ class Settings : Fragment() {
             requireContext().startActivity(intents)
         }
         return inf
+    }
+
+    override fun onBackPressed(): Boolean {
+        return false
     }
 }

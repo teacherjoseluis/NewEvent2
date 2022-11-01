@@ -14,7 +14,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
+import androidx.navigation.fragment.NavHostFragment
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.isEventDate
 import com.example.newevent2.Functions.userdbhelper
@@ -139,41 +141,41 @@ class ActivityContainer : AppCompatActivity() {
         //Creation of the navigation bar and the different calls it makes.
         //In this section, the fragments are indeed invoked and called
         val navView = findViewById<BottomNavigationView>(R.id.bottomnav)
-            navView.setOnNavigationItemSelectedListener { p0 ->
-                when (p0.itemId) {
-                    R.id.home -> {
-                        val newfragment = DashboardView_clone()
-                        fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
-                            .commit()
-                    }
-                    R.id.events -> {
-                        val newfragment = EventCategories()
-                        fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
-                            .commit()
-                    }
-                    R.id.tasks -> {
-                        val newfragment = DashboardActivity()
-                        fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
-                            .commit()
-                    }
-                    R.id.guests -> {
-                        val newfragment = TableGuestsActivity()
-                        fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
-                            .commit()
-                    }
-                    R.id.notes -> {
-                        val newfragment = MyNotes()
-                        fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
-                            .commit()
-                    }
+        navView.setOnNavigationItemSelectedListener { p0 ->
+            when (p0.itemId) {
+                R.id.home -> {
+                    val newfragment = DashboardView_clone()
+                    fm.beginTransaction()
+                        .replace(R.id.fragment_container, newfragment)
+                        .commit()
                 }
-                true
+                R.id.events -> {
+                    val newfragment = EventCategories()
+                    fm.beginTransaction()
+                        .replace(R.id.fragment_container, newfragment)
+                        .commit()
+                }
+                R.id.tasks -> {
+                    val newfragment = DashboardActivity()
+                    fm.beginTransaction()
+                        .replace(R.id.fragment_container, newfragment)
+                        .commit()
+                }
+                R.id.guests -> {
+                    val newfragment = TableGuestsActivity()
+                    fm.beginTransaction()
+                        .replace(R.id.fragment_container, newfragment)
+                        .commit()
+                }
+                R.id.notes -> {
+                    val newfragment = MyNotes()
+                    fm.beginTransaction()
+                        .replace(R.id.fragment_container, newfragment)
+                        .commit()
+                }
             }
+            true
+        }
         navView.menu.getItem(0).isChecked = true
 
 
@@ -217,9 +219,8 @@ class ActivityContainer : AppCompatActivity() {
     }
 
 
-
     private fun loadFragment(fragment: Fragment) {
-        if (fm.findFragmentByTag(fragment.javaClass.name)==null) {
+        if (fm.findFragmentByTag(fragment.javaClass.name) == null) {
             val transaction = fm.beginTransaction()
             transaction.replace(R.id.fragment_container, fragment, fragment.javaClass.name)
             transaction.addToBackStack(null)
@@ -232,7 +233,19 @@ class ActivityContainer : AppCompatActivity() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            val fragment =
+                fm.findFragmentById(R.id.fragment_container)
+            val currentFragment =
+                fragment?.parentFragmentManager?.fragments?.get(1) as? IOnBackPressed
+            val fragmentstring = currentFragment?.javaClass.toString()
+            if (fragmentstring.contains("DashboardView_clone") || fragmentstring == null) {
+                super.onBackPressed()
+            } else {
+                val newfragment = DashboardView_clone()
+                fm.beginTransaction()
+                    .replace(R.id.fragment_container, newfragment)
+                    .commit()
+            }
         }
     }
 
@@ -304,4 +317,8 @@ class ActivityContainer : AppCompatActivity() {
             }
         }
     }
+}
+
+interface IOnBackPressed {
+    fun onBackPressed(): Boolean
 }
