@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NewEvent2</string>
+    <string name="app_name">Brides &amp; Grooms</string>
     <string name="newevent_eventnameinput_en">Enter Event name</string>
     <string name="newevent_eventdateinput_en">Select Event date</string>
     <string name="newevent_eventtimeinput_en">Select Event time</string>
