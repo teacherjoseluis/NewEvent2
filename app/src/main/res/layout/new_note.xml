@@ -51,7 +51,7 @@
 
             <EditText
                 android:id="@+id/editTextTextMultiLine"
-                style="@style/Body2"
+                style="@style/Body1"
                 android:layout_width="0dp"
                 android:layout_height="250dp"
                 android:layout_marginTop="10dp"

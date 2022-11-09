@@ -60,11 +60,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/eventname"
+                    style="@style/Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/newevent_eventnameinput_en"
-                    android:maxLength="30"
-                    android:textAppearance="@style/Body2" />
+                    android:maxLength="30" />
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -87,11 +87,11 @@
                     android:id="@+id/eventdate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/Body1"
                     android:clickable="true"
                     android:focusable="false"
                     android:hint="@string/newevent_eventdateinput_en"
-                    android:inputType="date"
-                    android:textAppearance="@style/Body2" />
+                    android:inputType="date"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
@@ -127,11 +127,11 @@
                     android:id="@+id/eventtime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/Body1"
                     android:clickable="true"
                     android:focusable="false"
                     android:hint="@string/newevent_eventtimeinput_en"
-                    android:inputType="time"
-                    android:textAppearance="@style/Body2" />
+                    android:inputType="time" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
@@ -165,10 +165,10 @@
                     android:id="@+id/eventlocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/Body1"
                     android:clickable="true"
                     android:focusable="false"
-                    android:hint="@string/newevent_eventlocationinput_en"
-                    android:textAppearance="@style/Body2" />
+                    android:hint="@string/newevent_eventlocationinput_en" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView

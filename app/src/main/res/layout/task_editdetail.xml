@@ -38,11 +38,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/taskname"
+                    style="@style/Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/taskname"
-                    android:maxLength="20"
-                    android:textAppearance="@style/Body2"/>
+                    android:maxLength="20"/>
 
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -65,9 +65,9 @@
                 android:id="@+id/taskbudget"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
+                style="@style/Body1"
                 android:hint="@string/taskbudget"
-                android:maxLength="10"
-                android:textAppearance="@style/Body2" />
+                android:maxLength="10" />
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,10 +89,10 @@
                     android:id="@+id/taskdate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/Body1"
                     android:clickable="true"
                     android:focusable="false"
                     android:hint="@string/task_due_date"
-                    android:textAppearance="@style/Body2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -126,8 +126,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="@string/category"
-                android:textAppearance="@style/Body2" />
+                style="@style/Body1"
+                android:text="@string/category"/>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/groupedittask"

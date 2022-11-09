@@ -65,19 +65,20 @@
         <!--</androidx.constraintlayout.widget.ConstraintLayout>
         -->
     </androidx.core.widget.NestedScrollView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/NewTaskActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="55dp"
         android:clickable="true"
+        android:contentDescription="@string/newtaskactionbutton"
         app:backgroundTint="@color/azulmasClaro"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="24dp"
         app:srcCompat="@drawable/ic_icons8_plus_white"
-        app:tint="@color/white"
-        android:contentDescription="@string/newtaskactionbutton" />
+        app:tint="@color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>
