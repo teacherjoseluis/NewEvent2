@@ -80,6 +80,7 @@
         <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.113671875" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/activitycontainer.xml" value="0.2609375" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/blog_item_layout.xml" value="0.2916666666666667" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/category_item_layout.xml" value="0.47368421052631576" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardactivity.xml" value="0.5120370370370371" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardcharts.xml" value="0.35052083333333334" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/event_detail.xml" value="0.225" />
@@ -91,7 +92,7 @@
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/my_notes.xml" value="0.4764102564102564" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_guest.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_note.xml" value="1.0" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_vendor.xml" value="0.5657407407407408" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_vendor.xml" value="0.28688524590163933" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/note_item_layout.xml" value="0.4764102564102564" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/onboarding_name.xml" value="0.4764102564102564" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/payment_editdetail.xml" value="0.5" />

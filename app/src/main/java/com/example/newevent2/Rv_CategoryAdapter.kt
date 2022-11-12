@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.getlocale
 import com.example.newevent2.Model.MyFirebaseApp
+import com.example.newevent2.Model.PaymentDBHelper
 import com.example.newevent2.Model.TaskDBHelper
 import com.google.firebase.analytics.FirebaseAnalytics
 
@@ -53,6 +54,12 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
         p0.taskdonelabel?.text=taskstats.taskcompleted.toString()
         p0.taskbudgetlabel?.text= taskstats.sumbudget
 
+        val paymentdb = PaymentDBHelper(context)
+        // The below function gets the statistics for tasks and budgets associated to each category
+        val paymentstats=paymentdb.getCategoryStats(categorylist[p1].code)
+        p0.paymentdonelabel?.text=paymentstats.paymentcompleted.toString()
+        p0.paymentbudgetlabel?.text= paymentstats.sumpayments
+
         p0.itemView.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
@@ -74,6 +81,9 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
         val taskpendinglabel: TextView? =itemView.findViewById(R.id.taskpendinglabel)
         val taskdonelabel: TextView? =itemView.findViewById(R.id.taskdonelabel)
         val taskbudgetlabel: TextView? =itemView.findViewById(R.id.taskbudgetlabel)
+
+        val paymentdonelabel: TextView? =itemView.findViewById(R.id.paymentdonelabel)
+        val paymentbudgetlabel: TextView? =itemView.findViewById(R.id.paymentbudgetlabel)
     }
 }
 

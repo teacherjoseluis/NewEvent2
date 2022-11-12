@@ -17,7 +17,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="173dp"
-            android:layout_height="223dp"
+            android:layout_height="240dp"
             android:background="@drawable/rv_border">
 
             <ImageView
@@ -44,6 +44,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/categoryimage" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/categorytasksection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +59,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/pending"
+                        android:id="@+id/pendingtask"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
@@ -87,11 +88,11 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/completed"
+                        android:id="@+id/completedtask"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="8dp"
-                        app:layout_constraintStart_toEndOf="@+id/pending"
+                        app:layout_constraintStart_toEndOf="@+id/pendingtask"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="RtlSymmetry">
 
@@ -121,7 +122,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="8dp"
-                        app:layout_constraintStart_toEndOf="@+id/completed"
+                        app:layout_constraintStart_toEndOf="@+id/completedtask"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="RtlSymmetry">
 
@@ -144,6 +145,94 @@
                             android:text="@string/_0"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/taskbudgetimage"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="RtlSymmetry" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/categorypaymentsection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/categorytasksection">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/pendingpayment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/completed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="8dp"
+                        app:layout_constraintStart_toEndOf="@+id/pendingpayment"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="RtlSymmetry">
+
+                        <ImageView
+                            android:id="@+id/paymentdoneimage"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/rosaChillon"
+                            app:srcCompat="@drawable/task_done_outline"
+                            android:contentDescription="@string/taskdoneimage" />
+
+                        <TextView
+                            android:id="@+id/paymentdonelabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/BodyXSmall"
+                            android:paddingStart="4dp"
+                            android:text="@string/_0"
+                            app:layout_constraintStart_toEndOf="@+id/paymentdoneimage"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="RtlSymmetry" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="8dp"
+                        app:layout_constraintStart_toEndOf="@+id/completed"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="RtlSymmetry">
+
+                        <ImageView
+                            android:id="@+id/paymentbudgetimage"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/rosaChillon"
+                            app:srcCompat="@drawable/icons8_invoice_paid_32"
+                            android:contentDescription="@string/taskbudgetimage" />
+
+                        <TextView
+                            android:id="@+id/paymentbudgetlabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="4dp"
+                            style="@style/BodyXSmall"
+                            android:text="@string/_0"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/paymentbudgetimage"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="RtlSymmetry" />
                     </androidx.constraintlayout.widget.ConstraintLayout>

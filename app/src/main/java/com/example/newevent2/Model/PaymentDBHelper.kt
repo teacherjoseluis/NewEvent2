@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -7,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.CoRAddEditPayment
 import com.example.newevent2.CoRDeletePayment
+import java.text.DecimalFormat
 
 class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
 
@@ -95,6 +97,39 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         }
         cursor.close()
         return list
+    }
+
+    @SuppressLint("Range")
+    fun getCategoryStats(category: String): PaymentStatsToken {
+        val paymentstats = PaymentStatsToken()
+        var sumpayments = 0.0F
+        var cursor: Cursor = db.rawQuery(
+            "SELECT COUNT(*) as paymentcompleted FROM PAYMENT WHERE category='$category'",
+            null
+        )
+        if (cursor.count > 0) {
+            cursor.moveToFirst()
+            do {
+                paymentstats.paymentcompleted = cursor.getInt(cursor.getColumnIndex("paymentcompleted"))
+            } while (cursor.moveToNext())
+        }
+        cursor =
+            db.rawQuery("SELECT amount FROM PAYMENT WHERE category='$category'", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                val re = Regex("[^A-Za-z0-9 ]")
+                do {
+                    val payment = cursor.getString(cursor.getColumnIndex("amount"))
+                    val paymentamount = re.replace(payment, "").dropLast(2)
+                    sumpayments += paymentamount.toFloat()
+                } while (cursor.moveToNext())
+                val formatter = DecimalFormat("$#,###.00")
+                paymentstats.sumpayments = formatter.format(sumpayments)
+            }
+        }
+        cursor.close()
+        return paymentstats
     }
 
     fun hasVendorPayments(vendorkey: String): Int {
