@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.newevent2.Functions.*
+import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.PaymentDBHelper
 import com.example.newevent2.Model.Vendor
 import com.example.newevent2.ui.TextValidate
@@ -33,6 +34,7 @@ import kotlinx.android.synthetic.main.new_vendor.mailinputedit
 import kotlinx.android.synthetic.main.new_vendor.nameinputedit
 import kotlinx.android.synthetic.main.new_vendor.phoneimage
 import kotlinx.android.synthetic.main.new_vendor.phoneinputedit
+import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
 import kotlinx.android.synthetic.main.vendor_googlecard.view.*
 
 class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
@@ -99,6 +101,13 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                     intents.putExtras(b)
                     startActivity(intents)
                 }
+                getImgfromPlaces(
+                    this,
+                    vendoritem.placeid,
+                    resources.getString(R.string.google_maps_key),
+                    vendoritem.googlevendorname,
+                    googlecard.placesimagevendor
+                )
             }
         }
 
