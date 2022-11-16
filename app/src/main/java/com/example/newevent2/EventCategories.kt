@@ -26,6 +26,7 @@ class EventCategories : Fragment() {
     private lateinit var recyclerViewCategory: RecyclerView
     private var isRotate = false
     private val REQUEST_CODE_TASK = 4
+    private val REQUEST_CODE_PAYMENT = 5
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +101,7 @@ class EventCategories : Fragment() {
             // As it's a new payment, the value userid comes empty
             val newpayment = Intent(context, PaymentCreateEdit::class.java)
             newpayment.putExtra("userid", "")
-            startActivity(newpayment)
+            startActivityForResult(newpayment, REQUEST_CODE_PAYMENT)
         }
 
         // For the Ad in this View, the below is a listener that catches events
@@ -139,7 +140,7 @@ class EventCategories : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if ((requestCode == REQUEST_CODE_TASK) && resultCode == Activity.RESULT_OK){
+        if (((requestCode == REQUEST_CODE_TASK) || (requestCode == REQUEST_CODE_PAYMENT)) && resultCode == Activity.RESULT_OK){
             // Getting the list of categories that I'm actually going to show from the local DB
             val taskdb = TaskDBHelper(requireContext())
             val list = taskdb.getActiveCategories()

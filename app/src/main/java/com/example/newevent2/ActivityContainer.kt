@@ -114,12 +114,12 @@ class ActivityContainer : AppCompatActivity() {
         sidenavView.setNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.event_fragment -> {
-//                    clickNavItem = R.id.event_fragment
-//                    newfragment = MainEventView_clone()
+                    clickNavItem = R.id.event_fragment
+                    newfragment = DashboardView_clone()
                 }
                 R.id.task_fragment -> {
-//                    clickNavItem = R.id.task_fragment
-//                    newfragment = EventCategories()
+                    clickNavItem = R.id.task_fragment
+                    newfragment = DashboardActivity()
                 }
                 R.id.vendor_fragment -> {
                     clickNavItem = R.id.vendor_fragment
@@ -193,13 +193,9 @@ class ActivityContainer : AppCompatActivity() {
                             .commit()
                     }
                     R.id.task_fragment -> {
-                        if (newfragment.isAdded) {
-                            fm.beginTransaction().show(newfragment)
-                        } else {
-                            fm.beginTransaction()
-                                .replace(R.id.fragment_container, newfragment)
-                                .commit()
-                        }
+                        fm.beginTransaction()
+                            .replace(R.id.fragment_container, newfragment)
+                            .commit()
                     }
                     R.id.vendor_fragment -> {
                         fm.beginTransaction()

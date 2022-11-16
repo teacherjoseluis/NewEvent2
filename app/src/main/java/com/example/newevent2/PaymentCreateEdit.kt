@@ -3,6 +3,7 @@ package com.example.newevent2
 import android.Manifest
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -278,6 +279,12 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         //This absolutely needs to be handled as it has been generating very nasty exceptions
         val actv = findViewById<LinearLayout>(R.id.vendorpaymentsection)
         actv.visibility = View.GONE
+    }
+
+    override fun finish() {
+        val returnintent = Intent()
+        setResult(RESULT_OK, returnintent)
+        super.finish()
     }
 
     companion object {
