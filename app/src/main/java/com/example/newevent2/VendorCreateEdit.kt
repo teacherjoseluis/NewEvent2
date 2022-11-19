@@ -131,6 +131,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             val locationmap = Intent(this, MapsActivity::class.java)
             startActivityForResult(locationmap, autocompletePlaceCode)
         }
+        googleicon.tooltipText = getString(R.string.googlesearch)
 
         phoneinputedit.setOnClickListener {
             phoneinputedit.error = null

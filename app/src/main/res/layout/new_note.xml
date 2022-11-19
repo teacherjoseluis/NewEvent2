@@ -55,29 +55,44 @@
                 android:layout_width="0dp"
                 android:layout_height="250dp"
                 android:layout_marginTop="10dp"
+                android:autofillHints=""
                 android:background="@color/background"
                 android:ems="10"
-                android:padding="10dp"
                 android:gravity="start|top"
                 android:hint="@string/note"
                 android:inputType="textMultiLine"
+                android:padding="10dp"
                 android:shadowColor="#9E9E9E"
                 android:shadowDx="2"
                 android:shadowDy="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notetitlelayout"
-                android:autofillHints="" />
+                app:layout_constraintTop_toBottomOf="@+id/notetitlelayout" />
 
-            <com.google.android.material.button.MaterialButton
+            <!--            <com.google.android.material.button.MaterialButton-->
+            <!--                android:id="@+id/btnSelectColorBg"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="@string/note_color"-->
+            <!--                app:backgroundTint="@color/rosaChillon"-->
+            <!--                app:cornerRadius="4dp"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />-->
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btnSelectColorBg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/note_color"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="55dp"
+                android:clickable="true"
+                android:contentDescription="@string/floatingactionbuttonvendor"
                 app:backgroundTint="@color/rosaChillon"
-                app:cornerRadius="4dp"
+                app:fabSize="normal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+                app:srcCompat="@drawable/palette"
+                app:tint="@color/white" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

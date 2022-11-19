@@ -3,115 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/alert_icon_rosachillon.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/circle_rosachillon.xml" value="0.169921875" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.302734375" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/invoice.xml" value="0.169921875" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/lets_plan_together.xml" value="0.169921875" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/person.xml" value="0.169921875" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/wedding_rings_jewel_svgrepo_com3.xml" value="0.169921875" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/weddingrings_logo.xml" value="0.180859375" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/drawable/weddingrings_smalllogo.xml" value="0.169921875" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout-v28/guests_all.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/actioncard_layout.xml" value="0.18" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/activitycontainer.xml" value="0.110546875" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/blog_item_layout.xml" value="0.290625" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/calendar.xml" value="0.1578125" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/category_item_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/chartcard_emptystate.xml" value="0.18" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/chartcard_layoutpayment.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/chartcard_layouttask.xml" value="0.18" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/contact_item_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/dashboardactivity.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/dashboardblog.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/dashboardcharts.xml" value="0.2" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/empty_state.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/event_detail.xml" value="0.14" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/event_summary.xml" value="0.18" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/eventform_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/guest_item_layout.xml" value="0.5" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/guests_all.xml" value="0.14517980107115533" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/header_navview.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/journal_parentlayout.xml" value="0.18" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/journal_parentlayout2.xml" value="0.18" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/login0.xml" value="0.33" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/login_email.xml" value="0.33" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/main_toolbar.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/mainevent_summary.xml" value="0.226775956284153" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/my_events.xml" value="0.226775956284153" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/my_notes.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/native_ad_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/navbottom.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/new_guest.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/new_task.xml" value="0.16484375" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/new_task_taskdetail.xml" value="0.16484375" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/new_vendor.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/new_vendor2.xml" value="0.16484375" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/note_item_layout.xml" value="0.25" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/onboarding_event.xml" value="0.17421875" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/onboarding_name.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/payment_editdetail.xml" value="0.1829652996845426" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/payment_item_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/settings.xml" value="0.22" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/splashscreen.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingdetails.xml" value="0.25" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingguests.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddinglocation.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingprogress.xml" value="0.18" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.22" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/tableguestsactivity.xml" value="0.18" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_editdetail.xml" value="0.2" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_item_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/task_item_layout2.xml" value="0.22" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/taskpayment_list.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/taskpayment_tasks.xml" value="0.11247130833970925" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/vendor_editdetail.xml" value="0.16484375" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/vendor_googlecard.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/vendor_item_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/vendors_all.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/welcome.xml" value="0.1171448087431694" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/welcome0.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/layout/welcome_navigation.xml" value="0.16484375" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/menu/bottom_menu.xml" value="0.290625" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/menu/guests_menu2.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/menu/menu_navview.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/menu/notes_menu.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/menu/vendors_menu.xml" value="0.1" />
-        <entry key="..\:/Users/Public/AndroidStudioProjects/NewEvent2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.113671875" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/activitycontainer.xml" value="0.2609375" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/blog_item_layout.xml" value="0.2916666666666667" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/category_item_layout.xml" value="0.47368421052631576" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardactivity.xml" value="0.5120370370370371" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardcharts.xml" value="0.35052083333333334" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/event_detail.xml" value="0.225" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/eventform_layout.xml" value="0.2824074074074074" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/guests_all.xml" value="0.25" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/journal_parentlayout.xml" value="0.5731481481481482" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/journal_parentlayout2.xml" value="0.5731481481481482" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/mainevent_summary.xml" value="0.5796296296296296" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/my_notes.xml" value="0.4764102564102564" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_guest.xml" value="0.35104166666666664" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_note.xml" value="1.0" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_vendor.xml" value="0.28688524590163933" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/note_item_layout.xml" value="0.4764102564102564" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/onboarding_name.xml" value="0.4764102564102564" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/payment_editdetail.xml" value="0.5" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingdetails.xml" value="0.2824074074074074" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/summary_weddinglocation.xml" value="0.2824074074074074" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.5120370370370371" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/tableguestsactivity.xml" value="0.23369565217391305" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/task_editdetail.xml" value="0.2824074074074074" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/taskpayment_list.xml" value="0.5120370370370371" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/taskpayment_tasks.xml" value="0.5120370370370371" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/vendor_googlecard.xml" value="0.33" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/vendor_item_layout.xml" value="0.67" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/vendors_all.xml" value="0.5796296296296296" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/welcome0.xml" value="0.4764102564102564" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_vendor.xml" value="0.21851851851851853" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
