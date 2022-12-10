@@ -90,10 +90,10 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                                     "email"
                                 )
                             } else {
-                                onLoginSuccess()
+                                onLoginSuccess(userlocal.email)
                             }
                         } else {
-                            onLoginSuccess()
+                            onLoginSuccess(userlocal.email)
                         }
                     }
                 }
@@ -140,10 +140,10 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                                             "facebook"
                                         )
                                     } else {
-                                        onLoginSuccess()
+                                        onLoginSuccess(userlocal.email)
                                     }
                                 } else {
-                                    onLoginSuccess()
+                                    onLoginSuccess(userlocal.email)
                                 }
                             }
                         }
@@ -237,10 +237,10 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                             onOnboarding(uid, email, "google")
                         } else {
                             UserDBHelper(this@LoginView).insert(userAccount)
-                            onLoginSuccess()
+                            onLoginSuccess(userAccount.email)
                         }
                     } else {
-                        onLoginSuccess()
+                        onLoginSuccess(userAccount.email)
                     }
 
 //                    if (uid != "" && email != "") {
@@ -265,12 +265,13 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         private const val RC_SIGN_IN = 9001
     }
 
-    override fun onLoginSuccess() {
+    override fun onLoginSuccess(email: String) {
         Toast.makeText(
             this,
             getString(R.string.welcome_message),
             Toast.LENGTH_SHORT
         ).show()
+        saveUserSession(applicationContext, email)
         finish()
     }
 

@@ -2,12 +2,7 @@ package com.example.newevent2.MVP
 
 import android.app.Activity
 import com.example.newevent2.LoginView
-import com.example.newevent2.Model.User
-import com.example.newevent2.Model.UserModel
 import com.google.firebase.auth.AuthCredential
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 class LoginPresenter(
     view: LoginView,
@@ -57,7 +52,7 @@ class LoginPresenter(
 //    }
 
     interface ViewLoginActivity {
-        fun onLoginSuccess()
+        fun onLoginSuccess(email: String)
         fun onOnboarding(userid: String, email: String, authtype: String)
         fun onLoginError()
     }
