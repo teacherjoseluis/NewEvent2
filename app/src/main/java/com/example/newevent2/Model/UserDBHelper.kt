@@ -18,7 +18,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     private var nexthandlert: CoRAddEditTask? = null
     private var nexthandlerdelt: CoRDeleteTask? = null
     private var nexthandlerp: CoRAddEditPayment? = null
-    var nexthandlerdelp: CoRDeletePayment? = null
+    var nexthandlerpdel: CoRDeletePayment? = null
     var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
     var nexthandlerv: CoRAddEditVendor? = null
@@ -230,7 +230,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         if (user.payments == 0) user.haspayment = PaymentModel.INACTIVEFLAG
         update(user)
 
-        nexthandlerdelp?.onDeletePayment(payment)
+        nexthandlerpdel?.onDeletePayment(payment)
     }
 
     override suspend fun onAddEditGuest(guest: Guest) {

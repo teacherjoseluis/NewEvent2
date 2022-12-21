@@ -173,9 +173,9 @@ private fun orderChainDel(
     paymentModel: PaymentModel
 ): CoRDeletePayment {
     calendarEvent.nexthandlerpdel = userdbhelper
-    userdbhelper.nexthandleru = userModel
-    userModel.nexthandlerdelp = paymentDBHelper
-    paymentDBHelper.nexthandlerdel = paymentModel
+    userdbhelper.nexthandlerpdel = userModel
+    userModel.nexthandlerpdel = paymentDBHelper
+    paymentDBHelper.nexthandlerpdel = paymentModel
     return calendarEvent
 }
 

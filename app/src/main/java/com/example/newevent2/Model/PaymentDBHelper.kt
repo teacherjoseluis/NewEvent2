@@ -16,7 +16,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
     lateinit var payment: Payment
     var key = ""
     var nexthandler: CoRAddEditPayment? = null
-    var nexthandlerdel: CoRDeletePayment? = null
+    var nexthandlerpdel: CoRDeletePayment? = null
 
     fun insert(payment: Payment) {
         val values = ContentValues()
@@ -191,7 +191,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
 
     override fun onDeletePayment(payment: Payment) {
         delete(payment)
-        nexthandlerdel?.onDeletePayment(payment)
+        nexthandlerpdel?.onDeletePayment(payment)
     }
 
     companion object {

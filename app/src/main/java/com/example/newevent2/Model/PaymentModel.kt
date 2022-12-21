@@ -18,7 +18,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     var nexthandler: CoRAddEditPayment? = null
-    var nexthandlerdel: CoRDeletePayment? = null
+    var nexthandlerpdel: CoRDeletePayment? = null
 
     var userid = ""
     var eventid = ""
@@ -225,7 +225,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
             object : FirebaseDeletePaymentSuccess {
                 override fun onPaymentDeleted(flag: Boolean, payment: Payment) {
                     if (flag) {
-                        nexthandlerdel?.onDeletePayment(payment)
+                        nexthandlerpdel?.onDeletePayment(payment)
                     }
                 }
             })

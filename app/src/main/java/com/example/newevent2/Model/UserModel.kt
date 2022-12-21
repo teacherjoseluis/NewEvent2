@@ -46,7 +46,7 @@ class UserModel(
     private var nexthandlert: CoRAddEditTask? = null
     var nexthandlerdelt: CoRDeleteTask? = null
     private var nexthandlerp: CoRAddEditPayment? = null
-    var nexthandlerdelp: CoRDeletePayment? = null
+    var nexthandlerpdel: CoRDeletePayment? = null
     var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
     var nexthandlerv: CoRAddEditVendor? = null
@@ -261,7 +261,7 @@ class UserModel(
 
     override fun onDeletePayment(payment: Payment) {
         editUserAddPayment(paymentsactive - 1)
-        nexthandlerdelp?.onDeletePayment(payment)
+        nexthandlerpdel?.onDeletePayment(payment)
     }
 
     override suspend fun onAddEditGuest(guest: Guest) {
