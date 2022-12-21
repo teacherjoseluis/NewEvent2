@@ -58,11 +58,11 @@ class Rv_NoteAdapter(private val noteList: MutableList<Note>) :
         val notesummary: TextView? = itemView.findViewById(R.id.notesummary)
     }
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftLeft(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
 
     }
 
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftRight(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         val noteswift = noteList[position]
         Note().apply {
             title = noteList[position].title

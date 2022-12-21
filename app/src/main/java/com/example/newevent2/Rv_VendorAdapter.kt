@@ -147,11 +147,11 @@ class Rv_VendorAdapter(private val contactlist: ArrayList<VendorPayment>, val co
         val nativeAdView: NativeAdView = itemView.findViewById(R.id.nativeAd) as NativeAdView
     }
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftLeft(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         TODO("Not yet implemented")
     }
 
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftRight(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
 //        val vendorswift = contactlist[position].vendor
 //        val vendorbackup = Vendor().apply {
 //            key = contactlist[position].vendor.key

@@ -52,10 +52,10 @@ class SwipeControllerTasks(
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         if (direction == LEFT) {
-            mAdapter.onItemSwiftLeft(viewHolder.adapterPosition, rv, leftaction!!)
+            mAdapter.onItemSwiftLeft(context, viewHolder.adapterPosition, rv, leftaction!!)
         }
         if (direction == RIGHT) {
-            mAdapter.onItemSwiftRight(viewHolder.adapterPosition, rv, rightaction!!)
+            mAdapter.onItemSwiftRight(context, viewHolder.adapterPosition, rv, rightaction!!)
         }
     }
 

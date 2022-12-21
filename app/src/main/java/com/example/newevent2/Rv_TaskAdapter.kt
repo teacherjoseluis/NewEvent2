@@ -170,7 +170,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
     }
 
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftLeft(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         if (action == CHECKACTION) {
             val taskswift = taskList[position]
             taskList.removeAt(position)
@@ -190,8 +190,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
         }
     }
 
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
-
+    override fun onItemSwiftRight(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         //val user = com.example.newevent2.Functions.getUserSession(context!!)
         val taskswift = taskList[position]
         val taskbackup = Task().apply {

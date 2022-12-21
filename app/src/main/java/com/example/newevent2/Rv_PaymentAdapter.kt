@@ -135,11 +135,11 @@ class Rv_PaymentAdapter(
         val nativeAdView: NativeAdView = itemView.findViewById(R.id.nativeAd) as NativeAdView
     }
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftLeft(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         TODO("Not yet implemented")
     }
 
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftRight(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         val paymentswift = paymentList[position]
         val paymentbackup = Payment().apply {
             name = paymentswift.name

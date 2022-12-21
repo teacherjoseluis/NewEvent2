@@ -89,12 +89,12 @@ class Rv_GuestAdapter(
 //        val table = itemView.findViewById<TextView>(R.id.table)!!
     }
 
-    override fun onItemSwiftLeft(position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftLeft(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         TODO("Not yet implemented")
     }
 
     @SuppressLint("ShowToast")
-    override fun onItemSwiftRight(position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftRight(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         val guestswift = contactlist[position]
         val guestbackup = Guest().apply {
             rsvp = contactlist[position].rsvp
