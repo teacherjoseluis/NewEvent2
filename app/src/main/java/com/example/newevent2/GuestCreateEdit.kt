@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.telephony.PhoneNumberFormattingTextWatcher
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import android.view.Menu
@@ -68,6 +69,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         }
 
         val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
+        mPhoneNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
 //        if (guestitem.key != "") {
