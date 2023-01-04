@@ -9,6 +9,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.telephony.PhoneNumberFormattingTextWatcher
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import android.view.Menu
@@ -139,6 +140,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
 
         //This validates the input on the phone field so the user enters a valid number
         val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
+        mPhoneNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         mPhoneNumber.setOnFocusChangeListener { _, _ ->
             PhoneNumberUtils.formatNumber(

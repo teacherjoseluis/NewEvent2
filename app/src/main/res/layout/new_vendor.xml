@@ -113,7 +113,7 @@
                         style="@style/Body1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:digits="0123456789+"
+                        android:digits="0123456789+()-"
                         android:hint="@string/phone"
                         android:inputType="phone"
                         android:maxLength="50" />
