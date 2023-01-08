@@ -7,8 +7,7 @@ import com.example.newevent2.Model.Guest
 
 class GuestsAllPresenter(
     val context: Context,
-    val fragment: GuestsAll,
-    val view: View
+    val fragment: GuestsAll
 ) :
     GuestPresenter.GuestList {
 
@@ -19,19 +18,18 @@ class GuestsAllPresenter(
     }
 
     override fun onGuestList(list: ArrayList<Guest>) {
-       fragment.onGAGuests(view, list)
+       fragment.onGAGuests(list)
     }
 
     override fun onGuestListError(errcode: String) {
-        fragment.onGAGuestsError(view, GuestPresenter.ERRCODEGUESTS)
+        fragment.onGAGuestsError(GuestPresenter.ERRCODEGUESTS)
     }
 
     interface GAGuests {
         fun onGAGuests(
-            inflatedView: View,
             list: ArrayList<Guest>
         )
 
-        fun onGAGuestsError(inflatedView: View, errcode: String)
+        fun onGAGuestsError(errcode: String)
     }
 }

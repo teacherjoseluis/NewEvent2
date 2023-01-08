@@ -271,7 +271,7 @@ private fun orderChainAddGuest(
 ): CoRAddEditGuest {
     guestModel.nexthandler = guestDBHelper
     guestDBHelper.nexthandler = userdbhelper
-    userdbhelper.nexthandleru = userModel
+    userdbhelper.nexthandlerg = userModel
     userModel.nexthandlerg = guestCreateEdit
     return guestModel
 }

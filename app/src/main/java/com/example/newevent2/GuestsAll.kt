@@ -2,6 +2,7 @@ package com.example.newevent2
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.Intent.getIntent
@@ -27,6 +28,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import android.widget.Toast
 import com.example.newevent2.MVP.TaskPaymentTasksPresenter
+import com.example.newevent2.MVP.VendorsAllPresenter
 
 
 class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
@@ -93,7 +95,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
 
         pulltoRefresh.setOnRefreshListener {
-            presenterguest = GuestsAllPresenter(requireContext(), this, inf)
+            presenterguest = GuestsAllPresenter(requireContext(), this)
             pullToRefresh.isRefreshing = false
         }
 
@@ -115,7 +117,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //        val itemTouchHelper = ItemTouchHelper(swipeController)
 //        itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
 
-        presenterguest = GuestsAllPresenter(requireContext(), this, inf)
+        presenterguest = GuestsAllPresenter(requireContext(), this)
 
         ViewAnimation.init(inf.NewGuest)
         ViewAnimation.init(inf.ContactGuest)
@@ -207,7 +209,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
     }
 
     override fun onGAGuests(
-        inflatedView: View,
+        //inflatedView: View,
         list: ArrayList<Guest>
     ) {
 //        recyclerViewAllGuests = inflatedView.recyclerViewGuests
@@ -224,20 +226,20 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         recyclerViewAllGuests.adapter = rvAdapter
         contactlist = clone(list)
 
-        swipeController = SwipeControllerTasks(
-            inflatedView.context,
-            rvAdapter,
-            recyclerViewAllGuests,
-            null,
-            RIGHTACTION
-        )
-        val itemTouchHelper = ItemTouchHelper(swipeController)
-        itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
+//        swipeController = SwipeControllerTasks(
+//            inflatedView.context,
+//            rvAdapter,
+//            recyclerViewAllGuests,
+//            null,
+//            RIGHTACTION
+//        )
+//        val itemTouchHelper = ItemTouchHelper(swipeController)
+//        itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
     }
 
-    override fun onGAGuestsError(inflatedView: View, errcode: String) {
-        inflatedView.withdata.visibility = ConstraintLayout.GONE
-        inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
+    override fun onGAGuestsError(errcode: String) {
+        withdata.visibility = ConstraintLayout.GONE
+        withnodata.visibility = ConstraintLayout.VISIBLE
     }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -266,15 +268,16 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_CONTACTS && resultCode == RESULT_OK) {
-            val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
+        if (((requestCode == REQUEST_CODE_CONTACTS) || (requestCode == REQUEST_CODE_GUESTS)) && resultCode == Activity.RESULT_OK) {
+            //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
+            presenterguest = GuestsAllPresenter(requireContext(), this)
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        presenterguest = GuestsAllPresenter(requireContext(), this, inf)
+        presenterguest = GuestsAllPresenter(requireContext(), this)
 //        recyclerViewActive.adapter = null
 //        recyclerViewActive.adapter = rvAdapter
     }
