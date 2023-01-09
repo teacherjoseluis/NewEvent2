@@ -60,10 +60,10 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
         userid: String,
         eventid: String,
         guest: Guest
-    ) {
+    ): String {
         val postRef =
             myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Guest")
+                .child("Guest").push()
 
         //---------------------------------------
         // Getting the time and date to record in the recently created guest
@@ -85,6 +85,7 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
 
         postRef.setValue(guestadd as Map<String, Any>)
             .await()
+        return postRef.key.toString()
     }
 
 //    @SuppressLint("SimpleDateFormat")
@@ -174,7 +175,7 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
 
     override suspend fun onAddEditGuest(guest: Guest) {
         if (guest.key == "") {
-            addGuest(userid,eventid,guest)
+            guest.key  = addGuest(userid,eventid,guest)
             nexthandler?.onAddEditGuest(guest)
         } else if (guest.key != "") {
             editGuest(userid, eventid, guest)
