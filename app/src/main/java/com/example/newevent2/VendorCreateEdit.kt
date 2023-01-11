@@ -263,6 +263,11 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         loadingview.visibility = ConstraintLayout.VISIBLE
         withdataview.visibility = ConstraintLayout.GONE
 
+        nameinputedit.isEnabled = false
+        phoneinputedit.isEnabled = false
+        mailinputedit.isEnabled = false
+        button.isEnabled = false
+
         vendoritem.name = nameinputedit.text.toString()
         vendoritem.phone = phoneinputedit.text.toString()
         vendoritem.email = mailinputedit.text.toString()

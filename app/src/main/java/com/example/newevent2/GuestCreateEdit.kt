@@ -243,6 +243,13 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         loadingview.visibility = ConstraintLayout.VISIBLE
         withdataview.visibility = ConstraintLayout.GONE
 
+        nameinputedit.isEnabled = false
+        phoneinputedit.isEnabled = false
+        mailinputedit.isEnabled = false
+        rsvpgroup.isEnabled = false
+        companionsgroup.isEnabled = false
+        button.isEnabled = false
+
         var id = rsvpgroup.checkedChipId
         var chipselected = rsvpgroup.findViewById<Chip>(id)
         chiptextvalue = chipselected.text.toString()
