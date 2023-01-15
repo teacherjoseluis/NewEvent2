@@ -258,6 +258,7 @@
     <string name="successedituser">Usuario editado exitósamente</string>
     <string name="erroredituser">Hubo un error al intentar editar al usuario </string>
     <string name="googlesearch">Buscar por Google</string>
+    <string name="selectvendor">Seleccionar Proveedor</string>
 
     <string-array name="role" >
         <item>Novia</item>

@@ -55,7 +55,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
             Payment()
         }
 
-       //Calling the presenter for Vendors that will be used to associate the Payment to a Vendor
+        //Calling the presenter for Vendors that will be used to associate the Payment to a Vendor
         presentervendor = VendorPaymentPresenter(this, this)
 
         //We are making sure that only valid text is entered in the name of the payment
@@ -96,7 +96,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
         //This is simply to clear the vendor in case the user clicks on this field
 //        vendorautocomplete.setOnClickListener {
-            // Here it is where the text clearing takes place
+        // Here it is where the text clearing takes place
 //            if (vendorautocomplete.text.toString().isNotEmpty()) {
 //                AlertDialog.Builder(this)
 //                    .setTitle(getString(R.string.clearvendor))
@@ -149,11 +149,12 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
             // Check that if the vendor is set, that vendor exists
 
             val actv = findViewById<Spinner>(R.id.vendorspinner)
-            if (actv.selectedItem.toString()!="") {
+            if (actv.selectedItem.toString() != getString(R.string.selectvendor)) {
                 val vendordb = VendorDBHelper(this)
                 val vendorid = vendordb.getVendorIdByName(actv.selectedItem.toString())
                 if (vendorid == "") {
-                    Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT)
+                        .show()
                     inputvalflag = false
                 } else {
                     paymentitem.vendorid = vendorid
@@ -166,17 +167,21 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
         // Loading the Ad
         val adRequest = AdRequest.Builder().build()
-        RewardedAd.load(this,"ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d(TaskCreateEdit.TAG, adError.message)
-                mRewardedAd = null
-            }
+        RewardedAd.load(
+            this,
+            "ca-app-pub-3940256099942544/5224354917",
+            adRequest,
+            object : RewardedAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d(TaskCreateEdit.TAG, adError.message)
+                    mRewardedAd = null
+                }
 
-            override fun onAdLoaded(rewardedAd: RewardedAd) {
-                Log.d(TaskCreateEdit.TAG, "Ad was loaded.")
-                mRewardedAd = rewardedAd
-            }
-        })
+                override fun onAdLoaded(rewardedAd: RewardedAd) {
+                    Log.d(TaskCreateEdit.TAG, "Ad was loaded.")
+                    mRewardedAd = rewardedAd
+                }
+            })
 
         // Ad listener in case I want to add additional behavior
         mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
@@ -263,15 +268,21 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
     }
 
     override fun onVAVendors(list: ArrayList<String>) {
-        list.add("")
+        list.add(0, getString(R.string.selectvendor))
         val actv = findViewById<Spinner>(R.id.vendorspinner)
-        val adapteractv = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list)
+        val adapteractv =
+            ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list)
         actv.adapter = adapteractv
-        try {
-        val vendordb = VendorDBHelper(this)
-        val vendorname = vendordb.getVendorNameById(paymentitem.vendorid)
-            actv.setSelection(list.indexOf(vendorname))
-        } catch(e: Exception) {}
+        if (paymentitem.vendorid != "") {
+            try {
+                val vendordb = VendorDBHelper(this)
+                val vendorname = vendordb.getVendorNameById(paymentitem.vendorid)
+                actv.setSelection(list.indexOf(vendorname))
+            } catch (e: Exception) {
+            }
+        } else {
+            actv.setSelection(0)
+        }
         //actv.setTextColor(Color.RED)
     }
 

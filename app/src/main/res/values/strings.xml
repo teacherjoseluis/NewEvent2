@@ -271,6 +271,7 @@
     <string name="successedituser">User was edited successully</string>
     <string name="erroredituser">There was an error trying edit the user </string>
     <string name="googlesearch">Search by Google</string>
+    <string name="selectvendor">Select Vendor</string>
 
     <string-array name="role" >
         <item>Bride</item>
