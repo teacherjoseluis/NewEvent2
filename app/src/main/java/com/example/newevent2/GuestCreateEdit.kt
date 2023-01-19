@@ -37,6 +37,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
     private var chiptextvalue: String? = null
     private var categoryrsvp: String = ""
     private var categorycompanions: String = ""
+    private var categoryguests: String = ""
 
     private lateinit var guestitem: Guest
     private lateinit var loadingview: View
@@ -99,12 +100,21 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         if (guestitem.name != "") {
             nameinputedit.setText(guestitem.name)
             phoneinputedit.setText(guestitem.phone)
-            tableinputedit.setText(guestitem.table)
+            //tableinputedit.setText(guestitem.table)
             when (guestitem.companion) {
                 "adult" -> companionsgroup.check(chipadult.id)
                 "child" -> companionsgroup.check(chipchild.id)
                 "baby" -> companionsgroup.check(chipbaby.id)
                 else -> companionsgroup.check(chipnone.id)
+            }
+            when (guestitem.table) {
+                "family" -> guestgroup.check(chipfamily.id)
+                "extendedfamily" -> guestgroup.check(chipextended.id)
+                "familyfriends" -> guestgroup.check(chipfamfriends.id)
+                "oldfriends" -> guestgroup.check(chipoldfriends.id)
+                "coworkers" -> guestgroup.check(coworkers.id)
+                "others" -> guestgroup.check(others.id)
+                else -> guestgroup.check(others.id)
             }
         }
 
@@ -162,9 +172,14 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
             }
         }
 
-        tableinputedit.setOnClickListener {
-            tableinputedit.error = null
-        }
+//        tableinputedit.setOnClickListener {
+//            tableinputedit.error = null
+//        }
+
+//        mtaggroup.setOnTagClickListener { TagGroup.OnTagClickListener {
+//            Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_LONG).show()
+//        }
+//        }
 
         button.setOnClickListener {
             var inputvalflag = true
@@ -185,11 +200,16 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                     .show()
                 inputvalflag = false
             }
-            if (tableinputedit.text.toString().isEmpty()) {
-                Toast.makeText(this, getString(R.string.error_tableinput), Toast.LENGTH_SHORT)
+            if (guestgroup.checkedChipId == -1) {
+                Toast.makeText(this, "Guest category is required", Toast.LENGTH_SHORT)
                     .show()
                 inputvalflag = false
             }
+//            if (tableinputedit.text.toString().isEmpty()) {
+//                Toast.makeText(this, getString(R.string.error_tableinput), Toast.LENGTH_SHORT)
+//                    .show()
+//                inputvalflag = false
+//            }
             if (inputvalflag) {
                 lifecycleScope.launch {
                     saveguest()
@@ -271,9 +291,22 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
             else -> "none"
         }
 
+        id = guestgroup.checkedChipId
+        chipselected = guestgroup.findViewById(id)
+        chiptextvalue = chipselected.text.toString()
+        categoryguests = when (chiptextvalue) {
+            getString(R.string.family) -> "family"
+            getString(R.string.extendedfamily) -> "extendedfamily"
+            getString(R.string.familyfriends) -> "familyfriends"
+            getString(R.string.oldfriends) -> "oldfriends"
+            getString(R.string.coworkers) -> "coworkers"
+            getString(R.string.others) -> "others"
+            else -> "others"
+        }
+
         guestitem.rsvp = categoryrsvp
         guestitem.companion = categorycompanions
-        guestitem.table = tableinputedit.text.toString()
+        guestitem.table = categoryguests
         guestitem.name = nameinputedit.text.toString()
         guestitem.phone = phoneinputedit.text.toString()
         guestitem.email = mailinputedit.text.toString()

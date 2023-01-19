@@ -3,9 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_guest.xml" value="0.1515625" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_guest.xml" value="0.37395833333333334" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_vendor.xml" value="0.1" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/payment_editdetail.xml" value="0.21574074074074073" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.35" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/welcome0.xml" value="0.21481481481481482" />
       </map>
     </option>

@@ -272,6 +272,12 @@
     <string name="erroredituser">There was an error trying edit the user </string>
     <string name="googlesearch">Search by Google</string>
     <string name="selectvendor">Select Vendor</string>
+    <string name="family">Family</string>
+    <string name="extendedfamily">Extended family</string>
+    <string name="familyfriends">Family friends</string>
+    <string name="oldfriends">Old friends</string>
+    <string name="coworkers">Co-workers</string>
+    <string name="others">Others</string>
 
     <string-array name="role" >
         <item>Bride</item>

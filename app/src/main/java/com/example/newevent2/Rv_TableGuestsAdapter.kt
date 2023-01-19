@@ -3,6 +3,7 @@ package com.example.newevent2
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Model.TableGuests
+import kotlinx.android.synthetic.main.new_guest.*
 
 class Rv_TableGuestsAdapter(
     private val tableguestsList: ArrayList<TableGuests>
@@ -20,7 +22,8 @@ class Rv_TableGuestsAdapter(
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        val v = LayoutInflater.from(p0.context).inflate(R.layout.tableguests_parentlayout, p0, false)
+        val v =
+            LayoutInflater.from(p0.context).inflate(R.layout.tableguests_parentlayout, p0, false)
         context = p0.context
         return ViewHolder(v)
     }
@@ -32,7 +35,15 @@ class Rv_TableGuestsAdapter(
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        p0.table?.text = tableguestsList[p1].table
+        p0.table?.text = when (tableguestsList[p1].table) {
+            "family" -> context.getString(R.string.family)
+            "extendedfamily" -> context.getString(R.string.extendedfamily)
+            "familyfriends" -> context.getString(R.string.familyfriends)
+            "oldfriends" -> context.getString(R.string.oldfriends)
+            "coworkers" -> context.getString(R.string.coworkers)
+            else -> context.getString(R.string.others)
+        }
+
         p0.count?.text = tableguestsList[p1].count.toString()
         p0.recyclerView?.apply {
             layoutManager = LinearLayoutManager(p0.recyclerView.context).apply {

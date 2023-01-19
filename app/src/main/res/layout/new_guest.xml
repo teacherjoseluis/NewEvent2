@@ -110,13 +110,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
+                        android:contentDescription="@string/phoneimage"
                         android:paddingTop="10dp"
                         android:paddingEnd="10dp"
                         android:src="@drawable/icons8_phone_24"
                         app:layout_constraintBottom_toBottomOf="@+id/phoneinput"
                         app:layout_constraintEnd_toEndOf="@id/phoneinput"
                         app:layout_constraintTop_toTopOf="@id/phoneinput"
-                        android:contentDescription="@string/phoneimage"
                         tools:ignore="RtlSymmetry" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -154,13 +154,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
+                        android:contentDescription="@string/mailimage"
                         android:paddingTop="10dp"
                         android:paddingEnd="10dp"
                         android:src="@drawable/icons8_important_mail_24"
                         app:layout_constraintBottom_toBottomOf="@+id/mailinput"
                         app:layout_constraintEnd_toEndOf="@id/mailinput"
                         app:layout_constraintTop_toTopOf="@id/mailinput"
-                        android:contentDescription="@string/mailimage"
                         tools:ignore="RtlSymmetry" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -279,32 +279,83 @@
                     </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="@string/category"
+                        android:textAppearance="@style/Heading6" />
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tableinputedit"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:hint="@string/table"
-                            android:maxLength="10" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/guestgroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:checkedChip="@id/others"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipfamily"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/family"
+                            android:theme="@style/Theme.MaterialComponents.Light" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipextended"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/extendedfamily"
+                            android:theme="@style/Theme.MaterialComponents.Light" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipfamfriends"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/familyfriends"
+                            android:theme="@style/Theme.MaterialComponents.Light" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipoldfriends"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/oldfriends"
+                            android:theme="@style/Theme.MaterialComponents.Light" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/coworkers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/coworkers"
+                            android:theme="@style/Theme.MaterialComponents.Light" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/others"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/others"
+                            android:theme="@style/Theme.MaterialComponents.Light" />
+                    </com.google.android.material.chip.ChipGroup>
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
