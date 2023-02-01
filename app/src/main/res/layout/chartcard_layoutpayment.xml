@@ -27,18 +27,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/cardtitle"
-                    style="@style/Heading5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/card_title"
-                    android:textColor="@color/rosaChillon"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_conversion_absoluteHeight="11dp"
-                    tools:layout_conversion_absoluteWidth="36dp" />
-<!--
+                <!--
                 <TextView
                     android:id="@+id/secondarytext"
                     style="@style/Body1"
@@ -94,6 +83,18 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
             -->
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/cardtitle"
+            style="@style/Heading5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/card_title"
+            android:textColor="@color/rosaChillon"
+            tools:layout_conversion_absoluteHeight="11dp"
+            tools:layout_conversion_absoluteWidth="36dp" />
 
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

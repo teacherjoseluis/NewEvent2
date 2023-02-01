@@ -99,6 +99,42 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         return list
     }
 
+    fun getVendorPaymentList(vendorkey: String): ArrayList<Payment> {
+        val list = ArrayList<Payment>()
+        val cursor: Cursor =
+            db.rawQuery("SELECT * FROM PAYMENT where vendorid ='$vendorkey'", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    val paymentid = cursor.getString(cursor.getColumnIndex("paymentid"))
+                    val name = cursor.getString(cursor.getColumnIndex("name"))
+                    val date = cursor.getString(cursor.getColumnIndex("date"))
+                    val category = cursor.getString(cursor.getColumnIndex("category"))
+                    val amount = cursor.getString(cursor.getColumnIndex("amount"))
+                    val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
+                    val createdatetime = cursor.getString(cursor.getColumnIndex("createdatetime"))
+                    val vendorid = cursor.getString(cursor.getColumnIndex("vendorid"))
+                    val payment =
+                        Payment(
+                            paymentid,
+                            name,
+                            date,
+                            category,
+                            amount,
+                            eventid,
+                            createdatetime,
+                            vendorid
+                        )
+                    list.add(payment)
+                    Log.d(TAG, "Task $paymentid record obtained from local DB")
+                } while (cursor.moveToNext())
+            }
+        }
+        cursor.close()
+        return list
+    }
+
     @SuppressLint("Range")
     fun getCategoryStats(category: String): PaymentStatsToken {
         val paymentstats = PaymentStatsToken()
@@ -110,7 +146,8 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         if (cursor.count > 0) {
             cursor.moveToFirst()
             do {
-                paymentstats.paymentcompleted = cursor.getInt(cursor.getColumnIndex("paymentcompleted"))
+                paymentstats.paymentcompleted =
+                    cursor.getInt(cursor.getColumnIndex("paymentcompleted"))
             } while (cursor.moveToNext())
         }
         cursor =
