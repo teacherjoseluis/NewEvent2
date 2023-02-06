@@ -3,26 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/errorpagecolor"
+    android:background="@color/background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:ignore="Overdraw">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/withnodata"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imageView17"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/image_37"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/emptystate"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ativo_11"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/emptystate" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             style="@style/BodyBold"
@@ -30,7 +35,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="@string/there_are_no_elements_to_show"
-            android:textColor="@color/azulmasClaro"
+            android:textColor="@color/secondaryText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView17" />

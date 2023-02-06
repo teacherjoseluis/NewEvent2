@@ -86,12 +86,12 @@
     <string name="taskbudgetimage">Task Budget Image</string>
     <string name="card_title">Card Title</string>
     <string name="contactavatar">Contact Avatar</string>
-    <string name="there_is_no_activity_to_show">There is no activity to show</string>
+    <string name="there_is_no_activity_to_show">No activity to show</string>
     <string name="newtaskactionbutton">New Task Action Button</string>
     <string name="loading_blog_posts_to_show">Loading blog posts to show…</string>
     <string name="there_are_no_guests_yet_invited">There are no guests yet invited</string>
     <string name="emptystate">Empty State</string>
-    <string name="there_are_no_elements_to_show">There are no elements to show</string>
+    <string name="there_are_no_elements_to_show">No elements to show</string>
     <string name="newtaskbutton">New Task Button</string>
     <string name="vendors">Vendors</string>
     <string name="eventimage">Event Image</string>
