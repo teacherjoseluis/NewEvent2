@@ -53,6 +53,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -61,6 +63,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/eventname"
                     style="@style/Body1"
+                    android:background="@drawable/layout_border"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/newevent_eventnameinput_en"
@@ -80,6 +83,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -88,6 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/Body1"
+                    android:background="@drawable/layout_border"
                     android:clickable="true"
                     android:focusable="false"
                     android:hint="@string/newevent_eventdateinput_en"
@@ -120,6 +126,8 @@
                 android:id="@+id/eventtimetextinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -127,6 +135,7 @@
                     android:id="@+id/eventtime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/layout_border"
                     style="@style/Body1"
                     android:clickable="true"
                     android:focusable="false"
@@ -158,6 +167,8 @@
                 android:id="@+id/eventlocationtextinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -165,6 +176,7 @@
                     android:id="@+id/eventlocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/layout_border"
                     style="@style/Body1"
                     android:clickable="true"
                     android:focusable="false"

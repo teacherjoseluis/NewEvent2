@@ -60,6 +60,8 @@
                         android:layout_height="match_parent"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -67,6 +69,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/nameinputedit"
                             style="@style/Body1"
+                            android:background="@drawable/layout_border"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/name"
@@ -89,6 +92,8 @@
                         android:layout_height="match_parent"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -97,6 +102,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/phoneinputedit"
                             style="@style/Body1"
+                            android:background="@drawable/layout_border"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:digits="0123456789+()-"
@@ -135,6 +141,8 @@
                         android:layout_height="match_parent"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -143,6 +151,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/mailinputedit"
                             style="@style/Body1"
+                            android:background="@drawable/layout_border"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/email"

@@ -32,17 +32,21 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/taskname"
+                    android:foregroundTint="@color/rosaChillon"
                     style="@style/Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/layout_border"
                     android:hint="@string/taskname"
-                    android:maxLength="20"/>
+                    android:maxLength="20" />
 
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -57,19 +61,24 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-            <com.blackcat.currencyedittext.CurrencyEditText
-                android:id="@+id/taskbudget"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                style="@style/Body1"
-                android:hint="@string/taskbudget"
-                android:maxLength="10" />
+                <com.blackcat.currencyedittext.CurrencyEditText
+                    android:id="@+id/taskbudget"
+                    android:background="@drawable/layout_border"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    style="@style/Body1"
+                    android:hint="@string/taskbudget"
+                    android:maxLength="10"/>
             </com.google.android.material.textfield.TextInputLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/field3"
             android:layout_width="match_parent"
@@ -81,20 +90,23 @@
                 android:id="@+id/taskdateinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/taskdate"
+                    style="@style/Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Body1"
+                    android:background="@drawable/layout_border"
                     android:clickable="true"
                     android:focusable="false"
                     android:hint="@string/task_due_date"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
@@ -102,12 +114,12 @@
                 android:layout_height="26dp"
                 android:layout_gravity="right"
                 android:layout_marginEnd="8dp"
+                android:contentDescription="@string/calendaricon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/taskdateinput"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_icons8_calendar"
                 app:tint="#757575"
-                android:contentDescription="@string/calendaricon"
                 tools:ignore="RtlHardcoded" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -115,106 +127,106 @@
             android:id="@+id/field4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/field3">
 
             <TextView
+                style="@style/Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                style="@style/Body1"
-                android:text="@string/category"/>
+                android:text="@string/category" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/groupedittask"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:singleSelection="true">
-<!--
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Flowers &amp; Deco"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
+                <!--
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Flowers &amp; Deco"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Venue"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Venue"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Photo &amp; Video"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Photo &amp; Video"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Entertainment"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Entertainment"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Transportation"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Transportation"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Ceremony"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Ceremony"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Attire &amp; Accessories"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip7"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Attire &amp; Accessories"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Health &amp; Beauty"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip8"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Health &amp; Beauty"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Food &amp; Drink"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip9"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Food &amp; Drink"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:text="Guests"
-                    android:theme="@style/Theme.MaterialComponents.Light" />
-                    -->
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip10"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checkable="true"
+                                    android:text="Guests"
+                                    android:theme="@style/Theme.MaterialComponents.Light" />
+                                    -->
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
