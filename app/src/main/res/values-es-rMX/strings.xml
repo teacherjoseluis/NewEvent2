@@ -259,6 +259,7 @@
     <string name="erroredituser">Hubo un error al intentar editar al usuario </string>
     <string name="googlesearch">Buscar por Google</string>
     <string name="selectvendor">Seleccionar Proveedor</string>
+    <string name="selectcategory">Seleccionar Categoría</string>
     <string name="family">Familia</string>
     <string name="extendedfamily">Familia polìtica</string>
     <string name="familyfriends">Amigos de la familia</string>

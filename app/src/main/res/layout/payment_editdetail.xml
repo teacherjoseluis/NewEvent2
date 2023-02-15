@@ -40,12 +40,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/paymentname"
+                    style="@style/Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Body1"
                     android:background="@drawable/layout_border"
                     android:hint="@string/name"
-                    android:maxLength="20"/>
+                    android:maxLength="20" />
 
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -68,14 +68,15 @@
 
                 <com.blackcat.currencyedittext.CurrencyEditText
                     android:id="@+id/paymentamount"
+                    style="@style/Body1"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    style="@style/Body1"
                     android:background="@drawable/layout_border"
                     android:hint="@string/payment_amount"
-                    android:maxLength="10"/>
+                    android:maxLength="10" />
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/field3"
             android:layout_width="match_parent"
@@ -95,15 +96,15 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/paymentdate"
+                    style="@style/Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Body1"
                     android:background="@drawable/layout_border"
                     android:clickable="true"
                     android:focusable="false"
                     android:hint="@string/payment_due_date"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
@@ -111,12 +112,12 @@
                 android:layout_height="26dp"
                 android:layout_gravity="right"
                 android:layout_marginEnd="8dp"
+                android:contentDescription="@string/calendaricon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/paymentdateinput"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_icons8_calendar"
                 app:tint="#757575"
-                android:contentDescription="@string/calendaricon"
                 tools:ignore="RtlHardcoded" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -124,52 +125,70 @@
             android:id="@+id/field4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/field3">
 
             <TextView
+                style="@style/Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                style="@style/Body1"
                 android:text="@string/category" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/groupeditpayment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:singleSelection="true">
-            </com.google.android.material.chip.ChipGroup>
+                app:singleSelection="true"></com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/vendorpaymentsection"
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginTop="10dp"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/field4">
 
             <TextView
+                style="@style/Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                style="@style/Body1"
                 android:text="@string/vendor" />
 
-        <Spinner
-            android:id="@+id/vendorspinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:layout_weight=".28"
+                android:background="@drawable/spinner_format"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/vendorspinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:spinnerMode="dropdown" />
+
+<!--                <ImageView-->
+<!--                    android:layout_width="30dp"-->
+<!--                    android:layout_height="10dp"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:src="@drawable/png_dropdown" />-->
+
+            </RelativeLayout>
 
         </LinearLayout>
 

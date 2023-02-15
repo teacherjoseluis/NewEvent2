@@ -15,6 +15,7 @@ import android.telephony.TelephonyManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -23,14 +24,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newevent2.Functions.*
-import com.example.newevent2.MVP.ImagePresenter
-import com.example.newevent2.MVP.PaymentPresenter
 import com.example.newevent2.Model.PaymentDBHelper
 import com.example.newevent2.Model.Vendor
-import com.example.newevent2.Model.VendorPayment
 import com.example.newevent2.ui.TextValidate
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.new_guest.*
 import kotlinx.android.synthetic.main.new_vendor.*
 import kotlinx.android.synthetic.main.new_vendor.button
 import kotlinx.android.synthetic.main.new_vendor.mailimage
@@ -38,8 +35,6 @@ import kotlinx.android.synthetic.main.new_vendor.mailinputedit
 import kotlinx.android.synthetic.main.new_vendor.nameinputedit
 import kotlinx.android.synthetic.main.new_vendor.phoneimage
 import kotlinx.android.synthetic.main.new_vendor.phoneinputedit
-import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
-import kotlinx.android.synthetic.main.taskpayment_payments.view.*
 import kotlinx.android.synthetic.main.vendor_googlecard.view.*
 
 class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
@@ -74,6 +69,13 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         loadingview = findViewById(R.id.loadingscreen)
         withdataview = findViewById(R.id.withdata)
 
+        val language = this.resources.configuration.locales.get(0).language
+        val categorieslist = Category.getAllCategories(language)
+        categorieslist.add(0, getString(R.string.selectcategory))
+        val adapteractv =
+            ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, categorieslist)
+        categoryspinner.adapter = adapteractv
+
         //Sets vendoritem blank if nothing comes from the extras
         // otherwise it assumes a vendor item has been passed as a parameter
         val extras = intent.extras
@@ -89,11 +91,16 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             phoneinputedit.setText(vendoritem.phone)
             mailinputedit.setText(vendoritem.email)
 
+            if (vendoritem.category != "") {
+                categoryspinner.setSelection(categorieslist.indexOf(vendoritem.category))
+            } else {
+                categoryspinner.setSelection(0)
+            }
+
             val paymentDB = PaymentDBHelper(this)
             val paymentlist = paymentDB.getVendorPaymentList(vendoritem.key)
 
             if (paymentlist.size != 0) {
-
                 cardtitle.visibility = ConstraintLayout.VISIBLE
                 cardtitle.text = getString(R.string.payment)
 
@@ -215,6 +222,11 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                 phoneinputedit.error = getString(R.string.error_vendorphoneinput)
                 inputvalflag = false
             }
+            if (categoryspinner.selectedItem.toString() == getString(R.string.selectcategory)) {
+                Toast.makeText(this, getString(R.string.selectcategory), Toast.LENGTH_SHORT)
+                    .show()
+                inputvalflag = false
+            }
             if (inputvalflag) {
                 savevendor()
             }
@@ -289,11 +301,13 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         nameinputedit.isEnabled = false
         phoneinputedit.isEnabled = false
         mailinputedit.isEnabled = false
+        categoryspinner.isEnabled = false
         button.isEnabled = false
 
         vendoritem.name = nameinputedit.text.toString()
         vendoritem.phone = phoneinputedit.text.toString()
         vendoritem.email = mailinputedit.text.toString()
+        vendoritem.category = categoryspinner.selectedItem.toString()
 
         //Having vendoritem populated allows to decide whether we are adding a new
         // or editing an existing vendor
