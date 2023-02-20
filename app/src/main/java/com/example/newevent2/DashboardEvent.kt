@@ -86,7 +86,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
     private lateinit var inflatedView: View
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -111,7 +110,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             palodeRosa
         )
     }
-
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

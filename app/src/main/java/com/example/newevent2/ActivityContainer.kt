@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -45,6 +46,9 @@ class ActivityContainer : AppCompatActivity() {
     private var clickNavItem = 0
 
     private lateinit var headershortname: TextView
+
+    private val TIME_DELAY = 2000
+    private var back_pressed: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -232,10 +236,18 @@ class ActivityContainer : AppCompatActivity() {
             val fragment =
                 fm.findFragmentById(R.id.fragment_container)
             val currentFragment =
-                fragment?.parentFragmentManager?.fragments?.get(1) as? IOnBackPressed
+                fragment?.parentFragmentManager?.fragments?.get(1)
             val fragmentstring = currentFragment?.javaClass.toString()
-            if (fragmentstring.contains("DashboardView_clone") || fragmentstring == null) {
-                super.onBackPressed()
+            if (fragmentstring.contains("DashboardView_clone") || fragmentstring == "null") {
+                if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+                    super.onBackPressed()
+                } else {
+                    Toast.makeText(
+                        getBaseContext(), getString(R.string.pressexit),
+                        Toast.LENGTH_SHORT
+                    ).show();
+                }
+                back_pressed = System.currentTimeMillis();
             } else {
                 val newfragment = DashboardView_clone()
                 fm.beginTransaction()

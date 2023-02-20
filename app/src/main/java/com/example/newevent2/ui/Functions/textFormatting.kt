@@ -20,7 +20,11 @@ internal fun texttrimming(context: Context, text: String, maxwidthdp: Float): St
 
     if (croppedtext != text) {
         croppedtext.substring(0, (croppedtext.length) - 3)
+        croppedtext += "..."
+    }
+    else {
+        croppedtext = text
     }
 
-    return "$croppedtext..."
+    return croppedtext
 }

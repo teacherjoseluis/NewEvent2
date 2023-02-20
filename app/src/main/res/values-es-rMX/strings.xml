@@ -266,6 +266,7 @@
     <string name="oldfriends">Viejos amigos</string>
     <string name="coworkers">Compañeros de Trabajo</string>
     <string name="others">Otros</string>
+    <string name="pressexit">Presiona una vez más para salir!</string>
 
     <string-array name="role" >
         <item>Novia</item>

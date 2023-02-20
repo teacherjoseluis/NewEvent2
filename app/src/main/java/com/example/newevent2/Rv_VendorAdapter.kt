@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Functions.sumStrings
 import com.example.newevent2.Model.VendorPayment
+import com.example.newevent2.ui.Functions.texttrimming
 import com.example.newevent2.ui.LetterAvatar
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
@@ -65,7 +66,8 @@ class Rv_VendorAdapter(private val contactlist: ArrayList<VendorPayment>, val co
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         when (p0) {
             is VendorViewHolder -> {
-                p0.contactname.text = contactlist[p1].vendor.name
+                //p0.contactname.text = contactlist[p1].vendor.name
+                p0.contactname.text = texttrimming(context, contactlist[p1].vendor.name, VENDORTITLEWIDTH)
                 p0.paymentscount.text = contactlist[p1].amountlist.size.toString()
                 p0.paymentsamount.text = sumStrings(contactlist[p1].amountlist)
 
@@ -179,5 +181,6 @@ class Rv_VendorAdapter(private val contactlist: ArrayList<VendorPayment>, val co
 
     companion object {
         const val TAG = "Rv_VendorAdapter"
+        const val VENDORTITLEWIDTH = 400F
     }
 }

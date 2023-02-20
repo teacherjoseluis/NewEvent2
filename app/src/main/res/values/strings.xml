@@ -279,6 +279,7 @@
     <string name="oldfriends">Old friends</string>
     <string name="coworkers">Co-workers</string>
     <string name="others">Others</string>
+    <string name="pressexit">Press once again to exit!</string>
 
     <string-array name="role" >
         <item>Bride</item>
