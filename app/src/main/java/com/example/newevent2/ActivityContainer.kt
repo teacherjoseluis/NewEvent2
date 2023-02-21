@@ -51,6 +51,7 @@ class ActivityContainer : AppCompatActivity() {
     private var back_pressed: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activitycontainer)
 

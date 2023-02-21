@@ -31,6 +31,8 @@
         android:theme="@style/Theme.AppCompat.Light"
         android:fullBackupContent="@xml/backup_descriptor">
 
+
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -96,7 +98,7 @@
         <activity android:name=".DashboardView"
             android:theme="@style/AppTheme"/>
         <activity android:name=".ActivityContainer"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.Launcher"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
