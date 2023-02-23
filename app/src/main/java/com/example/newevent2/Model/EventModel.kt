@@ -38,7 +38,7 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         //savesuccessflag: FirebaseSaveSuccess
     ) : String {
 //        coroutineScope {
-            val postRef = myRef.child("User").child(user.key).child("Event").push()
+            val postRef = myRef.child("User").child(user.key!!).child("Event").push()
             val eventmap = hashMapOf(
                 "imageurl" to event.imageurl,
                 "placeid" to event.placeid,

@@ -3,7 +3,6 @@ package com.example.newevent2.Functions
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.newevent2.Model.User
-import com.facebook.FacebookSdk.getApplicationContext
 
 //deberia estar regresando un objeto del tipo user
 internal fun getUserSession(context: Context): String {

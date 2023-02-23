@@ -27,7 +27,7 @@ internal suspend fun addGuest(context: Context, guestitem: Guest, caller: String
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        guestmodel.userid = user.key
+        guestmodel.userid = user.key!!
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -96,7 +96,7 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        guestmodel.userid = user.key
+        guestmodel.userid = user.key!!
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -142,7 +142,7 @@ internal suspend fun editGuest(context: Context, guestitem: Guest) {
         userdbhelper = UserDBHelper(context)
         //---------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        guestmodel.userid = user.key
+        guestmodel.userid = user.key!!
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------

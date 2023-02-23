@@ -27,7 +27,7 @@ class DashboardView_clone() : Fragment() {
         //Setting up the pager adapter for this view
         val adapter =
             DashboardPagerAdapter(
-                userSession.key,
+                userSession.key!!,
                 userSession.eventid,
                 userSession.language,
                 childFragmentManager,

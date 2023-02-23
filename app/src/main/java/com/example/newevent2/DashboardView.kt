@@ -10,7 +10,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
-import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.User
 import com.example.newevent2.Model.UserDBHelper
@@ -63,7 +62,7 @@ class DashboardView : AppCompatActivity() {
         if (viewPager != null) {
             val adapter =
                 DashboardPagerAdapter(
-                    usersession.key,
+                    usersession.key!!,
                     usersession.eventid,
                     usersession.language,
                     supportFragmentManager,

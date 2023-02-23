@@ -28,7 +28,7 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
 
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        paymentmodel.userid = user.key
+        paymentmodel.userid = user.key!!
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -75,7 +75,7 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
         //------------------------------------------------
 
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        paymentmodel.userid = user.key
+        paymentmodel.userid = user.key!!
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -120,7 +120,7 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
         calendarevent = CalendarEvent(context)
         //---------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        paymentmodel.userid = user.key
+        paymentmodel.userid = user.key!!
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------

@@ -12,11 +12,12 @@ import com.example.newevent2.Functions.deleteUserSession
 import com.example.newevent2.LoginView
 import com.example.newevent2.R
 import com.google.firebase.auth.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 @SuppressLint("ParcelCreator")
 class User(
-    var key: String = "",
+    var key: String? = "",
     var eventid: String = "",
     var shortname: String = "",
     var email: String = "",
@@ -73,12 +74,17 @@ class User(
         UserPassword: String?,
         credential: AuthCredential?
     ): FirebaseUser? {
-        var authResultUser: FirebaseUser? = null
+        var authResult: AuthResult?
+        //var authResultUser: FirebaseUser? = null
         when (authtype) {
             "email" -> {
-                val authResult = loginWithEmail(mAuth, UserEmail!!, UserPassword!!)!!
-                if (authResult.user!!.isEmailVerified) {
-                    authResultUser = authResult.user
+               // val authResult = loginWithEmail(mAuth, UserEmail!!, UserPassword!!).await()
+                authResult = try {
+                    mAuth.signInWithEmailAndPassword(UserEmail!!, UserPassword!!).await()
+                } catch (e: Exception) {
+                    null
+                }
+                if (authResult?.user!!.isEmailVerified) {
                     Toast.makeText(
                         activity,
                         activity.getString(R.string.success_email_login),
@@ -90,13 +96,23 @@ class User(
                         activity.getString(R.string.notverified_email_login),
                         Toast.LENGTH_SHORT
                     ).show()
+                    authResult?.user!!.sendEmailVerification().await()
+                    Toast.makeText(
+                        activity,
+                        activity.getString(R.string.checkverification),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             else -> {
                 //Trying to implement coroutines here. Email authentication will also need it
-                val authResult = loginWithSocialNetwork(mAuth, credential!!)!!
+                //val authResult = loginWithSocialNetwork(mAuth, credential!!)!!
+                authResult = try {
+                    mAuth.signInWithCredential(credential!!).await()
+                } catch (e: Exception) {
+                    null
+                }
                 //Need to do something about these guys so they returned or used somewhere
-                authResultUser = authResult.user
                 Toast.makeText(
                     activity,
                     activity.getString(R.string.success_sn_login),
@@ -104,7 +120,7 @@ class User(
                 ).show()
             }
         }
-        return authResultUser
+        return authResult?.user
     }
 
     fun logout(activity: Activity) {
@@ -225,15 +241,16 @@ class User(
         return stepsBeanList
     }
 
-    private suspend fun loginWithEmail(
+    suspend fun loginWithEmail(
         mAuth: FirebaseAuth,
         UserEmail: String,
         UserPassword: String
     ): AuthResult? {
         return try {
-            return mAuth.signInWithEmailAndPassword(UserEmail, UserPassword).await()
+            val authresult = mAuth.signInWithEmailAndPassword(UserEmail, UserPassword).await()
+            authresult
         } catch (e: Exception) {
-            return null
+            null
         }
     }
 

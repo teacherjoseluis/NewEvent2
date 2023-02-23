@@ -63,16 +63,19 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                 //event.put(Events.UID_2445, item.key)
             }
         }
-        event.put(Events.CALENDAR_ID, getCalendarId(context))
-        event.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
-        event.put(Events.DTSTART, begindate.timeInMillis + 60 * 60 * 1000)
-        event.put(Events.DTEND, begindate.timeInMillis + 60 * 60 * 1000)
-        event.put(Events.ORGANIZER, "B&G")
-        event.put(Events.ALL_DAY, 1)
-        event.put(Events.STATUS, 1)
-        event.put(Events.HAS_ALARM, 1)
+        val calendarId = getCalendarId(context)
+        if (calendarId != null){
+            event.put(Events.CALENDAR_ID, calendarId)
+            event.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
+            event.put(Events.DTSTART, begindate.timeInMillis + 60 * 60 * 1000)
+            event.put(Events.DTEND, begindate.timeInMillis + 60 * 60 * 1000)
+            event.put(Events.ORGANIZER, "B&G")
+            event.put(Events.ALL_DAY, 1)
+            event.put(Events.STATUS, 1)
+            event.put(Events.HAS_ALARM, 1)
 
-        cr.insert(Events.CONTENT_URI, event)
+            cr.insert(Events.CONTENT_URI, event)
+        }
     }
 
     private fun editEvent(item: Any) {

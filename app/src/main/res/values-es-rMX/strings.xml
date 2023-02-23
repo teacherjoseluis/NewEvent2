@@ -267,6 +267,7 @@
     <string name="coworkers">Compañeros de Trabajo</string>
     <string name="others">Otros</string>
     <string name="pressexit">Presiona una vez más para salir!</string>
+    <string name="checkverification">Revisa tu inbox por un correo de verificación.</string>
 
     <string-array name="role" >
         <item>Novia</item>

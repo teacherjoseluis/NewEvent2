@@ -148,16 +148,19 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
             }
             // Check that if the vendor is set, that vendor exists
 
-            val actv = findViewById<Spinner>(R.id.vendorspinner)
-            if (actv.selectedItem.toString() != getString(R.string.selectvendor)) {
-                val vendordb = VendorDBHelper(this)
-                val vendorid = vendordb.getVendorIdByName(actv.selectedItem.toString())
-                if (vendorid == "") {
-                    Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT)
-                        .show()
-                    inputvalflag = false
-                } else {
-                    paymentitem.vendorid = vendorid
+            val vendorpaymentsection = findViewById<LinearLayout>(R.id.vendorpaymentsection)
+            if (vendorpaymentsection.visibility != View.GONE) {
+                val actv = findViewById<Spinner>(R.id.vendorspinner)
+                if (actv.selectedItem.toString() != getString(R.string.selectvendor)) {
+                    val vendordb = VendorDBHelper(this)
+                    val vendorid = vendordb.getVendorIdByName(actv.selectedItem.toString())
+                    if (vendorid == "") {
+                        Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT)
+                            .show()
+                        inputvalflag = false
+                    } else {
+                        paymentitem.vendorid = vendorid
+                    }
                 }
             }
             if (inputvalflag) {

@@ -52,7 +52,7 @@ internal suspend fun addUser(context: Context, useritem: User) {
     }
 }
 
-internal suspend fun onBoarding(context: Context, useritem: User, eventitem: Event) = withContext(Dispatchers.IO){
+internal suspend fun onBoarding(context: Context, useritem: User, eventitem: Event){
     try {
         //------------------------------------------------
         // Adding Calendar Event
@@ -63,7 +63,7 @@ internal suspend fun onBoarding(context: Context, useritem: User, eventitem: Eve
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        eventmodel.userid = user.key
+        eventmodel.userid = user.key!!
         //------------------------------------------------
         // Adding a new record in Local DB
         eventdbhelper = EventDBHelper(context)

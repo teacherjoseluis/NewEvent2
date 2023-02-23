@@ -22,7 +22,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        vendormodel.userid = user.key
+        vendormodel.userid = user.key!!
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -81,7 +81,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
 internal fun deleteVendor(context: Context, vendoritem: Vendor) {
     try {
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        vendormodel.userid = user.key
+        vendormodel.userid = user.key!!
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -125,7 +125,7 @@ internal fun editVendor(context: Context, vendoritem: Vendor) {
     try {
         //---------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        vendormodel.userid = user.key
+        vendormodel.userid = user.key!!
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------

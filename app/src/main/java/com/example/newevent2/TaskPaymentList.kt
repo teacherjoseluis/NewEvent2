@@ -1,6 +1,5 @@
 package com.example.newevent2
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -49,7 +48,7 @@ class TaskPaymentList : AppCompatActivity() {
         //Declaring the PageAdapter and invoking it
         val adapter = TaskPayment_PagerAdapter(
             supportFragmentManager,
-            usersession.key,
+            usersession.key!!,
             usersession.eventid,
             passedcategory,
             TaskModel.ACTIVESTATUS,

@@ -9,14 +9,9 @@ import com.example.newevent2.Functions.currentDateTime
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.text.DateFormat
-import androidx.annotation.NonNull
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
-import java.util.concurrent.Flow
 import kotlin.coroutines.resumeWithException
 import com.google.firebase.database.DatabaseError
 
@@ -27,13 +22,13 @@ import kotlin.coroutines.resume
 
 class UserModel(
     //This user creates and edits Users into Firebase
-    val key: String
+    val key: String?
 ) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
     CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor, CoRAddEditUser, CoROnboardUser {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
-    private val postRef = myRef.child("User").child(this.key)
+    private val postRef = myRef.child("User").child(this.key!!)
     private var firebaseUser = User(key)
     private val firebaseAuth = FirebaseAuth.getInstance()
 

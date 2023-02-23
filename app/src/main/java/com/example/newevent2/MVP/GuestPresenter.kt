@@ -95,7 +95,7 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val guest = GuestModel()
         guest.getAllGuestList(
-            user.key,
+            user.key!!,
             user.eventid,
             object : GuestModel.FirebaseSuccessGuestList {
                 @RequiresApi(Build.VERSION_CODES.O)

@@ -29,7 +29,7 @@ internal suspend fun addEvent(context: Context, eventitem: Event) {
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        eventmodel.userid = user.key
+        eventmodel.userid = user.key!!
         //------------------------------------------------
         // Adding a new record in Local DB
         eventdbhelper = EventDBHelper(context)

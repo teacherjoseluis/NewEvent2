@@ -18,6 +18,7 @@ import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -73,27 +74,32 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                     val userPassword = editPasswordlogin.text.toString()
 
                     val scope = CoroutineScope(Job() + Dispatchers.Main)
+                    var firebaseUser: FirebaseUser?
 
-                    scope.launch {
-                        val firebaseUser =
+                    lifecycleScope.launch {
+                        firebaseUser =
                             user.login(this@LoginView, "email", userEmail, userPassword, null)
-                        //------------------------------------------------------
-                        val userDBHelper = UserDBHelper(this@LoginView)
-                        val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
-                        //------------------------------------------------------
-                        if (userlocal.key == "") {
-                            val userremote = UserModel(firebaseUser.uid).getUser()
-                            if (userremote == null) {
-                                onOnboarding(
-                                    firebaseUser.uid,
-                                    firebaseUser.email!!,
-                                    "email"
-                                )
+
+                        if (firebaseUser != null) {
+                            //------------------------------------------------------
+                            val userDBHelper = UserDBHelper(this@LoginView)
+                            val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
+                            //------------------------------------------------------
+
+                            if (userlocal.key == "") {
+                                val userremote = UserModel(firebaseUser?.uid).getUser()
+                                if (userremote.key == "") {
+                                    onOnboarding(
+                                        firebaseUser?.uid!!,
+                                        firebaseUser?.email!!,
+                                        "email"
+                                    )
+                                } else {
+                                    onLoginSuccess(userlocal.email)
+                                }
                             } else {
                                 onLoginSuccess(userlocal.email)
                             }
-                        } else {
-                            onLoginSuccess(userlocal.email)
                         }
                     }
                 }
@@ -281,6 +287,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             getString(R.string.onboarding_message),
             Toast.LENGTH_SHORT
         ).show()
+        saveUserSession(applicationContext, email)
 
         val onboarding =
             Intent(this@LoginView, OnboardingView::class.java)

@@ -103,6 +103,7 @@ class Cache<T : Any> {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     fun save(context: Context, category: String, bitmap: Bitmap) {
         saveBitmaptoSD(context, category, bitmap)
     }

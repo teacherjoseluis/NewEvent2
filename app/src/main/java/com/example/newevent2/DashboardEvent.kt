@@ -220,7 +220,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             //expressing that there is nothing to see here.
             Toast.makeText(
                 context,
-                getString(R.string.error_gettingdata),
+                "You can start by adding either tasks or payments related to your event",
                 Toast.LENGTH_SHORT
             ).show()
             Log.i("EventSummary.TAG", "No data was obtained from the Event")

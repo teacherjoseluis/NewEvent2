@@ -28,7 +28,7 @@ internal fun addTask(context: Context, taskitem: Task) {
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        taskmodel.userid = user.key
+        taskmodel.userid = user.key!!
         taskmodel.eventid = user.eventid
         //------------------------------------------------
         // Adding a new record in Local DB
@@ -73,7 +73,7 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        taskmodel.userid = user.key
+        taskmodel.userid = user.key!!
         taskmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -120,7 +120,7 @@ internal fun editTask(context: Context, taskitem: Task) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        taskmodel.userid = user.key
+        taskmodel.userid = user.key!!
         taskmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------

@@ -142,7 +142,7 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val payment = PaymentModel()
         payment.getPaymentsList(
-            user.key,
+            user.key!!,
             user.eventid,
             object : PaymentModel.FirebaseSuccessPaymentList {
                 @RequiresApi(VERSION_CODES.LOLLIPOP)

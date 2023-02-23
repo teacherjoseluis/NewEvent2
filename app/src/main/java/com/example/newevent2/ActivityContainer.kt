@@ -1,10 +1,7 @@
 package com.example.newevent2
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -15,10 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
-import androidx.navigation.fragment.NavHostFragment
-import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.isEventDate
 import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.User
@@ -28,12 +21,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseUser
 import com.nordan.dialog.Animation
 import com.nordan.dialog.NordanAlertDialog
 import kotlinx.android.synthetic.main.header_navview.*
 import kotlinx.android.synthetic.main.header_navview.view.*
-import java.lang.Exception
 
 class ActivityContainer : AppCompatActivity() {
 

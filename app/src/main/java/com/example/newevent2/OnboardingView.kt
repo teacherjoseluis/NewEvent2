@@ -12,8 +12,6 @@ import android.content.pm.PackageManager
 import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
-import com.example.newevent2.Functions.addEvent
-import com.example.newevent2.Functions.addUser
 import com.example.newevent2.Functions.onBoarding
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.User

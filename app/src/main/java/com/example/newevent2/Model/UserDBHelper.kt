@@ -88,7 +88,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         }
     }
 
-    fun getUser(key: String): User {
+    fun getUser(key: String?): User {
         var user = User()
         val cursor: Cursor = db.rawQuery("SELECT * FROM USER WHERE userid = '$key'", null)
         if (cursor.count > 0) {
@@ -182,7 +182,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override suspend fun onAddEditUser(user: User) {
-        if (!getUserexists(user.key)) {
+        if (!getUserexists(user.key!!)) {
             insert(user)
         } else {
             update(user)
@@ -270,7 +270,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override suspend fun onOnboardUser(user: User, event: Event) {
-        if (!getUserexists(user.key)) {
+        if (!getUserexists(user.key!!)) {
             insert(user)
         } else {
             update(user)
