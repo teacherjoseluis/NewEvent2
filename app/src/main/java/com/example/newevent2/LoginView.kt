@@ -97,9 +97,9 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                                 } else {
                                     onLoginSuccess(userlocal.email)
                                 }
-                            } else {
+                            } //else {
                                 onLoginSuccess(userlocal.email)
-                            }
+                            //}
                         }
                     }
                 }

@@ -45,7 +45,7 @@ class TaskCreateEdit : AppCompatActivity() {
 
     private lateinit var taskitem: Task
     private var mRewardedAd: RewardedAd? = null
-    private lateinit var optionsmenu:Menu
+    private lateinit var optionsmenu: Menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,10 +95,15 @@ class TaskCreateEdit : AppCompatActivity() {
         val chipgroupedit = findViewById<ChipGroup>(R.id.groupedittask)
 
         // Create chips and select the one matching the category
+
+        val language = this.resources.configuration.locales.get(0).language
         val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
         for (category in list) {
             val chip = Chip(this)
-            chip.text = category.en_name
+            chip.text = when (language) {
+                "en" -> category.en_name
+                else -> category.es_name
+            }
             chip.isClickable = true
             chip.isCheckable = true
             chipgroupedit.addView(chip)

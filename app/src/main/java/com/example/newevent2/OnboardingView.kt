@@ -17,6 +17,14 @@ import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.User
 import kotlinx.android.synthetic.main.onboarding_name.*
 import kotlinx.coroutines.*
+import android.content.Context
+import android.view.View
+
+import android.view.View.OnFocusChangeListener
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
+import com.google.android.material.textfield.TextInputEditText
+
 
 class OnboardingView() : AppCompatActivity() {
 
@@ -70,20 +78,44 @@ class OnboardingView() : AppCompatActivity() {
                     etname.error = null
                 }
 
+                etname.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                        hideSoftKeyboard()
+                    }
+                })
+
                 etPlannedDate.setOnClickListener {
                     etPlannedDate.error = null
                     showDatePickerDialog()
                 }
+
+                etPlannedDate.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                        hideSoftKeyboard()
+                    }
+                })
 
                 etPlannedTime.setOnClickListener {
                     etPlannedTime.error = null
                     showTimePickerDialog()
                 }
 
+                etPlannedTime.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                        hideSoftKeyboard()
+                    }
+                })
+
                 etlocation.setOnClickListener {
                     val locationmap = Intent(this, MapsActivity::class.java)
                     startActivityForResult(locationmap, autocompletePlaceCode)
                 }
+
+                etlocation.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                        hideSoftKeyboard()
+                    }
+                })
 
                 submitevent.setOnClickListener {
                     var inputvalflag: Boolean
@@ -185,5 +217,12 @@ class OnboardingView() : AppCompatActivity() {
         val newFragment = TimePickerFragment(etPlannedTime)
         newFragment.show(supportFragmentManager, "Time Picker")
 
+    }
+
+    fun hideSoftKeyboard() {
+        if (currentFocus != null) {
+            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
     }
 }

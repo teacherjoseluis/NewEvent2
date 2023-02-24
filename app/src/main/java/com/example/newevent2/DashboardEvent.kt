@@ -19,10 +19,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -59,8 +56,8 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.android.synthetic.main.chartcard_layoutpayment.view.*
 import kotlinx.android.synthetic.main.dashboardcharts.view.*
-import kotlinx.android.synthetic.main.dashboardcharts.view.withnodata
 import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlinx.android.synthetic.main.summary_weddingguests.view.*
 import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
@@ -126,7 +123,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
 
         if (user.hastask == "Y" || user.haspayment == "Y") {
-            inflatedView.withnodata.visibility = ConstraintLayout.GONE
+            inflatedView.withnodata1.visibility = ConstraintLayout.GONE
             inflatedView.withdata.visibility = ConstraintLayout.VISIBLE
             //----------------------------------------------------------------------------------
 
@@ -181,7 +178,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 )//设置StepsViewIndicator AttentionIcon
             //--------------------------------------------------------------------------------------------
 
-            val weddingphotodetail = inflatedView.findViewById<ConstraintLayout>(R.id.weddingphotodetail)
+            val weddingphotodetail = inflatedView.findViewById<LinearLayout>(R.id.weddingphotodetail)
             weddingphotodetail.setOnClickListener {
                 // ------- Analytics call ----------------
                 val bundle = Bundle()
@@ -480,6 +477,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     override fun onPaymentsStatsError(inflatedView: View, errcode: String) {
         inflatedView.withdata.paymentchart.visibility = ConstraintLayout.GONE
         inflatedView.withdata.paymentchartnodata.visibility = ConstraintLayout.VISIBLE
+        inflatedView.withdata.paymentchartnodata.cardtitle.text = getString(R.string.payments)
     }
 
     class myPercentageFormatter : ValueFormatter() {
@@ -503,7 +501,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         val cardlayoutinvisible = inflatedView.findViewById<View>(R.id.noguestlayout)
         cardlayoutinvisible.visibility = View.GONE
 
-        inflatedView.guestlayout.setOnClickListener {
+        inflatedView.dashboard_vertical_layout_5.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTINFOCARD")

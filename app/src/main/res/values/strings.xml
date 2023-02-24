@@ -281,6 +281,7 @@
     <string name="others">Others</string>
     <string name="pressexit">Press once again to exit!</string>
     <string name="checkverification">Check your inbox for a verification email.</string>
+    <string name="eventcreated">Your event was succesfully created</string>
 
     <string-array name="role" >
         <item>Bride</item>

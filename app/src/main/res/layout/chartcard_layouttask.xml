@@ -6,23 +6,31 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="200dp"
-        android:layout_height="220dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:cardElevation="2dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="100">
+
+        <LinearLayout
+            android:id="@+id/cardtitlelinearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cardcartlayout_header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:padding="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -38,80 +46,35 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layout_conversion_absoluteHeight="11dp"
                     tools:layout_conversion_absoluteWidth="36dp" />
-                <!--
-                <TextView
-                    android:id="@+id/secondarytext"
-                    style="@style/Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Secondary Text"
-                    android:textColor="@color/secondaryText"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardtitle"
-                    tools:layout_conversion_absoluteHeight="18dp"
-                    tools:layout_conversion_absoluteWidth="97dp" />
--->
+
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <!--
-                      <View
-                          android:id="@+id/carddivider"
-                          android:layout_width="match_parent"
-                          android:layout_height="1dp"
-                          android:background="@color/colorDivider"
-                          app:layout_constraintTop_toBottomOf="@+id/cardcartlayout_header" />
+        </LinearLayout>
 
-
-                                  <androidx.constraintlayout.widget.ConstraintLayout
-                                      android:id="@+id/cardcartlayout_footer"
-                                      android:layout_width="match_parent"
-                                      android:layout_height="wrap_content"
-                                      android:layout_marginBottom="8dp"
-                                      app:layout_constraintBottom_toBottomOf="parent">
-
-                                      <Button
-                                          android:id="@+id/action1"
-                                          style="@style/Widget.MaterialComponents.Button.TextButton"
-                                          android:layout_width="wrap_content"
-                                          android:layout_height="wrap_content"
-                                          android:layout_marginLeft="8dp"
-                                          android:text="Action 1"
-                                          android:textColor="@color/azulOscuro"
-                                          app:layout_constraintStart_toStartOf="parent"
-                                          app:layout_constraintTop_toTopOf="parent" />
-
-                                      <Button
-                                          android:id="@+id/action2"
-                                          style="@style/Widget.MaterialComponents.Button.TextButton"
-                                          android:layout_width="wrap_content"
-                                          android:layout_height="wrap_content"
-                                          android:layout_gravity="bottom"
-                                          android:layout_marginLeft="8dp"
-                                          android:text="Action 2"
-                                          android:textColor="@color/azulOscuro"
-                                          app:layout_constraintStart_toEndOf="@+id/action1"
-                                          app:layout_constraintTop_toTopOf="parent" />
-
-                      </androidx.constraintlayout.widget.ConstraintLayout>
-           -->
-
+            <LinearLayout
+                android:id="@+id/cardchartlinearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="70"
+                android:layout_gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/charttask"
-                android:layout_width="220dp"
-                android:layout_height="150dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardcartlayout_header" />
+                android:padding="5dp" />
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

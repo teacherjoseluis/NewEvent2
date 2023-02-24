@@ -75,7 +75,7 @@ internal suspend fun onBoarding(context: Context, useritem: User, eventitem: Eve
         chainofcommand.onOnboardUser(useritem, eventitem)
         //------------------------------------------------
         Toast.makeText(context, context.getString(R.string.successadduser), Toast.LENGTH_LONG).show()
-        Toast.makeText(context, "Event was created successully", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.eventcreated), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
         val errormsg = context.getString(R.string.erroradduser)
         errormsg.plus(e.message)

@@ -81,10 +81,14 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         val chipgroupedit = findViewById<ChipGroup>(R.id.groupeditpayment)
 
         // Create chips and select the one matching the category
+        val language = this.resources.configuration.locales.get(0).language
         val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
         for (category in list) {
             val chip = Chip(this)
-            chip.text = category.en_name
+            chip.text = when (language) {
+                "en" -> category.en_name
+                else -> category.es_name
+            }
             chip.isClickable = true
             chip.isCheckable = true
             chipgroupedit.addView(chip)

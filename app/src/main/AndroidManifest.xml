@@ -56,7 +56,7 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".MainActivity"
-            android:label="NewEvent2"
+            android:label="Brides $ Grooms"
             android:theme="@style/AppTheme">
             <!--Default Intent Filter-->
         </activity>
