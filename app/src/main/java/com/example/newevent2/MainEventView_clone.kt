@@ -54,7 +54,7 @@ class MainEventView_clone : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = MainEventPagerAdapter(
-            user.key!!,
+            user.userid!!,
             user.eventid,
             childFragmentManager
         )

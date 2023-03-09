@@ -49,7 +49,7 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val vendor = VendorModel()
         vendor.getAllVendorList(
-            user.key!!,
+            user.userid!!,
             user.eventid,
             object : VendorModel.FirebaseSuccessVendorList {
                 @RequiresApi(Build.VERSION_CODES.O)

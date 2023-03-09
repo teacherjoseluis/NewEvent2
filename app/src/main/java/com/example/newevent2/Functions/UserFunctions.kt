@@ -27,7 +27,7 @@ internal suspend fun addUser(context: Context, useritem: User) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(useritem.key)
+        usermodel = UserModel(useritem.userid)
         //------------------------------------------------
         val chainofcommand = orderChainAdd(usermodel,userdbhelper)
         chainofcommand.onAddEditUser(useritem)
@@ -63,13 +63,13 @@ internal suspend fun onBoarding(context: Context, useritem: User, eventitem: Eve
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        eventmodel.userid = user.key!!
+        eventmodel.userid = user.userid!!
         //------------------------------------------------
         // Adding a new record in Local DB
         eventdbhelper = EventDBHelper(context)
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(useritem.key)
+        usermodel = UserModel(useritem.userid)
         //------------------------------------------------
         val chainofcommand = orderChainOnboard(usermodel,userdbhelper,calendarevent, eventmodel, eventdbhelper)
         chainofcommand.onOnboardUser(useritem, eventitem)
@@ -93,7 +93,7 @@ internal suspend fun editUser(context: Context, useritem: User) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(useritem.key)
+        usermodel = UserModel(useritem.userid)
         //------------------------------------------------
         val chainofcommand = orderChainEdit(usermodel,userdbhelper)
         chainofcommand.onAddEditUser(useritem)

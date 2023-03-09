@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.isEventDate
 import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.User
@@ -289,9 +290,20 @@ class ActivityContainer : AppCompatActivity() {
         super.onResume()
         //If session is empty the user gets redirected to the login screen
         //usersession = com.example.newevent2.Functions.getUserSession(this)
-        userdbhelper = UserDBHelper(this)
-        usersession = userdbhelper.getUser(userdbhelper.getUserKey())
-        if (usersession.email == "") {
+//        userdbhelper = UserDBHelper(this)
+//        usersession = userdbhelper.getUser(userdbhelper.getUserKey())
+
+
+        val lastSignedInAt = try {
+            getUserSession(this@ActivityContainer, "last_signed_in_at") as Long
+        } catch (e: Exception) {
+            println(e.message)
+            0L
+        }
+        val currentTimeMillis = System.currentTimeMillis()
+
+        //168 hrs
+        if ((currentTimeMillis <= lastSignedInAt - (60 * 60 * 168 * 1000)) || lastSignedInAt == 0L) {
             val loginactivity =
                 Intent(this, LoginView::class.java)
             startActivity(loginactivity)
@@ -316,6 +328,32 @@ class ActivityContainer : AppCompatActivity() {
                     .commit()
             }
         }
+//
+//        if (usersession.email == "") {
+//            val loginactivity =
+//                Intent(this, LoginView::class.java)
+//            startActivity(loginactivity)
+//        } else {
+//            headershortname.text = usersession.shortname
+//            if (isEventDate(this) == 0) {
+//                NordanAlertDialog.Builder(this)
+//                    .setAnimation(Animation.SLIDE)
+//                    .isCancellable(false)
+//                    .setTitle(getString(R.string.congratulations))
+//                    .setMessage(getString(R.string.weddingday))
+//                    .setIcon(R.drawable.love_animated_gif_2018_8, true)
+//                    .setPositiveBtnText(getString(R.string.great))
+//                    .build().show()
+//            }
+//
+//            var activefragment = fm.findFragmentById(R.id.fragment_container)
+//            if (activefragment == null) {
+//                activefragment = DashboardView_clone()
+//                fm.beginTransaction()
+//                    .add(R.id.fragment_container, activefragment, "DashboardView")
+//                    .commit()
+//            }
+//        }
     }
 }
 

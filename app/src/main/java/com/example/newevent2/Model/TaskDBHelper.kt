@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import Application.FirebaseDataImportException
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -9,6 +10,8 @@ import com.example.newevent2.Category
 import com.example.newevent2.Category.Companion.getCategory
 import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeleteTask
+import com.google.android.gms.common.stats.StatsUtils.getEventKey
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.text.DecimalFormat
 
 class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
@@ -18,6 +21,27 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
     var key = ""
     var nexthandler: CoRAddEditTask? = null
     var nexthandlerdel: CoRDeleteTask? = null
+
+    @ExperimentalCoroutinesApi
+    suspend fun firebaseImport(userid: String) : Boolean {
+        val taskList: ArrayList<Task>
+        val eventModel = EventModel()
+        try {
+            val eventKey = eventModel.getEventKey(userid)
+            val taskModel = TaskModel()
+
+            taskList = taskModel.getTasks(userid, eventKey)
+            db.execSQL("DELETE FROM TASK")
+
+            for (taskItem in taskList){
+                insert(taskItem)
+            }
+        } catch (e: Exception){
+            println(e.message)
+            throw FirebaseDataImportException("Error importing Task data: $e")
+        }
+        return true
+    }
 
     fun insert(task: Task) {
         val values = ContentValues()

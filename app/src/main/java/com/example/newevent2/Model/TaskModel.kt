@@ -6,13 +6,16 @@ import androidx.annotation.RequiresApi
 import com.example.newevent2.CoRAddEditTask
 import com.example.newevent2.CoRDeleteTask
 import com.example.newevent2.Functions.userdbhelper
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.FirebaseException
+import com.google.firebase.database.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class TaskModel : CoRAddEditTask, CoRDeleteTask {
 
@@ -188,6 +191,26 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
 //        postRef.addValueEventListener(tasklListenerActive)
 //    }
 
+    @ExperimentalCoroutinesApi
+    suspend fun getTasks(userid: String, eventid: String): ArrayList<Task> {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task").orderByChild("date")
+        val taskList = ArrayList<Task>()
+
+        try {
+            for (snapChild in postRef.awaitsSingle()?.children!!) {
+                val taskItem = snapChild.getValue(Task::class.java)
+                taskItem!!.key = snapChild.key.toString()
+                taskList.add(taskItem)
+            }
+        } catch (e: Exception) {
+            println(e.message)
+        }
+        return taskList!!
+    }
+
+
     fun getAllTasksList(
         userid: String,
         eventid: String,
@@ -313,6 +336,30 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
                     Log.e(TAG, "Task ${task.name} failed to be deleted")
                 }
     }
+
+    @ExperimentalCoroutinesApi
+    suspend fun Query.awaitsSingle(): DataSnapshot? =
+        suspendCancellableCoroutine { continuation ->
+            val listener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        continuation.resume(snapshot)
+                    } catch (exception: Exception) {
+                        continuation.resumeWithException(exception)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    val exception = when (error.toException()) {
+                        is FirebaseException -> error.toException()
+                        else -> Exception("The Firebase call for reference $this was cancelled")
+                    }
+                    continuation.resumeWithException(exception)
+                }
+            }
+            continuation.invokeOnCancellation { this.removeEventListener(listener) }
+            this.addListenerForSingleValueEvent(listener)
+        }
 
     override fun onAddEditTask(task: Task) {
         //val user = userdbhelper.getUser(userdbhelper.getUserKey())

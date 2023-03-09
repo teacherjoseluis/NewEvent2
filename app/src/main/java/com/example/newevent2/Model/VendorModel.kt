@@ -5,14 +5,17 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.newevent2.CoRAddEditVendor
 import com.example.newevent2.CoRDeleteVendor
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.FirebaseException
+import com.google.firebase.database.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
 
@@ -23,6 +26,25 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
 
     var userid = ""
     var eventid = ""
+
+    @ExperimentalCoroutinesApi
+    suspend fun getVendors(userid: String, eventid: String): java.util.ArrayList<Vendor> {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Vendor").orderByChild("name")
+        val vendorList = java.util.ArrayList<Vendor>()
+
+        try {
+            for (snapChild in postRef.awaitsSingle()?.children!!) {
+                val vendorItem = snapChild.getValue(Vendor::class.java)
+                vendorItem!!.key = snapChild.key.toString()
+                vendorList.add(vendorItem)
+            }
+        } catch (e: Exception) {
+            println(e.message)
+        }
+        return vendorList
+    }
 
     fun getAllVendorList(
         userid: String,
@@ -155,6 +177,30 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
                     Log.e(TAG, "Vendor ${vendor.name} failed to be deleted")
                 }
     }
+
+    @ExperimentalCoroutinesApi
+    suspend fun Query.awaitsSingle(): DataSnapshot? =
+        suspendCancellableCoroutine { continuation ->
+            val listener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        continuation.resume(snapshot)
+                    } catch (exception: Exception) {
+                        continuation.resumeWithException(exception)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    val exception = when (error.toException()) {
+                        is FirebaseException -> error.toException()
+                        else -> Exception("The Firebase call for reference $this was cancelled")
+                    }
+                    continuation.resumeWithException(exception)
+                }
+            }
+            continuation.invokeOnCancellation { this.removeEventListener(listener) }
+            this.addListenerForSingleValueEvent(listener)
+        }
 
     override fun onAddEditVendor(vendor: Vendor) {
         if (vendor.key == "") {

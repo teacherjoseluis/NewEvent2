@@ -50,7 +50,7 @@ class DashboardView : AppCompatActivity() {
         super.onStart()
         userdbhelper = UserDBHelper(this)
         usersession = userdbhelper.getUser(userdbhelper.getUserKey())
-        if (usersession.key == "") {
+        if (usersession.userid == "") {
             val loginactivity =
                 Intent(this, LoginView::class.java)
             startActivity(loginactivity)
@@ -62,7 +62,7 @@ class DashboardView : AppCompatActivity() {
         if (viewPager != null) {
             val adapter =
                 DashboardPagerAdapter(
-                    usersession.key!!,
+                    usersession.userid!!,
                     usersession.eventid,
                     usersession.language,
                     supportFragmentManager,

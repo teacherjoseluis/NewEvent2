@@ -1,5 +1,9 @@
 package com.example.newevent2.Model
 
+import Application.EmailVerificationException
+import Application.ExistingSessionException
+import Application.SessionAccessException
+import Application.UserAuthenticationException
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -9,15 +13,20 @@ import android.util.Log
 import android.widget.Toast
 import com.baoyachi.stepview.bean.StepBean
 import com.example.newevent2.Functions.deleteUserSession
+import com.example.newevent2.Functions.getUserSession
+import com.example.newevent2.Functions.saveUserSession
 import com.example.newevent2.LoginView
 import com.example.newevent2.R
 import com.google.firebase.auth.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 @SuppressLint("ParcelCreator")
 class User(
-    var key: String? = "",
+    var userid: String? = "",
     var eventid: String = "",
     var shortname: String = "",
     var email: String = "",
@@ -41,6 +50,8 @@ class User(
 ) : Parcelable {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val database = FirebaseDatabase.getInstance().reference
+    private lateinit var activeSessionsRef: DatabaseReference
     private lateinit var viewLogin: LoginView
 
     constructor(parcel: Parcel) : this(
@@ -73,57 +84,111 @@ class User(
         UserEmail: String?,
         UserPassword: String?,
         credential: AuthCredential?
-    ): FirebaseUser? {
+    ): AuthResult = coroutineScope {
         var authResult: AuthResult?
-        //var authResultUser: FirebaseUser? = null
+
+        //choosing the authentication method
         when (authtype) {
             "email" -> {
-               // val authResult = loginWithEmail(mAuth, UserEmail!!, UserPassword!!).await()
-                authResult = try {
-                    mAuth.signInWithEmailAndPassword(UserEmail!!, UserPassword!!).await()
+                try {
+                    authResult =
+                        mAuth.signInWithEmailAndPassword(UserEmail!!, UserPassword!!).await()
+
+                    if (authResult?.user!!.isEmailVerified) {
+                        Toast.makeText(
+                            activity,
+                            activity.getString(R.string.success_email_login),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            activity.getString(R.string.notverified_email_login),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        authResult.user!!.sendEmailVerification().await()
+                        Toast.makeText(
+                            activity,
+                            activity.getString(R.string.checkverification),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        throw EmailVerificationException("Email account for user ${authResult?.user!!} has not been verified")
+                    }
                 } catch (e: Exception) {
-                    null
-                }
-                if (authResult?.user!!.isEmailVerified) {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.success_email_login),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.notverified_email_login),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    authResult?.user!!.sendEmailVerification().await()
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.checkverification),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    throw UserAuthenticationException(e.toString())
                 }
             }
             else -> {
                 //Trying to implement coroutines here. Email authentication will also need it
                 //val authResult = loginWithSocialNetwork(mAuth, credential!!)!!
-                authResult = try {
-                    mAuth.signInWithCredential(credential!!).await()
+                try {
+                    authResult = mAuth.signInWithCredential(credential!!).await()
                 } catch (e: Exception) {
-                    null
+                    throw UserAuthenticationException(e.toString())
                 }
-                //Need to do something about these guys so they returned or used somewhere
-                Toast.makeText(
-                    activity,
-                    activity.getString(R.string.success_sn_login),
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
-        return authResult?.user
+        // reviewing if there is an already logged session for the user
+        activeSessionsRef = database.child("User").child(authResult.user?.uid!!).child("session")
+        val activeSessionsSnapshot = try {
+            activeSessionsRef.get().await()
+        } catch (e: Exception) {
+            throw SessionAccessException(e.toString())
+        }
+
+        // extracting the session value from Firebase
+        val currentTimeMillis = System.currentTimeMillis()
+        val lastSignedInAtRef = database.child("User").child(authResult.user?.uid!!).child("last_signed_in_at")
+
+        if (activeSessionsSnapshot.exists()) {
+            val storedSessionID =
+                activeSessionsSnapshot.getValue(String::class.java)
+            if (storedSessionID != "") {
+                // Session ID exists and therefore a user is signed in elsewhere
+                throw ExistingSessionException("There is an existing session $storedSessionID for user ${authResult?.user!!}")
+            } else {
+                // Session ID does not exist and user can login using this device
+                lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
+                activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
+                    .await()
+
+                // saving authentication variables in the shared preferences
+                saveUserSession(activity, authResult!!.user!!.email.toString(), null,"email")
+                saveUserSession(activity, authResult.user!!.uid, null,"user_id")
+                saveUserSession(
+                    activity,
+                    authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
+                    "session_id"
+                )
+                saveUserSession(activity, null, currentTimeMillis, "last_signed_in_at")
+                return@coroutineScope authResult
+            }
+        } else {
+            lastSignedInAtRef.setValue(currentTimeMillis.toString())
+            activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
+
+            // saving authentication variables in the shared preferences
+            saveUserSession(activity, authResult!!.user!!.email.toString(), null,"email")
+            saveUserSession(activity, authResult.user!!.uid, null, "user_id")
+            saveUserSession(
+                activity,
+                authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
+                "session_id"
+            )
+            saveUserSession(activity, null, currentTimeMillis, "last_signed_in_at")
+            return@coroutineScope authResult
+        }
     }
 
     fun logout(activity: Activity) {
+        val userId = getUserSession(activity, "user_id").toString()
+        activeSessionsRef = database.child("User").child(userId).child("session")
+        if (userId != null) {
+            activeSessionsRef.setValue(null)
+        } else {
+            // No user ID stored in shared preference
+            // Handle error
+        }
         mAuth.signOut()
         deleteUserSession(activity)
         Toast.makeText(activity, activity.getString(R.string.success_logout), Toast.LENGTH_SHORT)
@@ -271,7 +336,7 @@ class User(
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(key)
+        parcel.writeString(userid)
         parcel.writeString(eventid)
         parcel.writeString(shortname)
         parcel.writeString(email)

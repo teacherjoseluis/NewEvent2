@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import Application.FirebaseDataImportException
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -7,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.*
 import com.example.newevent2.Functions.getlocale
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.collections.ArrayList
 
 class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
@@ -16,6 +18,27 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
     var key = ""
     var nexthandler: CoRAddEditGuest? = null
     var nexthandlerdel: CoRDeleteGuest? = null
+
+    @ExperimentalCoroutinesApi
+    suspend fun firebaseImport(userid: String) : Boolean {
+        val guestList: ArrayList<Guest>
+        val eventModel = EventModel()
+        try {
+            val eventKey = eventModel.getEventKey(userid)
+            val guestModel = GuestModel()
+
+            guestList = guestModel.getGuests(userid, eventKey)
+            db.execSQL("DELETE FROM GUEST")
+
+            for (guestItem in guestList){
+                insert(guestItem)
+            }
+        } catch (e: Exception){
+            println(e.message)
+            throw FirebaseDataImportException("Error importing Guest data: $e")
+        }
+        return true
+    }
 
     fun insert(guest: Guest) {
         val values = ContentValues()

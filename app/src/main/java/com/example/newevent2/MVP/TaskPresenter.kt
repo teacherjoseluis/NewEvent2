@@ -68,7 +68,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
         // This is when I receive an empty list of Tasks from the cache
         val task = TaskModel()
         task.getAllTasksList(
-            user.key!!,
+            user.userid!!,
             user.eventid,
             object : TaskModel.FirebaseSuccessTaskList {
                 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

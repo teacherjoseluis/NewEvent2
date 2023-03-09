@@ -48,7 +48,7 @@ class TaskPaymentList : AppCompatActivity() {
         //Declaring the PageAdapter and invoking it
         val adapter = TaskPayment_PagerAdapter(
             supportFragmentManager,
-            usersession.key!!,
+            usersession.userid!!,
             usersession.eventid,
             passedcategory,
             TaskModel.ACTIVESTATUS,

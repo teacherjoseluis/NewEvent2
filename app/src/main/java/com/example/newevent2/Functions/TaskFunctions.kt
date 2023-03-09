@@ -28,14 +28,14 @@ internal fun addTask(context: Context, taskitem: Task) {
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        taskmodel.userid = user.key!!
+        taskmodel.userid = user.userid!!
         taskmodel.eventid = user.eventid
         //------------------------------------------------
         // Adding a new record in Local DB
         taskdbhelper = TaskDBHelper(context)
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.key)
+        usermodel = UserModel(user.userid)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         val chainofcommand =
@@ -73,7 +73,7 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        taskmodel.userid = user.key!!
+        taskmodel.userid = user.userid!!
         taskmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -83,7 +83,7 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         //------------------------------------------------
 
         // Updating User information in Firebase
-        usermodel = UserModel(user.key)
+        usermodel = UserModel(user.userid)
         usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         val chainofcommand =
@@ -120,7 +120,7 @@ internal fun editTask(context: Context, taskitem: Task) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        taskmodel.userid = user.key!!
+        taskmodel.userid = user.userid!!
         taskmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------

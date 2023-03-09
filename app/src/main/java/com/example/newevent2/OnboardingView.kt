@@ -41,7 +41,7 @@ class OnboardingView() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userSession = User()
-        userSession.key = intent.getStringExtra("userid").toString()
+        userSession.userid = intent.getStringExtra("userid").toString()
         userSession.email = intent.getStringExtra("email").toString()
         userSession.authtype = intent.getStringExtra("authtype").toString()
         userSession.language = this.resources.configuration.locales.get(0).language

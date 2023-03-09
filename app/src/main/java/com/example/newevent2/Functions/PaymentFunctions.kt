@@ -28,7 +28,7 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
 
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        paymentmodel.userid = user.key!!
+        paymentmodel.userid = user.userid!!
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -38,7 +38,7 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         //------------------------------------------------
 
         // Updating User information in Firebase
-        usermodel = UserModel(user.key)
+        usermodel = UserModel(user.userid)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         val chainofcommand = orderChainAdd(calendarevent, paymentmodel, paymentdbhelper, userdbhelper, usermodel)
@@ -75,7 +75,7 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
         //------------------------------------------------
 
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        paymentmodel.userid = user.key!!
+        paymentmodel.userid = user.userid!!
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -86,7 +86,7 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
 
 
         // Updating User information in Firebase
-        usermodel = UserModel(user.key)
+        usermodel = UserModel(user.userid)
         usermodel.paymentsactive = user.payments
         //------------------------------------------------
 
@@ -120,7 +120,7 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
         calendarevent = CalendarEvent(context)
         //---------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        paymentmodel.userid = user.key!!
+        paymentmodel.userid = user.userid!!
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------

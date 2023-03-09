@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import Application.FirebaseDataImportException
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -9,12 +10,28 @@ import com.example.newevent2.CoRAddEditEvent
 import com.example.newevent2.CoROnboardUser
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.userdbhelper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
 
     private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
     var nexthandlere: CoRAddEditEvent? = null
     var nexthandleron: CoROnboardUser? = null
+
+
+    @ExperimentalCoroutinesApi
+    suspend fun firebaseImport(userid: String) : Boolean {
+        val event: Event
+        try {
+            val eventModel = EventModel()
+            event = eventModel.getEvent(userid)
+            update(event)
+        } catch (e: Exception){
+            println(e.message)
+            throw FirebaseDataImportException("Error importing Event data: $e")
+        }
+        return true
+    }
 
     fun insert(event: Event) {
         val values = ContentValues()

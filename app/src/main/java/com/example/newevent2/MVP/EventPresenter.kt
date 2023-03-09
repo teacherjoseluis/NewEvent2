@@ -69,7 +69,7 @@ class EventPresenter : Cache.EventItemCacheData {
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
         val event = EventModel()
         event.getEventdetail(
-            user.key!!,
+            user.userid!!,
             user.eventid,
             object : EventModel.FirebaseSuccessListenerEventDetail {
                 @RequiresApi(Build.VERSION_CODES.O)

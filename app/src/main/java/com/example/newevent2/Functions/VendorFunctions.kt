@@ -22,7 +22,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        vendormodel.userid = user.key!!
+        vendormodel.userid = user.userid!!
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -31,7 +31,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
         //taskdbhelper.task = taskitem
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.key)
+        usermodel = UserModel(user.userid)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         if (caller == "contact"){
@@ -81,7 +81,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
 internal fun deleteVendor(context: Context, vendoritem: Vendor) {
     try {
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        vendormodel.userid = user.key!!
+        vendormodel.userid = user.userid!!
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -90,7 +90,7 @@ internal fun deleteVendor(context: Context, vendoritem: Vendor) {
         vendordbhelper.vendor = vendoritem
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.key)
+        usermodel = UserModel(user.userid)
         usermodel.vendorsactive = user.vendors
         //------------------------------------------------
         // Updating User information in Session
@@ -125,7 +125,7 @@ internal fun editVendor(context: Context, vendoritem: Vendor) {
     try {
         //---------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        vendormodel.userid = user.key!!
+        vendormodel.userid = user.userid!!
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------

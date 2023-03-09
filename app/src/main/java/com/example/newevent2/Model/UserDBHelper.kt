@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import Application.FirebaseDataImportException
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -8,6 +9,7 @@ import android.util.Log
 import com.example.newevent2.*
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.userdbhelper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
     CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
@@ -29,12 +31,12 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     private var useremail: String
 
     init {
-        useremail = getUserSession(context)
+        useremail = getUserSession(context, "email").toString()
     }
 
     fun insert(user: User?) {
         val values = ContentValues()
-        values.put("userid", user!!.key)
+        values.put("userid", user!!.userid)
         values.put("eventid", user.eventid)
         values.put("shortname", user.shortname)
         values.put("email", user.email)
@@ -57,6 +59,20 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         values.put("vendors", user.vendors)
         db.insert("USER", null, values)
         Log.d(TAG, "User record inserted")
+    }
+
+    @ExperimentalCoroutinesApi
+    suspend fun firebaseImport(userid: String) : Boolean {
+        val user: User
+        try {
+            val userModel = UserModel(userid)
+            user = userModel.getUser()
+            update(user)
+        } catch (e: Exception){
+            println(e.message)
+            throw FirebaseDataImportException("Error importing User data: $e")
+        }
+        return true
     }
 
     private fun getUserexists(key: String): Boolean {
@@ -146,7 +162,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
 
     fun update(user: User) {
         val values = ContentValues()
-        values.put("userid", user.key)
+        values.put("userid", user.userid)
         values.put("eventid", user.eventid)
         values.put("shortname", user.shortname)
         values.put("email", user.email)
@@ -168,11 +184,11 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         values.put("status", user.status)
         values.put("vendors", user.vendors)
 
-        val retVal = db.update("USER", values, "userid = '${user.key}'", null)
+        val retVal = db.update("USER", values, "userid = '${user.userid}'", null)
         if (retVal >= 1) {
-            Log.d(TAG, "User ${user.key} updated")
+            Log.d(TAG, "User ${user.userid} updated")
         } else {
-            Log.d(TAG, "User ${user.key} not updated")
+            Log.d(TAG, "User ${user.userid} not updated")
         }
         //db.close()
     }
@@ -182,7 +198,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override suspend fun onAddEditUser(user: User) {
-        if (!getUserexists(user.key!!)) {
+        if (!getUserexists(user.userid!!)) {
             insert(user)
         } else {
             update(user)
@@ -270,7 +286,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     override suspend fun onOnboardUser(user: User, event: Event) {
-        if (!getUserexists(user.key!!)) {
+        if (!getUserexists(user.userid!!)) {
             insert(user)
         } else {
             update(user)

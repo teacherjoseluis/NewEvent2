@@ -36,30 +36,30 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         event: Event,
         uri: Uri?
         //savesuccessflag: FirebaseSaveSuccess
-    ) : String {
+    ): String {
 //        coroutineScope {
-            val postRef = myRef.child("User").child(user.key!!).child("Event").push()
-            val eventmap = hashMapOf(
-                "imageurl" to event.imageurl,
-                "placeid" to event.placeid,
-                "latitude" to event.latitude,
-                "longitude" to event.longitude,
-                "address" to event.address,
-                "name" to event.name,
-                "date" to event.date,
-                "time" to event.time,
-                "about" to event.eventid,
-                "location" to event.location
-            )
+        val postRef = myRef.child("User").child(user.userid!!).child("Event").push()
+        val eventmap = hashMapOf(
+            "imageurl" to event.imageurl,
+            "placeid" to event.placeid,
+            "latitude" to event.latitude,
+            "longitude" to event.longitude,
+            "address" to event.address,
+            "name" to event.name,
+            "date" to event.date,
+            "time" to event.time,
+            "about" to event.eventid,
+            "location" to event.location
+        )
 
-            postRef.setValue(
-                eventmap as Map<String, Any>
-            ).await()
-            val eventid = postRef.key.toString()
-            //Save Event image in Storage
-            if (uri != null) {
-                saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)
-            }
+        postRef.setValue(
+            eventmap as Map<String, Any>
+        ).await()
+        val eventid = postRef.key.toString()
+        //Save Event image in Storage
+        if (uri != null) {
+            saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)
+        }
 //            { error, _ ->
 //                if (error != null) {
 //                    //Se loggea un error al guardar el usuario TODO databaseError.getMessage()
@@ -99,6 +99,50 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         savesuccessflag.onSaveSuccess(event.key)
     }
 
+//    fun getEventkey(
+//        userid: String,
+//        dataFetched: FirebaseSuccessListenerEventKey
+//    ) {
+//        var eventkey = ""
+//        val postRef =
+//            myRef.child("User").child(userid).child("Event").limitToFirst(1)
+//
+//        val eventListenerActive = object : ValueEventListener {
+//            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+//            override fun onDataChange(p0: DataSnapshot) {
+//                for (snapchild in p0.children){
+//                    eventkey = snapchild.key.toString()
+//                }
+//                dataFetched.onEvent(eventkey)
+//            }
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                println("loadPost:onCancelled ${databaseError.toException()}")
+//            }
+//        }
+//        postRef.addValueEventListener(eventListenerActive)
+//    }
+
+    @ExperimentalCoroutinesApi
+    suspend fun getEventKey(userid: String): String {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").limitToFirst(1)
+        return try {
+            var eventkey = ""
+            for (snapchild in postRef.awaitsSingle()?.children!!) {
+                eventkey = snapchild.key.toString()
+            }
+            eventkey
+        } catch (e: Exception) {
+            Log.d(
+                UserModel.TAG,
+                "Data associated to User cannot ben retrieved from Firebase"
+            )
+            ""
+        }
+    }
+
+
     fun getEventdetail(
         userid: String,
         eventid: String,
@@ -122,32 +166,73 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         postRef.addValueEventListener(eventListenerActive)
     }
 
+
     @ExperimentalCoroutinesApi
-    suspend fun getEventChildrenflag(
-        userid: String,
-        eventid: String
-    ): Boolean {
-        var existsflag=false
+    suspend fun getEvent(userid: String): Event {
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
-          try {
-              existsflag = when {
-                  postRef.awaitsSingle()?.hasChild("Task") == true -> true
-                  postRef.awaitsSingle()?.hasChild("Payment") == true -> true
-                  else -> false
-              }
+            myRef.child("User").child(userid).child("Event").limitToFirst(1)
+        var eventItem: Event? = null
+        try {
+            for (snapChild in postRef.awaitsSingle()?.children!!) {
+                eventItem = snapChild.getValue(Event::class.java)
+                eventItem!!.key = snapChild.key.toString()
+            }
         } catch (e: Exception) {
-            Log.d(
-                TAG,
-                "Data associated to Event cannot ben retrieved from Firebase"
-            )
-            false
+            println(e.message)
         }
-        return existsflag
+        return eventItem!!
     }
+
+//    @ExperimentalCoroutinesApi
+//    suspend fun getEventChildrenflag(
+//        userid: String,
+//        eventid: String
+//    ): Boolean {
+//        var existsflag = false
+//        val postRef =
+//            myRef.child("User").child(userid).child("Event").child(eventid)
+//        try {
+//            existsflag = when {
+//                postRef.awaitsSingle()?.hasChild("Task") == true -> true
+//                postRef.awaitsSingle()?.hasChild("Payment") == true -> true
+//                else -> false
+//            }
+//        } catch (e: Exception) {
+//            Log.d(
+//                TAG,
+//                "Data associated to Event cannot ben retrieved from Firebase"
+//            )
+//            false
+//        }
+//        return existsflag
+//    }
 
     @ExperimentalCoroutinesApi
     suspend fun DatabaseReference.awaitsSingle(): DataSnapshot? =
+        suspendCancellableCoroutine { continuation ->
+            val listener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        continuation.resume(snapshot)
+                    } catch (exception: Exception) {
+                        continuation.resumeWithException(exception)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    val exception = when (error.toException()) {
+                        is FirebaseException -> error.toException()
+                        else -> Exception("The Firebase call for reference $this was cancelled")
+                    }
+                    continuation.resumeWithException(exception)
+                }
+            }
+            continuation.invokeOnCancellation { this.removeEventListener(listener) }
+            this.addListenerForSingleValueEvent(listener)
+        }
+
+    @ExperimentalCoroutinesApi
+    suspend fun Query.awaitsSingle(): DataSnapshot? =
         suspendCancellableCoroutine { continuation ->
             val listener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -188,7 +273,7 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
     }
 
     override suspend fun onOnboardUser(user: User, event: Event) {
-        event.key =  addEvent(user, event, null)
+        event.key = addEvent(user, event, null)
         nexthandleron?.onOnboardUser(user, event)
     }
 

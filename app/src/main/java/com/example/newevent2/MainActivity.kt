@@ -210,7 +210,7 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
             location = eventlocation.text.toString()
         }
         val eventmodel = EventModel()
-        eventmodel.editEvent(user.key!!, event, object : EventModel.FirebaseSaveSuccess {
+        eventmodel.editEvent(user.userid!!, event, object : EventModel.FirebaseSaveSuccess {
             override fun onSaveSuccess(eventid: String) {
                 //Updating local storage
                 val eventdb = EventDBHelper(applicationContext)
@@ -218,7 +218,7 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
 
                 if(uri != null) {
                     //There was a change in the event image
-                    replaceImage(applicationContext, "eventimage", user.key!!, user.eventid, uri!!)
+                    replaceImage(applicationContext, "eventimage", user.userid!!, user.eventid, uri!!)
                 }
 
                 if(eventplaceid != "") {

@@ -5,14 +5,17 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.newevent2.*
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.FirebaseException
+import com.google.firebase.database.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
 
@@ -23,6 +26,25 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
 
     var userid = ""
     var eventid = ""
+
+    @ExperimentalCoroutinesApi
+    suspend fun getGuests(userid: String, eventid: String): ArrayList<Guest> {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Guest").orderByChild("name")
+        val guestList = ArrayList<Guest>()
+
+        try {
+            for (snapChild in postRef.awaitsSingle()?.children!!) {
+                val guestItem = snapChild.getValue(Guest::class.java)
+                guestItem!!.key = snapChild.key.toString()
+                guestList.add(guestItem)
+            }
+        } catch (e: Exception) {
+            println(e.message)
+        }
+        return guestList
+    }
 
     fun getAllGuestList(
         userid: String,
@@ -172,6 +194,30 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
                     Log.e(TAG, "Guest ${guest.name} failed to be deleted")
                 }
     }
+
+    @ExperimentalCoroutinesApi
+    suspend fun Query.awaitsSingle(): DataSnapshot? =
+        suspendCancellableCoroutine { continuation ->
+            val listener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        continuation.resume(snapshot)
+                    } catch (exception: Exception) {
+                        continuation.resumeWithException(exception)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    val exception = when (error.toException()) {
+                        is FirebaseException -> error.toException()
+                        else -> Exception("The Firebase call for reference $this was cancelled")
+                    }
+                    continuation.resumeWithException(exception)
+                }
+            }
+            continuation.invokeOnCancellation { this.removeEventListener(listener) }
+            this.addListenerForSingleValueEvent(listener)
+        }
 
     override suspend fun onAddEditGuest(guest: Guest) {
         if (guest.key == "") {

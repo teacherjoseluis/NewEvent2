@@ -282,6 +282,8 @@
     <string name="pressexit">Press once again to exit!</string>
     <string name="checkverification">Check your inbox for a verification email.</string>
     <string name="eventcreated">Your event was succesfully created</string>
+    <string name="error_emailverification">You cannot login at this moment, you need to verify your email account first</string>
+    <string name="error_usersession">There was a problem with your user session or you are already logged in another device</string>
 
     <string-array name="role" >
         <item>Bride</item>

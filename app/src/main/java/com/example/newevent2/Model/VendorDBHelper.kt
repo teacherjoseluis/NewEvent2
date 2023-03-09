@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import Application.FirebaseDataImportException
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
@@ -7,6 +8,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.collections.ArrayList
 
 class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
@@ -16,6 +18,27 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
     var key = ""
     var nexthandler: CoRAddEditVendor? = null
     var nexthandlerdel: CoRDeleteVendor? = null
+
+    @ExperimentalCoroutinesApi
+    suspend fun firebaseImport(userid: String) : Boolean {
+        val vendorList: ArrayList<Vendor>
+        val eventModel = EventModel()
+        try {
+            val eventKey = eventModel.getEventKey(userid)
+            val vendorModel = VendorModel()
+
+            vendorList = vendorModel.getVendors(userid, eventKey)
+            db.execSQL("DELETE FROM VENDOR")
+
+            for (vendorItem in vendorList){
+                insert(vendorItem)
+            }
+        } catch (e: Exception){
+            println(e.message)
+            throw FirebaseDataImportException("Error importing Vendor data: $e")
+        }
+        return true
+    }
 
     fun insert(vendor: Vendor) {
         val values = ContentValues()

@@ -27,7 +27,7 @@ internal suspend fun addGuest(context: Context, guestitem: Guest, caller: String
         //------------------------------------------------
         // Adding a new record in Firebase
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        guestmodel.userid = user.key!!
+        guestmodel.userid = user.userid!!
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -36,7 +36,7 @@ internal suspend fun addGuest(context: Context, guestitem: Guest, caller: String
         //taskdbhelper.task = taskitem
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.key)
+        usermodel = UserModel(user.userid)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         if (caller == "contact"){
@@ -96,7 +96,7 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        guestmodel.userid = user.key!!
+        guestmodel.userid = user.userid!!
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------
@@ -105,7 +105,7 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
         guestdbhelper.guest = guestitem
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.key)
+        usermodel = UserModel(user.userid)
         usermodel.guestsactive = user.guests
         //------------------------------------------------
         // Updating User information in Session
@@ -142,7 +142,7 @@ internal suspend fun editGuest(context: Context, guestitem: Guest) {
         userdbhelper = UserDBHelper(context)
         //---------------------------------------------------
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        guestmodel.userid = user.key!!
+        guestmodel.userid = user.userid!!
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
         //------------------------------------------------

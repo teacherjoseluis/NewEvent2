@@ -1,17 +1,28 @@
 package com.example.newevent2
 
+import Application.EmailVerificationException
+import Application.ExistingSessionException
+import Application.SessionAccessException
+import Application.UserAuthenticationException
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
+import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.saveUserSession
+import com.example.newevent2.MVP.GuestPresenter
 import com.example.newevent2.MVP.LoginPresenter
-import com.example.newevent2.Model.User
-import com.example.newevent2.Model.UserDBHelper
-import com.example.newevent2.Model.UserModel
+import com.example.newevent2.MVP.PaymentPresenter
+import com.example.newevent2.MVP.TaskPresenter
+import com.example.newevent2.Model.*
+import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.Task
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
@@ -22,6 +33,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DataSnapshot
 import kotlinx.android.synthetic.main.login0.*
 import kotlinx.coroutines.*
 import java.util.regex.Matcher
@@ -34,6 +46,9 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
     val user = User()
 
+    private lateinit var authResult: AuthResult
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login0)
@@ -73,33 +88,33 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                     val userEmail = editEmaillogin.text.toString()
                     val userPassword = editPasswordlogin.text.toString()
 
-                    val scope = CoroutineScope(Job() + Dispatchers.Main)
-                    var firebaseUser: FirebaseUser?
-
                     lifecycleScope.launch {
-                        firebaseUser =
-                            user.login(this@LoginView, "email", userEmail, userPassword, null)
+                        try {
+                            authResult =
+                                user.login(this@LoginView, "email", userEmail, userPassword, null)
 
-                        if (firebaseUser != null) {
-                            //------------------------------------------------------
-                            val userDBHelper = UserDBHelper(this@LoginView)
-                            val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
-                            //------------------------------------------------------
+                            val firebaseUser = authResult.user
+                            val lastSignedInAt = getUserSession(this@LoginView, "last_signed_in_at")
+                            if (lastSignedInAt == "") {
+                                onOnboarding(
+                                    firebaseUser!!.uid,
+                                    firebaseUser.email!!,
+                                    "email"
+                                )
+                            } else {
+                                val dbHelper = DatabaseHelper(this@LoginView)
+                                dbHelper.updateLocalDB(firebaseUser!!.uid)
+                            }
+                            onLoginSuccess(firebaseUser!!.email!!)
 
-                            if (userlocal.key == "") {
-                                val userremote = UserModel(firebaseUser?.uid).getUser()
-                                if (userremote.key == "") {
-                                    onOnboarding(
-                                        firebaseUser?.uid!!,
-                                        firebaseUser?.email!!,
-                                        "email"
-                                    )
-                                } else {
-                                    onLoginSuccess(userlocal.email)
-                                }
-                            } //else {
-                                onLoginSuccess(userlocal.email)
-                            //}
+                        } catch (e: EmailVerificationException) {
+                            displayErrorMsg(getString(R.string.error_emailverification) + e.toString())
+                        } catch (e: UserAuthenticationException) {
+                            displayErrorMsg(getString(R.string.failed_email_login) + e.toString())
+                        } catch (e: SessionAccessException) {
+                            displayErrorMsg(getString(R.string.error_usersession) + e.toString())
+                        } catch (e: ExistingSessionException) {
+                            displayErrorMsg(getString(R.string.error_usersession) + e.toString())
                         }
                     }
                 }
@@ -110,7 +125,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                 frame3.visibility = ConstraintLayout.VISIBLE
             }
 
-            // Google Sign In
+// Google Sign In
             signgoogle.setOnClickListener {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken("319634884697-ihokd8d4om17tsanagl74ife42c5n68f.apps.googleusercontent.com")
@@ -122,7 +137,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                 startActivityForResult(signInIntent, RC_SIGN_IN)
             }
 
-            // Facebook Sign In
+// Facebook Sign In
             signfacebook.setOnClickListener {
                 LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
                 LoginManager.getInstance()
@@ -130,26 +145,33 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                         override fun onSuccess(result: LoginResult?) {
                             val fbtoken = result!!.accessToken
                             val credential = FacebookAuthProvider.getCredential(fbtoken.token)
-                            scope.launch {
-                                val firebaseUser =
-                                    user.login(this@LoginView, "facebook", null, null, credential)
+                            lifecycleScope.launch {
+                                val authResult =
+                                    user.login(
+                                        this@LoginView,
+                                        "facebook",
+                                        null,
+                                        null,
+                                        credential
+                                    )
                                 //------------------------------------------------------
-                                val userDBHelper = UserDBHelper(this@LoginView)
-                                val userlocal = userDBHelper.getUser(firebaseUser!!.uid)
+                                val firebaseUser = authResult.user
                                 //------------------------------------------------------
-                                if (userlocal.key == "") {
-                                    val userremote = UserModel(firebaseUser.uid).getUser()
-                                    if (userremote == null) {
+                                if (firebaseUser != null) {
+                                    val lastSignedInAt =
+                                        getUserSession(this@LoginView, "last_signed_in_at")
+
+                                    if (lastSignedInAt == "") {
                                         onOnboarding(
                                             firebaseUser.uid,
                                             firebaseUser.email!!,
                                             "facebook"
                                         )
                                     } else {
-                                        onLoginSuccess(userlocal.email)
+                                        val dbHelper = DatabaseHelper(this@LoginView)
+                                        dbHelper.updateLocalDB(firebaseUser.uid)
                                     }
-                                } else {
-                                    onLoginSuccess(userlocal.email)
+                                    onLoginSuccess(firebaseUser.email!!)
                                 }
                             }
                         }
@@ -230,35 +252,138 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                 var email = ""
 
                 lifecycleScope.launch {
-                    var firebaseUser: FirebaseUser? =
-                        user.login(this@LoginView, "google", null, null, credential)
-                    uid = firebaseUser!!.uid
-                    email = firebaseUser.email!!
+                    val authResult =
+                        user.login(
+                            this@LoginView,
+                            "google",
+                            null,
+                            null,
+                            credential
+                        )
                     //------------------------------------------------------
-                    userAccount = UserDBHelper(this@LoginView).getUser(firebaseUser!!.uid)
+                    val firebaseUser = authResult.user
                     //------------------------------------------------------
-                    if (userAccount.email == "") {
-                        userAccount = UserModel(firebaseUser!!.uid).getUser()
-                        if (userAccount == null) {
-                            onOnboarding(uid, email, "google")
-                        } else {
-                            UserDBHelper(this@LoginView).insert(userAccount)
-                            onLoginSuccess(userAccount.email)
-                        }
-                    } else {
-                        onLoginSuccess(userAccount.email)
-                    }
+                    if (firebaseUser != null) {
+                        val lastSignedInAt =
+                            getUserSession(this@LoginView, "last_signed_in_at")
 
-//                    if (uid != "" && email != "") {
-//                        if (userAccount.email == "") {
+                        if (lastSignedInAt == "") {
+                            onOnboarding(
+                                firebaseUser.uid,
+                                firebaseUser.email!!,
+                                "google"
+                            )
+                        } else {
+                            val dbHelper = DatabaseHelper(this@LoginView)
+                            dbHelper.updateLocalDB(firebaseUser.uid)
+                        }
+                        onLoginSuccess(firebaseUser.email!!)
+                    }
+                }
+
+//                lifecycleScope.launch {
+//                    var authResult =
+//                        user.login(this@LoginView, "google", null, null, credential)
+//
+//                    val firebaseUser = authResult.user
+//                    uid = firebaseUser!!.uid
+//                    email = firebaseUser.email!!
+//                    //------------------------------------------------------
+//                    userAccount = UserDBHelper(this@LoginView).getUser(firebaseUser!!.uid)
+//                    //------------------------------------------------------
+//                    if (userAccount.email == "") {
+//                        userAccount = UserModel(firebaseUser!!.uid).getUser()
+//                        if (userAccount == null) {
 //                            onOnboarding(uid, email, "google")
 //                        } else {
-//                            //saveUserSession(this@LoginView, email)
-//                            UserModel(uid).getUser()
-//                            onLoginSuccess()
+//                            ////------------------------- Read remote DB and dump into local
+//                            UserDBHelper(this@LoginView).insert(userAccount)
+//                            val event = EventModel()
+//                            event.getEventdetail(
+//                                user.userid!!,
+//                                user.eventid,
+//                                object : EventModel.FirebaseSuccessListenerEventDetail {
+//                                    @RequiresApi(Build.VERSION_CODES.O)
+//                                    override fun onEvent(event: Event) {
+//                                        EventDBHelper(this@LoginView).insert(event)
+//                                    }
+//                                }
+//                            )
+//                            val task = TaskModel()
+//                            task.getAllTasksList(
+//                                user.userid!!,
+//                                user.eventid,
+//                                object : TaskModel.FirebaseSuccessTaskList {
+//                                    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+//                                    override fun onTaskList(arrayList: ArrayList<Task>) {
+//                                        if (arrayList.isNotEmpty()) {
+//                                            // This may be heavy, getting all of the tasks from Firebase but storing them into the cache
+//                                            for (taskitem in arrayList) {
+//                                                TaskDBHelper(this@LoginView).insert(taskitem)
+//                                            }
+//                                        }
+//                                    }
+//                                })
+//                            val payment = PaymentModel()
+//                            payment.getPaymentsList(
+//                                user.userid!!,
+//                                user.eventid,
+//                                object : PaymentModel.FirebaseSuccessPaymentList {
+//                                    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+//                                    override fun onPaymentList(arrayList: ArrayList<Payment>) {
+//                                        for (paymentitem in arrayList) {
+//                                            PaymentDBHelper(this@LoginView).insert(paymentitem)
+//                                        }
+//                                    }
+//                                })
+//                            val guest = GuestModel()
+//                            guest.getAllGuestList(
+//                                user.userid!!,
+//                                user.eventid,
+//                                object : GuestModel.FirebaseSuccessGuestList {
+//                                    @RequiresApi(Build.VERSION_CODES.O)
+//                                    override fun onGuestList(list: ArrayList<Guest>) {
+//                                        if (list.isNotEmpty()) {
+//                                            // This may be heavy, getting all of the tasks from Firebase but storing them into the cache
+//                                            for (guestitem in list) {
+//                                                GuestDBHelper(this@LoginView).insert(guestitem)
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            )
+//                            val vendor = VendorModel()
+//                            vendor.getAllVendorList(
+//                                user.userid!!,
+//                                user.eventid,
+//                                object : VendorModel.FirebaseSuccessVendorList {
+//                                    @RequiresApi(Build.VERSION_CODES.O)
+//                                    override fun onVendorList(list: ArrayList<Vendor>) {
+//                                        if (list.isNotEmpty()) {
+//                                            // This may be heavy, getting all of the tasks from Firebase but storing them into the cache
+//                                            for (vendoritem in list) {
+//                                                VendorDBHelper(this@LoginView).insert(vendoritem)
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            )
+//                            onLoginSuccess(userAccount.email)
 //                        }
+//                    } else {
+//                        onLoginSuccess(userAccount.email)
 //                    }
-                }
+//
+////                    if (uid != "" && email != "") {
+////                        if (userAccount.email == "") {
+////                            onOnboarding(uid, email, "google")
+////                        } else {
+////                            //saveUserSession(this@LoginView, email)
+////                            UserModel(uid).getUser()
+////                            onLoginSuccess()
+////                        }
+////                    }
+//                }
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)
             }
@@ -277,8 +402,11 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             getString(R.string.welcome_message),
             Toast.LENGTH_SHORT
         ).show()
-        saveUserSession(applicationContext, email)
+        saveUserSession(applicationContext, email, null, "email")
         finish()
+        val mainactivity =
+            Intent(this, ActivityContainer::class.java)
+        startActivity(mainactivity)
     }
 
     override fun onOnboarding(userid: String, email: String, authtype: String) {
@@ -287,7 +415,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             getString(R.string.onboarding_message),
             Toast.LENGTH_SHORT
         ).show()
-        saveUserSession(applicationContext, email)
+        saveUserSession(applicationContext, email, null, "email")
 
         val onboarding =
             Intent(this@LoginView, OnboardingView::class.java)
@@ -325,5 +453,13 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
     override fun onSignUpError() {
         frame3.visibility = ConstraintLayout.INVISIBLE
         frame1.visibility = ConstraintLayout.VISIBLE
+    }
+
+    private fun displayErrorMsg(message: String) {
+        Toast.makeText(
+            this@LoginView,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 }

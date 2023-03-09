@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import Application.FirebaseDataImportException
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
@@ -8,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.CoRAddEditPayment
 import com.example.newevent2.CoRDeletePayment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.text.DecimalFormat
 
 class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
@@ -17,6 +19,27 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
     var key = ""
     var nexthandler: CoRAddEditPayment? = null
     var nexthandlerpdel: CoRDeletePayment? = null
+
+    @ExperimentalCoroutinesApi
+    suspend fun firebaseImport(userid: String) : Boolean {
+        val paymentList: ArrayList<Payment>
+        val eventModel = EventModel()
+        try {
+            val eventKey = eventModel.getEventKey(userid)
+            val paymentModel = PaymentModel()
+
+            paymentList = paymentModel.getPayments(userid, eventKey)
+            db.execSQL("DELETE FROM PAYMENT")
+
+            for (paymentItem in paymentList){
+                insert(paymentItem)
+            }
+        } catch (e: Exception){
+            println(e.message)
+            throw FirebaseDataImportException("Error importing Payment data: $e")
+        }
+        return true
+    }
 
     fun insert(payment: Payment) {
         val values = ContentValues()

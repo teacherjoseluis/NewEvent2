@@ -269,6 +269,8 @@
     <string name="pressexit">Presiona una vez más para salir!</string>
     <string name="checkverification">Revisa tu inbox por un correo de verificación.</string>
     <string name="eventcreated">Tu evento se creo exitósamente</string>
+    <string name="error_emailverification">No puedes entrar a la aplicacion en este momento, primero tienes que verificar tu email</string>
+    <string name="error_usersession">Hubo un problema con tu sesión o estas registrado en otro dispositivo</string>
 
     <string-array name="role" >
         <item>Novia</item>

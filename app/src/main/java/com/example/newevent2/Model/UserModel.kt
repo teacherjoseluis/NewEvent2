@@ -29,6 +29,7 @@ class UserModel(
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     private val postRef = myRef.child("User").child(this.key!!)
+    private val activeSessionsRef = myRef.child("session")
     private var firebaseUser = User(key)
     private val firebaseAuth = FirebaseAuth.getInstance()
 
@@ -103,16 +104,50 @@ class UserModel(
 
     @ExperimentalCoroutinesApi
     suspend fun getUser(): User {
-        return try {
-            postRef.awaitsSingle()?.getValue(User::class.java)!!
+        var user: User? = null
+        try {
+            user = postRef.awaitsSingle()?.getValue(User::class.java)!!
+            user.userid = postRef.key.toString()
+
+            val eventmodel = EventModel()
+            user.eventid = eventmodel.getEventKey(user.userid!!)
         } catch (e: Exception) {
-            Log.d(
-                TAG,
-                "Data associated to User cannot ben retrieved from Firebase"
-            )
-            User()
+            println(e.message)
         }
+        return user!!
     }
+
+//    @ExperimentalCoroutinesApi
+//    suspend fun getSession(): String {
+//        return try {
+//            val session = activeSessionsRef.child(key!!).awaitsSingle()?.getValue(String::class.java)!!
+//            session
+//        } catch (e: Exception) {
+//            Log.d(
+//                TAG,
+//                "Data associated to User cannot ben retrieved from Firebase"
+//            )
+//            ""
+//        }
+//    }
+
+    fun getSession(dataFetched: FirebaseSuccessSession) {
+        val postRef =
+            activeSessionsRef.child(key!!)
+        val sessionListenerActive = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onDataChange(p0: DataSnapshot) {
+                val sessionid = p0.getValue(String()::class.java)!!
+                dataFetched.onSessionexists(sessionid)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+        postRef.addValueEventListener(sessionListenerActive)
+    }
+
 
     private fun editUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
         //Commented entries correspond to values in the User entity that are not to be edited
@@ -130,7 +165,7 @@ class UserModel(
         //postRef.child("haspayment").setValue(user.haspayment)
         //postRef.child("hasguest").setValue(user.hasguest)
         //postRef.child("hasvendor").setValue(user.hasvendor)
-        Log.d(TAG, "Data associated to User ${user.key} has just been saved")
+        Log.d(TAG, "Data associated to User ${user.userid} has just been saved")
     }
 
     private fun editUserAddTask(value: Int) {
@@ -195,7 +230,11 @@ class UserModel(
                 "payments" to 0,
                 "guests" to 0,
                 "status" to "A",
-                "vendors" to 0
+                "vendors" to 0,
+                // The below fields are of exclusive use of Firebase to police the authentication
+                // and number of active sessions
+                "session" to "",
+                "last_signed_in_at" to ""
             )
             postRef.setValue(
                 userfb as Map<String, Any>
@@ -286,6 +325,10 @@ class UserModel(
 
     interface FirebaseSuccessUser {
         fun onUserexists(user: User)
+    }
+
+    interface FirebaseSuccessSession {
+        fun onSessionexists(sessionid: String)
     }
 
     interface FirebaseSaveSuccess {
