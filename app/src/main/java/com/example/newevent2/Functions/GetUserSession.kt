@@ -31,6 +31,7 @@ internal fun getUserSession(context: Context, category: String): Any {
     return when (category){
         "email" -> sharedPreference.getString("email", "")!!
         "user_id" -> sharedPreference.getString("user_id", "")!!
+        "event_id" -> sharedPreference.getString("event_id", "")!!
         "session_id" -> sharedPreference.getString("session_id", "")!!
         "last_signed_in_at" -> sharedPreference.getLong("last_signed_in_at", 0L)
         else -> ""
@@ -43,6 +44,7 @@ internal fun saveUserSession(context: Context, value: String?, valueLong: Long?,
     when (category) {
         "email" -> sessionEditor.putString("email", value)
         "user_id" -> sessionEditor.putString("user_id", value)
+        "event_id" -> sessionEditor.putString("event_id", value)
         "session_id" -> sessionEditor.putString("session_id", value)
         "last_signed_in_at" -> sessionEditor.putLong("last_signed_in_at", valueLong!!)
     }
@@ -54,6 +56,7 @@ internal fun deleteUserSession(context: Context) {
     val sessionEditor = userSession!!.edit()
     sessionEditor.putString("email", "")
     sessionEditor.putString("user_id", "")
+    sessionEditor.putString("event_id", "")
     sessionEditor.putString("session_id", "")
     sessionEditor.putLong("last_signed_in_at", 0L)
     sessionEditor.apply()

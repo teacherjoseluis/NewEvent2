@@ -136,9 +136,17 @@ class User(
             throw SessionAccessException(e.toString())
         }
 
+        val eventIdRef = database.child("User").child(authResult.user?.uid!!).child("eventid")
+        val eventSnapShot = try {
+            eventIdRef.get().await()
+        } catch (e: java.lang.Exception) {
+            throw SessionAccessException(e.toString())
+        }
+
         // extracting the session value from Firebase
         val currentTimeMillis = System.currentTimeMillis()
-        val lastSignedInAtRef = database.child("User").child(authResult.user?.uid!!).child("last_signed_in_at")
+        val lastSignedInAtRef =
+            database.child("User").child(authResult.user?.uid!!).child("last_signed_in_at")
 
         if (activeSessionsSnapshot.exists()) {
             val storedSessionID =
@@ -149,12 +157,14 @@ class User(
             } else {
                 // Session ID does not exist and user can login using this device
                 lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
+                val eventId = eventSnapShot.getValue(String::class.java)
                 activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
                     .await()
 
                 // saving authentication variables in the shared preferences
-                saveUserSession(activity, authResult!!.user!!.email.toString(), null,"email")
-                saveUserSession(activity, authResult.user!!.uid, null,"user_id")
+                saveUserSession(activity, authResult!!.user!!.email.toString(), null, "email")
+                saveUserSession(activity, authResult.user!!.uid, null, "user_id")
+                saveUserSession(activity, eventId, null, "event_id")
                 saveUserSession(
                     activity,
                     authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
@@ -168,7 +178,7 @@ class User(
             activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
 
             // saving authentication variables in the shared preferences
-            saveUserSession(activity, authResult!!.user!!.email.toString(), null,"email")
+            saveUserSession(activity, authResult!!.user!!.email.toString(), null, "email")
             saveUserSession(activity, authResult.user!!.uid, null, "user_id")
             saveUserSession(
                 activity,

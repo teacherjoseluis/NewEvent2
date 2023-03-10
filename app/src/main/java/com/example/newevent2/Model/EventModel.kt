@@ -56,6 +56,10 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
             eventmap as Map<String, Any>
         ).await()
         val eventid = postRef.key.toString()
+        val userEventIdRef =
+            myRef.child("User").child(user.userid!!).child("eventid")
+        userEventIdRef.setValue(eventid).await()
+
         //Save Event image in Storage
         if (uri != null) {
             saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)

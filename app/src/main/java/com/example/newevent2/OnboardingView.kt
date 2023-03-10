@@ -180,6 +180,8 @@ class OnboardingView() : AppCompatActivity() {
                                 //addEvent(this@OnboardingView, event)
 
                                 onBoarding(this@OnboardingView, userSession, event)
+                                delay(1000)
+                                finish()
                             }
                         }
                         val resultIntent = Intent()

@@ -112,7 +112,8 @@
 
         <activity android:name=".LoginView" />
         <activity android:name=".LoginEmailView" />
-        <activity android:name=".OnboardingView" />
+        <activity android:name=".OnboardingView"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".TaskCreateEdit"
             android:theme="@style/AppTheme"/>
         <activity android:name=".PaymentCreateEdit"

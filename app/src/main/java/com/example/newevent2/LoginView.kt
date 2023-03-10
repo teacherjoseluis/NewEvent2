@@ -4,25 +4,17 @@ import Application.EmailVerificationException
 import Application.ExistingSessionException
 import Application.SessionAccessException
 import Application.UserAuthenticationException
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.saveUserSession
-import com.example.newevent2.MVP.GuestPresenter
 import com.example.newevent2.MVP.LoginPresenter
-import com.example.newevent2.MVP.PaymentPresenter
-import com.example.newevent2.MVP.TaskPresenter
 import com.example.newevent2.Model.*
-import com.example.newevent2.Model.Event
-import com.example.newevent2.Model.Task
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
@@ -31,9 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.DataSnapshot
 import kotlinx.android.synthetic.main.login0.*
 import kotlinx.coroutines.*
 import java.util.regex.Matcher
@@ -94,8 +84,8 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                                 user.login(this@LoginView, "email", userEmail, userPassword, null)
 
                             val firebaseUser = authResult.user
-                            val lastSignedInAt = getUserSession(this@LoginView, "last_signed_in_at")
-                            if (lastSignedInAt == "") {
+                            val eventId = getUserSession(this@LoginView, "event_id")
+                            if (eventId == "") {
                                 onOnboarding(
                                     firebaseUser!!.uid,
                                     firebaseUser.email!!,
@@ -158,10 +148,8 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                                 val firebaseUser = authResult.user
                                 //------------------------------------------------------
                                 if (firebaseUser != null) {
-                                    val lastSignedInAt =
-                                        getUserSession(this@LoginView, "last_signed_in_at")
-
-                                    if (lastSignedInAt == "") {
+                                    val eventId = getUserSession(this@LoginView, "event_id")
+                                    if (eventId == "") {
                                         onOnboarding(
                                             firebaseUser.uid,
                                             firebaseUser.email!!,
@@ -247,11 +235,8 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             try {
                 val account = task.getResult(ApiException::class.java)
                 val credential = GoogleAuthProvider.getCredential(account!!.idToken, null)
-                var userAccount: User
-                var uid = ""
-                var email = ""
 
-                lifecycleScope.launch {
+                lifecycleScope.launchWhenResumed {
                     val authResult =
                         user.login(
                             this@LoginView,
@@ -264,15 +249,29 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                     val firebaseUser = authResult.user
                     //------------------------------------------------------
                     if (firebaseUser != null) {
-                        val lastSignedInAt =
-                            getUserSession(this@LoginView, "last_signed_in_at")
+                        val eventId = getUserSession(this@LoginView, "event_id")
+                        if (eventId == "") {
+//                            onOnboarding(
+//                                firebaseUser.uid,
+//                                firebaseUser.email!!,
+//                                "google"
+//                            )
 
-                        if (lastSignedInAt == "") {
-                            onOnboarding(
-                                firebaseUser.uid,
-                                firebaseUser.email!!,
-                                "google"
-                            )
+                            withContext(Dispatchers.Main) {
+                                val onboardActivity =
+                                    Intent(this@LoginView, OnboardingView::class.java)
+                                onboardActivity.putExtra("userid", firebaseUser.uid)
+                                onboardActivity.putExtra("email", firebaseUser.email!!)
+                                onboardActivity.putExtra("authtype", "google")
+                                startActivity(onboardActivity)
+                                delay(1000)
+//                                finish()
+//                                overridePendingTransition(
+//                                    android.R.anim.slide_out_right,
+//                                    android.R.anim.slide_in_left
+//                                )
+                            }
+
                         } else {
                             val dbHelper = DatabaseHelper(this@LoginView)
                             dbHelper.updateLocalDB(firebaseUser.uid)
@@ -415,14 +414,13 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             getString(R.string.onboarding_message),
             Toast.LENGTH_SHORT
         ).show()
-        saveUserSession(applicationContext, email, null, "email")
 
         val onboarding =
             Intent(this@LoginView, OnboardingView::class.java)
         onboarding.putExtra("userid", userid)
         onboarding.putExtra("email", email)
         onboarding.putExtra("authtype", authtype)
-
+        finish()
         startActivity(onboarding)
         overridePendingTransition(android.R.anim.slide_out_right, android.R.anim.slide_in_left)
     }
