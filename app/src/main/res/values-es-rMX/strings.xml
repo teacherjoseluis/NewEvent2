@@ -271,6 +271,12 @@
     <string name="eventcreated">Tu evento se creo exitósamente</string>
     <string name="error_emailverification">No puedes entrar a la aplicacion en este momento, primero tienes que verificar tu email</string>
     <string name="error_usersession">Hubo un problema con tu sesión o estas registrado en otro dispositivo</string>
+    <string name="weakpassword">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="invalidemailpassword">Correo electrónico o contraseña inválidos</string>
+    <string name="errorsendingverification">Error al enviar el mensaje de verificación por correo electrónico</string>
+    <string name="resetpwderror_authinvaliduser">No pudimos encontrar una cuenta con esa dirección de correo electrónico</string>
+    <string name="resetpwderror_invalidcredentials">La dirección de correo electrónico proporcionada es inválida. Por favor, verifica que no haya errores de escritura e intenta nuevamente</string>
+    <string name="resetpwderror_authmailexception">Hubo un error al enviar el correo electrónico de restablecimiento de contraseña. Por favor, intenta de nuevo más tarde</string>
 
     <string-array name="role" >
         <item>Novia</item>

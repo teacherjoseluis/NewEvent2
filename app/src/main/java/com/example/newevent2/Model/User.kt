@@ -20,9 +20,11 @@ import com.example.newevent2.R
 import com.google.firebase.auth.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 @SuppressLint("ParcelCreator")
 class User(
@@ -52,6 +54,7 @@ class User(
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val database = FirebaseDatabase.getInstance().reference
     private lateinit var activeSessionsRef: DatabaseReference
+    private lateinit var lastSignedInAtRef: DatabaseReference
     private lateinit var viewLogin: LoginView
 
     constructor(parcel: Parcel) : this(
@@ -129,25 +132,23 @@ class User(
             }
         }
         // reviewing if there is an already logged session for the user
-        activeSessionsRef = database.child("User").child(authResult.user?.uid!!).child("session")
+        activeSessionsRef = database.child(authResult.user?.uid!!).child("session")
+        lastSignedInAtRef = database.child(authResult.user?.uid!!).child("last_signed_in_at")
         val activeSessionsSnapshot = try {
             activeSessionsRef.get().await()
         } catch (e: Exception) {
             throw SessionAccessException(e.toString())
         }
 
+        //-----------------------------------------------------------------------------------------------------------------
         val eventIdRef = database.child("User").child(authResult.user?.uid!!).child("eventid")
         val eventSnapShot = try {
             eventIdRef.get().await()
         } catch (e: java.lang.Exception) {
             throw SessionAccessException(e.toString())
         }
-
-        // extracting the session value from Firebase
-        val currentTimeMillis = System.currentTimeMillis()
-        val lastSignedInAtRef =
-            database.child("User").child(authResult.user?.uid!!).child("last_signed_in_at")
-
+        val eventId = eventSnapShot.getValue(String::class.java)
+        //-----------------------------------------------------------------------------------------------------------------
         if (activeSessionsSnapshot.exists()) {
             val storedSessionID =
                 activeSessionsSnapshot.getValue(String::class.java)
@@ -155,9 +156,10 @@ class User(
                 // Session ID exists and therefore a user is signed in elsewhere
                 throw ExistingSessionException("There is an existing session $storedSessionID for user ${authResult?.user!!}")
             } else {
-                // Session ID does not exist and user can login using this device
+                // extracting the session value from Firebase
+                val currentTimeMillis = System.currentTimeMillis()
                 lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
-                val eventId = eventSnapShot.getValue(String::class.java)
+                // Session ID does not exist and user can login using this device
                 activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
                     .await()
 
@@ -174,12 +176,17 @@ class User(
                 return@coroutineScope authResult
             }
         } else {
-            lastSignedInAtRef.setValue(currentTimeMillis.toString())
+            // extracting the session value from Firebase
+            val currentTimeMillis = System.currentTimeMillis()
+            lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
+            // Session ID does not exist and user can login using this device
             activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
+                .await()
 
             // saving authentication variables in the shared preferences
             saveUserSession(activity, authResult!!.user!!.email.toString(), null, "email")
             saveUserSession(activity, authResult.user!!.uid, null, "user_id")
+            saveUserSession(activity, eventId, null, "event_id")
             saveUserSession(
                 activity,
                 authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
@@ -192,7 +199,7 @@ class User(
 
     fun logout(activity: Activity) {
         val userId = getUserSession(activity, "user_id").toString()
-        activeSessionsRef = database.child("User").child(userId).child("session")
+        activeSessionsRef = database.child(userId).child("session")
         if (userId != null) {
             activeSessionsRef.setValue(null)
         } else {
@@ -205,90 +212,144 @@ class User(
             .show()
     }
 
-    fun signup(view: LoginView, activity: Activity, UserEmail: String, UserPassword: String) {
-        viewLogin = view
-        mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
-            .addOnCompleteListener(activity) { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.email_signup_success),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    verifyaccount(activity)
-                    viewLogin.onSignUpSuccess()
-                } else {
-                    viewLogin.onSignUpError()
-                    try {
-                        throw task.exception!!
-                    } catch (e: FirebaseAuthUserCollisionException) {
-                        Toast.makeText(
-                            activity,
-                            activity.getString(R.string.error_emailaccountexists),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            activity,
-                            activity.getString(R.string.error_emailsignup),
-                            //e.message, //There are several errors that can be caught at this point
-                            Toast.LENGTH_SHORT
-                        ).show()
+//    fun signup(view: LoginView, activity: Activity, UserEmail: String, UserPassword: String) {
+//        viewLogin = view
+//        mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
+//            .addOnCompleteListener(activity) { task ->
+//                if (task.isSuccessful) {
+//                    Toast.makeText(
+//                        activity,
+//                        activity.getString(R.string.email_signup_success),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                    verifyaccount(activity)
+//                    viewLogin.onSignUpSuccess()
+//                } else {
+//                    viewLogin.onSignUpError()
+//                    try {
+//                        throw task.exception!!
+//                    } catch (e: FirebaseAuthUserCollisionException) {
+//                        Toast.makeText(
+//                            activity,
+//                            activity.getString(R.string.error_emailaccountexists),
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    } catch (e: Exception) {
+//                        Toast.makeText(
+//                            activity,
+//                            activity.getString(R.string.error_emailsignup),
+//                            //e.message, //There are several errors that can be caught at this point
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//            }
+//    }
+
+    suspend fun signup(UserEmail: String, UserPassword: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword).await()
+                mAuth.currentUser?.sendEmailVerification()?.await()
+                true
+            } catch (e: Exception) {
+                when (e) {
+                    is FirebaseAuthUserCollisionException -> {
+                        throw e
+                    }
+                    is FirebaseAuthWeakPasswordException -> {
+                        throw e
+                    }
+                    is FirebaseAuthInvalidCredentialsException -> {
+                        throw e
+                    }
+                    is FirebaseAuthEmailException -> {
+                        throw e
+                    }
+                    else -> {
+                        throw e
                     }
                 }
             }
+            false
+        }
     }
 
-    private fun verifyaccount(activity: Activity) {
-        val user = mAuth.currentUser
-        user!!.sendEmailVerification()
-            .addOnCompleteListener(activity) { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.success_account_verification),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.failed_account_verification),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-    }
+//    private fun verifyaccount(activity: Activity) {
+//        val user = mAuth.currentUser
+//        user!!.sendEmailVerification()
+//            .addOnCompleteListener(activity) { task ->
+//                if (task.isSuccessful) {
+//                    Toast.makeText(
+//                        activity,
+//                        activity.getString(R.string.success_account_verification),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                } else {
+//                    Toast.makeText(
+//                        activity,
+//                        activity.getString(R.string.failed_account_verification),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            }
+//    }
 
-    fun sendpasswordreset(activity: Activity, userEmail: String) {
-        mAuth.sendPasswordResetEmail(userEmail)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.success_password_reset_email),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    try {
-                        throw task.exception!!
-                    } catch (e: FirebaseAuthInvalidUserException) {
-                        //ERROR_USER_NOT_FOUND
-                        Toast.makeText(
-                            activity,
-                            activity.getString(R.string.error_emailaccountnotfound),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            activity,
-                            activity.getString(R.string.failed_email_login),
-                            //e.message, //There are several errors that can be caught at this point
-                            Toast.LENGTH_SHORT
-                        ).show()
+    suspend fun sendPasswordReset(UserEmail: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                mAuth.sendPasswordResetEmail(UserEmail).await()
+                true
+            } catch (e: Exception) {
+                when (e) {
+                    is FirebaseAuthInvalidUserException -> {
+                        throw e
+                    }
+                    is FirebaseAuthInvalidCredentialsException -> {
+                        throw e
+                    }
+                    is FirebaseAuthEmailException -> {
+                        throw e
+                    }
+                    else -> {
+                        throw e
                     }
                 }
             }
+            false
+        }
     }
+
+//    fun sendpasswordreset(activity: Activity, userEmail: String) {
+//        mAuth.sendPasswordResetEmail(userEmail)
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    Toast.makeText(
+//                        activity,
+//                        activity.getString(R.string.success_password_reset_email),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                } else {
+//                    try {
+//                        throw task.exception!!
+//                    } catch (e: FirebaseAuthInvalidUserException) {
+//                        //ERROR_USER_NOT_FOUND
+//                        Toast.makeText(
+//                            activity,
+//                            activity.getString(R.string.error_emailaccountnotfound),
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    } catch (e: Exception) {
+//                        Toast.makeText(
+//                            activity,
+//                            activity.getString(R.string.failed_email_login),
+//                            //e.message, //There are several errors that can be caught at this point
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//            }
+//    }
 
     fun onboardingprogress(context: Context): ArrayList<StepBean> {
         val stepsBeanList = arrayListOf<StepBean>()

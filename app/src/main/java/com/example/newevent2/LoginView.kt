@@ -15,16 +15,14 @@ import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.saveUserSession
 import com.example.newevent2.MVP.LoginPresenter
 import com.example.newevent2.Model.*
-import com.facebook.*
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.login0.*
+import kotlinx.android.synthetic.main.login0.editPasswordlogin
+import kotlinx.android.synthetic.main.login0.forgotemaillink
+import kotlinx.android.synthetic.main.login_email.*
 import kotlinx.coroutines.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -32,7 +30,7 @@ import java.util.regex.Pattern
 
 class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.SignUpActivity {
 
-    private lateinit var mCallbackManager: CallbackManager
+    //private lateinit var mCallbackManager: CallbackManager
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
     val user = User()
 
@@ -44,8 +42,10 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         setContentView(R.layout.login0)
 
         // Facebook Initializations
-        FacebookSdk.sdkInitialize(applicationContext)
-        mCallbackManager = CallbackManager.Factory.create()
+//        FacebookSdk.setApplicationId("420436362323049")
+//        FacebookSdk.setClientToken("2d0cd88a18ebf54c93cc70d64edfcddc")
+//        FacebookSdk.sdkInitialize(applicationContext)
+//        mCallbackManager = CallbackManager.Factory.create()
 
         val user = User()
 
@@ -78,7 +78,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                     val userEmail = editEmaillogin.text.toString()
                     val userPassword = editPasswordlogin.text.toString()
 
-                    lifecycleScope.launch {
+                    lifecycleScope.launchWhenResumed {
                         try {
                             authResult =
                                 user.login(this@LoginView, "email", userEmail, userPassword, null)
@@ -86,11 +86,20 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                             val firebaseUser = authResult.user
                             val eventId = getUserSession(this@LoginView, "event_id")
                             if (eventId == "") {
-                                onOnboarding(
-                                    firebaseUser!!.uid,
-                                    firebaseUser.email!!,
-                                    "email"
-                                )
+                                withContext(Dispatchers.Main) {
+                                    val onboardActivity =
+                                        Intent(this@LoginView, OnboardingView::class.java)
+                                    onboardActivity.putExtra("userid", firebaseUser!!.uid)
+                                    onboardActivity.putExtra("email", firebaseUser.email!!)
+                                    onboardActivity.putExtra("authtype", "email")
+                                    startActivity(onboardActivity)
+                                    delay(1000)
+//                                finish()
+//                                overridePendingTransition(
+//                                    android.R.anim.slide_out_right,
+//                                    android.R.anim.slide_in_left
+//                                )
+                                }
                             } else {
                                 val dbHelper = DatabaseHelper(this@LoginView)
                                 dbHelper.updateLocalDB(firebaseUser!!.uid)
@@ -128,51 +137,125 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             }
 
 // Facebook Sign In
-            signfacebook.setOnClickListener {
-                LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
-                LoginManager.getInstance()
-                    .registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
-                        override fun onSuccess(result: LoginResult?) {
-                            val fbtoken = result!!.accessToken
-                            val credential = FacebookAuthProvider.getCredential(fbtoken.token)
-                            lifecycleScope.launch {
-                                val authResult =
-                                    user.login(
-                                        this@LoginView,
-                                        "facebook",
-                                        null,
-                                        null,
-                                        credential
-                                    )
-                                //------------------------------------------------------
-                                val firebaseUser = authResult.user
-                                //------------------------------------------------------
-                                if (firebaseUser != null) {
-                                    val eventId = getUserSession(this@LoginView, "event_id")
-                                    if (eventId == "") {
-                                        onOnboarding(
-                                            firebaseUser.uid,
-                                            firebaseUser.email!!,
-                                            "facebook"
-                                        )
-                                    } else {
-                                        val dbHelper = DatabaseHelper(this@LoginView)
-                                        dbHelper.updateLocalDB(firebaseUser.uid)
-                                    }
-                                    onLoginSuccess(firebaseUser.email!!)
-                                }
-                            }
-                        }
-
-                        override fun onCancel() {
-                            Log.d(TAGF, "facebook:onCancel")
-                        }
-
-                        override fun onError(error: FacebookException?) {
-                            Log.d(TAGF, "facebook:onError", error)
-                        }
-                    })
-            }
+//            signfacebook.setPermissions("email", "public_profile")
+//            signfacebook.setOnClickListener {
+////                LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
+////                LoginManager.getInstance()
+////                    .registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
+////                        override fun onSuccess(result: LoginResult?) {
+////                            val fbtoken = result!!.accessToken
+////                            val credential = FacebookAuthProvider.getCredential(fbtoken.token)
+////                            lifecycleScope.launchWhenResumed {
+////                                val authResult =
+////                                    user.login(
+////                                        this@LoginView,
+////                                        "facebook",
+////                                        null,
+////                                        null,
+////                                        credential
+////                                    )
+////                                //------------------------------------------------------
+////                                val firebaseUser = authResult.user
+////                                //------------------------------------------------------
+////                                val eventId = getUserSession(this@LoginView, "event_id")
+////                                if (eventId == "") {
+////                                    withContext(Dispatchers.Main) {
+////                                        val onboardActivity =
+////                                            Intent(this@LoginView, OnboardingView::class.java)
+////                                        onboardActivity.putExtra("userid", firebaseUser!!.uid)
+////                                        onboardActivity.putExtra("email", firebaseUser.email!!)
+////                                        onboardActivity.putExtra("authtype", "facebook")
+////                                        startActivity(onboardActivity)
+////                                        delay(1000)
+//////                                finish()
+//////                                overridePendingTransition(
+//////                                    android.R.anim.slide_out_right,
+//////                                    android.R.anim.slide_in_left
+//////                                )
+////                                    }
+////                                } else {
+////                                    val dbHelper = DatabaseHelper(this@LoginView)
+////                                    dbHelper.updateLocalDB(firebaseUser!!.uid)
+////                                }
+////                                onLoginSuccess(firebaseUser!!.email!!)
+////
+////                            }
+////                        }
+////
+////                        override fun onCancel() {
+////                            Log.d(TAGF, "facebook:onCancel")
+////                        }
+////
+////                        override fun onError(error: FacebookException?) {
+////                            Log.d(TAGF, "facebook:onError", error)
+////                        }
+////                    })
+////                val loginManager = LoginManager.getInstance()
+////                val callbackManager = CallbackManager.Factory.create()
+//
+//                // Call the registerCallback method on the LoginManager instance
+//                loginManager.registerCallback(
+//                    callbackManager,
+//                    object : FacebookCallback<LoginResult> {
+//                        override fun onSuccess(result: LoginResult) {
+//                            result?.accessToken?.let { accessToken ->
+//                                // Handle login success
+//                                // You can access the user's access token with accessToken
+//                                val credential =
+//                                    FacebookAuthProvider.getCredential(accessToken.token)
+//                                lifecycleScope.launchWhenResumed {
+//                                    val authResult =
+//                                        user.login(
+//                                            this@LoginView,
+//                                            "facebook",
+//                                            null,
+//                                            null,
+//                                            credential
+//                                        )
+//                                    //------------------------------------------------------
+//                                    val firebaseUser = authResult.user
+//                                    //------------------------------------------------------
+//                                    val eventId = getUserSession(this@LoginView, "event_id")
+//                                    if (eventId == "") {
+//                                        withContext(Dispatchers.Main) {
+//                                            val onboardActivity =
+//                                                Intent(
+//                                                    this@LoginView,
+//                                                    OnboardingView::class.java
+//                                                )
+//                                            onboardActivity.putExtra(
+//                                                "userid",
+//                                                firebaseUser!!.uid
+//                                            )
+//                                            onboardActivity.putExtra(
+//                                                "email",
+//                                                firebaseUser.email!!
+//                                            )
+//                                            onboardActivity.putExtra("authtype", "facebook")
+//                                            startActivity(onboardActivity)
+//                                            delay(1000)
+//                                        }
+//                                    } else {
+//                                        val dbHelper = DatabaseHelper(this@LoginView)
+//                                        dbHelper.updateLocalDB(firebaseUser!!.uid)
+//                                    }
+//                                    onLoginSuccess(firebaseUser!!.email!!)
+////
+////                            }
+//                                }
+//                            }
+//                        }
+//
+//                        override fun onCancel() {
+//                            // Handle login cancellation
+//                        }
+//
+//                        override fun onError(error: FacebookException) {
+//                            TODO("Not yet implemented")
+//                        }
+//                    })
+//
+//            }
         }
 
         signupbuttonstart.setOnClickListener {
@@ -207,13 +290,68 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                 if (inputvalflag) {
                     val userEmail = editEmailsignup.text.toString()
                     val userPassword = editPasswordsignup1.text.toString()
-                    user.signup(this, this, userEmail, userPassword)
+
+                    lifecycleScope.launch {
+                        try {
+                            val signUpResult = user.signup(userEmail, userPassword)
+                            if (signUpResult) {
+                                //onSignUpSuccess()
+                                Toast.makeText(
+                                    this@LoginView,
+                                    getString(R.string.email_signup_success),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Toast.makeText(
+                                    this@LoginView,
+                                    getString(R.string.success_account_verification),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } catch (e: FirebaseAuthUserCollisionException) {
+                            displayErrorMsg(getString(R.string.error_emailaccountexists) + e.toString())
+                        } catch (e: FirebaseAuthWeakPasswordException) {
+                            displayErrorMsg(getString(R.string.weakpassword) + e.toString())
+                        } catch (e: FirebaseAuthInvalidCredentialsException) {
+                            displayErrorMsg(getString(R.string.invalidemailpassword) + e.toString())
+                        } catch (e: FirebaseAuthEmailException) {
+                            displayErrorMsg(getString(R.string.errorsendingverification) + e.toString())
+                        } catch (e: Exception) {
+                            displayErrorMsg(getString(R.string.error_emailsignup) + e.toString())
+                        }
+                    }
+                    //user.signup(this, this, userEmail, userPassword)
+                    onBackPressed()
                 }
             }
 
             loginlink.setOnClickListener {
                 frame2.visibility = ConstraintLayout.VISIBLE
                 frame3.visibility = ConstraintLayout.INVISIBLE
+            }
+        }
+
+        forgotemaillink.setOnClickListener {
+            var inputvalflag = true
+            if (editEmaillogin.text.toString().isEmpty()) {
+                editEmaillogin.error = getString(R.string.error_valid_emailaccount)
+                inputvalflag = false
+            }
+            if (inputvalflag) {
+                val userEmail = editEmaillogin.text.toString()
+                val user = User()
+                lifecycleScope.launch {
+                    try {
+                        user.sendPasswordReset(userEmail)
+                    } catch (e: FirebaseAuthInvalidUserException) {
+                        displayErrorMsg(getString(R.string.resetpwderror_authinvaliduser) + e.toString())
+                    } catch (e: FirebaseAuthInvalidCredentialsException) {
+                        displayErrorMsg(getString(R.string.resetpwderror_invalidcredentials) + e.toString())
+                    } catch (e: FirebaseAuthEmailException) {
+                        displayErrorMsg(getString(R.string.resetpwderror_authmailexception) + e.toString())
+                    } catch (e: Exception) {
+                        displayErrorMsg(getString(R.string.resetpwderror_authmailexception) + e.toString())
+                    }
+                }
             }
         }
 
@@ -224,9 +362,8 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         scope.cancel()
     }
 
-
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        mCallbackManager.onActivityResult(requestCode, resultCode, data)
+//        mCallbackManager.onActivityResult(requestCode, resultCode, data)
         // Pass the activity result back to the Facebook SDK
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -276,6 +413,9 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                             val dbHelper = DatabaseHelper(this@LoginView)
                             dbHelper.updateLocalDB(firebaseUser.uid)
                         }
+
+
+
                         onLoginSuccess(firebaseUser.email!!)
                     }
                 }
@@ -387,6 +527,53 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                 Log.w(TAG, "Google sign in failed", e)
             }
         }
+//        else { //Safe to assume that we are talking about Facebook authentication?
+//            try {
+//                val accessToken = AccessToken.getCurrentAccessToken()
+//                val isLoggedIn = accessToken != null && !accessToken.isExpired
+//                if (isLoggedIn) {
+//                    val credential = FacebookAuthProvider.getCredential(accessToken!!.token)
+//                    lifecycleScope.launchWhenResumed {
+//                        val authResult =
+//                            user.login(
+//                                this@LoginView,
+//                                "facebook",
+//                                null,
+//                                null,
+//                                credential
+//                            )
+//                        //------------------------------------------------------
+//                        val firebaseUser = authResult.user
+//                        //------------------------------------------------------
+//                        val eventId = getUserSession(this@LoginView, "event_id")
+//                        if (eventId == "") {
+//                            withContext(Dispatchers.Main) {
+//                                val onboardActivity =
+//                                    Intent(this@LoginView, OnboardingView::class.java)
+//                                onboardActivity.putExtra("userid", firebaseUser!!.uid)
+//                                onboardActivity.putExtra("email", firebaseUser.email!!)
+//                                onboardActivity.putExtra("authtype", "facebook")
+//                                startActivity(onboardActivity)
+//                                delay(1000)
+////                                finish()
+////                                overridePendingTransition(
+////                                    android.R.anim.slide_out_right,
+////                                    android.R.anim.slide_in_left
+////                                )
+//                            }
+//                        } else {
+//                            val dbHelper = DatabaseHelper(this@LoginView)
+//                            dbHelper.updateLocalDB(firebaseUser!!.uid)
+//                        }
+//                        onLoginSuccess(firebaseUser!!.email!!)
+////
+////                            }
+//                    }
+//                }
+//            } catch (e: ApiException) {
+//                Log.w(TAG, "Google sign in failed", e)
+//            }
+//        }
     }
 
     companion object {

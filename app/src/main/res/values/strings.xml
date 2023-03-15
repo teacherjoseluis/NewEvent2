@@ -284,6 +284,12 @@
     <string name="eventcreated">Your event was succesfully created</string>
     <string name="error_emailverification">You cannot login at this moment, you need to verify your email account first</string>
     <string name="error_usersession">There was a problem with your user session or you are already logged in another device</string>
+    <string name="weakpassword">Password must be at least 6 characters long</string>
+    <string name="invalidemailpassword">Invalid email or password</string>
+    <string name="errorsendingverification">Error sending email verification message</string>
+    <string name="resetpwderror_authinvaliduser">We could not find an account with that email address</string>
+    <string name="resetpwderror_invalidcredentials">The email address provided is invalid. Please check for typos and try again</string>
+    <string name="resetpwderror_authmailexception">There was an error sending the password reset email. Please try again later</string>
 
     <string-array name="role" >
         <item>Bride</item>

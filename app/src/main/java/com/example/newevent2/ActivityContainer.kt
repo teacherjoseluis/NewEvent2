@@ -17,7 +17,6 @@ import com.example.newevent2.Functions.isEventDate
 import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.User
 import com.example.newevent2.Model.UserDBHelper
-import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -269,9 +268,9 @@ class ActivityContainer : AppCompatActivity() {
                     googleSignInClient.signOut()
                 }
                 //Logoff in case the user was logged in with Facebook
-                "facebook" -> {
-                    LoginManager.getInstance().logOut()
-                }
+//                "facebook" -> {
+//                    LoginManager.getInstance().logOut()
+//                }
             }
             //Logoff from Firebase
             usersession.logout(this@ActivityContainer)

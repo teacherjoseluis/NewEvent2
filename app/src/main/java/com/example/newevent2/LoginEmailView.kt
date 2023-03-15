@@ -5,9 +5,14 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.MVP.LoginEmailPresenter
 import com.example.newevent2.Model.User
+import com.google.firebase.auth.FirebaseAuthEmailException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.android.synthetic.main.login_email.*
+import kotlinx.coroutines.launch
 
 class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginActivity {
 
@@ -84,7 +89,19 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginAc
             if (inputvalflag) {
                 val userEmail = mailinputedit.text.toString()
                 val user = User()
-                user.sendpasswordreset(this, userEmail)
+                lifecycleScope.launch {
+                    try {
+                        user.sendPasswordReset(userEmail)
+                    } catch(e: FirebaseAuthInvalidUserException){
+                        displayErrorMsg(getString(R.string.resetpwderror_authinvaliduser) + e.toString())
+                    } catch(e: FirebaseAuthInvalidCredentialsException){
+                        displayErrorMsg(getString(R.string.resetpwderror_invalidcredentials) + e.toString())
+                    } catch (e: FirebaseAuthEmailException){
+                        displayErrorMsg(getString(R.string.resetpwderror_authmailexception) + e.toString())
+                    } catch (e: Exception){
+                        displayErrorMsg(getString(R.string.resetpwderror_authmailexception) + e.toString())
+                    }
+                }
             }
         }
     }
@@ -122,6 +139,14 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginAc
             this,
             getString(R.string.login_error_message),
             Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun displayErrorMsg(message: String) {
+        Toast.makeText(
+            this,
+            message,
+            Toast.LENGTH_LONG
         ).show()
     }
 }

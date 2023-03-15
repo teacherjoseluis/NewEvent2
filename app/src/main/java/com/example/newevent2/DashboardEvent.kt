@@ -19,6 +19,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -108,7 +109,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         )
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint("UseCompatLoadingForDrawables", "ResourceType")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -222,10 +223,12 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             ).show()
             Log.i("EventSummary.TAG", "No data was obtained from the Event")
             inflatedView.withdata.visibility = ConstraintLayout.GONE
-            inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
+            inflatedView.onboarding.visibility = ConstraintLayout.VISIBLE
 
-            inflatedView.withnodata1.newtaskbutton.visibility = FloatingActionButton.VISIBLE
-            inflatedView.withnodata1.newtaskbutton.setOnClickListener {
+            //inflatedView.withnodata1.newtaskbutton.visibility = FloatingActionButton.VISIBLE
+            val mAlphaAnimation =   AnimationUtils.loadAnimation(context,R.xml.alpha_animation)
+            inflatedView.onboarding.newtaskbutton.startAnimation(mAlphaAnimation)
+            inflatedView.onboarding.newtaskbutton.setOnClickListener {
                 val newtask = Intent(activity, TaskCreateEdit::class.java)
                 startActivity(newtask)
             }

@@ -15,6 +15,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     -->
+
+    <include
+        android:id="@+id/onboarding"
+        layout="@layout/onboarding_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
+
     <include
         android:id="@+id/withnodata1"
         layout="@layout/empty_state"
