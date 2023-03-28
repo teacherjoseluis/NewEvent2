@@ -19,44 +19,58 @@
 
         <ImageView
             android:id="@+id/imageView17"
-            android:layout_width="360dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
             android:adjustViewBounds="true"
             android:contentDescription="@string/emptystate"
-            android:scaleType="fitCenter"
+            android:padding="30dp"
+            android:scaleType="centerInside"
             android:src="@drawable/ativo_11"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
-        <TextView
-            style="@style/BodyBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="@string/there_are_no_elements_to_show"
-            android:textColor="@color/secondaryText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView17" />
+<!--        <TextView-->
+<!--            style="@style/BodyBold"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="10dp"-->
+<!--            android:text="@string/there_are_no_elements_to_show"-->
+<!--            android:textColor="@color/secondaryText"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/imageView17" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/newtaskbutton"
-        android:visibility="invisible"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/newtaskbutton"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            android:id="@+id/empty_card"
+            layout="@layout/onboardingcard" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/newtaskbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="55dp"
         android:clickable="true"
-        android:tint="@color/white"
+        android:contentDescription="@string/newtaskbutton"
         app:backgroundTint="@color/rosaChillon"
         app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/withnodata"
         app:maxImageSize="24dp"
-        app:srcCompat="@drawable/ic_icons8_plus"
-        android:contentDescription="@string/newtaskbutton" />
+        app:srcCompat="@drawable/ic_icons8_plus_white"
+        app:tint="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

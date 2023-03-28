@@ -3,12 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/arrowside.xml" value="0.2677083333333333" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/launch_screen.xml" value="0.1787037037037037" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/layout_border.xml" value="0.13425925925925927" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/lets_plan_together.xml" value="0.12222222222222222" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/login_gradient.xml" value="0.12222222222222222" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/onboard_border.xml" value="0.2677083333333333" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/onboardingDialog.xml" value="0.2677083333333333" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/organizer.xml" value="0.12222222222222222" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/person.xml" value="0.12222222222222222" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/rv_border.xml" value="0.2677083333333333" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/spinner_format.xml" value="0.20277777777777778" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/warning_svgrepo_com.xml" value="0.12222222222222222" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/weddingrings_smalllogo.xml" value="0.12222222222222222" />
@@ -34,6 +38,7 @@
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/note_item_layout.xml" value="0.34444444444444444" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/onboarding_name.xml" value="0.5130208333333334" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/onboarding_state.xml" value="0.33" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/onboardingcard.xml" value="0.75" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/payment_editdetail.xml" value="0.25" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/settings.xml" value="0.5130208333333334" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.35" />
@@ -44,6 +49,7 @@
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/taskpayment_payments.xml" value="0.225" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/taskpayment_tasks.xml" value="0.225" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/vendor_item_layout.xml" value="0.1361111111111111" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/vendors_all.xml" value="0.225" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/welcome0.xml" value="0.21481481481481482" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/xml/alpha_animation.xml" value="0.34444444444444444" />

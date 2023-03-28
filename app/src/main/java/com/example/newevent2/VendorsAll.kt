@@ -17,6 +17,8 @@ import com.example.newevent2.MVP.VendorsAllPresenter
 import com.example.newevent2.Model.*
 import com.example.newevent2.ui.ViewAnimation
 import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.android.synthetic.main.onboardingcard.view.*
+import kotlinx.android.synthetic.main.tableguestsactivity.*
 import kotlinx.android.synthetic.main.vendors_all.*
 import kotlinx.android.synthetic.main.vendors_all.view.*
 
@@ -167,6 +169,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         // No vendors coming, the regular layout is hidden and the emptystate one is shown
         withdatav.visibility = ConstraintLayout.GONE
         withnodatav.visibility = ConstraintLayout.VISIBLE
+        withnodatav.onboardingmessage.text = getString(R.string.emptystate_novendorsmsg)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

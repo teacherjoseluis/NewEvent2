@@ -91,7 +91,7 @@
     <string name="loading_blog_posts_to_show">Loading blog posts to show…</string>
     <string name="there_are_no_guests_yet_invited">There are no guests yet invited</string>
     <string name="emptystate">Empty State</string>
-    <string name="there_are_no_elements_to_show">No elements to show</string>
+    <string name="there_are_no_elements_to_show">Nothing to see here</string>
     <string name="newtaskbutton">New Task Button</string>
     <string name="vendors">Vendors</string>
     <string name="eventimage">Event Image</string>
@@ -290,6 +290,12 @@
     <string name="resetpwderror_authinvaliduser">We could not find an account with that email address</string>
     <string name="resetpwderror_invalidcredentials">The email address provided is invalid. Please check for typos and try again</string>
     <string name="resetpwderror_authmailexception">There was an error sending the password reset email. Please try again later</string>
+    <string name="onboarding_message_createtask">Welcome to our app! Let\'s get started by creating a task for your event.</string>
+    <string name="emptystate_noguestsmsg">There are currently no guests in your Event but you can add them here!</string>
+    <string name="emptystate_nonotesmsg">There are currently no Notes but you can add one here</string>
+    <string name="emptystate_nopaymentsmsg">There are currently no payments registered in the app for this category, you can go back and start adding them</string>
+    <string name="emptystate_notasksmsg">There are currently no tasks registered in the app for this category, you can go back and start adding them</string>
+    <string name="emptystate_novendorsmsg">There are currently no vendors in your Event but you can add them here!</string>
 
     <string-array name="role" >
         <item>Bride</item>

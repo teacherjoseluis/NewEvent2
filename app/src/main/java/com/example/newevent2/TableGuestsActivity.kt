@@ -23,6 +23,7 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.android.synthetic.main.onboardingcard.view.*
 import kotlinx.android.synthetic.main.tableguestsactivity.*
 import kotlinx.android.synthetic.main.tableguestsactivity.view.*
 import kotlinx.android.synthetic.main.tableguestsactivity.view.adView
@@ -137,6 +138,7 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
     override fun onTableGuestListError(errcode: String) {
         withdata.visibility = View.GONE
         withnodata.visibility = View.VISIBLE
+        withnodata.onboardingmessage.text = getString(R.string.emptystate_noguestsmsg)
     }
 
     @SuppressLint("NotifyDataSetChanged")

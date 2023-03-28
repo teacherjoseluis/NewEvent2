@@ -167,7 +167,7 @@
     <string name="error_emailaccountnotfound">La cuenta de correo no se encontró, necesitas registrarte primero</string>
     <string name="error_emailaccountexists">La cuenta de correo que intentas usar ya existe</string>
     <string name="error_emailpasswordincorrect">La contraseña es incorrecta</string>
-    <string name="there_are_no_elements_to_show">No hay elementos para mostrar</string>
+    <string name="there_are_no_elements_to_show">No hay nada que ver por aquí</string>
     <string name="error_noemailclient">No hay aplicaciones de correo instaladas en tu dispositivo</string>
     <string name="there_are_no_guests_yet_invited">No hay tienes invitados aún</string>
     <string name="there_is_no_activity_to_show">No hay actividad para mostrar</string>
@@ -277,6 +277,12 @@
     <string name="resetpwderror_authinvaliduser">No pudimos encontrar una cuenta con esa dirección de correo electrónico</string>
     <string name="resetpwderror_invalidcredentials">La dirección de correo electrónico proporcionada es inválida. Por favor, verifica que no haya errores de escritura e intenta nuevamente</string>
     <string name="resetpwderror_authmailexception">Hubo un error al enviar el correo electrónico de restablecimiento de contraseña. Por favor, intenta de nuevo más tarde</string>
+    <string name="onboarding_message_createtask">Bienvenido ! Empecemos por crear una tarea para tu evento.</string>
+    <string name="emptystate_noguestsmsg">Actualmente no hay invitados a tu evento pero los puedes agregar aquí</string>
+    <string name="emptystate_nonotesmsg">Actualmente no hay Notas pero las puedes agregar aquí</string>
+    <string name="emptystate_nopaymentsmsg">Actualmente no existen pagos para esta categoría en la app, puedes ir atrás y agregar algunas</string>
+    <string name="emptystate_notasksmsg">Actualmente no existen tareas para esta categoría en la app, puedes ir atrás y agregar algunas</string>
+    <string name="emptystate_novendorsmsg">Actualmente no hay vendedores para tu evento pero los puedes agregar aquí</string>
 
     <string-array name="role" >
         <item>Novia</item>

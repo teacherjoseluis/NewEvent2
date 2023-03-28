@@ -29,6 +29,7 @@ import kotlin.collections.ArrayList
 import android.widget.Toast
 import com.example.newevent2.MVP.TaskPaymentTasksPresenter
 import com.example.newevent2.MVP.VendorsAllPresenter
+import kotlinx.android.synthetic.main.onboardingcard.view.*
 
 
 class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
@@ -240,6 +241,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
     override fun onGAGuestsError(errcode: String) {
         withdata.visibility = ConstraintLayout.GONE
         withnodata.visibility = ConstraintLayout.VISIBLE
+        withnodata.onboardingmessage.text = getString(R.string.emptystate_noguestsmsg)
     }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

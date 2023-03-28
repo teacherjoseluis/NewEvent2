@@ -20,6 +20,7 @@ import com.example.newevent2.Model.NoteDBHelper
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.my_notes.*
 import kotlinx.android.synthetic.main.my_notes.view.*
+import kotlinx.android.synthetic.main.onboardingcard.view.*
 
 class MyNotes : Fragment(), NotePresenter.NoteActivity {
 
@@ -100,6 +101,7 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
     override fun onNoteError(inflatedView: View, errcode: String) {
         inflatedView.withdata.visibility = ConstraintLayout.GONE
         inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
+        inflatedView.onboardingmessage.text = getString(R.string.emptystate_nonotesmsg)
     }
 
     companion object {

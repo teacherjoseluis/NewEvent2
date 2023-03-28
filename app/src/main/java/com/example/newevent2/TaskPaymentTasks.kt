@@ -21,6 +21,7 @@ import com.example.newevent2.Functions.clone
 import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.Model.VendorDBHelper
 import kotlinx.android.synthetic.main.guests_all.*
+import kotlinx.android.synthetic.main.onboardingcard.view.*
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 
 
@@ -133,6 +134,7 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
     override fun onTPTasksError(inflatedView: View, errcode: String) {
         //We are showing the empty state layout and hiding the one that will load with task data
         inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
+        inflatedView.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
         inflatedView.scrollviewt.visibility = ConstraintLayout.GONE
     }
 

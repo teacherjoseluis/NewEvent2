@@ -60,6 +60,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.chartcard_layoutpayment.view.*
 import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import kotlinx.android.synthetic.main.empty_state.view.*
+import kotlinx.android.synthetic.main.onboardingcard.view.*
 import kotlinx.android.synthetic.main.summary_weddingguests.view.*
 import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -224,6 +225,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             Log.i("EventSummary.TAG", "No data was obtained from the Event")
             inflatedView.withdata.visibility = ConstraintLayout.GONE
             inflatedView.onboarding.visibility = ConstraintLayout.VISIBLE
+            inflatedView.onboarding_card.onboardingmessage.text = getString(R.string.onboarding_message_createtask)
 
             //inflatedView.withnodata1.newtaskbutton.visibility = FloatingActionButton.VISIBLE
             val mAlphaAnimation =   AnimationUtils.loadAnimation(context,R.xml.alpha_animation)
