@@ -18,18 +18,27 @@ import com.example.newevent2.Model.User
 import kotlinx.android.synthetic.main.onboarding_name.*
 import kotlinx.coroutines.*
 import android.content.Context
+import android.telephony.TelephonyManager
 import android.view.View
 
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat.getSystemService
+import com.google.android.gms.common.api.Status
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.textfield.TextInputEditText
+import java.util.*
 
 
 class OnboardingView() : AppCompatActivity() {
 
     private val autocompletePlaceCode = 1
 
+    private var eventlocationname: String? = null
     private var eventplaceid: String? = null
     private var eventlatitude = 0.0
     private var eventlongitude = 0.0
@@ -48,6 +57,32 @@ class OnboardingView() : AppCompatActivity() {
         userSession.language = this.resources.configuration.locales.get(0).country
 
         setContentView(R.layout.onboarding_name)
+
+        //---------- Places loading -------------
+        if (!Places.isInitialized()) {
+            Places.initialize(applicationContext, getString(R.string.google_maps_key), Locale.US)
+        }
+
+        // Initialize the AutocompleteSupportFragment.
+        val autocompleteFragment =
+            supportFragmentManager.findFragmentById(R.id.etlocation)
+                    as AutocompleteSupportFragment
+
+        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        autocompleteFragment.setCountry(tm.simCountryIso)
+        autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT)
+        autocompleteFragment.setPlaceFields(
+            listOf(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.LAT_LNG,
+                Place.Field.ADDRESS,
+                Place.Field.PHONE_NUMBER,
+                Place.Field.RATING,
+                Place.Field.USER_RATINGS_TOTAL
+            )
+        )
+        //---------------------------------------
 
         // Hide Layout for Onboarding Event
         eventonboaarding.visibility = ConstraintLayout.INVISIBLE
@@ -106,16 +141,47 @@ class OnboardingView() : AppCompatActivity() {
                     }
                 })
 
-                etlocation.setOnClickListener {
-                    val locationmap = Intent(this, MapsActivity::class.java)
-                    startActivityForResult(locationmap, autocompletePlaceCode)
-                }
+//                etlocation.setOnClickListener {
+//                    val locationmap = Intent(this, MapsActivity::class.java)
+//                    startActivityForResult(locationmap, autocompletePlaceCode)
 
-                etlocation.setOnFocusChangeListener(object : View.OnFocusChangeListener {
-                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-                        hideSoftKeyboard()
-                    }
-                })
+
+                    autocompleteFragment.setOnPlaceSelectedListener(object :
+                        PlaceSelectionListener {
+                        override fun onPlaceSelected(p0: Place) {
+                            eventplaceid = p0.id
+                            eventlatitude = p0.latLng!!.latitude
+                            eventlongitude = p0.latLng!!.longitude
+                            eventaddress = p0.address
+                            eventlocationname = p0.name
+                            //etlocation.setText(eventlocationname)
+
+//                            val resultIntent = Intent()
+                            //resultIntent.putExtra("eventid", eventkey)
+                            //resultIntent.putExtra("place_name", p0.name)
+                            //resultIntent.putExtra("place_id", p0.id)
+                            //resultIntent.putExtra("place_latitude", p0.latLng!!.latitude)
+                            //resultIntent.putExtra("place_longitude", p0.latLng!!.longitude)
+                            //resultIntent.putExtra("place_address", p0.address)
+//                            resultIntent.putExtra("place_phone", p0.phoneNumber)
+//                            resultIntent.putExtra("place_rating", p0.rating)
+//                            resultIntent.putExtra("place_userrating", p0.userRatingsTotal)
+//                            setResult(Activity.RESULT_OK, resultIntent)
+//                            finish()
+                        }
+
+                        override fun onError(p0: Status) {
+                            // Here it's where I Should be implementing the case when the provider has not been found
+                            //Toast.makeText(applicationContext, "" + p0.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    })
+//                }
+
+//                etlocation.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+//                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
+//                        hideSoftKeyboard()
+//                    }
+//                })
 
                 submitevent.setOnClickListener {
                     var inputvalflag: Boolean
@@ -132,10 +198,10 @@ class OnboardingView() : AppCompatActivity() {
                         etPlannedTime.error = getString(R.string.error_eventtimeinput)
                         inputvalflag = false
                     }
-                    if (etlocation.text.toString().isEmpty()) {
-                        etlocation.error = getString(R.string.error_eventlocationinput)
-                        inputvalflag = false
-                    }
+//                    if (etlocation.text.toString().isEmpty()) {
+//                        etlocation.error = getString(R.string.error_eventlocationinput)
+//                        inputvalflag = false
+//                    }
                     if (inputvalflag) {
                         val event = Event().apply {
                             placeid = eventplaceid.toString()
@@ -145,7 +211,7 @@ class OnboardingView() : AppCompatActivity() {
                             name = etname.text.toString()
                             date = etPlannedDate.text.toString()
                             time = etPlannedTime.text.toString()
-                            location = etlocation.text.toString()
+                            location = eventlocationname.toString()
                         }
 
                         userSession.role = when (spinner.selectedItemPosition) {
@@ -192,18 +258,18 @@ class OnboardingView() : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == autocompletePlaceCode) {
-            val placenameString = data?.getStringExtra("place_name")
-            eventplaceid = data!!.getStringExtra("place_id").toString()
-            eventlatitude = data.getDoubleExtra("place_latitude", 0.0)
-            eventlongitude = data.getDoubleExtra("place_longitude", 0.0)
-            eventaddress = data.getStringExtra("place_address").toString()
-            etlocation.setText(placenameString)
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == Activity.RESULT_OK && requestCode == autocompletePlaceCode) {
+//            val placenameString = data?.getStringExtra("place_name")
+//            eventplaceid = data!!.getStringExtra("place_id").toString()
+//            eventlatitude = data.getDoubleExtra("place_latitude", 0.0)
+//            eventlongitude = data.getDoubleExtra("place_longitude", 0.0)
+//            eventaddress = data.getStringExtra("place_address").toString()
+//            etlocation.setText(placenameString)
+//        }
+//    }
 
     private fun showDatePickerDialog() {
         val newFragment =
