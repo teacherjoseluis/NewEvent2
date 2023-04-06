@@ -161,7 +161,7 @@ private fun orderChainAdd(
     calendarEvent.nexthandlerp = paymentModel
     paymentModel.nexthandler = paymentDBHelper
     paymentDBHelper.nexthandler = userdbhelper
-    userdbhelper.nexthandleru = userModel
+    userdbhelper.nexthandlerp = userModel
     return calendarEvent
 }
 

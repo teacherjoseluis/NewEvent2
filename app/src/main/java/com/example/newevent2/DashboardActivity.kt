@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,8 @@ import com.example.newevent2.MVP.DashboardActivityPresenter
 import com.example.newevent2.Model.TaskJournal
 import kotlinx.android.synthetic.main.dashboardactivity.*
 import kotlinx.android.synthetic.main.dashboardactivity.view.*
+import kotlinx.android.synthetic.main.onboardingcard.view.*
+import kotlinx.android.synthetic.main.vendors_all.*
 
 class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInterface {
 
@@ -65,7 +68,8 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
     override fun onTaskJournalError(errcode: String) {
         //Consider adding a try catch in case there is no data coming from Firebase
         journalparentrv.visibility = View.GONE
-        noactivity.visibility = View.VISIBLE
+        withnodataj.visibility = ConstraintLayout.VISIBLE
+        withnodataj.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

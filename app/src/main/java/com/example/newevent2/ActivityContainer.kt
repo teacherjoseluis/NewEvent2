@@ -299,10 +299,13 @@ class ActivityContainer : AppCompatActivity() {
             println(e.message)
             0L
         }
+
         val currentTimeMillis = System.currentTimeMillis()
+        val oneWeekInMillis = 604800000L
+        //val oneWeekInMillis = 3600000L
 
         //168 hrs
-        if ((currentTimeMillis <= lastSignedInAt - (60 * 60 * 168 * 1000)) || lastSignedInAt == 0L) {
+        if (currentTimeMillis - lastSignedInAt >= oneWeekInMillis || lastSignedInAt == 0L) {
             val loginactivity =
                 Intent(this, LoginView::class.java)
             startActivity(loginactivity)

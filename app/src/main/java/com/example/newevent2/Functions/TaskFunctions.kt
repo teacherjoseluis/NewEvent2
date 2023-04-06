@@ -160,7 +160,7 @@ private fun orderChainAdd(
     calendarEvent.nexthandlert = taskModel
     taskModel.nexthandler = taskDBHelper
     taskDBHelper.nexthandler = userdbhelper
-    userdbhelper.nexthandleru = userModel
+    userdbhelper.nexthandlert = userModel
     return calendarEvent
 }
 

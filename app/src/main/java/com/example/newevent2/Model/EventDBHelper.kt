@@ -25,7 +25,9 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
         try {
             val eventModel = EventModel()
             event = eventModel.getEvent(userid)
-            update(event)
+            //update(event)
+            db.execSQL("DELETE FROM EVENT")
+            insert(event)
         } catch (e: Exception){
             println(e.message)
             throw FirebaseDataImportException("Error importing Event data: $e")

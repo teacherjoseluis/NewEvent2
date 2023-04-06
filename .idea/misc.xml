@@ -24,7 +24,7 @@
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/chartcard_emptystate.xml" value="0.3527777777777778" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/chartcard_layoutpayment.xml" value="0.1" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/chartcard_layouttask.xml" value="0.33" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardactivity.xml" value="0.153125" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardactivity.xml" value="0.22" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardblog.xml" value="0.3527777777777778" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardcharts.xml" value="0.32303370786516855" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/empty_state.xml" value="0.33" />
@@ -52,6 +52,8 @@
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/vendor_item_layout.xml" value="0.1361111111111111" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/vendors_all.xml" value="0.225" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/welcome0.xml" value="0.21481481481481482" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/menu/bottom_menu.xml" value="0.20625" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/menu/menu_navview.xml" value="0.20625" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/xml/alpha_animation.xml" value="0.34444444444444444" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/xml/scene_01.xml" value="0.34444444444444444" />

@@ -25,6 +25,8 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -55,8 +57,11 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.MPPointF
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.android.synthetic.main.activitycontainer.view.*
 import kotlinx.android.synthetic.main.chartcard_layoutpayment.view.*
 import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import kotlinx.android.synthetic.main.empty_state.view.*
@@ -180,7 +185,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 )//设置StepsViewIndicator AttentionIcon
             //--------------------------------------------------------------------------------------------
 
-            val weddingphotodetail = inflatedView.findViewById<LinearLayout>(R.id.weddingphotodetail)
+            val weddingphotodetail =
+                inflatedView.findViewById<LinearLayout>(R.id.weddingphotodetail)
             weddingphotodetail.setOnClickListener {
                 // ------- Analytics call ----------------
                 val bundle = Bundle()
@@ -225,10 +231,16 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             Log.i("EventSummary.TAG", "No data was obtained from the Event")
             inflatedView.withdata.visibility = ConstraintLayout.GONE
             inflatedView.onboarding.visibility = ConstraintLayout.VISIBLE
-            inflatedView.onboarding_card.onboardingmessage.text = getString(R.string.onboarding_message_createtask)
+            inflatedView.onboarding_card.onboardingmessage.text =
+                getString(R.string.onboarding_message_createtask)
+
+            val bottomView = this.activity?.findViewById<BottomNavigationView>(R.id.bottomnav)!!
+            for (i in 0 until bottomView.menu.size()) {
+                bottomView.menu.getItem(i).isEnabled = false
+            }
 
             //inflatedView.withnodata1.newtaskbutton.visibility = FloatingActionButton.VISIBLE
-            val mAlphaAnimation =   AnimationUtils.loadAnimation(context,R.xml.alpha_animation)
+            val mAlphaAnimation = AnimationUtils.loadAnimation(context, R.xml.alpha_animation)
             inflatedView.onboarding.newtaskbutton.startAnimation(mAlphaAnimation)
             inflatedView.onboarding.newtaskbutton.setOnClickListener {
                 val newtask = Intent(activity, TaskCreateEdit::class.java)

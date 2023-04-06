@@ -229,7 +229,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         TODO("Not yet implemented")
     }
 
-    override suspend fun onAddEditGuest(guest: Guest) {
+    override fun onAddEditGuest(guest: Guest) {
         //Callbacks whenever adding the Guest ends,
         // this will hide the loading view and return to the normal layout
         (mContext as ContactsAll).loadingview.visibility = ConstraintLayout.GONE

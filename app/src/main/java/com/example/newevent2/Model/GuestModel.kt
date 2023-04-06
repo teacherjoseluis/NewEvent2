@@ -7,8 +7,7 @@ import androidx.annotation.RequiresApi
 import com.example.newevent2.*
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.sql.Time
@@ -21,6 +20,7 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
 
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val myRef = database.reference
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
     var nexthandler: CoRAddEditGuest? = null
     var nexthandlerdel: CoRDeleteGuest? = null
 
@@ -78,7 +78,7 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private suspend fun addGuest(
+    private fun addGuest(
         userid: String,
         eventid: String,
         guest: Guest
@@ -104,9 +104,10 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
             "createdatetime" to sdf.format(guestdatetime)
 
         )
-
-        postRef.setValue(guestadd as Map<String, Any>)
-            .await()
+        coroutineScope.launch {
+            postRef.setValue(guestadd as Map<String, Any>)
+                .await()
+        }
         return postRef.key.toString()
     }
 
@@ -153,7 +154,7 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
 //            }
 //    }
 
-    private suspend fun editGuest(
+    private fun editGuest(
         userid: String,
         eventid: String,
         guest: Guest
@@ -170,9 +171,10 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
             "phone" to guest.phone,
             "email" to guest.email
         )
-
-        postRef.setValue(guestedit as Map<String, Any>)
-            .await()
+        coroutineScope.launch {
+            postRef.setValue(guestedit as Map<String, Any>)
+                .await()
+        }
     }
 
     private fun deleteGuest(
@@ -219,9 +221,9 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override suspend fun onAddEditGuest(guest: Guest) {
+    override fun onAddEditGuest(guest: Guest) {
         if (guest.key == "") {
-            guest.key  = addGuest(userid,eventid,guest)
+            guest.key = addGuest(userid, eventid, guest)
             nexthandler?.onAddEditGuest(guest)
         } else if (guest.key != "") {
             editGuest(userid, eventid, guest)

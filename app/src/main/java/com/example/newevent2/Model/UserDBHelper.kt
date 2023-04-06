@@ -17,9 +17,9 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
 
     private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
     var nexthandleru: CoRAddEditUser? = null
-    private var nexthandlert: CoRAddEditTask? = null
-    private var nexthandlerdelt: CoRDeleteTask? = null
-    private var nexthandlerp: CoRAddEditPayment? = null
+    var nexthandlert: CoRAddEditTask? = null
+    var nexthandlerdelt: CoRDeleteTask? = null
+    var nexthandlerp: CoRAddEditPayment? = null
     var nexthandlerpdel: CoRDeletePayment? = null
     var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
@@ -249,7 +249,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         nexthandlerpdel?.onDeletePayment(payment)
     }
 
-    override suspend fun onAddEditGuest(guest: Guest) {
+    override fun onAddEditGuest(guest: Guest) {
         val user = getUser(userdbhelper.getUserKey())
         user.guests = user.guests + 1
         user.hasguest = GuestModel.ACTIVEFLAG

@@ -335,7 +335,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         const val CALLER = "guest"
     }
 
-    override suspend fun onAddEditGuest(guest: Guest) {
+    override fun onAddEditGuest(guest: Guest) {
         (mContext as GuestCreateEdit).loadingview.visibility = ConstraintLayout.GONE
         (mContext as GuestCreateEdit).withdataview.visibility = ConstraintLayout.VISIBLE
         GuestsAll.guestcreated_flag = 1

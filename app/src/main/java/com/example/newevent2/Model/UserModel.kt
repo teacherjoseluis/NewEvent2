@@ -28,10 +28,13 @@ class UserModel(
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
+    private val uid = FirebaseAuth.getInstance().currentUser?.uid
+    val userRef = FirebaseDatabase.getInstance().getReference("User/$uid")
     private val postRef = myRef.child("User").child(this.key!!)
     private val activeSessionsRef = myRef.child("session")
     private var firebaseUser = User(key)
     private val firebaseAuth = FirebaseAuth.getInstance()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     var tasksactive = 0
     var paymentsactive = 0
@@ -169,43 +172,63 @@ class UserModel(
     }
 
     private fun editUserAddTask(value: Int) {
-        postRef.child("tasksactive").setValue(value)
-        Log.d(TAG, "There are currently $value active tasks associated to the User")
+        coroutineScope.launch {
+            val user = getUser()
+            userRef.child("tasksactive").setValue(user.tasksactive + value).await()
+            Log.d(TAG, "There are currently $value active tasks associated to the User")
+        }
     }
 
     private fun editUserAddPayment(value: Int) {
-        postRef.child("payments").setValue(value)
-        Log.d(TAG, "There are currently $value payments associated to the User")
+        coroutineScope.launch {
+            val user = getUser()
+            userRef.child("payments").setValue(user.payments + value).await()
+            Log.d(TAG, "There are currently $value payments associated to the User")
+        }
     }
 
     private fun editUserAddGuest(value: Int) {
-        postRef.child("guests").setValue(value)
-        Log.d(TAG, "There are currently $value guests associated to the User")
+        coroutineScope.launch {
+            val user = getUser()
+            userRef.child("guests").setValue(user.guests + value).await()
+            Log.d(TAG, "There are currently $value guests associated to the User")
+        }
     }
 
     private fun editUserAddVendor(value: Int) {
-        postRef.child("vendors").setValue(value)
-        Log.d(TAG, "There are currently $value vendors associated to the User")
+        coroutineScope.launch {
+            val user = getUser()
+            userRef.child("vendors").setValue(user.vendors + value).await()
+            Log.d(TAG, "There are currently $value vendors associated to the User")
+        }
     }
 
     private fun editUserTaskflag(flag: String) {
-        postRef.child("hastask").setValue(flag)
-        Log.d(TAG, "Flag hastask for the User has been set to $flag")
+        coroutineScope.launch {
+            userRef.child("hastask").setValue(flag).await()
+            Log.d(TAG, "Flag hastask for the User has been set to $flag")
+        }
     }
 
     private fun editUserPaymentflag(flag: String) {
-        postRef.child("haspayment").setValue(flag)
-        Log.d(TAG, "Flag haspayment for the User has been set to $flag")
+        coroutineScope.launch {
+            userRef.child("haspayment").setValue(flag).await()
+            Log.d(TAG, "Flag haspayment for the User has been set to $flag")
+        }
     }
 
     private fun editUserGuestflag(flag: String) {
-        postRef.child("hasguest").setValue(flag)
-        Log.d(TAG, "Flag hasguest for the User has been set to $flag")
+        coroutineScope.launch {
+            userRef.child("hasguest").setValue(flag).await()
+            Log.d(TAG, "Flag hasguest for the User has been set to $flag")
+        }
     }
 
     private fun editUserVendorflag(flag: String) {
-        postRef.child("hasvendor").setValue(flag)
-        Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
+        coroutineScope.launch {
+            userRef.child("hasvendor").setValue(flag).await()
+            Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
+        }
     }
 
     private suspend fun addUser(user: User) {
@@ -278,29 +301,30 @@ class UserModel(
 
     override fun onAddEditTask(task: Task) {
         editUserTaskflag(TaskModel.ACTIVEFLAG)
-        editUserAddTask(tasksactive + 1)
+        editUserAddTask(1)
         nexthandlert?.onAddEditTask(task)
     }
 
     override fun onDeleteTask(task: Task) {
-        editUserAddTask(tasksactive - 1)
+        editUserAddTask(- 1)
         nexthandlerdelt?.onDeleteTask(task)
     }
 
+
     override fun onAddEditPayment(payment: Payment) {
         editUserPaymentflag(PaymentModel.ACTIVEFLAG)
-        editUserAddPayment(paymentsactive + 1)
+        editUserAddPayment( 1)
         nexthandlerp?.onAddEditPayment(payment)
     }
 
     override fun onDeletePayment(payment: Payment) {
-        editUserAddPayment(paymentsactive - 1)
+        editUserAddPayment( - 1)
         nexthandlerpdel?.onDeletePayment(payment)
     }
 
-    override suspend fun onAddEditGuest(guest: Guest) {
+    override fun onAddEditGuest(guest: Guest) {
         editUserGuestflag(GuestModel.ACTIVEFLAG)
-        editUserAddGuest(guestsactive + 1)
+        editUserAddGuest( + 1)
         nexthandlerg?.onAddEditGuest(guest)
     }
 
@@ -310,7 +334,7 @@ class UserModel(
 
     override fun onAddEditVendor(vendor: Vendor) {
         editUserVendorflag(VendorModel.ACTIVEFLAG)
-        editUserAddVendor(vendorsactive + 1)
+        editUserAddVendor( + 1)
         nexthandlerv?.onAddEditVendor(vendor)
     }
 
