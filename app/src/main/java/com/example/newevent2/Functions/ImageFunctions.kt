@@ -61,7 +61,8 @@ fun getImgfromStorage(
 fun getImgfromSD(category: String, context: Context): Bitmap {
     val imagepath =
         Paths.get(
-            context.getExternalFilesDir(null)?.absolutePath, "Images", "$category.PNG"
+            //context.getExternalFilesDir(null)?.absolutePath, "Images", "$category.PNG"
+            context.getExternalFilesDir(null)?.absolutePath, "$category.PNG"
         ).toString()
     var bitmapimage = BitmapFactory.decodeFile(imagepath)
     if (bitmapimage == null) {
@@ -75,7 +76,7 @@ fun getImgfromPlaces(
     placeId: String,
     ApiKey: String,
     category: String,
-    placesimage : ImageView
+    placesimage: ImageView
 ) {
     var bitmapimage: Bitmap?
     val fields = listOf(Place.Field.PHOTO_METADATAS)
@@ -174,7 +175,7 @@ fun saveURLImgtoSD(category: String, uri: Uri?, context: Context) {
 @RequiresApi(Build.VERSION_CODES.R)
 fun saveBitmaptoSD(context: Context, category: String, bitmap: Bitmap) {
     val imagepath = Paths.get(
-        context.getExternalFilesDir(null)?.absolutePath, "Images"
+        context.getExternalFilesDir(null)?.absolutePath
     ).toString()
     val imagefile = File(imagepath, "$category.PNG")
     try {
@@ -201,7 +202,7 @@ fun saveBitmaptoSD(context: Context, category: String, bitmap: Bitmap) {
             out.flush()
             out.close()
         }
-    } catch (e: Exception){
+    } catch (e: Exception) {
         Toast.makeText(
             context,
             "There was an error trying create the event ${e.message}",
@@ -225,7 +226,7 @@ fun replaceImage(context: Context, category: String, userid: String, eventid: St
 fun delImgfromSD(category: String, context: Context) {
     val imagepath =
         Paths.get(
-            context.getExternalFilesDir(null)?.absolutePath, "Images"
+            context.getExternalFilesDir(null)?.absolutePath
         ).toString()
     val imagefile = File(imagepath, "$category.PNG")
     imagefile.delete()
