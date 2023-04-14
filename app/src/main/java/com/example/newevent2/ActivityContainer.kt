@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.isEventDate
 import com.example.newevent2.Functions.userdbhelper
@@ -273,7 +274,9 @@ class ActivityContainer : AppCompatActivity() {
 //                }
             }
             //Logoff from Firebase
-            usersession.logout(this@ActivityContainer)
+            lifecycleScope.launchWhenResumed {
+                usersession.logout(this@ActivityContainer)
+            }
             //usersession.deleteUserSession(this@ActivityContainer)
             finish()
         }

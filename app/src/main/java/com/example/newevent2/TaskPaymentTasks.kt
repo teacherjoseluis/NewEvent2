@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.newevent2.Functions.clone
 import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.Model.VendorDBHelper
+import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlinx.android.synthetic.main.guests_all.*
 import kotlinx.android.synthetic.main.onboardingcard.view.*
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
@@ -128,14 +130,18 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
             //If no tasks are retrieved from the presenter the component is marked as invisible
             inflatedView.activetaskslayout.visibility = ConstraintLayout.GONE
             inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
+            inflatedView.withnodatataskpaymentt.empty_card.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
+            inflatedView.withnodatataskpaymentt.newtaskbutton.hide()
         }
     }
 
     override fun onTPTasksError(inflatedView: View, errcode: String) {
         //We are showing the empty state layout and hiding the one that will load with task data
         inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
-        inflatedView.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
-        inflatedView.scrollviewt.visibility = ConstraintLayout.GONE
+        //inflatedView.withnodatataskpaymentt.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
+        inflatedView.withnodatataskpaymentt.empty_card.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
+        inflatedView.activetaskslayout.visibility = ConstraintLayout.GONE
+        inflatedView.withnodatataskpaymentt.newtaskbutton.hide()
     }
 
     @SuppressLint("NotifyDataSetChanged")

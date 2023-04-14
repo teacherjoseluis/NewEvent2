@@ -28,9 +28,9 @@
             android:scaleType="centerInside"
             android:src="@drawable/ativo_11"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+            tools:layout_editor_absoluteY="16dp" />
 
-<!--        <TextView-->
+        <!--        <TextView-->
 <!--            style="@style/BodyBold"-->
 <!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->

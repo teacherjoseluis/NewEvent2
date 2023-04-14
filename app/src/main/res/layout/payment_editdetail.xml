@@ -40,6 +40,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/paymentname"
+                    android:foregroundTint="@color/rosaChillon"
                     style="@style/Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -73,7 +74,8 @@
                     android:layout_height="70dp"
                     android:background="@drawable/layout_border"
                     android:hint="@string/payment_amount"
-                    android:maxLength="10" />
+                    android:maxLength="10"
+                    android:padding="10dp"/>
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -143,7 +145,7 @@
                 android:id="@+id/groupeditpayment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:singleSelection="true"></com.google.android.material.chip.ChipGroup>
+                app:singleSelection="true"/>
         </LinearLayout>
 
         <LinearLayout

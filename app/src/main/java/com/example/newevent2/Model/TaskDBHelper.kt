@@ -27,12 +27,10 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         val taskList: ArrayList<Task>
         val eventModel = EventModel()
         try {
+            db.execSQL("DELETE FROM TASK")
             val eventKey = eventModel.getEventKey(userid)
             val taskModel = TaskModel()
-
             taskList = taskModel.getTasks(userid, eventKey)
-            db.execSQL("DELETE FROM TASK")
-
             for (taskItem in taskList){
                 insert(taskItem)
             }
@@ -53,8 +51,14 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         values.put("status", task.status)
         values.put("eventid", task.eventid)
         values.put("createdatetime", task.createdatetime)
-        db.insert("TASK", null, values)
-        Log.d(TAG, "Task record inserted")
+        try {
+            db.insert("TASK", null, values)
+            Log.d(TAG, "Task record inserted ${task.name}")
+        }
+        catch (e: Exception)
+        {
+            println(e.message)
+        }
     }
 
     private fun getTaskexists(key: String): Boolean {

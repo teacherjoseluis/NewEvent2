@@ -9,6 +9,7 @@ import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.TaskModel
 import com.example.newevent2.Model.User
 import com.example.newevent2.Model.UserDBHelper
+import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
 import java.util.*
 import kotlin.collections.ArrayList
@@ -67,9 +68,14 @@ class TaskPaymentList : AppCompatActivity() {
         // Every container page will have the title name for the associated category
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        val language = this.resources.configuration.locales.get(0).language
+
         for (category in list) {
             if (category.code == passedcategory) {
-                apptitle.text = category.en_name
+                apptitle.text = when (language) {
+                    "en" -> category.en_name
+                    else -> category.es_name
+                }
             }
         }
     }

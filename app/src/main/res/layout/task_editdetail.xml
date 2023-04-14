@@ -74,7 +74,8 @@
                     android:layout_height="70dp"
                     style="@style/Body1"
                     android:hint="@string/taskbudget"
-                    android:maxLength="10"/>
+                    android:maxLength="10"
+                    android:padding="10dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

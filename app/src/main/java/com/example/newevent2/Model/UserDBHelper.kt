@@ -67,7 +67,8 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         try {
             val userModel = UserModel(userid)
             user = userModel.getUser()
-            update(user)
+            db.execSQL("DELETE FROM USER")
+            insert(user)
         } catch (e: Exception){
             println(e.message)
             throw FirebaseDataImportException("Error importing User data: $e")

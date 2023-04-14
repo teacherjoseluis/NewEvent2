@@ -52,9 +52,9 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
         Log.d(TAG, "Event record inserted")
 
         //updating eventid in user
+        userdbhelper = UserDBHelper(context)
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
         user.eventid = event.key
-        userdbhelper = UserDBHelper(context)
         userdbhelper.update(user)
 //        user.saveUserSession(context)
     }
