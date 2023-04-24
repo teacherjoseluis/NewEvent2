@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -13,9 +14,11 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.newevent2.Functions.addGuest
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.isEventDate
 import com.example.newevent2.Functions.userdbhelper
+import com.example.newevent2.Model.EventModel
 import com.example.newevent2.Model.User
 import com.example.newevent2.Model.UserDBHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -26,6 +29,7 @@ import com.nordan.dialog.Animation
 import com.nordan.dialog.NordanAlertDialog
 import kotlinx.android.synthetic.main.header_navview.*
 import kotlinx.android.synthetic.main.header_navview.view.*
+import kotlinx.coroutines.launch
 
 class ActivityContainer : AppCompatActivity() {
 
@@ -40,6 +44,7 @@ class ActivityContainer : AppCompatActivity() {
     private lateinit var headershortname: TextView
 
     private val TIME_DELAY = 2000
+    private val LOGINACTIVITY = 123
     private var back_pressed: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -303,15 +308,22 @@ class ActivityContainer : AppCompatActivity() {
             0L
         }
 
+        val emailid = try {
+            getUserSession(this@ActivityContainer, "event_id") as String
+        } catch (e: Exception) {
+            println(e.message)
+            ""
+        }
+
         val currentTimeMillis = System.currentTimeMillis()
         val oneWeekInMillis = 604800000L
         //val oneWeekInMillis = 3600000L
 
         //168 hrs
-        if (currentTimeMillis - lastSignedInAt >= oneWeekInMillis || lastSignedInAt == 0L) {
+        if (currentTimeMillis - lastSignedInAt >= oneWeekInMillis || lastSignedInAt == 0L || emailid == "") {
             val loginactivity =
                 Intent(this, LoginView::class.java)
-            startActivity(loginactivity)
+            startActivityForResult(loginactivity, LOGINACTIVITY)
         } else {
             headershortname.text = usersession.shortname
             if (isEventDate(this) == 0) {
@@ -359,6 +371,22 @@ class ActivityContainer : AppCompatActivity() {
 //                    .commit()
 //            }
 //        }
+    }
+
+//    override fun onBackPressedLogin() {
+//        finishActivity(LOGINACTIVITY)
+//        super.onBackPressed()
+//    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == LOGINACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                //
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                super.onBackPressed()
+            }
+        }
     }
 }
 

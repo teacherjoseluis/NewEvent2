@@ -23,6 +23,7 @@ import android.view.View
 
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
@@ -43,6 +44,9 @@ class OnboardingView() : AppCompatActivity() {
     private var eventlatitude = 0.0
     private var eventlongitude = 0.0
     private var eventaddress: String? = null
+
+    private val TIME_DELAY = 2000
+    private var back_pressed: Long = 0
 
     private lateinit var userSession: User
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
@@ -292,5 +296,19 @@ class OnboardingView() : AppCompatActivity() {
             val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
         }
+    }
+
+    override fun onBackPressed() {
+        if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+            userSession.logout(this)
+            super.onBackPressed()
+            finish()
+        } else {
+            Toast.makeText(
+                getBaseContext(), getString(R.string.pressexit),
+                Toast.LENGTH_SHORT
+            ).show();
+        }
+        back_pressed = System.currentTimeMillis();
     }
 }

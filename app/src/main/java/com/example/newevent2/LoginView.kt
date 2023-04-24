@@ -32,11 +32,15 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
 
     //private lateinit var mCallbackManager: CallbackManager
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
+    private val TIME_DELAY = 2000
+    private var back_pressed: Long = 0
     val user = User()
+
+    private var onBackPressedListener: OnBackPressedLoginViewListener? = null
 
     private lateinit var authResult: AuthResult
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    //@OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login0)
@@ -357,10 +361,10 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        scope.cancel()
-    }
+    //override fun onDestroy() {
+    //super.onDestroy()
+    //scope.cancel()
+    //}
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 //        mCallbackManager.onActivityResult(requestCode, resultCode, data)
@@ -640,6 +644,19 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         frame1.visibility = ConstraintLayout.VISIBLE
     }
 
+    override fun onBackPressed() {
+        if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+            super.onBackPressed()
+            finish()
+        } else {
+            Toast.makeText(
+                getBaseContext(), getString(R.string.pressexit),
+                Toast.LENGTH_SHORT
+            ).show();
+        }
+        back_pressed = System.currentTimeMillis();
+    }
+
     private fun displayErrorMsg(message: String) {
         Toast.makeText(
             this@LoginView,
@@ -647,4 +664,8 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             Toast.LENGTH_LONG
         ).show()
     }
+}
+
+interface OnBackPressedLoginViewListener {
+    fun onBackPressedLogin()
 }

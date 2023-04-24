@@ -9,6 +9,7 @@ import android.util.Log
 import com.example.newevent2.CoRAddEditEvent
 import com.example.newevent2.CoROnboardUser
 import com.example.newevent2.Functions.getUserSession
+import com.example.newevent2.Functions.saveUserSession
 import com.example.newevent2.Functions.userdbhelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -57,6 +58,7 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
         user.eventid = event.key
         userdbhelper.update(user)
 //        user.saveUserSession(context)
+        saveUserSession(context, event.key, null, "event_id")
     }
 
     private fun getEventexists(key: String): Boolean {
