@@ -2,6 +2,7 @@ package com.example.newevent2
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.onboardingcard.view.*
 import kotlinx.android.synthetic.main.tableguestsactivity.*
 import kotlinx.android.synthetic.main.vendors_all.*
 import kotlinx.android.synthetic.main.vendors_all.view.*
+import java.lang.Exception
 
 class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 
@@ -40,10 +42,17 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     private var userrating = 0
     private var isRotate = false
 
+    private var mContext: Context? = null
+
     private var contactlist = ArrayList<Vendor>()
 
     private val REQUEST_CODE_CONTACTS = 1
     private val REQUEST_CODE_VENDOR = 3
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +84,11 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         }
 
         // Invoking the presenter that will populate the recyclerview
-        presentervendor = VendorsAllPresenter(requireContext(), this)
+        try {
+            presentervendor = VendorsAllPresenter(mContext!!, this)
+        } catch (e: Exception) {
+            println(e.message)
+        }
 
         //This is for the Add button, Vendors can be added from scratch or from the contact list
         ViewAnimation.init(inf.NewVendor)
@@ -138,7 +151,11 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        presentervendor = VendorsAllPresenter(requireContext(), this)
+        try {
+            presentervendor = VendorsAllPresenter(mContext!!, this)
+        } catch (e: Exception) {
+            println(e.message)
+        }
 //        recyclerViewActive.adapter = null
 //        recyclerViewActive.adapter = rvAdapter
     }
@@ -148,7 +165,11 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         vendorpaymentlist: ArrayList<VendorPayment>
     ) {
         // There are vendors obtained from the presenter and these are passed to the recyclerview
-        rvAdapter = Rv_VendorAdapter(vendorpaymentlist, requireContext())
+        try {
+            rvAdapter = Rv_VendorAdapter(vendorpaymentlist, mContext!!)
+        } catch (e: Exception){
+            println(e.message)
+        }
 
         recyclerViewAllVendor.adapter = null
         recyclerViewAllVendor.adapter = rvAdapter
@@ -203,7 +224,11 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         }
         if (((requestCode == REQUEST_CODE_CONTACTS) || (requestCode == REQUEST_CODE_VENDOR)) && resultCode == Activity.RESULT_OK) {
             //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
-            presentervendor = VendorsAllPresenter(requireContext(), this)
+            try {
+                presentervendor = VendorsAllPresenter(mContext!!, this)
+            } catch (e: Exception) {
+                println(e.message)
+            }
         }
     }
 

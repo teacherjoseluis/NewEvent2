@@ -70,6 +70,7 @@ import kotlinx.android.synthetic.main.summary_weddingguests.view.*
 import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.text.DecimalFormat
 import kotlin.collections.ArrayList
 
@@ -125,7 +126,11 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflatedView = inflater.inflate(R.layout.dashboardcharts, container, false)
 
         //Calling the presenter that will pull of the data I need for this view
-        dashboardEP = DashboardEventPresenter(requireContext(), this, inflatedView)
+        try {
+            dashboardEP = DashboardEventPresenter(requireContext(), this, inflatedView)
+        } catch (e: Exception) {
+            println(e.message)
+        }
         //this needs to evaluate if it's true to continue the process, else it will stop it
         val user = userdbhelper.getUser(userdbhelper.getUserKey())
 
@@ -547,12 +552,16 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflatedview.findViewById<TextView>(R.id.eventfulladdress).text = event.address
 
         val daysleft = daystoDate(converttoDate(event.date))
-        inflatedview.findViewById<TextView>(R.id.deadline).text =
+        inflatedview.findViewById<TextView>(R.id.deadline).text = try {
             daysleft.toString().plus(" ").plus(
                 getString(
                     R.string.daysleft
                 )
             )
+        } catch (e: Exception) {
+            println(e.message)
+            ""
+        }
 
         // Load thumbnail
         imagePresenter = ImagePresenter(context, this, inflatedview)

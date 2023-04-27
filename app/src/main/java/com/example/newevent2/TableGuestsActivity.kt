@@ -64,7 +64,11 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
             }
         }
 
-        presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+        try {
+            presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+        } catch (e: Exception) {
+            println(e.message)
+        }
 
         ViewAnimation.init(inf.NewGuestTG)
         ViewAnimation.init(inf.ContactGuestTG)
@@ -144,14 +148,22 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+        try {
+            presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+        } catch (e: Exception) {
+            println(e.message)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (((requestCode == REQUEST_CODE_CONTACTS) || (requestCode == REQUEST_CODE_GUESTS)) && resultCode == Activity.RESULT_OK) {
             //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
-            presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+            try {
+                presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+            } catch (e: Exception) {
+                println(e.message)
+            }
         }
     }
 }

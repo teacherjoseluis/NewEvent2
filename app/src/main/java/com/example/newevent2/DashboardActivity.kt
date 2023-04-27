@@ -55,7 +55,11 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
 //            newtask.putExtra("eventid", userSession.eventid)
             startActivityForResult(newtask, REQUEST_CODE_TASK)
         }
-        presentertask = DashboardActivityPresenter(requireContext(), this)
+        try {
+            presentertask = DashboardActivityPresenter(requireContext(), this)
+        } catch (e: Exception) {
+            println(e.message)
+        }
         return inf
     }
 
@@ -74,9 +78,13 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if ((requestCode == REQUEST_CODE_TASK) && resultCode == Activity.RESULT_OK){
-            presentertask = DashboardActivityPresenter(requireContext(), this)
+        if ((requestCode == REQUEST_CODE_TASK) && resultCode == Activity.RESULT_OK) {
+            try {
+                presentertask = DashboardActivityPresenter(requireContext(), this)
+            } catch (e: Exception) {
+                println(e.message)
             }
+        }
     }
 }
 

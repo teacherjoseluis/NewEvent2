@@ -96,7 +96,11 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
 
         pulltoRefresh.setOnRefreshListener {
-            presenterguest = GuestsAllPresenter(requireContext(), this)
+            try {
+                presenterguest = GuestsAllPresenter(requireContext(), this)
+            } catch (e: Exception) {
+                println(e.message)
+            }
             pullToRefresh.isRefreshing = false
         }
 
@@ -118,7 +122,11 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //        val itemTouchHelper = ItemTouchHelper(swipeController)
 //        itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
 
-        presenterguest = GuestsAllPresenter(requireContext(), this)
+        try {
+            presenterguest = GuestsAllPresenter(requireContext(), this)
+        } catch (e: Exception) {
+            println(e.message)
+        }
 
         ViewAnimation.init(inf.NewGuest)
         ViewAnimation.init(inf.ContactGuest)
@@ -272,14 +280,22 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         super.onActivityResult(requestCode, resultCode, data)
         if (((requestCode == REQUEST_CODE_CONTACTS) || (requestCode == REQUEST_CODE_GUESTS)) && resultCode == Activity.RESULT_OK) {
             //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
-            presenterguest = GuestsAllPresenter(requireContext(), this)
+            try {
+                presenterguest = GuestsAllPresenter(requireContext(), this)
+            } catch (e: Exception) {
+                println(e.message)
+            }
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        presenterguest = GuestsAllPresenter(requireContext(), this)
+        try {
+            presenterguest = GuestsAllPresenter(requireContext(), this)
+        } catch (e: Exception) {
+            println(e.message)
+        }
 //        recyclerViewActive.adapter = null
 //        recyclerViewActive.adapter = rvAdapter
     }

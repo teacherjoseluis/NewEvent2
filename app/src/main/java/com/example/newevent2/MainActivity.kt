@@ -36,7 +36,7 @@ import kotlinx.android.synthetic.main.eventform_layout.*
 import kotlinx.android.synthetic.main.task_editdetail.*
 import java.util.*
 
-class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresenter.EventItem {
+class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresenter.EventItem {
 
     private val autocompletePlaceCode = 1
 
@@ -59,7 +59,11 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        presenterevent = EventPresenter(applicationContext, this)
+        try {
+            presenterevent = EventPresenter(applicationContext, this)
+        } catch (e: Exception) {
+            println(e.message)
+        }
         presenterevent.getEventDetail()
 
         eventname.setOnClickListener {
@@ -190,7 +194,8 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
                     showImagePickerDialog()
                 } else {
                     //permission from popup denied
-                    Toast.makeText(this, getString(R.string.permissiondenied), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.permissiondenied), Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -216,12 +221,18 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
                 val eventdb = EventDBHelper(applicationContext)
                 eventdb.update(event)
 
-                if(uri != null) {
+                if (uri != null) {
                     //There was a change in the event image
-                    replaceImage(applicationContext, "eventimage", user.userid!!, user.eventid, uri!!)
+                    replaceImage(
+                        applicationContext,
+                        "eventimage",
+                        user.userid!!,
+                        user.eventid,
+                        uri!!
+                    )
                 }
 
-                if(eventplaceid != "") {
+                if (eventplaceid != "") {
                     //There was a change in the event location
                     delImgfromSD(ImagePresenter.PLACEIMAGE, this@MainActivity)
                 }
@@ -322,7 +333,11 @@ class MainActivity: AppCompatActivity(), ImagePresenter.EventImage, EventPresent
         eventaddress = event.address
         eventkey = event.key
 
-        imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
+        try {
+            imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
+        } catch (e: Exception) {
+            println(e.message)
+        }
         imagePresenter.getEventImage()
     }
 

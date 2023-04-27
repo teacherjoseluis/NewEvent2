@@ -16,7 +16,7 @@ class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity {
 
     private lateinit var recyclerViewBlog: RecyclerView
     private lateinit var presenter: BlogPresenter
-    private lateinit var inf:View
+    private lateinit var inf: View
 
     var language = "en"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +45,11 @@ class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity {
 
     override fun onResume() {
         super.onResume()
-        presenter = BlogPresenter(requireContext(), this, inf, language)
+        try {
+            presenter = BlogPresenter(requireContext(), this, inf, language)
+        } catch (e: Exception) {
+            println(e.message)
+        }
     }
 
     override fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<Blog>) {

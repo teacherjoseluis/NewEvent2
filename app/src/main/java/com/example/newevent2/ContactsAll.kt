@@ -84,7 +84,11 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         } else {
             //permission already granted
             // Call the presenter
-            presenterguest = ContactsAllPresenter(this, this)
+            try {
+                presenterguest = ContactsAllPresenter(this, this)
+            } catch (e: Exception) {
+                println(e.message)
+            }
         }
     }
 
@@ -257,7 +261,11 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                     PackageManager.PERMISSION_GRANTED
                 ) {
                     //permission from popup granted
-                    presenterguest = ContactsAllPresenter(this, this)
+                    try {
+                        presenterguest = ContactsAllPresenter(this, this)
+                    } catch (e: Exception) {
+                        println(e.message)
+                    }
                 }
             }
         }

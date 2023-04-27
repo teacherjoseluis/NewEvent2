@@ -83,7 +83,11 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
             }
         }
 
-        presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
+        try {
+            presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
+        } catch (e: Exception) {
+            println(e.message)
+        }
         return inf
     }
 
@@ -130,7 +134,8 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
             //If no tasks are retrieved from the presenter the component is marked as invisible
             inflatedView.activetaskslayout.visibility = ConstraintLayout.GONE
             inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
-            inflatedView.withnodatataskpaymentt.empty_card.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
+            inflatedView.withnodatataskpaymentt.empty_card.onboardingmessage.text =
+                getString(R.string.emptystate_notasksmsg)
             inflatedView.withnodatataskpaymentt.newtaskbutton.hide()
         }
     }
@@ -139,7 +144,8 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         //We are showing the empty state layout and hiding the one that will load with task data
         inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
         //inflatedView.withnodatataskpaymentt.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
-        inflatedView.withnodatataskpaymentt.empty_card.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
+        inflatedView.withnodatataskpaymentt.empty_card.onboardingmessage.text =
+            getString(R.string.emptystate_notasksmsg)
         inflatedView.activetaskslayout.visibility = ConstraintLayout.GONE
         inflatedView.withnodatataskpaymentt.newtaskbutton.hide()
     }
@@ -147,7 +153,11 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
+        try {
+            presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
+        } catch (e: Exception) {
+            println(e.message)
+        }
 //        recyclerViewActive.adapter = null
 //        recyclerViewActive.adapter = rvAdapter
     }

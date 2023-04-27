@@ -42,7 +42,11 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
                 reverseLayout = true
             }
         }
-        presenternote = NotePresenter(requireContext(), this, inf)
+        try {
+            presenternote = NotePresenter(requireContext(), this, inf)
+        } catch (e: Exception) {
+            println(e.message)
+        }
 
         inf.floatingNewNote.setOnClickListener {
             // ------- Analytics call ----------------
@@ -79,7 +83,11 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
         super.onActivityResult(requestCode, resultCode, data)
         if ((requestCode == REQUEST_CODE_NOTES) && (resultCode == Activity.RESULT_OK)) {
             //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
-            presenternote = NotePresenter(requireContext(), this, inf)
+            try {
+                presenternote = NotePresenter(requireContext(), this, inf)
+            } catch (e: Exception) {
+                println(e.message)
+            }
         }
     }
 

@@ -56,7 +56,11 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         }
 
         //Calling the presenter for Vendors that will be used to associate the Payment to a Vendor
-        presentervendor = VendorPaymentPresenter(this, this)
+        try {
+            presentervendor = VendorPaymentPresenter(this, this)
+        } catch (e: Exception) {
+            println(e.message)
+        }
 
         //We are making sure that only valid text is entered in the name of the payment
         paymentname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
