@@ -116,6 +116,12 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                 "others" -> guestgroup.check(others.id)
                 else -> guestgroup.check(others.id)
             }
+            when (guestitem.rsvp){
+                "y" -> rsvpgroup.check(chip1.id)
+                "n" -> rsvpgroup.check(chip2.id)
+                "pending" -> rsvpgroup.check(chip3.id)
+                else -> rsvpgroup.check(chip1.id)
+            }
         }
 
         nameinputedit.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
@@ -302,6 +308,10 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
             getString(R.string.coworkers) -> "coworkers"
             getString(R.string.others) -> "others"
             else -> "others"
+        }
+
+        if (categoryrsvp == "n"){
+            categoryguests = "notattending"
         }
 
         guestitem.rsvp = categoryrsvp

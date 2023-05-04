@@ -31,7 +31,8 @@ class TableGuestsActivityPresenter(
             guesttableslist.clear()
             var count = 0
             for (guest in list) {
-                if (guest.table == tables && guest.rsvp != "n"){
+                //if (guest.table == tables && guest.rsvp != "n"){
+                if (guest.table == tables) {
                     count += when (guest.companion) {
                         "none" -> 1
                         else -> 2

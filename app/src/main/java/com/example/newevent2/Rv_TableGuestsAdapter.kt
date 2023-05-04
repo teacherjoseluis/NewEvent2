@@ -41,6 +41,7 @@ class Rv_TableGuestsAdapter(
             "familyfriends" -> context.getString(R.string.familyfriends)
             "oldfriends" -> context.getString(R.string.oldfriends)
             "coworkers" -> context.getString(R.string.coworkers)
+            "notattending" -> context.getString(R.string.notattending)
             else -> context.getString(R.string.others)
         }
 

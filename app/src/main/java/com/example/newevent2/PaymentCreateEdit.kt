@@ -1,6 +1,7 @@
 package com.example.newevent2
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -34,7 +35,8 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
     private lateinit var paymentitem: Payment
     private lateinit var presentervendor: VendorPaymentPresenter
-    private var mRewardedAd: RewardedAd? = null
+    private lateinit var rewardedAd: RewardedAd
+    private lateinit var adManager: AdManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,42 +179,44 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         }
 
         // Loading the Ad
-        val adRequest = AdRequest.Builder().build()
-        RewardedAd.load(
-            this,
-            "ca-app-pub-3940256099942544/5224354917",
-            adRequest,
-            object : RewardedAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d(TaskCreateEdit.TAG, adError.message)
-                    mRewardedAd = null
-                }
-
-                override fun onAdLoaded(rewardedAd: RewardedAd) {
-                    Log.d(TaskCreateEdit.TAG, "Ad was loaded.")
-                    mRewardedAd = rewardedAd
-                }
-            })
-
-        // Ad listener in case I want to add additional behavior
-        mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdShowedFullScreenContent() {
-                // Called when ad is shown.
-                Log.d(TaskCreateEdit.TAG, "Ad was shown.")
-            }
-
-            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                // Called when ad fails to show.
-                Log.d(TaskCreateEdit.TAG, "Ad failed to show.")
-            }
-
-            override fun onAdDismissedFullScreenContent() {
-                // Called when ad is dismissed.
-                // Set the ad reference to null so you don't show the ad a second time.
-                Log.d(TaskCreateEdit.TAG, "Ad was dismissed.")
-                mRewardedAd = null
-            }
-        }
+//        val adRequest = AdRequest.Builder().build()
+//        RewardedAd.load(
+//            this,
+//            "ca-app-pub-3940256099942544/5224354917",
+//            adRequest,
+//            object : RewardedAdLoadCallback() {
+//                override fun onAdFailedToLoad(adError: LoadAdError) {
+//                    Log.d(TaskCreateEdit.TAG, adError.message)
+//                    mRewardedAd = null
+//                }
+//
+//                override fun onAdLoaded(rewardedAd: RewardedAd) {
+//                    Log.d(TaskCreateEdit.TAG, "Ad was loaded.")
+//                    mRewardedAd = rewardedAd
+//                }
+//            })
+//
+//        // Ad listener in case I want to add additional behavior
+//        mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+//            override fun onAdShowedFullScreenContent() {
+//                // Called when ad is shown.
+//                Log.d(TaskCreateEdit.TAG, "Ad was shown.")
+//            }
+//
+//            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+//                // Called when ad fails to show.
+//                Log.d(TaskCreateEdit.TAG, "Ad failed to show.")
+//            }
+//
+//            override fun onAdDismissedFullScreenContent() {
+//                // Called when ad is dismissed.
+//                // Set the ad reference to null so you don't show the ad a second time.
+//                Log.d(TaskCreateEdit.TAG, "Ad was dismissed.")
+//                mRewardedAd = null
+//            }
+//        }
+        adManager = AdManagerSingleton.getAdManager()
+        adManager.loadAndShowRewardedAd(this)
     }
 
     // Repeated from TaskCreateEdit
@@ -265,12 +269,15 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
             } else if (paymentitem.key != "") {
                 editPayment(this, paymentitem)
             }
+            val resultIntent = Intent()
+            setResult(Activity.RESULT_OK, resultIntent)
         }
-        if (mRewardedAd != null) {
-            mRewardedAd?.show(this) {}
+        if (adManager.mRewardedAd != null) {
+            adManager.mRewardedAd?.show(this) {}
         } else {
             Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
         }
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {

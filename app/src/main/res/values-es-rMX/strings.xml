@@ -284,6 +284,7 @@
     <string name="emptystate_nopaymentsmsg">Actualmente no existen pagos para esta categoría en la app, puedes ir atrás y agregar algunas</string>
     <string name="emptystate_notasksmsg">Actualmente no existen tareas para esta categoría en la app, puedes ir atrás y agregar algunas</string>
     <string name="emptystate_novendorsmsg">Actualmente no hay vendedores para tu evento pero los puedes agregar aquí</string>
+    <string name="notattending">No asiste</string>
 
     <string-array name="role" >
         <item>Novia</item>

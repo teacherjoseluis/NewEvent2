@@ -87,7 +87,7 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         val chainofcommand =
-            orderChainDel(calendarevent, userdbhelper, usermodel, taskdbhelper, taskmodel)
+            orderChainDel(calendarevent, usermodel, userdbhelper, taskdbhelper, taskmodel)
         chainofcommand.onDeleteTask(taskitem)
         //------------------------------------------------
         // ------- Analytics call ----------------
@@ -166,14 +166,14 @@ private fun orderChainAdd(
 
 private fun orderChainDel(
     calendarEvent: CalendarEvent,
-    userdbhelper: UserDBHelper,
     userModel: UserModel,
+    userdbhelper: UserDBHelper,
     taskDBHelper: TaskDBHelper,
     taskModel: TaskModel
 ): CoRDeleteTask {
-    calendarEvent.nexthandlertdel = userdbhelper
-    userdbhelper.nexthandleru = userModel
-    userModel.nexthandlerdelt = taskDBHelper
+    calendarEvent.nexthandlertdel = userModel
+    userModel.nexthandlerdelt = userdbhelper
+    userdbhelper.nexthandlerdelt = taskDBHelper
     taskDBHelper.nexthandlerdel = taskModel
     return calendarEvent
 }
