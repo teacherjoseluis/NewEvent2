@@ -1,6 +1,7 @@
 package com.example.newevent2
 
 //import com.example.newevent2.MVP.TaskPresenter
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
@@ -11,12 +12,15 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.DashboardActivityPresenter
+import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.Model.TaskJournal
 import kotlinx.android.synthetic.main.dashboardactivity.*
 import kotlinx.android.synthetic.main.dashboardactivity.view.*
+import kotlinx.android.synthetic.main.mainevent_summary.view.*
 import kotlinx.android.synthetic.main.onboardingcard.view.*
 import kotlinx.android.synthetic.main.vendors_all.*
 
@@ -84,6 +88,16 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
             } catch (e: Exception) {
                 println(e.message)
             }
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onResume() {
+        super.onResume()
+        try {
+            presentertask = DashboardActivityPresenter(requireContext(), this)
+        } catch (e: Exception) {
+            println(e.message)
         }
     }
 }

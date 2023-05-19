@@ -8,3 +8,6 @@ class ExistingSessionException (message: String) : Exception(message)
 
 // Exception related to Database updates
 class FirebaseDataImportException (message: String) : Exception(message)
+
+// Exception related to Network connectivity
+class NetworkConnectivityException (message: String) : Exception(message)

@@ -10,7 +10,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
-class AdManager(private val adDelayTimeMillis: Long = 60000) {
+class AdManager(private val adDelayTimeMillis: Long) {
     private var lastAdShownTime: Long = 0
     var mRewardedAd: RewardedAd? = null
 
@@ -35,6 +35,7 @@ class AdManager(private val adDelayTimeMillis: Long = 60000) {
                     override fun onAdLoaded(rewardedAd: RewardedAd) {
                         Log.d(TaskCreateEdit.TAG, "Ad was loaded.")
                         mRewardedAd = rewardedAd
+                        lastAdShownTime = currentTimeMillis
                     }
                 })
 
@@ -58,7 +59,6 @@ class AdManager(private val adDelayTimeMillis: Long = 60000) {
                 }
             }
             // Update the time when the last ad was shown
-            lastAdShownTime = currentTimeMillis
         } else {
             // Delay time has not elapsed, do not show the ad
         }

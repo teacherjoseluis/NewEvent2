@@ -23,7 +23,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
     var nexthandlerdel: CoRDeleteTask? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(userid: String) : Boolean {
+    suspend fun firebaseImport(userid: String): Boolean {
         val taskList: ArrayList<Task>
         val eventModel = EventModel()
         try {
@@ -31,10 +31,10 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             val eventKey = eventModel.getEventKey(userid)
             val taskModel = TaskModel()
             taskList = taskModel.getTasks(userid, eventKey)
-            for (taskItem in taskList){
+            for (taskItem in taskList) {
                 insert(taskItem)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             println(e.message)
             throw FirebaseDataImportException("Error importing Task data: $e")
         }
@@ -54,9 +54,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         try {
             db.insert("TASK", null, values)
             Log.d(TAG, "Task record inserted ${task.name}")
-        }
-        catch (e: Exception)
-        {
+        } catch (e: Exception) {
             println(e.message)
         }
     }
@@ -75,7 +73,10 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
 
     fun getTasks(): ArrayList<Task> {
         val list = ArrayList<Task>()
-        val cursor: Cursor = db.rawQuery("SELECT * FROM TASK WHERE taskid IS NOT NULL AND taskid !='' ORDER BY createdatetime DESC", null)
+        val cursor: Cursor = db.rawQuery(
+            "SELECT * FROM TASK WHERE taskid IS NOT NULL AND taskid !='' ORDER BY createdatetime DESC",
+            null
+        )
         if (cursor != null) {
             if (cursor.count > 0) {
                 cursor.moveToFirst()
@@ -99,10 +100,32 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         return list
     }
 
+    fun getTasksNames(): ArrayList<String> {
+        val list = ArrayList<String>()
+        val cursor: Cursor = db.rawQuery(
+            "SELECT name FROM TASK WHERE taskid IS NOT NULL AND taskid !='' ORDER BY createdatetime DESC",
+            null
+        )
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    val name = cursor.getString(cursor.getColumnIndex("name"))
+                    list.add(name)
+                } while (cursor.moveToNext())
+            }
+        }
+        cursor.close()
+        return list
+    }
+
     fun getActiveCategories(): ArrayList<Category> {
         val list = ArrayList<Category>()
         val cursor: Cursor =
-            db.rawQuery("SELECT DISTINCT category FROM (SELECT category FROM TASK WHERE status = 'A' UNION ALL SELECT category FROM PAYMENT)", null)
+            db.rawQuery(
+                "SELECT DISTINCT category FROM (SELECT category FROM TASK WHERE status = 'A' UNION ALL SELECT category FROM PAYMENT)",
+                null
+            )
         if (cursor != null) {
             if (cursor.count > 0) {
                 cursor.moveToFirst()

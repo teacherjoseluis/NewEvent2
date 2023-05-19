@@ -30,6 +30,14 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import kotlinx.android.synthetic.main.payment_editdetail.*
 import java.util.*
+import android.view.View.OnFocusChangeListener
+
+import android.view.MotionEvent
+
+import android.view.View.OnTouchListener
+
+
+
 
 class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors {
 
@@ -65,8 +73,14 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         }
 
         //We are making sure that only valid text is entered in the name of the payment
+        val taskhelper = TaskDBHelper(this)
+        val tasklist =  taskhelper.getTasksNames()
+        val itemsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, tasklist)
+
+        paymentname.setAdapter(itemsAdapter)
         paymentname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
             if (!p1) {
+                paymentname.hint=""
                 val validationmessage = TextValidate(paymentname).namefieldValidate()
                 if (validationmessage != "") {
                     paymentname.error = "Error in Payment name: $validationmessage"
@@ -243,6 +257,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                     paymentdate.error = getString(R.string.error_invaliddate)
                 }
             }))
+
         newFragment.show(supportFragmentManager, "datePicker")
     }
 

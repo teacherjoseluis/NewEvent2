@@ -24,6 +24,8 @@ import kotlinx.android.synthetic.main.mainevent_summary.view.*
 class EventCategories : Fragment() {
 
     private lateinit var recyclerViewCategory: RecyclerView
+    private lateinit var inf: View
+    private lateinit var list: ArrayList<Category>
     private var isRotate = false
     private val REQUEST_CODE_TASK = 4
     private val REQUEST_CODE_PAYMENT = 5
@@ -38,11 +40,11 @@ class EventCategories : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val inf = inflater.inflate(R.layout.mainevent_summary, container, false)
+        inf = inflater.inflate(R.layout.mainevent_summary, container, false)
 
         // Getting the list of categories that I'm actually going to show from the local DB
         val taskdb = TaskDBHelper(requireContext())
-        val list = taskdb.getActiveCategories()
+        list = taskdb.getActiveCategories()
 
         // Creates and loads the Ad
         val adRequest = AdRequest.Builder().build()
@@ -136,6 +138,20 @@ class EventCategories : Fragment() {
             }
         }
         return inf
+    }
+
+    //Hopefully this doesn't break
+    override fun onResume() {
+        super.onResume()
+        //Creating the recyclerview to show the Categories, 2 columns
+        recyclerViewCategory = inf.categoryrv
+        recyclerViewCategory.apply {
+            layoutManager = GridLayoutManager(context, 2).apply {
+                reverseLayout = true
+            }
+        }
+        val rvAdapter = rvCategoryAdapter(list)
+        recyclerViewCategory.adapter = rvAdapter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

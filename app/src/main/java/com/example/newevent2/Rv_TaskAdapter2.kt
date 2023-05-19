@@ -74,11 +74,11 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
 //        p0.categoryavatar?.setImageResource(resourceId)
 
         p0.itemView.setOnClickListener {
-            if(taskList[p1].status == "A") {
+//            if(taskList[p1].status == "A") {
                 val taskdetail = Intent(context, TaskCreateEdit::class.java)
                 taskdetail.putExtra("task", taskList[p1])
                 context.startActivity(taskdetail)
-            }
+//            }
         }
     }
 

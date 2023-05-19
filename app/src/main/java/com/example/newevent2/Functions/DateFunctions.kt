@@ -8,6 +8,7 @@ import java.sql.Time
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -46,7 +47,8 @@ internal fun daystoDate(date: Date): Int {
 internal fun validateOldDate(year: Int, month: Int, day: Int): Boolean {
     val localDate = LocalDate.of(year, month, day)
     val defaultZoneId = ZoneId.systemDefault()
-    val datetovalidate = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant())
+    //val datetovalidate = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant())
+    val datetovalidate = Date.from(localDate.atTime(LocalTime.MAX).atZone(defaultZoneId).toInstant())
     return datetovalidate.after(currentDateTime)
 }
 

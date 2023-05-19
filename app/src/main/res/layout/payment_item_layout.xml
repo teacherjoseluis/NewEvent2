@@ -21,17 +21,26 @@
     android:paddingRight="16dp">
 
     <ImageView
+        android:id="@+id/arrowside"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/rosaChillon"
+        tools:srcCompat="@drawable/ic_arrow_left" />
+
+    <ImageView
         android:id="@+id/categoryavatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="5dp"
         android:layout_marginBottom="5dp"
+        android:contentDescription="@string/categoryavatar"
         android:paddingBottom="5dp"
         app:layout_constraintBottom_toTopOf="@+id/view"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/arrowside"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/categoryavatar" />
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/paymentname"
@@ -83,10 +92,10 @@
         style="@style/BodySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="5dp"
         android:paddingBottom="5dp"
-        android:text="@string/budget"
+        android:text="@string/amount"
         android:textColor="@color/azulmasClaro"
         app:layout_constraintEnd_toStartOf="@+id/paymentamounts"
         app:layout_constraintTop_toBottomOf="@+id/paymentname" />

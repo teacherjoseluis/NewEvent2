@@ -297,6 +297,7 @@
     <string name="emptystate_notasksmsg">There are currently no tasks registered in the app for this category, you can go back and start adding them</string>
     <string name="emptystate_novendorsmsg">There are currently no vendors in your Event but you can add them here!</string>
     <string name="notattending">Not attending</string>
+    <string name="error_networkconnectivity">There was a problem with your network connection, please make sure you are connected to the Internet</string>
 
     <string-array name="role" >
         <item>Bride</item>

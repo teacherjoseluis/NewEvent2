@@ -1,9 +1,6 @@
 package com.example.newevent2.Model
 
-import Application.EmailVerificationException
-import Application.ExistingSessionException
-import Application.SessionAccessException
-import Application.UserAuthenticationException
+import Application.*
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -118,7 +115,11 @@ class User(
                         throw EmailVerificationException("Email account for user ${authResult?.user!!} has not been verified")
                     }
                 } catch (e: Exception) {
-                    throw UserAuthenticationException(e.toString())
+                    if (e is com.google.firebase.FirebaseNetworkException) {
+                        throw NetworkConnectivityException(e.toString())
+                    } else {
+                        throw UserAuthenticationException(e.toString())
+                    }
                 }
             }
             else -> {
@@ -127,7 +128,11 @@ class User(
                 try {
                     authResult = mAuth.signInWithCredential(credential!!).await()
                 } catch (e: Exception) {
-                    throw UserAuthenticationException(e.toString())
+                    if (e is com.google.firebase.FirebaseNetworkException) {
+                        throw NetworkConnectivityException(e.toString())
+                    } else {
+                        throw UserAuthenticationException(e.toString())
+                    }
                 }
             }
         }
@@ -150,12 +155,12 @@ class User(
         val eventId = eventSnapShot.getValue(String::class.java)
         //-----------------------------------------------------------------------------------------------------------------
         if (activeSessionsSnapshot.exists()) {
-            val storedSessionID =
-                activeSessionsSnapshot.getValue(String::class.java)
-            if (storedSessionID != "") {
-                // Session ID exists and therefore a user is signed in elsewhere
-                throw ExistingSessionException("There is an existing session $storedSessionID for user ${authResult?.user!!}")
-            } else {
+//            val storedSessionID =
+//                activeSessionsSnapshot.getValue(String::class.java)
+//            if (storedSessionID != "") {
+//                // Session ID exists and therefore a user is signed in elsewhere
+//                throw ExistingSessionException("There is an existing session $storedSessionID for user ${authResult?.user!!}")
+//            } else {
                 // extracting the session value from Firebase
                 val currentTimeMillis = System.currentTimeMillis()
                 lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
@@ -174,7 +179,7 @@ class User(
                 )
                 saveUserSession(activity, null, currentTimeMillis, "last_signed_in_at")
                 return@coroutineScope authResult
-            }
+            //}
         } else {
             // extracting the session value from Firebase
             val currentTimeMillis = System.currentTimeMillis()

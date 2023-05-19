@@ -1,9 +1,6 @@
 package com.example.newevent2
 
-import Application.EmailVerificationException
-import Application.ExistingSessionException
-import Application.SessionAccessException
-import Application.UserAuthenticationException
+import Application.*
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -111,13 +108,15 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                             onLoginSuccess(firebaseUser!!.email!!)
 
                         } catch (e: EmailVerificationException) {
-                            displayErrorMsg(getString(R.string.error_emailverification) + e.toString())
+                            displayErrorMsg(getString(R.string.error_emailverification)/* + e.toString()*/)
                         } catch (e: UserAuthenticationException) {
-                            displayErrorMsg(getString(R.string.failed_email_login) + e.toString())
+                            displayErrorMsg(getString(R.string.failed_email_login)/* + e.toString()*/)
                         } catch (e: SessionAccessException) {
-                            displayErrorMsg(getString(R.string.error_usersession) + e.toString())
+                            displayErrorMsg(getString(R.string.error_usersession)/* + e.toString()*/)
                         } catch (e: ExistingSessionException) {
-                            displayErrorMsg(getString(R.string.error_usersession) + e.toString())
+                            displayErrorMsg(getString(R.string.error_usersession)/* + e.toString()*/)
+                        } catch (e: NetworkConnectivityException) {
+                            displayErrorMsg(getString(R.string.error_networkconnectivity)/* + e.toString()*/)
                         }
                     }
                 }
