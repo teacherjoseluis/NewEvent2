@@ -23,7 +23,7 @@
     <string name="available">Disponible</string>
     <string name="error_valid_emailaccount">Se requiere una cuenta de correo válida</string>
     <string name="baby">Bebé</string>
-    <string name="blogimage">Imágen de Blog</string>
+    <string name="blogimage">Imagen de Blog</string>
     <string name="blog_title">Título del Blog</string>
     <string name="passwords_dontmatch">Ambas contraseñas no concuerdan</string>
     <string name="budget">Presupuesto</string>
@@ -32,14 +32,15 @@
     <string name="card_title">Título de la tarjeta</string>
     <string name="category">Categoría</string>
     <string name="categoryavatar">Avatar de categoría</string>
-    <string name="categoryimage">Imágen de la categoría</string>
+    <string name="categoryimage">Imagen de la categoría</string>
     <string name="error_taskcategoryinput">La categoría es requerida</string>
     <string name="success_password_reset_email">Revisa tu cuenta de correo por un correo de reseteo de contraseña</string>
     <string name="child">Niño(a)</string>
     <string name="clearvendor">Remover proveedor</string>
     <string name="clockicon">Ícono de reloj</string>
     <string name="companions">Acompañantes</string>
-    <string name="complete_task">Completar Tarea</string>
+    <string name="complete_task">Completar</string>
+    <string name="reactivate_task">Reactivar Tarea</string>
     <string name="congratulations">Felicidades!</string>
     <string name="contactavatar">Avatar de contacto</string>
     <string name="fabcontactguest">Botón de contacto de invitado</string>
@@ -59,13 +60,13 @@
     <string name="done">Hecho</string>
     <string name="logoff_question">Te quieres desconectar?</string>
     <string name="duenext">Próxima tarea</string>
-    <string name="editeventImage">Editar Imágen del evento</string>
+    <string name="editeventImage">Editar Imagen del evento</string>
     <string name="email">Correo Electrónico</string>
     <string name="emptystate">Estado vacío</string>
     <string name="newevent_eventnameinput_en">Ingresa el nombre del evento</string>
     <string name="success_eventchanges">Cambios al evento se guardaron exitósamente</string>
     <string name="eventdetails">Detalles del Evento</string>
-    <string name="eventimage">Imágen del Evento</string>
+    <string name="eventimage">Imagen del Evento</string>
     <string name="event_name">Nombre del Evento</string>
     <string name="events">Eventos</string>
     <string name="fabcontactvendor">Botón de contacto</string>
@@ -73,7 +74,7 @@
     <string name="floatingactionbuttonvendor">Botón de proveedor</string>
     <string name="forgot_password">Olvidaste tu contraseña?</string>
     <string name="forgot_your_email_click_in_here">Olvidaste tu correo? Da click</string>
-    <string name="for_you">para tí</string>
+    <string name="for_you">para ti</string>
     <string name="from_contacts">De Contactos</string>
     <string name="full_address">Dirección completa</string>
     <string name="googleicon">Ícono de Google</string>
@@ -83,15 +84,15 @@
     <string name="home">Inicio</string>
     <string name="language">Idioma</string>
     <string name="letsplantogether">Vamos a planear juntos</string>
-    <string name="loading_blog_posts_to_show">Cargando publicaciones...</string>
-    <string name="loading">Cargando...</string>
+    <string name="loading_blog_posts_to_show">Cargando publicaciones…</string>
+    <string name="loading">Cargando…</string>
     <string name="localization">Localización</string>
     <string name="location">Ubicación</string>
     <string name="login">Conectarse</string>
     <string name="logoff">Desconectarse</string>
     <string name="log_off">Desconectarse</string>
     <string name="logo">Logotipo</string>
-    <string name="mailimage">Imágen de Correo</string>
+    <string name="mailimage">Imagen de Correo</string>
     <string name="title_activity_maps">Mapa</string>
     <string name="more_options">Más opciones</string>
     <string name="my_event">mi evento</string>
@@ -109,7 +110,7 @@
     <string name="newtaskpaymentactionbutton">Nueva Tarea_Pago</string>
     <string name="newvendor_title">Nuevo Proveedor</string>
     <string name="none">Ninguno</string>
-    <string name="no" translatable="false">No</string>
+    <string name="no">No</string>
     <string name="note">Nota</string>
     <string name="note_color">color de nota</string>
     <string name="notes">Notas</string>
@@ -134,6 +135,7 @@
     <string name="rejected">Rechazado(a)</string>
     <string name="rejectedicon">Ícono de rechazo</string>
     <string name="remove_guest">Remover Invitado</string>
+    <string name="brides_amp_grooms"><![CDATA[Brides & Grooms]]></string>
     <string name="remove_vendor">Remover Proveedor</string>
     <string name="requestinfo">Solicitar Información</string>
     <string name="role">Rol</string>
@@ -158,11 +160,11 @@
     <string name="table_twopoints">Mesa:</string>
     <string name="task">Tarea</string>
     <string name="taskbudget">Presupuesto de la Tarea</string>
-    <string name="taskbudgetimage">Imágen del presupuesto de la Tarea</string>
-    <string name="taskdoneimage">Imágen de tarea completada</string>
+    <string name="taskbudgetimage">Imagen del presupuesto de la Tarea</string>
+    <string name="taskdoneimage">Imagen de tarea completada</string>
     <string name="task_due_date">Fecha límite de la tarea</string>
     <string name="taskname">Nombre de la tarea</string>
-    <string name="taskpendingimage">Imágen de Tarea pendiente</string>
+    <string name="taskpendingimage">Imagen de Tarea pendiente</string>
     <string name="tasks">Tareas</string>
     <string name="terms_and_conditions">Términos y Condiciones</string>
     <string name="error_emailaccountnotfound">La cuenta de correo no se encontró, necesitas registrarte primero</string>
@@ -286,6 +288,7 @@
     <string name="emptystate_novendorsmsg">Actualmente no hay vendedores para tu evento pero los puedes agregar aquí</string>
     <string name="notattending">No asiste</string>
     <string name="error_networkconnectivity">Hay un problema con tu conexión a Internet, asegurate de estar conectado para continuar</string>
+    <string name="error_networkconnection">Existe un problema al intentar conectartse a la red. Para poder llevar a cabo esta acción necesitas asegurarte que exista acceso a Internet.</string>
 
     <string-array name="role" >
         <item>Novia</item>

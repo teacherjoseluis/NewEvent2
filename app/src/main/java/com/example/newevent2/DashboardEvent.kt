@@ -25,11 +25,8 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.get
-import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.baoyachi.stepview.HorizontalStepView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -41,38 +38,29 @@ import com.example.newevent2.Functions.converttoDate
 import com.example.newevent2.Functions.daystoDate
 import com.example.newevent2.Functions.getImgfromPlaces
 import com.example.newevent2.Functions.userdbhelper
-import com.example.newevent2.MVP.ContactsAllPresenter
 import com.example.newevent2.MVP.DashboardEventPresenter
 import com.example.newevent2.MVP.ImagePresenter
 import com.example.newevent2.Model.Event
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Task
-import com.example.newevent2.ui.CurrencyValueFormatter
+import com.example.newevent2.Model.User
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.activitycontainer.view.*
 import kotlinx.android.synthetic.main.chartcard_layoutpayment.view.*
 import kotlinx.android.synthetic.main.dashboardcharts.view.*
 import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlinx.android.synthetic.main.onboardingcard.view.*
 import kotlinx.android.synthetic.main.summary_weddingguests.view.*
 import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.text.DecimalFormat
-import kotlin.collections.ArrayList
 
 class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     DashboardEventPresenter.PaymentStats, DashboardEventPresenter.GuestStats,
@@ -90,6 +78,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     private var tfLight: Typeface? = null
 
     private lateinit var inflatedView: View
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,7 +110,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         inflatedView = inflater.inflate(R.layout.dashboardcharts, container, false)
 
@@ -132,7 +121,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             println(e.message)
         }
         //this needs to evaluate if it's true to continue the process, else it will stop it
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        user = userdbhelper.getUser(userdbhelper.getUserKey())
 
         if (user.hastask == "Y" || user.haspayment == "Y") {
             inflatedView.withnodata1.visibility = ConstraintLayout.GONE
@@ -502,18 +491,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflatedView.withdata.paymentchartnodata.cardtitle.text = getString(R.string.payments)
     }
 
-    class myPercentageFormatter : ValueFormatter() {
-        private var mFormat: DecimalFormat? = null
-
-        init {
-            mFormat = DecimalFormat("###,###,##0.0")
-        }
-
-        override fun getFormattedValue(value: Float): String {
-            return mFormat!!.format(value.toDouble()) + " %"
-        }
-    }
-
     override fun onGuestConfirmation(
         inflatedView: View,
         confirmed: Int,
@@ -551,7 +528,13 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflatedview.findViewById<TextView>(R.id.eventaddress).text = event.location
         inflatedview.findViewById<TextView>(R.id.eventfulladdress).text = event.address
 
-        val daysleft = daystoDate(converttoDate(event.date))
+        var daysleft = 0
+        try {
+            daysleft = daystoDate(converttoDate(event.date))
+        } catch (e: Exception) {
+            user.softlogout(activity!!)
+        }
+
         inflatedview.findViewById<TextView>(R.id.deadline).text = try {
             daysleft.toString().plus(" ").plus(
                 getString(
@@ -697,7 +680,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                         placeid,
                         resources.getString(R.string.google_maps_key),
                         ImagePresenter.PLACEIMAGE,
-                        inflatedView!!.placesimage
+                        inflatedView.placesimage
                     )
                 }
             }

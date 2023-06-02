@@ -1,6 +1,7 @@
 package com.example.newevent2.Model
 
 import Application.FirebaseDataImportException
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -23,11 +24,10 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     var nexthandlerpdel: CoRDeletePayment? = null
     var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
-    var nexthandlerv: CoRAddEditVendor? = null
-    var nexthandlerdelv: CoRDeleteVendor? = null
+    private var nexthandlerv: CoRAddEditVendor? = null
+    private var nexthandlerdelv: CoRDeleteVendor? = null
     var nexthandleron: CoROnboardUser? = null
 
-    private lateinit var user: User
     private var useremail: String
 
     init {
@@ -86,6 +86,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         return existsflag
     }
 
+    @SuppressLint("Range")
     fun getUserKey(): String {
         var key = ""
         val cursor: Cursor = db.rawQuery("SELECT userid FROM USER WHERE email = '$useremail'", null)
@@ -100,11 +101,12 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         }
         finally {
             if (cursor != null) {
-                cursor.close();
+                cursor.close()
             }
         }
     }
 
+    @SuppressLint("Range")
     fun getUser(key: String?): User {
         var user = User()
         val cursor: Cursor = db.rawQuery("SELECT * FROM USER WHERE userid = '$key'", null)

@@ -3,13 +3,11 @@ package com.example.newevent2.MVP
 import Application.Cache
 import android.content.Context
 import android.os.Build
-import android.view.View
 import androidx.annotation.RequiresApi
 import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.MainActivity
-import com.example.newevent2.Model.*
-
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.EventModel
 
 class EventPresenter : Cache.EventItemCacheData {
 

@@ -88,7 +88,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
         } catch (e: Exception) {
             println(e.message)
         }
-        return paymentList!!
+        return paymentList
     }
 
     fun getPaymentsList(

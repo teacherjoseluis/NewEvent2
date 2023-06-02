@@ -37,11 +37,11 @@ class Rv_TaskDatesAdapter(
     }
     //--------------------------------------------------
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): Rv_TaskDatesAdapter.ViewHolder {
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
 //        val v = LayoutInflater.from(p0.context).inflate(R.layout.journal_parentlayout, p0, false)
 //        context = p0.context
 //        return ViewHolder(v)
-        lateinit var genericViewHolder: Rv_TaskDatesAdapter.ViewHolder
+        lateinit var genericViewHolder: ViewHolder
         when (p1) {
             EVEN -> {
                 val v = LayoutInflater.from(p0.context)

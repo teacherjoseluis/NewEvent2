@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newevent2.MVP.DashboardActivityPresenter
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.ui.ViewAnimation
@@ -30,16 +29,10 @@ class EventCategories : Fragment() {
     private val REQUEST_CODE_TASK = 4
     private val REQUEST_CODE_PAYMENT = 5
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // This instruction intends to keep the state of the fragment and don't reload when the user returns
-        //retainInstance = true
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         inf = inflater.inflate(R.layout.mainevent_summary, container, false)
 
         // Getting the list of categories that I'm actually going to show from the local DB

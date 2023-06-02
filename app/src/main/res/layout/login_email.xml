@@ -99,7 +99,8 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPassword"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:autofillHints="" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -129,7 +130,8 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPassword"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:autofillHints="" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

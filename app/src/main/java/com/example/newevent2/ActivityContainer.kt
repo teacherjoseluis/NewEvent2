@@ -14,13 +14,9 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.newevent2.Functions.addGuest
 import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.isEventDate
-import com.example.newevent2.Functions.userdbhelper
-import com.example.newevent2.Model.EventModel
 import com.example.newevent2.Model.User
-import com.example.newevent2.Model.UserDBHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -29,7 +25,6 @@ import com.nordan.dialog.Animation
 import com.nordan.dialog.NordanAlertDialog
 import kotlinx.android.synthetic.main.header_navview.*
 import kotlinx.android.synthetic.main.header_navview.view.*
-import kotlinx.coroutines.launch
 
 class ActivityContainer : AppCompatActivity() {
 
@@ -65,7 +60,7 @@ class ActivityContainer : AppCompatActivity() {
 //        } else {
         //Short name is shown in the sidebar header
         headershortname =
-            sidenavView.getHeaderView(0).findViewById<TextView>(R.id.headershortname)
+            sidenavView.getHeaderView(0).findViewById(R.id.headershortname)
         //   headershortname.text = usersession.shortname
         //}
 
@@ -217,15 +212,6 @@ class ActivityContainer : AppCompatActivity() {
     }
 
 
-    private fun loadFragment(fragment: Fragment) {
-        if (fm.findFragmentByTag(fragment.javaClass.name) == null) {
-            val transaction = fm.beginTransaction()
-            transaction.replace(R.id.fragment_container, fragment, fragment.javaClass.name)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-    }
-
     // This catches the back option in Android, if the sidebar is displayed, then it gets closed
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -241,11 +227,11 @@ class ActivityContainer : AppCompatActivity() {
                     super.onBackPressed()
                 } else {
                     Toast.makeText(
-                        getBaseContext(), getString(R.string.pressexit),
+                        baseContext, getString(R.string.pressexit),
                         Toast.LENGTH_SHORT
-                    ).show();
+                    ).show()
                 }
-                back_pressed = System.currentTimeMillis();
+                back_pressed = System.currentTimeMillis()
             } else {
                 val newfragment = DashboardView_clone()
                 fm.beginTransaction()

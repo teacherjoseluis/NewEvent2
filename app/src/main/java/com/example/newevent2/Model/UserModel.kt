@@ -29,11 +29,10 @@ class UserModel(
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     private val uid = FirebaseAuth.getInstance().currentUser?.uid
-    val userRef = FirebaseDatabase.getInstance().getReference("User/$uid")
+    private val userRef = FirebaseDatabase.getInstance().getReference("User/$uid")
     private val postRef = myRef.child("User").child(this.key!!)
     private val activeSessionsRef = myRef.child("session")
     private var firebaseUser = User(key)
-    private val firebaseAuth = FirebaseAuth.getInstance()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     var tasksactive = 0
@@ -50,7 +49,6 @@ class UserModel(
     var nexthandlerdelg: CoRDeleteGuest? = null
     var nexthandlerv: CoRAddEditVendor? = null
     var nexthandlerdelv: CoRDeleteVendor? = null
-    var nexthandlere: CoRAddEditEvent? = null
     var nexthandleron: CoROnboardUser? = null
 
     fun getUser(dataFetched: FirebaseSuccessUser) {
@@ -134,42 +132,6 @@ class UserModel(
 //        }
 //    }
 
-    fun getSession(dataFetched: FirebaseSuccessSession) {
-        val postRef =
-            activeSessionsRef.child(key!!)
-        val sessionListenerActive = object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onDataChange(p0: DataSnapshot) {
-                val sessionid = p0.getValue(String()::class.java)!!
-                dataFetched.onSessionexists(sessionid)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
-            }
-        }
-        postRef.addValueEventListener(sessionListenerActive)
-    }
-
-
-    private fun editUser(user: User, savesuccessflag: FirebaseSaveSuccess) {
-        //Commented entries correspond to values in the User entity that are not to be edited
-        postRef.child("eventid").setValue(user.eventid)
-        postRef.child("shortname").setValue(user.shortname)
-        //postRef.child("email").setValue(user.email)
-        //postRef.child("country").setValue(user.country)
-        postRef.child("language").setValue(user.language)
-        //postRef.child("createdatetime").setValue(user.createdatetime)
-        //postRef.child("authtype").setValue(user.authtype)
-        //postRef.child("imageurl").setValue(user.imageurl)
-        postRef.child("role").setValue(user.role)
-        postRef.child("hasevent").setValue(user.hasevent)
-        //postRef.child("hastask").setValue(user.hastask)
-        //postRef.child("haspayment").setValue(user.haspayment)
-        //postRef.child("hasguest").setValue(user.hasguest)
-        //postRef.child("hasvendor").setValue(user.hasvendor)
-        Log.d(TAG, "Data associated to User ${user.userid} has just been saved")
-    }
 
     private fun editUserAddTask(value: Int) {
         coroutineScope.launch {
@@ -355,9 +317,7 @@ class UserModel(
         fun onSessionexists(sessionid: String)
     }
 
-    interface FirebaseSaveSuccess {
-        fun onSaveSuccess(flag: Boolean)
-    }
+    interface FirebaseSaveSuccess
 
     companion object {
         const val TAG = "UserModel"

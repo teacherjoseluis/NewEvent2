@@ -217,6 +217,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         return filteredModelList
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onGAGuests(
         //inflatedView: View,
         list: ArrayList<Guest>
@@ -229,6 +230,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //            }
 //        }
         rvAdapter = Rv_GuestAdapter(list, requireContext())
+        rvAdapter.notifyDataSetChanged()
         //rvAdapter.notifyDataSetChanged()
 
         recyclerViewAllGuests.adapter = null

@@ -1,5 +1,6 @@
 package Application
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
@@ -158,6 +159,7 @@ class Cache<T : Any> {
         }
     }
 
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.O)
     fun loadimage(cacheCategory: String) {
         val imagebitmap = getImgfromSD(cacheCategory, contextCache)

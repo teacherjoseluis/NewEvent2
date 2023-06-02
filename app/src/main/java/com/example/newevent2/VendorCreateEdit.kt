@@ -1,5 +1,6 @@
 package com.example.newevent2
 
+import NetworkUtils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -51,6 +52,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
     private var placelongitude = 0.0
     private var placelocation = ""
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +75,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         val categorieslist = Category.getAllCategories(language)
         categorieslist.add(0, getString(R.string.selectcategory))
         val adapteractv =
-            ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, categorieslist)
+            ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categorieslist)
         categoryspinner.adapter = adapteractv
 
         //Sets vendoritem blank if nothing comes from the extras
@@ -121,7 +123,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                 googlecard.ratingnumber.text = vendoritem.ratingnumber.toString()
                 googlecard.reviews.text =
                     "(" + vendoritem.reviews.toString() + ")"
-                googlecard.rating.rating = vendoritem.rating!!.toFloat()
+                googlecard.rating.rating = vendoritem.rating.toFloat()
                 googlecard.location.text = vendoritem.location
                 googlecard.setOnClickListener {
                     val uris =
@@ -283,11 +285,11 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                 phoneinputedit.isEnabled = false
                 mailinputedit.isEnabled = false
                 button.isEnabled = false
-                super.onOptionsItemSelected(item);
+                super.onOptionsItemSelected(item)
             }
             else -> {
                 //true
-                super.onOptionsItemSelected(item);
+                super.onOptionsItemSelected(item)
             }
         }
     }
@@ -311,11 +313,25 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
 
         //Having vendoritem populated allows to decide whether we are adding a new
         // or editing an existing vendor
-        if (vendoritem.key == "") {
-            addVendor(this, vendoritem, CALLER)
-        } else if (vendoritem.key != "") {
-            editVendor(this, vendoritem)
+        val networkUtils = NetworkUtils(this)
+        if(networkUtils.isNetworkAvailable()) {
+            if (vendoritem.key == "") {
+                addVendor(this, vendoritem, CALLER)
+            } else if (vendoritem.key != "") {
+                editVendor(this, vendoritem)
+            }
+        } else {
+            displayErrorMsg(this, getString(R.string.error_networkconnection))
+            loadingview.visibility = ConstraintLayout.GONE
+            withdataview.visibility = ConstraintLayout.VISIBLE
+            nameinputedit.isEnabled = true
+            phoneinputedit.isEnabled = true
+            mailinputedit.isEnabled = true
+            categoryspinner.isEnabled = true
+            button.isEnabled = true
         }
+        Thread.sleep(1500)
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -352,11 +368,11 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             placelongitude = data.getDoubleExtra("place_longitude", 0.0)
             placelocation = data.getStringExtra("place_name")!!
 
-            vendoritem.placeid = data?.getStringExtra("place_id")!!
-            vendoritem.googlevendorname = data?.getStringExtra("place_name")!!
-            vendoritem.rating = data?.getDoubleExtra("place_rating", 0.0)!!.toFloat().toString()
-            vendoritem.ratingnumber = data?.getDoubleExtra("place_rating", 0.0).toFloat()
-            vendoritem.reviews = data?.getIntExtra("place_userrating", 0).toFloat()
+            vendoritem.placeid = data.getStringExtra("place_id")!!
+            vendoritem.googlevendorname = data.getStringExtra("place_name")!!
+            vendoritem.rating = data.getDoubleExtra("place_rating", 0.0).toFloat().toString()
+            vendoritem.ratingnumber = data.getDoubleExtra("place_rating", 0.0).toFloat()
+            vendoritem.reviews = data.getIntExtra("place_userrating", 0).toFloat()
 
             //The card allows to click on it and go to Google Maps
             googlecard.setOnClickListener {

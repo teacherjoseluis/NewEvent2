@@ -1,6 +1,7 @@
 package com.example.newevent2
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -13,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.Category.Companion.getCategory
+import com.example.newevent2.MVP.DashboardActivityPresenter
 import com.example.newevent2.Model.Task
 import com.example.newevent2.Model.TaskDBHelper
 import com.example.newevent2.Model.TaskModel
@@ -41,26 +43,34 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.taskname?.text = taskList[p1].name
-        p0.taskname?.setTextColor(when(taskList[p1].status) {
-            "C" -> getCategory(taskList[p1].category).colorinactiveforeground.toColorInt()
-            else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
-        })
+        p0.taskname?.setTextColor(
+            when (taskList[p1].status) {
+                "C" -> getCategory(taskList[p1].category).colorinactiveforeground.toColorInt()
+                else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
+            }
+        )
         p0.taskcategory?.text = taskList[p1].category
-        p0.taskcategory?.setTextColor(when(taskList[p1].status) {
-            "C" -> getCategory(taskList[p1].category).colorinactiveforeground.toColorInt()
-            else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
-        })
+        p0.taskcategory?.setTextColor(
+            when (taskList[p1].status) {
+                "C" -> getCategory(taskList[p1].category).colorinactiveforeground.toColorInt()
+                else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
+            }
+        )
         //p0.itemView.taskcard.setCardBackgroundColor(getCategory(taskList[p1].category).colorbackground.toColorInt())
-        p0.itemView.taskcard.setCardBackgroundColor(when(taskList[p1].status) {
-            "C" -> getCategory(taskList[p1].category).colorinactivebackground.toColorInt()
-            else -> getCategory(taskList[p1].category).colorbackground.toColorInt()
-        })
+        p0.itemView.taskcard.setCardBackgroundColor(
+            when (taskList[p1].status) {
+                "C" -> getCategory(taskList[p1].category).colorinactivebackground.toColorInt()
+                else -> getCategory(taskList[p1].category).colorbackground.toColorInt()
+            }
+        )
         //p0.taskstatus?.setTextColor(getCategory(taskList[p1].category).colorforeground.toColorInt())
-        p0.taskstatus?.setTextColor(when(taskList[p1].status) {
-            "C" -> getCategory(taskList[p1].category).colorinactiveforeground.toColorInt()
-            else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
-        })
-        p0.taskstatus?.text = when(taskList[p1].status) {
+        p0.taskstatus?.setTextColor(
+            when (taskList[p1].status) {
+                "C" -> getCategory(taskList[p1].category).colorinactiveforeground.toColorInt()
+                else -> getCategory(taskList[p1].category).colorforeground.toColorInt()
+            }
+        )
+        p0.taskstatus?.text = when (taskList[p1].status) {
             "A" -> context.getString(R.string.todo)
             "C" -> context.getString(R.string.done)
             else -> "unknown"
@@ -75,9 +85,9 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
 
         p0.itemView.setOnClickListener {
 //            if(taskList[p1].status == "A") {
-                val taskdetail = Intent(context, TaskCreateEdit::class.java)
-                taskdetail.putExtra("task", taskList[p1])
-                context.startActivity(taskdetail)
+            val taskdetail = Intent(context, TaskCreateEdit::class.java)
+            taskdetail.putExtra("task", taskList[p1])
+            context.startActivity(taskdetail)
 //            }
         }
     }
@@ -146,6 +156,7 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
         const val TAG = "Rv_TaskAdapter"
     }
 }
+
 
 
 

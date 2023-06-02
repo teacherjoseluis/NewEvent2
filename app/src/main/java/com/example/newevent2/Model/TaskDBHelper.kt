@@ -1,6 +1,7 @@
 package com.example.newevent2.Model
 
 import Application.FirebaseDataImportException
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -71,6 +72,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         return existsflag
     }
 
+    @SuppressLint("Range")
     fun getTasks(): ArrayList<Task> {
         val list = ArrayList<Task>()
         val cursor: Cursor = db.rawQuery(

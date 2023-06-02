@@ -33,7 +33,6 @@ public class LetterAvatar extends ColorDrawable {
         this.context = context;
     }
 
-    @SuppressWarnings("Since15")
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);

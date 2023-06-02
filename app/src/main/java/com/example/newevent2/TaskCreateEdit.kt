@@ -1,6 +1,5 @@
 package com.example.newevent2
 
-import Application.Notification
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
@@ -12,7 +11,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -22,21 +20,11 @@ import com.example.newevent2.Model.*
 import com.example.newevent2.Model.Task
 import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.coroutines.launch
 import java.util.*
@@ -44,9 +32,9 @@ import java.util.*
 class TaskCreateEdit : AppCompatActivity() {
 
     private lateinit var taskitem: Task
-    private var mRewardedAd: RewardedAd? = null
     private lateinit var optionsmenu: Menu
     private lateinit var adManager: AdManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +86,7 @@ class TaskCreateEdit : AppCompatActivity() {
         // Create chips and select the one matching the category
 
         val language = this.resources.configuration.locales.get(0).language
-        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        val list = ArrayList(EnumSet.allOf(Category::class.java))
         for (category in list) {
             val chip = Chip(this)
             chip.text = when (language) {
@@ -205,6 +193,13 @@ class TaskCreateEdit : AppCompatActivity() {
         if (taskitem.key != "") {
             optionsmenu = menu
             menuInflater.inflate(R.menu.tasks_menu, menu)
+
+            //val resourceName = resources.getResourceName(R.id.complete_task)
+            if (taskitem.status == Rv_TaskAdapter.ACTIVETASK) {
+                optionsmenu.findItem(R.id.complete_task).title = getString(R.string.complete_task)
+            } else if (taskitem.status == Rv_TaskAdapter.COMPLETETASK) {
+                optionsmenu.findItem(R.id.complete_task).title = getString(R.string.reactivate_task)
+            }
         }
         return true
     }
@@ -236,10 +231,17 @@ class TaskCreateEdit : AppCompatActivity() {
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
-                super.onOptionsItemSelected(item);
+                val resultIntent = Intent()
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish()
+                super.onOptionsItemSelected(item)
             }
             R.id.complete_task -> {
-                taskitem.status = Rv_TaskAdapter.COMPLETETASK
+                if (taskitem.status == Rv_TaskAdapter.ACTIVETASK) {
+                    taskitem.status = Rv_TaskAdapter.COMPLETETASK
+                } else if (taskitem.status == Rv_TaskAdapter.COMPLETETASK) {
+                    taskitem.status = Rv_TaskAdapter.ACTIVETASK
+                }
                 lifecycleScope.launch {
                     editTask(this@TaskCreateEdit, taskitem)
                 }
@@ -250,10 +252,14 @@ class TaskCreateEdit : AppCompatActivity() {
                 groupedittask.isEnabled = false
                 savebuttontask.isEnabled = false
                 optionsmenu.clear()
-                super.onOptionsItemSelected(item);
+//                val resultIntent = Intent()
+//                setResult(Activity.RESULT_OK, resultIntent)
+                Thread.sleep(1500)
+                finish()
+                super.onOptionsItemSelected(item)
             }
             else -> {
-                super.onOptionsItemSelected(item);
+                super.onOptionsItemSelected(item)
             }
         }
     }
@@ -264,7 +270,7 @@ class TaskCreateEdit : AppCompatActivity() {
         var mycategorycode = ""
         val categoryname = groupedittask.findViewById<Chip>(groupedittask.checkedChipId).text
 
-        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        val list = ArrayList(EnumSet.allOf(Category::class.java))
         for (category in list) {
             if (categoryname == category.en_name) {
                 mycategorycode = category.code

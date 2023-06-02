@@ -35,7 +35,7 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         inf = inflater.inflate(R.layout.taskpayment_payments, container, false)
         presenterpayment = TaskPaymentPaymentsPresenter(requireContext(), this, inf, category)

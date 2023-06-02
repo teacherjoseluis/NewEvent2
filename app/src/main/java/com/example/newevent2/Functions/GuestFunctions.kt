@@ -8,8 +8,6 @@ import android.provider.ContactsContract
 import android.widget.Toast
 import com.example.newevent2.*
 import com.example.newevent2.Model.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 var guestmodel = GuestModel()
 lateinit var guestdbhelper: GuestDBHelper
@@ -19,7 +17,7 @@ private lateinit var contactsAll: ContactsAll
 @SuppressLint("StaticFieldLeak")
 private lateinit var guestCreateEdit: GuestCreateEdit
 
-internal suspend fun addGuest(context: Context, guestitem: Guest, caller: String) {
+internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
     try {
         //------------------------------------------------
         // Updating User information in Local DB
@@ -136,7 +134,7 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
     }
 }
 
-internal suspend fun editGuest(context: Context, guestitem: Guest) {
+internal fun editGuest(context: Context, guestitem: Guest) {
     try {
         // Updating User information in Local DB
         userdbhelper = UserDBHelper(context)
@@ -175,6 +173,7 @@ internal suspend fun editGuest(context: Context, guestitem: Guest) {
     }
 }
 
+@SuppressLint("Range")
 internal fun contacttoGuest(context: Context, contactid: String): Guest {
     val contactguest = Guest()
     val cursor: Cursor?

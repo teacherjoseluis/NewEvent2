@@ -6,17 +6,13 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.newevent2.CoRAddEditEvent
 import com.example.newevent2.CoROnboardUser
-import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.saveImgtoStorage
-import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.MVP.ImagePresenter
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -212,30 +208,6 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
 //    }
 
     @ExperimentalCoroutinesApi
-    suspend fun DatabaseReference.awaitsSingle(): DataSnapshot? =
-        suspendCancellableCoroutine { continuation ->
-            val listener = object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    try {
-                        continuation.resume(snapshot)
-                    } catch (exception: Exception) {
-                        continuation.resumeWithException(exception)
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    val exception = when (error.toException()) {
-                        is FirebaseException -> error.toException()
-                        else -> Exception("The Firebase call for reference $this was cancelled")
-                    }
-                    continuation.resumeWithException(exception)
-                }
-            }
-            continuation.invokeOnCancellation { this.removeEventListener(listener) }
-            this.addListenerForSingleValueEvent(listener)
-        }
-
-    @ExperimentalCoroutinesApi
     suspend fun Query.awaitsSingle(): DataSnapshot? =
         suspendCancellableCoroutine { continuation ->
             val listener = object : ValueEventListener {
@@ -265,10 +237,6 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
 
     interface FirebaseSuccessListenerEventDetail {
         fun onEvent(event: Event)
-    }
-
-    interface FirebaseSuccessListenerEventKey {
-        fun onEvent(eventkey: String)
     }
 
     override suspend fun onAddEditEvent(event: Event) {

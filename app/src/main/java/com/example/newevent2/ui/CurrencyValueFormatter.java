@@ -10,7 +10,6 @@ import java.text.DecimalFormat;
  *
  * @author Philipp Jahoda
  */
-@SuppressWarnings("Since15")
 public class CurrencyValueFormatter extends ValueFormatter
 {
 

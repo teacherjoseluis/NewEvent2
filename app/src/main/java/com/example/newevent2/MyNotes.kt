@@ -10,15 +10,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.NotePresenter
-import com.example.newevent2.MVP.VendorsAllPresenter
 import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.Model.Note
-import com.example.newevent2.Model.NoteDBHelper
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.my_notes.*
 import kotlinx.android.synthetic.main.my_notes.view.*
 import kotlinx.android.synthetic.main.onboardingcard.view.*
 
@@ -33,7 +29,7 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         inf = inflater.inflate(R.layout.my_notes, container, false)
 
         recyclerView = inf.recyclerViewNotes
@@ -61,22 +57,6 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
             startActivityForResult(newnote, REQUEST_CODE_NOTES)
         }
         return inf
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        if (notescreated_flag== 1) {
-//            val notedb = NoteDBHelper(requireContext())
-//            val notelist = notedb.getAllNotes()
-//            if (notelist.size == 0) {
-//                this.withdata.visibility = ConstraintLayout.GONE
-//                this.withnodata.visibility = ConstraintLayout.VISIBLE
-//            }
-//            rvAdapter = Rv_NoteAdapter(notelist)
-//            recyclerView.adapter = rvAdapter
-//            notescreated_flag = 0
-//        }
-//        presenternote = NotePresenter(requireContext(), this, inf)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,7 +1,6 @@
 package com.example.newevent2.MVP
 
 import android.content.Context
-import android.view.View
 import com.example.newevent2.Model.PaymentDBHelper
 import com.example.newevent2.Model.Vendor
 import com.example.newevent2.Model.VendorPayment

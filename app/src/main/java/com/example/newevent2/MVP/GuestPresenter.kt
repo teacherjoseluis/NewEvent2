@@ -54,7 +54,7 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
         cacheguest.loadarraylist(Guest::class)
     }
 
-    @SuppressLint("Recycle")
+    @SuppressLint("Recycle", "Range")
     fun getContactsList(){
         val contactlist = ArrayList<Contact>()
         val contentResolver = mContext.contentResolver

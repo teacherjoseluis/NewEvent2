@@ -158,6 +158,7 @@ internal fun editVendor(context: Context, vendoritem: Vendor) {
     }
 }
 
+@SuppressLint("Range")
 internal fun contacttoVendor(context: Context, contactid: String): Vendor {
     val contactvendor = Vendor()
     val cursor: Cursor?

@@ -124,7 +124,6 @@ class Rv_GuestAdapter(
     companion object {
         const val DELETEACTION = "delete"
         const val TAG = "Rv_GuestAdapter"
-        const val CALLER = "none"
     }
 }
 

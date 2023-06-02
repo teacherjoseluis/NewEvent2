@@ -1,6 +1,5 @@
 package com.example.newevent2
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.google.android.gms.ads.AdError
@@ -59,8 +58,6 @@ class AdManager(private val adDelayTimeMillis: Long) {
                 }
             }
             // Update the time when the last ad was shown
-        } else {
-            // Delay time has not elapsed, do not show the ad
         }
     }
 }

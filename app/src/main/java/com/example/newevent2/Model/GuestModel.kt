@@ -245,10 +245,6 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
             })
     }
 
-    interface FirebaseAddEditGuestSuccess {
-        fun onGuestAddedEdited(flag: Boolean, guest: Guest)
-    }
-
     interface FirebaseDeleteGuestSuccess {
         fun onGuestDeleted(flag: Boolean, guest: Guest)
     }

@@ -29,7 +29,6 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     private lateinit var recyclerViewAllVendor: RecyclerView
     private lateinit var presentervendor: VendorsAllPresenter
     private lateinit var rvAdapter: Rv_VendorAdapter
-    private lateinit var swipeController: SwipeControllerTasks
 
     private val autocompleteplacecode = 1
     private var placeid: String? = null
@@ -43,8 +42,6 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     private var isRotate = false
 
     private var mContext: Context? = null
-
-    private var contactlist = ArrayList<Vendor>()
 
     private val REQUEST_CODE_CONTACTS = 1
     private val REQUEST_CODE_VENDOR = 3
@@ -160,6 +157,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 //        recyclerViewActive.adapter = rvAdapter
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onVAVendors(
         //inflatedView: View,
         vendorpaymentlist: ArrayList<VendorPayment>
@@ -167,6 +165,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         // There are vendors obtained from the presenter and these are passed to the recyclerview
         try {
             rvAdapter = Rv_VendorAdapter(vendorpaymentlist, mContext!!)
+            rvAdapter.notifyDataSetChanged()
         } catch (e: Exception){
             println(e.message)
         }
@@ -233,7 +232,6 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     }
 
     companion object {
-        const val RIGHTACTION = "delete"
         var vendorcreated_flag = 0
     }
 }

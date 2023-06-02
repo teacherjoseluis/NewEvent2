@@ -35,9 +35,7 @@ import com.google.android.material.textfield.TextInputEditText
 import java.util.*
 
 
-class OnboardingView() : AppCompatActivity() {
-
-    private val autocompletePlaceCode = 1
+class OnboardingView : AppCompatActivity() {
 
     private var eventlocationname: String? = null
     private var eventplaceid: String? = null
@@ -49,7 +47,6 @@ class OnboardingView() : AppCompatActivity() {
     private var back_pressed: Long = 0
 
     private lateinit var userSession: User
-    private val scope = CoroutineScope(Job() + Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,33 +114,33 @@ class OnboardingView() : AppCompatActivity() {
                     etname.error = null
                 }
 
-                etname.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+                etname.onFocusChangeListener = object : OnFocusChangeListener {
                     override fun onFocusChange(v: View?, hasFocus: Boolean) {
                         hideSoftKeyboard()
                     }
-                })
+                }
 
                 etPlannedDate.setOnClickListener {
                     etPlannedDate.error = null
                     showDatePickerDialog()
                 }
 
-                etPlannedDate.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+                etPlannedDate.onFocusChangeListener = object : OnFocusChangeListener {
                     override fun onFocusChange(v: View?, hasFocus: Boolean) {
                         hideSoftKeyboard()
                     }
-                })
+                }
 
                 etPlannedTime.setOnClickListener {
                     etPlannedTime.error = null
                     showTimePickerDialog()
                 }
 
-                etPlannedTime.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+                etPlannedTime.onFocusChangeListener = object : OnFocusChangeListener {
                     override fun onFocusChange(v: View?, hasFocus: Boolean) {
                         hideSoftKeyboard()
                     }
-                })
+                }
 
 //                etlocation.setOnClickListener {
 //                    val locationmap = Intent(this, MapsActivity::class.java)
@@ -305,10 +302,10 @@ class OnboardingView() : AppCompatActivity() {
             finish()
         } else {
             Toast.makeText(
-                getBaseContext(), getString(R.string.pressexit),
+                baseContext, getString(R.string.pressexit),
                 Toast.LENGTH_SHORT
-            ).show();
+            ).show()
         }
-        back_pressed = System.currentTimeMillis();
+        back_pressed = System.currentTimeMillis()
     }
 }

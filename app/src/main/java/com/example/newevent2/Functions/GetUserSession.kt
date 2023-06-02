@@ -2,7 +2,6 @@ package com.example.newevent2.Functions
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.newevent2.Model.User
 
 //deberia estar regresando un objeto del tipo user
 internal fun getUserSession(context: Context, category: String): Any {
@@ -52,7 +51,7 @@ internal fun saveUserSession(context: Context, value: String?, valueLong: Long?,
 }
 
 internal fun deleteUserSession(context: Context) {
-    var userSession = context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+    val userSession = context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
     val sessionEditor = userSession!!.edit()
     sessionEditor.putString("email", "")
     sessionEditor.putString("user_id", "")

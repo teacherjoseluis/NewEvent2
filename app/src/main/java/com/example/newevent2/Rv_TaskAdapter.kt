@@ -112,7 +112,7 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
                     getCategory(taskList[p1].category).drawable, "drawable",
                     context.packageName
                 )
-                p0.categoryavatar?.setImageResource(resourceId)
+                p0.categoryavatar.setImageResource(resourceId)
 
                 p0.itemView.setOnClickListener {
                     val taskdetail = Intent(context, TaskCreateEdit::class.java)

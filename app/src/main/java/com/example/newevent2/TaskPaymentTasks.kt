@@ -55,7 +55,7 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
         //Calling the presenter
 

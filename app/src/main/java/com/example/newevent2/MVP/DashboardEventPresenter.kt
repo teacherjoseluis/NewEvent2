@@ -2,13 +2,13 @@ package com.example.newevent2.MVP
 
 import android.content.Context
 import android.view.View
-import androidx.lifecycle.lifecycleScope
 import com.example.newevent2.DashboardEvent
 import com.example.newevent2.MVP.PaymentPresenter.Companion.ERRCODEPAYMENTS
 import com.example.newevent2.MVP.TaskPresenter.Companion.ERRCODETASKS
-import com.example.newevent2.Model.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
+import com.example.newevent2.Model.Event
+import com.example.newevent2.Model.Guest
+import com.example.newevent2.Model.Payment
+import com.example.newevent2.Model.Task
 
 class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent, val view: View) :
     TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList,

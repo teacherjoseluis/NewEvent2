@@ -1,23 +1,16 @@
 package com.example.newevent2.Model
 
 import Application.FirebaseDataImportException
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import androidx.lifecycle.lifecycleScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(
+class DatabaseHelper(val context: Context) : SQLiteOpenHelper(
     context,
     DATABASENAME, null,
     DATABASEVERSION
 ) {
-    val context = context
 
     private val createusertable =
         "CREATE TABLE USER (userid TEXT, eventid TEXT, shortname TEXT, email TEXT, country TEXT, language TEXT, createdatetime TEXT, authtype TEXT, imageurl TEXT, role TEXT, hasevent TEXT, hastask TEXT, haspayment TEXT, hasguest TEXT, hasvendor TEXT, tasksactive INTEGER, taskscompleted INTEGER, payments INTEGER, guests INTEGER, status TEXT, vendors TEXT)"

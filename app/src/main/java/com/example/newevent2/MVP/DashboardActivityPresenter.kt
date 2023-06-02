@@ -1,7 +1,6 @@
 package com.example.newevent2.MVP
 
 import android.content.Context
-import android.view.View
 import com.example.newevent2.DashboardActivity
 import com.example.newevent2.Functions.converttoDate
 import com.example.newevent2.MVP.TaskPresenter.Companion.ERRCODETASKS

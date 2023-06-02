@@ -43,7 +43,6 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
     private lateinit var paymentitem: Payment
     private lateinit var presentervendor: VendorPaymentPresenter
-    private lateinit var rewardedAd: RewardedAd
     private lateinit var adManager: AdManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +77,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         val itemsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, tasklist)
 
         paymentname.setAdapter(itemsAdapter)
-        paymentname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+        paymentname.onFocusChangeListener = OnFocusChangeListener { _, p1 ->
             if (!p1) {
                 paymentname.hint=""
                 val validationmessage = TextValidate(paymentname).namefieldValidate()
@@ -102,7 +101,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
         // Create chips and select the one matching the category
         val language = this.resources.configuration.locales.get(0).language
-        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        val list = ArrayList(EnumSet.allOf(Category::class.java))
         for (category in list) {
             val chip = Chip(this)
             chip.text = when (language) {
@@ -238,7 +237,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         var mycategorycode = ""
         val categoryname = groupeditpayment.findViewById<Chip>(groupeditpayment.checkedChipId).text
 
-        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+        val list = ArrayList(EnumSet.allOf(Category::class.java))
         for (category in list) {
             if (categoryname == category.en_name) {
                 mycategorycode = category.code
@@ -304,7 +303,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         list.add(0, getString(R.string.selectvendor))
         val actv = findViewById<Spinner>(R.id.vendorspinner)
         val adapteractv =
-            ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list)
+            ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, list)
         actv.adapter = adapteractv
         if (paymentitem.vendorid != "") {
             try {

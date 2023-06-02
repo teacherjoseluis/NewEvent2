@@ -207,7 +207,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             println(e.message)
         }
-        return taskList!!
+        return taskList
     }
 
 

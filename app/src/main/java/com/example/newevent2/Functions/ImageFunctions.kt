@@ -13,17 +13,12 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.example.newevent2.ContactsAll
-import com.example.newevent2.DashboardEvent.Companion.PERMISSION_CODE
-import com.example.newevent2.MVP.ContactsAllPresenter
 import com.example.newevent2.R
 import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.places.api.Places
@@ -59,14 +54,24 @@ fun getImgfromStorage(
 //OUT: Image URL
 @RequiresApi(Build.VERSION_CODES.O)
 fun getImgfromSD(category: String, context: Context): Bitmap {
-    val imagepath =
+    var bitmapimage: Bitmap?
+    val imagepath_firstoption =
         Paths.get(
             //context.getExternalFilesDir(null)?.absolutePath, "Images", "$category.PNG"
             context.getExternalFilesDir(null)?.absolutePath, "$category.PNG"
         ).toString()
-    var bitmapimage = BitmapFactory.decodeFile(imagepath)
+    bitmapimage = BitmapFactory.decodeFile(imagepath_firstoption)
     if (bitmapimage == null) {
-        bitmapimage = createemptyBitmap(250, 250)
+        val imagepath_secondoption =
+            Paths.get(
+                context.getExternalFilesDir(null)?.absolutePath, "Images", "$category.PNG"
+                //context.getExternalFilesDir(null)?.absolutePath, "$category.PNG"
+            ).toString()
+
+        bitmapimage = BitmapFactory.decodeFile(imagepath_secondoption)
+    }
+    if (bitmapimage == null) {
+        bitmapimage = createemptyBitmap(250, 250)!!
     }
     return bitmapimage
 }
@@ -180,23 +185,15 @@ fun saveBitmaptoSD(context: Context, category: String, bitmap: Bitmap) {
     val imagefile = File(imagepath, "$category.PNG")
     try {
         //Request permissions
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_DENIED
-            ) {
-                //permission denied
-                //val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                //show popup to request runtime permission
-                //requestPermissions(permissions, PERMISSION_CODE)
-            } else {
-                //permission already granted
-                val out = FileOutputStream(imagefile)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-                out.flush()
-                out.close()
-            }
+        if (checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+            PackageManager.PERMISSION_DENIED
+        ) {
+            //permission denied
+            //val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            //show popup to request runtime permission
+            //requestPermissions(permissions, PERMISSION_CODE)
         } else {
-            //system OS is < Marshmallow
+            //permission already granted
             val out = FileOutputStream(imagefile)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             out.flush()

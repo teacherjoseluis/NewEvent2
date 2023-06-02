@@ -52,7 +52,6 @@ class User(
     private val database = FirebaseDatabase.getInstance().reference
     private lateinit var activeSessionsRef: DatabaseReference
     private lateinit var lastSignedInAtRef: DatabaseReference
-    private lateinit var viewLogin: LoginView
 
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
@@ -85,7 +84,7 @@ class User(
         UserPassword: String?,
         credential: AuthCredential?
     ): AuthResult = coroutineScope {
-        var authResult: AuthResult?
+        val authResult: AuthResult?
 
         //choosing the authentication method
         when (authtype) {
@@ -112,7 +111,7 @@ class User(
                             activity.getString(R.string.checkverification),
                             Toast.LENGTH_SHORT
                         ).show()
-                        throw EmailVerificationException("Email account for user ${authResult?.user!!} has not been verified")
+                        throw EmailVerificationException("Email account for user ${authResult.user!!} has not been verified")
                     }
                 } catch (e: Exception) {
                     if (e is com.google.firebase.FirebaseNetworkException) {
@@ -207,14 +206,21 @@ class User(
         activeSessionsRef = database.child(userId).child("session")
         if (userId != null) {
             activeSessionsRef.setValue(null)
-        } else {
-            // No user ID stored in shared preference
-            // Handle error
         }
         mAuth.signOut()
         deleteUserSession(activity)
         Toast.makeText(activity, activity.getString(R.string.success_logout), Toast.LENGTH_SHORT)
             .show()
+    }
+
+    fun softlogout(activity: Activity) {
+        val userId = getUserSession(activity, "user_id").toString()
+        activeSessionsRef = database.child(userId).child("session")
+        if (userId != null) {
+            activeSessionsRef.setValue(null)
+        }
+        mAuth.signOut()
+        deleteUserSession(activity)
     }
 
 //    fun signup(view: LoginView, activity: Activity, UserEmail: String, UserPassword: String) {
@@ -380,30 +386,6 @@ class User(
             "User hasevent(${this.hasevent}), hastask(${this.hastask}), haspayment(${this.haspayment}), hasguest(${this.hasguest}), hasvendor(${this.hasvendor})"
         )
         return stepsBeanList
-    }
-
-    suspend fun loginWithEmail(
-        mAuth: FirebaseAuth,
-        UserEmail: String,
-        UserPassword: String
-    ): AuthResult? {
-        return try {
-            val authresult = mAuth.signInWithEmailAndPassword(UserEmail, UserPassword).await()
-            authresult
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private suspend fun loginWithSocialNetwork(
-        mAuth: FirebaseAuth,
-        credential: AuthCredential
-    ): AuthResult? {
-        return try {
-            return mAuth.signInWithCredential(credential).await()
-        } catch (e: Exception) {
-            return null
-        }
     }
 
     interface SignUpActivity {

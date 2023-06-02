@@ -2,12 +2,10 @@ package com.example.newevent2.Functions
 
 import Application.CalendarEvent
 import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Bundle
-import android.widget.Toast
-import com.example.newevent2.*
-import com.example.newevent2.Model.*
-import com.example.newevent2.Model.Event
+import com.example.newevent2.CoRAddEditEvent
+import com.example.newevent2.Model.EventDBHelper
+import com.example.newevent2.Model.EventModel
+import com.example.newevent2.Model.UserModel
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var calendarevent : CalendarEvent
@@ -16,48 +14,6 @@ var eventmodel = EventModel()
 @SuppressLint("StaticFieldLeak")
 lateinit var eventdbhelper: EventDBHelper
 private lateinit var usermodel: UserModel
-
-//Need to convert this one into a suspend function
-internal suspend fun addEvent(context: Context, eventitem: Event) {
-    try {
-        //------------------------------------------------
-        // Adding Calendar Event
-        calendarevent = CalendarEvent(context)
-        //------------------------------------------------
-        // Updating User information in Local DB
-        userdbhelper = UserDBHelper(context)
-        //------------------------------------------------
-        // Adding a new record in Firebase
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
-        eventmodel.userid = user.userid!!
-        //------------------------------------------------
-        // Adding a new record in Local DB
-        eventdbhelper = EventDBHelper(context)
-        //------------------------------------------------
-        // Updating User information in Firebase
-        usermodel = UserModel(user.userid)
-        //------------------------------------------------
-        val chainofcommand = orderChainAdd(calendarevent, eventmodel, eventdbhelper)
-        chainofcommand.onAddEditEvent(eventitem)
-        //------------------------------------------------
-        // ------- Analytics call ----------------
-        val bundle = Bundle()
-        bundle.putString("LOCATION", eventitem.location)
-        bundle.putString("DATE", eventitem.date)
-        bundle.putString("TIME", eventitem.date)
-        bundle.putDouble("LATITUDE", eventitem.latitude)
-        bundle.putDouble("LONGITUDE", eventitem.longitude)
-        MyFirebaseApp.mFirebaseAnalytics.logEvent("ADDEVENT", bundle)
-        //------------------------------------------------
-        Toast.makeText(context, "Event was created successully", Toast.LENGTH_LONG).show()
-    } catch (e: Exception) {
-        Toast.makeText(
-            context,
-            "There was an error trying create the event ${e.message}",
-            Toast.LENGTH_LONG
-        ).show()
-    }
-}
 
 private fun orderChainAdd(
     calendarEvent: CalendarEvent,

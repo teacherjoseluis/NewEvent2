@@ -27,13 +27,9 @@ import java.util.regex.Pattern
 
 class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.SignUpActivity {
 
-    //private lateinit var mCallbackManager: CallbackManager
-    private val scope = CoroutineScope(Job() + Dispatchers.Main)
     private val TIME_DELAY = 2000
     private var back_pressed: Long = 0
     val user = User()
-
-    private var onBackPressedListener: OnBackPressedLoginViewListener? = null
 
     private lateinit var authResult: AuthResult
 
@@ -581,7 +577,6 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
 
     companion object {
         private const val TAG = "GoogleActivity"
-        private const val TAGF = "FacebookLogin"
         private const val RC_SIGN_IN = 9001
     }
 
@@ -649,11 +644,11 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
             finish()
         } else {
             Toast.makeText(
-                getBaseContext(), getString(R.string.pressexit),
+                baseContext, getString(R.string.pressexit),
                 Toast.LENGTH_SHORT
-            ).show();
+            ).show()
         }
-        back_pressed = System.currentTimeMillis();
+        back_pressed = System.currentTimeMillis()
     }
 
     private fun displayErrorMsg(message: String) {
@@ -665,6 +660,4 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
     }
 }
 
-interface OnBackPressedLoginViewListener {
-    fun onBackPressedLogin()
-}
+interface OnBackPressedLoginViewListener

@@ -1,5 +1,6 @@
 package com.example.newevent2.Model
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -29,6 +30,7 @@ class NoteDBHelper(context: Context) {
         Log.d(TAG, "Note record inserted")
     }
 
+    @SuppressLint("Range")
     fun getAllNotes(): ArrayList<Note> {
         val list = ArrayList<Note>()
         val cursor: Cursor = db.rawQuery("SELECT * FROM NOTE ORDER BY lastupdateddatetime DESC", null)

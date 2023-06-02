@@ -27,9 +27,9 @@ import com.example.newevent2.ui.TextValidate
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.new_guest.*
-import kotlinx.android.synthetic.main.task_editdetail.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import kotlinx.coroutines.withContext
 
 
 class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
@@ -257,10 +257,10 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                 rsvpgroup.isEnabled = false
                 companionsgroup.isEnabled = false
                 button.isEnabled = false
-                super.onOptionsItemSelected(item);
+                super.onOptionsItemSelected(item)
             }
             else -> {
-                super.onOptionsItemSelected(item);
+                super.onOptionsItemSelected(item)
             }
         }
     }
@@ -326,6 +326,10 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         } else if (guestitem.key != "") {
             editGuest(this, guestitem)
         }
+        withContext(Dispatchers.IO) {
+            Thread.sleep(1500)
+        }
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {

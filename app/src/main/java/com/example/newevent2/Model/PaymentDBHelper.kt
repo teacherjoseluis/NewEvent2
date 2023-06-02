@@ -67,6 +67,7 @@ class PaymentDBHelper(context: Context) : CoRAddEditPayment, CoRDeletePayment {
         return existsflag
     }
 
+    @SuppressLint("Range")
     fun getPayments(): ArrayList<Payment> {
         val list = ArrayList<Payment>()
         val cursor: Cursor = db.rawQuery("SELECT * FROM PAYMENT ORDER BY createdatetime DESC", null)

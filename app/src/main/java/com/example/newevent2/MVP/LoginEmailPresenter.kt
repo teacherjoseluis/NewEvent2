@@ -2,8 +2,6 @@ package com.example.newevent2.MVP
 
 import android.app.Activity
 import com.example.newevent2.LoginEmailView
-import com.example.newevent2.Model.User
-import com.example.newevent2.Model.UserModel
 
 class LoginEmailPresenter(
     view: LoginEmailView,
@@ -12,9 +10,7 @@ class LoginEmailPresenter(
     UserPassword: String
 ) {
 
-    var viewEmailLogin: LoginEmailView = view
-
-//    init {
+    //    init {
 //        loginUser(activity, UserEmail, UserPassword)
 //    }
 

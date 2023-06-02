@@ -12,17 +12,13 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newevent2.MVP.DashboardActivityPresenter
-import com.example.newevent2.MVP.GuestsAllPresenter
 import com.example.newevent2.Model.TaskJournal
 import kotlinx.android.synthetic.main.dashboardactivity.*
 import kotlinx.android.synthetic.main.dashboardactivity.view.*
-import kotlinx.android.synthetic.main.mainevent_summary.view.*
 import kotlinx.android.synthetic.main.onboardingcard.view.*
-import kotlinx.android.synthetic.main.vendors_all.*
 
 class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInterface {
 
@@ -67,9 +63,11 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
         return inf
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onTaskJournal(list: ArrayList<TaskJournal>) {
         //emptyrecyclerview.visibility = View.GONE
         val rvAdapter = Rv_TaskDatesAdapter(list)
+        rvAdapter.notifyDataSetChanged()
         recyclerViewActivity.adapter = rvAdapter
     }
 

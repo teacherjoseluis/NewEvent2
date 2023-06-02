@@ -9,7 +9,6 @@ public class ViewAnimation {
     public static boolean rotateFab(final View v, boolean rotate) {
         v.animate().setDuration(200)
                 .setListener(new AnimatorListenerAdapter() {
-                    @SuppressWarnings("Since15")
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
@@ -27,7 +26,6 @@ public class ViewAnimation {
                 .setDuration(200)
                 .translationY(0)
                 .setListener(new AnimatorListenerAdapter() {
-                    @SuppressWarnings("Since15")
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
@@ -44,7 +42,6 @@ public class ViewAnimation {
                 .setDuration(200)
                 .translationY(v.getHeight())
                 .setListener(new AnimatorListenerAdapter() {
-                    @SuppressWarnings("Since15")
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         v.setVisibility(View.GONE);

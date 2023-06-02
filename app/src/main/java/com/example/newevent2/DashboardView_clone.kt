@@ -1,15 +1,16 @@
 package com.example.newevent2
 
-import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.example.newevent2.Functions.userdbhelper
 import com.example.newevent2.Model.UserDBHelper
 import com.google.android.material.tabs.TabLayout
 
-class DashboardView_clone() : Fragment() {
+class DashboardView_clone : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -13,9 +13,7 @@ class LoginPresenter(
     credential: AuthCredential?
 ) {
 
-    var viewLogin: LoginView = view
-
-//    private fun loginUser(
+    //    private fun loginUser(
 //        activity: Activity,
 //        authtype: String,
 //        username: String?,

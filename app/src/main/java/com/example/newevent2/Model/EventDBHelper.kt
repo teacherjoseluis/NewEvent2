@@ -1,6 +1,7 @@
 package com.example.newevent2.Model
 
 import Application.FirebaseDataImportException
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -8,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.newevent2.CoRAddEditEvent
 import com.example.newevent2.CoROnboardUser
-import com.example.newevent2.Functions.getUserSession
 import com.example.newevent2.Functions.saveUserSession
 import com.example.newevent2.Functions.userdbhelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,8 +16,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
 
     private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
-    var nexthandlere: CoRAddEditEvent? = null
-    var nexthandleron: CoROnboardUser? = null
+    private var nexthandlere: CoRAddEditEvent? = null
+    private var nexthandleron: CoROnboardUser? = null
 
 
     @ExperimentalCoroutinesApi
@@ -71,6 +71,7 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
         return existsflag
     }
 
+    @SuppressLint("Range")
     fun getEvent(): Event {
 //        val list = ArrayList<Event>()
         var event = Event()
@@ -97,23 +98,6 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser {
         }
         cursor.close()
         return event
-    }
-
-    fun getEventChildrenflag(key: String): Boolean {
-        var existsflag = false
-        var cursor: Cursor = db.rawQuery("SELECT * FROM TASK WHERE eventid = '$key'", null)
-        if (cursor.count > 0) {
-            existsflag = true
-        }
-        cursor.close()
-        if (!existsflag) {
-            cursor = db.rawQuery("SELECT * FROM PAYMENT WHERE eventid = '$key'", null)
-            if (cursor.count > 0) {
-                existsflag = true
-            }
-            cursor.close()
-        }
-        return existsflag
     }
 
     fun update(event: Event) {

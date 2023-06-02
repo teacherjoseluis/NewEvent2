@@ -1,15 +1,15 @@
 package com.example.newevent2.Model
 
 import Application.FirebaseDataImportException
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.example.newevent2.*
-import com.example.newevent2.Functions.getlocale
+import com.example.newevent2.CoRAddEditGuest
+import com.example.newevent2.CoRDeleteGuest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlin.collections.ArrayList
 
 class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
 
@@ -65,6 +65,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         return existsflag
     }
 
+    @SuppressLint("Range")
     fun getAllGuests(): ArrayList<Guest> {
         val list = ArrayList<Guest>()
         val cursor: Cursor = db.rawQuery("SELECT * FROM GUEST ORDER BY name ASC", null)

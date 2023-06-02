@@ -1,5 +1,6 @@
 package Application
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
@@ -176,6 +177,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
         return null
     }
 
+    @SuppressLint("Range")
     private fun getNewEventId(): Long {
         val localuri = Uri.parse(getCalendarUriBase() + "events")
         val cursor: Cursor? = context.contentResolver.query(
