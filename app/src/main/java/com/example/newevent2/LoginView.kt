@@ -319,7 +319,8 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
                         }
                     }
                     //user.signup(this, this, userEmail, userPassword)
-                    onBackPressed()
+                    //onBackPressed()
+                    logoffapp()
                 }
             }
 
@@ -573,6 +574,24 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
 //                Log.w(TAG, "Google sign in failed", e)
 //            }
 //        }
+    }
+
+    private fun logoffapp() {
+        // Dialog
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.emailverification_title))
+        builder.setMessage(getString(R.string.emailverification_message))
+
+        builder.setPositiveButton(
+            getString(R.string.accept)
+        ) { _, _ ->
+            finish()
+        }
+//        builder.setNegativeButton(
+//            "Cancel"
+//        ) { p0, _ -> p0!!.dismiss() }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     companion object {

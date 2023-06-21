@@ -65,7 +65,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
             }
         }
         val calendarId = getCalendarId(context)
-        if (calendarId != null){
+        if (calendarId != null) {
             event.put(Events.CALENDAR_ID, calendarId)
             event.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
             event.put(Events.DTSTART, begindate.timeInMillis + 60 * 60 * 1000)
@@ -129,15 +129,20 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
     private fun deleteEvent(item: Any) {
         when (item) {
             is Task -> {
-                eventUri = ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
+                if (item.eventid != "") {
+                    eventUri = ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
+                    cr.delete(eventUri, null, null)
+                }
             }
 
             is Payment -> {
-                eventUri =
-                    ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
+                if (item.eventid != "") {
+                    eventUri =
+                        ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
+                    cr.delete(eventUri, null, null)
+                }
             }
         }
-        cr.delete(eventUri, null, null)
     }
 
     private fun getCalendarId(context: Context): Long? {

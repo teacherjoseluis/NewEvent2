@@ -304,11 +304,23 @@ class TaskCreateEdit : AppCompatActivity() {
                     PackageManager.PERMISSION_DENIED
                     ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
                     PackageManager.PERMISSION_DENIED
+                    ) && (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_DENIED
+                    ) && (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_DENIED
+                    ) && (checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_DENIED
                     )
         ) {
             //permission denied
             val permissions =
-                arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
+                arrayOf(
+                    Manifest.permission.READ_CALENDAR,
+                    Manifest.permission.WRITE_CALENDAR,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                )
             //show popup to request runtime permission
             requestPermissions(permissions, PERMISSION_CODE)
         } else {

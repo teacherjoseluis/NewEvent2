@@ -9,13 +9,12 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.example.newevent2.Functions.addPayment
-import com.example.newevent2.Functions.editPayment
-import com.example.newevent2.Functions.validateOldDate
 import com.example.newevent2.MVP.VendorPaymentPresenter
 import com.example.newevent2.Model.*
 import com.example.newevent2.ui.TextValidate
@@ -35,13 +34,23 @@ import android.view.View.OnFocusChangeListener
 import android.view.MotionEvent
 
 import android.view.View.OnTouchListener
-
-
+import androidx.lifecycle.lifecycleScope
+import com.example.newevent2.Functions.*
+import com.example.newevent2.Functions.addPayment
+import com.example.newevent2.Functions.deleteTask
+import com.example.newevent2.Functions.editPayment
+import com.example.newevent2.Functions.editTask
+import com.example.newevent2.Functions.validateOldDate
+import kotlinx.android.synthetic.main.task_editdetail.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors {
 
     private lateinit var paymentitem: Payment
+    private lateinit var optionsmenu: Menu
     private lateinit var presentervendor: VendorPaymentPresenter
     private lateinit var adManager: AdManager
 
@@ -55,7 +64,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        //Paymentitem will be blank if nothing comes in the extras
+        // Payment item will be blank if nothing comes in the extras
         // but if something comes it will assume this is an edit
         val extras = intent.extras
         paymentitem = if (extras!!.containsKey("payment")) {
@@ -73,13 +82,13 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
         //We are making sure that only valid text is entered in the name of the payment
         val taskhelper = TaskDBHelper(this)
-        val tasklist =  taskhelper.getTasksNames()
+        val tasklist = taskhelper.getTasksNames()
         val itemsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, tasklist)
 
         paymentname.setAdapter(itemsAdapter)
         paymentname.onFocusChangeListener = OnFocusChangeListener { _, p1 ->
             if (!p1) {
-                paymentname.hint=""
+                paymentname.hint = ""
                 val validationmessage = TextValidate(paymentname).namefieldValidate()
                 if (validationmessage != "") {
                     paymentname.error = "Error in Payment name: $validationmessage"
@@ -169,8 +178,8 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                 Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
                 inputvalflag = false
             }
-            // Check that if the vendor is set, that vendor exists
 
+            // Check that if the vendor is set, that vendor exists
             val vendorpaymentsection = findViewById<LinearLayout>(R.id.vendorpaymentsection)
             if (vendorpaymentsection.visibility != View.GONE) {
                 val actv = findViewById<Spinner>(R.id.vendorspinner)
@@ -232,6 +241,40 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         adManager.loadAndShowRewardedAd(this)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (paymentitem.key != "") {
+            optionsmenu = menu
+            menuInflater.inflate(R.menu.payments_menu, menu)
+            optionsmenu.findItem(R.id.delete_payment).title = getString(R.string.delete_payment)
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.delete_payment -> {
+                lifecycleScope.launch {
+                    deletePayment(this@PaymentCreateEdit, paymentitem)
+                }
+                // disable controls
+                paymentname.isEnabled = false
+                paymentamount.isEnabled = false
+                paymentdate.isEnabled = false
+                groupeditpayment.isEnabled = false
+                savebuttonpayment.isEnabled = false
+                optionsmenu.clear()
+//                val resultIntent = Intent()
+//                setResult(Activity.RESULT_OK, resultIntent)
+                Thread.sleep(1500)
+                finish()
+                super.onOptionsItemSelected(item)
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
     // Repeated from TaskCreateEdit
     private fun getCategory(): String {
         var mycategorycode = ""
@@ -266,17 +309,8 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         paymentitem.amount = paymentamount.text.toString()
         paymentitem.category = getCategory()
 
-        if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
-                    PackageManager.PERMISSION_DENIED
-                    ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
-                    PackageManager.PERMISSION_DENIED
-                    )
-        ) {
-            //permission denied
-            val permissions =
-                arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR)
-            //show popup to request runtime permission
-            requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
+        if (!checkPaymentPermissions()) {
+            alertBox()
         } else {
             if (paymentitem.key == "") {
                 addPayment(this, paymentitem)
@@ -285,14 +319,62 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
             }
             val resultIntent = Intent()
             setResult(Activity.RESULT_OK, resultIntent)
+
+            if (adManager.mRewardedAd != null) {
+                adManager.mRewardedAd?.show(this) {}
+            } else {
+                Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
+            }
+            Thread.sleep(1500)
+            finish()
         }
-        if (adManager.mRewardedAd != null) {
-            adManager.mRewardedAd?.show(this) {}
-        } else {
-            Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
-        }
-        finish()
     }
+
+    private fun alertBox() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.lackpermissions_message))
+        builder.setMessage(getString(R.string.lackpermissions_message))
+
+        builder.setPositiveButton(
+            getString(R.string.accept)
+        ) { _, _ ->
+            requestPaymentPermissions()
+        }
+        builder.setNegativeButton(
+            "Cancel"
+        ) { p0, _ -> p0!!.dismiss() }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun checkPaymentPermissions(): Boolean {
+        return !((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
+                PackageManager.PERMISSION_DENIED
+                ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
+                PackageManager.PERMISSION_DENIED
+                ) && (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_DENIED
+                ) && (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_DENIED
+                ) && (checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_DENIED
+                ))
+    }
+
+    private fun requestPaymentPermissions() {
+        val permissions =
+            arrayOf(
+                Manifest.permission.READ_CALENDAR,
+                Manifest.permission.WRITE_CALENDAR,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.MANAGE_EXTERNAL_STORAGE
+            )
+        //show popup to request runtime permission
+        requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
+    }
+
 
     override fun onSupportNavigateUp(): Boolean {
         finish()

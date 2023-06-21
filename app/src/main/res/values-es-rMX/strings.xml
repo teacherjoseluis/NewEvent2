@@ -40,6 +40,7 @@
     <string name="clockicon">Ícono de reloj</string>
     <string name="companions">Acompañantes</string>
     <string name="complete_task">Completar</string>
+    <string name="delete_payment">Borrar Pago</string>
     <string name="reactivate_task">Reactivar Tarea</string>
     <string name="congratulations">Felicidades!</string>
     <string name="contactavatar">Avatar de contacto</string>
@@ -289,6 +290,10 @@
     <string name="notattending">No asiste</string>
     <string name="error_networkconnectivity">Hay un problema con tu conexión a Internet, asegurate de estar conectado para continuar</string>
     <string name="error_networkconnection">Existe un problema al intentar conectartse a la red. Para poder llevar a cabo esta acción necesitas asegurarte que exista acceso a Internet.</string>
+    <string name="emailverification_title">Verificación de correo electrónico</string>
+    <string name="emailverification_message">Verifica tu bandeja de entrada y haga clic en el enlace de verificación que te enviamos para completar el proceso. Una vez verificado, podrás volver a iniciar sesión en la aplicación y disfrutar de todas sus funciones.</string>
+    <string name="lackpermissions_message">La aplicación neceista permisos para completar esta acción</string>
+
 
     <string-array name="role" >
         <item>Novia</item>

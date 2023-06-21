@@ -193,6 +193,20 @@ class UserModel(
         }
     }
 
+    private suspend fun editUserShortName(user: User) {
+        coroutineScope.launch {
+            userRef.child("shortname").setValue(user.shortname).await()
+            Log.d(TAG, "Shortname for the User has been set to ${user.shortname}")
+        }
+    }
+
+    private suspend fun editUserRole(user: User) {
+        coroutineScope.launch {
+            userRef.child("role").setValue(user.role).await()
+            Log.d(TAG, "Role for the User has been set to ${user.role}")
+        }
+    }
+
     private suspend fun addUser(user: User) {
         coroutineScope {
             val userfb = hashMapOf(
@@ -305,7 +319,8 @@ class UserModel(
     }
 
     override suspend fun onAddEditUser(user: User) {
-        addUser(user)
+        editUserShortName(user)
+        editUserRole(user)
         nexthandleru?.onAddEditUser(user)
     }
 

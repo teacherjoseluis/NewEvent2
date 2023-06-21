@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--    <item-->
+    <!--        android:id="@+id/action_search"-->
+    <!--        android:gravity="right"-->
+    <!--        android:icon="@drawable/icons8_conversion_24"-->
+    <!--        android:iconifiedByDefault="false"-->
+    <!--        android:title=""-->
+    <!--        android:iconTint="@color/white"-->
+    <!--        app:actionViewClass="android.widget.SearchView"-->
+    <!--        app:showAsAction="ifRoom|collapseActionView" />-->
+
+    <item
+        android:id="@+id/delete_payment"
+        android:iconTint="@color/white"
+        android:title="@string/complete_task"
+        app:showAsAction="never"/>
+</menu>

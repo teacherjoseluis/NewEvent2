@@ -37,6 +37,8 @@ import kotlinx.android.synthetic.main.new_vendor.nameinputedit
 import kotlinx.android.synthetic.main.new_vendor.phoneimage
 import kotlinx.android.synthetic.main.new_vendor.phoneinputedit
 import kotlinx.android.synthetic.main.vendor_googlecard.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
 
@@ -314,7 +316,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         //Having vendoritem populated allows to decide whether we are adding a new
         // or editing an existing vendor
         val networkUtils = NetworkUtils(this)
-        if(networkUtils.isNetworkAvailable()) {
+        if (networkUtils.isNetworkAvailable()) {
             if (vendoritem.key == "") {
                 addVendor(this, vendoritem, CALLER)
             } else if (vendoritem.key != "") {
@@ -330,7 +332,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             categoryspinner.isEnabled = true
             button.isEnabled = true
         }
-        Thread.sleep(1500)
+        Thread.sleep(2000)
         finish()
     }
 
