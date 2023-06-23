@@ -221,29 +221,8 @@ class OnboardingView : AppCompatActivity() {
                             else -> "Bride"
                         }
 
-                        if ((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
-                                    PackageManager.PERMISSION_DENIED
-                                    ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
-                                    PackageManager.PERMISSION_DENIED
-                                    ) && (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                                    PackageManager.PERMISSION_DENIED
-                                    ) && (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                                    PackageManager.PERMISSION_DENIED
-                                    ) && (checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) ==
-                                    PackageManager.PERMISSION_DENIED
-                                    )
-                        ) {
-                            //permission denied
-                            val permissions =
-                                arrayOf(
-                                    Manifest.permission.READ_CALENDAR,
-                                    Manifest.permission.WRITE_CALENDAR,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE
-                                )
-                            //show popup to request runtime permission
-                            requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
+                        if (!checkPermissions()) {
+                            alertBox()
                         } else {
                             lifecycleScope.launch {
                                 //addUser - Remote & Local
@@ -280,6 +259,48 @@ class OnboardingView : AppCompatActivity() {
 //            etlocation.setText(placenameString)
 //        }
 //    }
+
+    private fun alertBox() {
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.lackpermissions_message))
+        builder.setMessage(getString(R.string.lackpermissions_message))
+
+        builder.setPositiveButton(
+            getString(R.string.accept)
+        ) { _, _ ->
+            requestPermissions()
+        }
+        builder.setNegativeButton(
+            "Cancel"
+        ) { p0, _ -> p0!!.dismiss() }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun checkPermissions(): Boolean {
+        return !((checkSelfPermission(Manifest.permission.READ_CALENDAR) ==
+                PackageManager.PERMISSION_DENIED
+                ) && (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) ==
+                PackageManager.PERMISSION_DENIED
+                ) && (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_DENIED
+                ) && (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_DENIED
+                ))
+    }
+
+    private fun requestPermissions() {
+        val permissions =
+            arrayOf(
+                Manifest.permission.READ_CALENDAR,
+                Manifest.permission.WRITE_CALENDAR,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        //show popup to request runtime permission
+        requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
+    }
 
     private fun showDatePickerDialog() {
         val newFragment =

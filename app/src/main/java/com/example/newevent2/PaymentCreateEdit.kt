@@ -299,7 +299,6 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                     paymentdate.error = getString(R.string.error_invaliddate)
                 }
             }))
-
         newFragment.show(supportFragmentManager, "datePicker")
     }
 
@@ -357,8 +356,6 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                 PackageManager.PERMISSION_DENIED
                 ) && (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                 PackageManager.PERMISSION_DENIED
-                ) && (checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_DENIED
                 ))
     }
 
@@ -368,11 +365,40 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                 Manifest.permission.READ_CALENDAR,
                 Manifest.permission.WRITE_CALENDAR,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         //show popup to request runtime permission
-        requestPermissions(permissions, TaskCreateEdit.PERMISSION_CODE)
+        requestPermissions(permissions, PERMISSION_CODE)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            PERMISSION_CODE -> {
+                // Check if all permissions were granted
+                var allPermissionsGranted = true
+                for (result in grantResults) {
+                    if (result != PackageManager.PERMISSION_GRANTED) {
+                        allPermissionsGranted = false
+                        break
+                    }
+                }
+
+                if (allPermissionsGranted) {
+                    // All permissions were granted. Proceed with the desired functionality.
+                    // For example, you can call a method that requires the permissions here.
+                } else {
+                    // At least one permission was denied.
+                    // You can handle the denial scenario here, such as displaying a message or disabling functionality that requires the permissions.
+                }
+            }
+            // Add other request codes and handling logic for other permission requests if needed.
+        }
     }
 
 
@@ -414,5 +440,6 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
     companion object {
         const val TAG = "PaymentCreateEdit"
+        internal const val PERMISSION_CODE = 42
     }
 }

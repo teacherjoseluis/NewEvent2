@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
+import com.yalantis.ucrop.UCrop
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -31,9 +32,9 @@ import com.example.newevent2.Model.MyFirebaseApp
 import com.example.newevent2.ui.TextValidate
 import com.example.newevent2.ui.dialog.DatePickerFragment
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.eventform_layout.*
 import kotlinx.android.synthetic.main.task_editdetail.*
+import java.io.File
 import java.util.*
 
 class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresenter.EventItem {
@@ -266,18 +267,42 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
             eventlocation.setText(placenameString)
         }
 
+//        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+//            uri = data?.data!!
+//            CropImage.activity(uri)
+//                .setMinCropResultSize(80, 80)
+//                .setMaxCropResultSize(800, 800)
+//                .start(this)
+//        }
+//
+//        if (resultCode == Activity.RESULT_OK && requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+//            val result = CropImage.getActivityResult(data)
+//            if (resultCode == Activity.RESULT_OK) {
+//                uri = result.uri
+//                //delImgfromSD("eventimage", this@MainActivity)
+//                //eventimage.setImageURI(uri)
+//                // event_imageurl = uri.lastPathSegment.toString()
+//                Glide.with(this@MainActivity)
+//                    .load(uri)
+//                    .apply(RequestOptions.circleCropTransform())
+//                    .into(eventimage)
+//
+//            }
+//        }
+
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             uri = data?.data!!
-            CropImage.activity(uri)
-                .setMinCropResultSize(80, 80)
-                .setMaxCropResultSize(800, 800)
+            val destinationUri = Uri.fromFile(File(cacheDir, "cropped_image.jpg")) // Specify the destination file URI for the cropped image
+            UCrop.of(uri!!, destinationUri)
+                .withAspectRatio(1f, 1f) // Set the desired aspect ratio (change as needed)
+                .withMaxResultSize(800, 800) // Set the maximum result size for the cropped image
                 .start(this)
         }
 
-        if (resultCode == Activity.RESULT_OK && requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            val result = CropImage.getActivityResult(data)
-            if (resultCode == Activity.RESULT_OK) {
-                uri = result.uri
+        if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            val resultUri = UCrop.getOutput(data!!)
+            if (resultUri != null) {
+                uri = resultUri
                 //delImgfromSD("eventimage", this@MainActivity)
                 //eventimage.setImageURI(uri)
                 // event_imageurl = uri.lastPathSegment.toString()
@@ -285,7 +310,6 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
                     .load(uri)
                     .apply(RequestOptions.circleCropTransform())
                     .into(eventimage)
-
             }
         }
     }

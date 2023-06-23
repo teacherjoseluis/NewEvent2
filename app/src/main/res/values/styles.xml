@@ -10,6 +10,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppThemeUCropActivity" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <!-- Other style attributes -->
+    </style>
+
     <style name="AppTheme.DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@android:color/black</item>
     </style>

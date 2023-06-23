@@ -185,24 +185,39 @@ fun saveBitmaptoSD(context: Context, category: String, bitmap: Bitmap) {
     val imagefile = File(imagepath, "$category.PNG")
     try {
         //Request permissions
-        if (checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-            PackageManager.PERMISSION_DENIED
-        ) {
-            //permission denied
-            //val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            //show popup to request runtime permission
-            //requestPermissions(permissions, PERMISSION_CODE)
-        } else {
-            //permission already granted
-            val out = FileOutputStream(imagefile)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-            out.flush()
-            out.close()
-        }
+        //permission already granted
+        val out = FileOutputStream(imagefile)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+        out.flush()
+        out.close()
+
     } catch (e: Exception) {
         Toast.makeText(
             context,
             "There was an error trying create the event ${e.message}",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+}
+
+fun saveImagetoSD(context: Context, category: String, imageUri: Uri) {
+    val imagepath = Paths.get(context.getExternalFilesDir(null)?.absolutePath).toString()
+    val imagefile = File(imagepath, "$category.PNG")
+    try {
+        val inputStream = context.contentResolver.openInputStream(imageUri)
+        val outputStream = FileOutputStream(imagefile)
+
+        inputStream?.use { input ->
+            outputStream.use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        Toast.makeText(context, "Image saved successfully", Toast.LENGTH_SHORT).show()
+    } catch (e: Exception) {
+        Toast.makeText(
+            context,
+            "There was an error saving the image: ${e.message}",
             Toast.LENGTH_LONG
         ).show()
     }
@@ -215,6 +230,7 @@ fun replaceImage(context: Context, category: String, userid: String, eventid: St
     delImgfromSD(category, context)
     // 2. Rewrite Image in Storage
     saveImgtoStorage(category, userid, eventid, uri)
+    saveImagetoSD(context, category, uri)
 }
 
 //Function to delete/replace and image from Shared Preferences
