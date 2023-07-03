@@ -36,9 +36,9 @@ class Rv_PaymentAdapter(
     //--------------------------------------------------
     // For Native Ad Implementation
     override fun getItemViewType(position: Int): Int {
-        if (position != 0 && position % 4 == 0) {
-            return NATIVE_AD_VIEW_TYPE
-        }
+//        if (position > 0 && (position + 1) % 4 == 0) {
+//            return NATIVE_AD_VIEW_TYPE
+//        }
         return DEFAULT_VIEW_TYPE
     }
     //--------------------------------------------------
