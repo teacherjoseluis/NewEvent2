@@ -25,6 +25,7 @@
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/spinner_format.xml" value="0.20277777777777778" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/three_dots_more_indicator_graycolor.xml" value="0.23541666666666666" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/three_dots_more_indicator_primarycolor.xml" value="0.23541666666666666" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/vector.xml" value="0.4036458333333333" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/warning_svgrepo_com.xml" value="0.12222222222222222" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/wedding_rings_jewel_svgrepo_com2.xml" value="0.23541666666666666" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/drawable/wedding_rings_jewel_svgrepo_com3.xml" value="0.23541666666666666" />
@@ -35,22 +36,25 @@
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/actioncard_layout.xml" value="0.3800578034682081" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/activity_maps.xml" value="0.20625" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/activitycontainer.xml" value="0.225" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/blog_item_layout.xml" value="0.33" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/blog_item_layout.xml" value="0.25" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/category_item_layout.xml" value="0.6169154228855721" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/category_listitem_layout.xml" value="0.3875" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/chartcard_emptystate.xml" value="0.3527777777777778" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/chartcard_layoutpayment.xml" value="0.1" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/chartcard_layouttask.xml" value="0.33" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/chartcard_layouttask.xml" value="0.2159090909090909" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/contact_item_layout.xml" value="0.3875" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardactivity.xml" value="0.22" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardblog.xml" value="0.3527777777777778" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardcharts.xml" value="0.36376210235131395" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/dashboardcharts.xml" value="0.22" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/empty_state.xml" value="0.33" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/eventform_layout.xml" value="0.19444444444444445" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/journal_parentlayout.xml" value="0.10648148148148148" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/journal_parentlayout2.xml" value="0.34444444444444444" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/login0.xml" value="0.67" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/login_email.xml" value="0.47085201793721976" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/main_toolbar.xml" value="0.26296296296296295" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/my_notes.xml" value="0.3206672845227062" />
-        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_guest.xml" value="0.37395833333333334" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_guest.xml" value="0.1" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/new_vendor.xml" value="0.25" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/note_item_layout.xml" value="0.34444444444444444" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/onboarding_name.xml" value="0.5130208333333334" />
@@ -59,6 +63,7 @@
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/payment_editdetail.xml" value="0.2749658002735978" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/payment_item_layout.xml" value="0.5" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/settings.xml" value="0.5130208333333334" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingdetails.xml" value="0.11666666666666667" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingguests.xml" value="0.3875" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/summary_weddingprogress.xml" value="0.3875" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/layout/tableguests_parentlayout.xml" value="0.35" />
@@ -78,6 +83,7 @@
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/menu/tasks_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/xml/alpha_animation.xml" value="0.34444444444444444" />
+        <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/xml/remote_config_defaults.xml" value="0.3875" />
         <entry key="..\:/Users/josel/StudioProjects/NewEvent2/app/src/main/res/xml/scene_01.xml" value="0.34444444444444444" />
       </map>
     </option>

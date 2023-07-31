@@ -25,6 +25,10 @@
                 android:icon="@drawable/vector"
                 android:title="@string/settings"/>
             <item
+                android:id="@+id/contact_fragment"
+                android:icon="@drawable/icons8_important_mail_24"
+                android:title="@string/contact_the_developer"/>
+            <item
                 android:id="@+id/account_logoff"
                 android:icon="@drawable/person"
                 android:title="@string/log_off"/>

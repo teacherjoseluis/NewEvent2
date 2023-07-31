@@ -9,13 +9,13 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
-import com.example.newevent2.*
-import com.example.newevent2.Functions.converttoCalendar
-import com.example.newevent2.Functions.converttoDate
-import com.example.newevent2.Model.Event
-import com.example.newevent2.Model.Payment
-import com.example.newevent2.Model.Task
-import com.example.newevent2.Model.User
+import com.bridesandgrooms.event.*
+import com.bridesandgrooms.event.Functions.converttoCalendar
+import com.bridesandgrooms.event.Functions.converttoDate
+import com.bridesandgrooms.event.Model.Event
+import com.bridesandgrooms.event.Model.Payment
+import com.bridesandgrooms.event.Model.Task
+import com.bridesandgrooms.event.Model.User
 import java.util.*
 
 

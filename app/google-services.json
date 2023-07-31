@@ -8,18 +8,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:319634884697:android:273ecb491abb42a9dc0948",
+        "mobilesdk_app_id": "1:319634884697:android:c8b927ba522747cedc0948",
         "android_client_info": {
-          "package_name": "com.example.newevent2"
+          "package_name": "com.bridesandgrooms.event"
         }
       },
       "oauth_client": [
         {
-          "client_id": "319634884697-6d6pqq139kqdt4gm9hia32t48kjhphrk.apps.googleusercontent.com",
+          "client_id": "319634884697-d79as8b605fr29so6p24bk6m0q9cg3n2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.newevent2",
+            "package_name": "com.bridesandgrooms.event",
             "certificate_hash": "1a1674e1ede0782dfd0ec4ce318db1b78bf5fa1f"
+          }
+        },
+        {
+          "client_id": "319634884697-hd0f6nsv7fpkjsqb0lao0p42cd1gs76j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bridesandgrooms.event",
+            "certificate_hash": "cb600353101d4ba74387e5335f03cbf87040d457"
           }
         },
         {
@@ -29,7 +37,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC6nCSLYrxoARX3OAEqNdpSFsf73OOHdbo"
+          "current_key": "AIzaSyBpBf8M9EMUF8CjjbO8PreNlJ6bEkABlhg"
         }
       ],
       "services": {

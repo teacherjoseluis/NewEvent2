@@ -304,7 +304,13 @@
     <string name="emailverification_title">Email Verification</string>
     <string name="emailverification_message">Please check your inbox and click on the verification link we sent you to complete the process. Once verified, you will be able to login back into the app and enjoy all its features.</string>
     <string name="lackpermissions_message">The application lacks the permissions to complete this action</string>
-
+    <string name="lackpermissions_action">Please grant the permissions needed when requested</string>
+    <string name="edit_guest">Edit Guest</string>
+    <string name="new_task">New Task</string>
+    <string name="edit_task">Task Detail</string>
+    <string name="edit_payment">Payment Detail</string>
+    <string name="comingsoon">Not available at the moment, coming soon…</string>
+    <string name="contact_the_developer">Contact the Developer</string>
 
     <string-array name="role" >
         <item>Bride</item>

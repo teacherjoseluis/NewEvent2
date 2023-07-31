@@ -5,12 +5,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.newevent2.Functions.createemptyBitmap
-import com.example.newevent2.Functions.getImgfromSD
-import com.example.newevent2.Functions.saveBitmaptoSD
-import com.example.newevent2.Functions.saveURLImgtoSD
-import com.example.newevent2.MVP.*
-import com.example.newevent2.Model.*
+import com.bridesandgrooms.event.Functions.createemptyBitmap
+import com.bridesandgrooms.event.Functions.getImgfromSD
+import com.bridesandgrooms.event.Functions.saveBitmaptoSD
+import com.bridesandgrooms.event.Functions.saveURLImgtoSD
+import com.bridesandgrooms.event.MVP.*
+import com.bridesandgrooms.event.Model.*
 import com.google.firebase.storage.StorageReference
 import kotlin.reflect.KClass
 

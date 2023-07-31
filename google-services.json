@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:319634884697:android:273ecb491abb42a9dc0948",
         "android_client_info": {
-          "package_name": "com.example.newevent2"
+          "package_name": "com.bridesandgrooms.event"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "319634884697-bargo80n0hpojt2e8v8rfvg6s18derd8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.newevent2",
+            "package_name": "com.bridesandgrooms.event",
             "certificate_hash": "1a1674e1ede0782dfd0ec4ce318db1b78bf5fa1f"
           }
         },

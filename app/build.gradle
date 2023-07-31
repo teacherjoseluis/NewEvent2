@@ -2,9 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.firebase.firebase-perf'
-apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion 31
@@ -14,10 +15,10 @@ android {
         configurations.all{
             resolutionStrategy {force 'androidx.core:core-ktx:1.6.0'}
         }
-        applicationId "com.example.newevent2"
+        applicationId "com.bridesandgrooms.event"
         minSdkVersion 26
         targetSdkVersion 31
-        versionCode 1
+        versionCode 8
         versionName "1.0"
         // Required ONLY when setting minSdkVersion to 20 or lower
         multiDexEnabled true
@@ -28,6 +29,15 @@ android {
         //multiDexEnabled true
     }
 
+//    signingConfigs {
+//        release {
+//            storeFile file("C:/Users/josel/StudioProjects/NewEvent2/KeyStore/keystore.jks")
+//            storePassword "80ligomA"
+//            keyAlias "bridesandgrooms_keystore"
+//            keyPassword "80ligomA"
+//        }
+//    }
+
 //    buildFeatures {
 //        // Enables Jetpack Compose for this module
 //        compose = true
@@ -35,8 +45,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -54,6 +65,8 @@ android {
         enabled = true
     }
 }
+
+
 
 repositories {
     mavenCentral()
@@ -148,4 +161,6 @@ dependencies {
     //implementation 'me.gujun.android.taggroup:library:1.4@aar'
 //    implementation 'co.lujun:androidtagview:1.1.7'
 //    implementation 'androidx.appcompat:appcompat:1.0.1'
+    implementation 'com.google.firebase:firebase-config:20.0.2'
+    implementation 'com.google.firebase:firebase-messaging:20.3.0'
 }

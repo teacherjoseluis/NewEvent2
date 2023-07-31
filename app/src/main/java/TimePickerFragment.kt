@@ -7,7 +7,7 @@ import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import com.example.newevent2.R
+import com.bridesandgrooms.event.R
 import java.util.*
 
 

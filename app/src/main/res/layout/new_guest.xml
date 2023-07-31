@@ -69,9 +69,9 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/nameinputedit"
                             style="@style/Body1"
-                            android:background="@drawable/layout_border"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="@drawable/layout_border"
                             android:hint="@string/name"
                             android:maxLength="50" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -102,9 +102,9 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/phoneinputedit"
                             style="@style/Body1"
-                            android:background="@drawable/layout_border"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="@drawable/layout_border"
                             android:digits="0123456789+()-"
                             android:hint="@string/phone"
                             android:inputType="phone"
@@ -151,9 +151,9 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/mailinputedit"
                             style="@style/Body1"
-                            android:background="@drawable/layout_border"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="@drawable/layout_border"
                             android:hint="@string/email"
                             android:maxLength="50" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -373,13 +373,13 @@
 
     <Button
         android:id="@+id/button"
+        app:backgroundTint="@color/rosaChillon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:shadowDy="2"
         android:shadowRadius="4"
         android:text="@string/save"
-        app:backgroundTint="@color/rosaChillon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

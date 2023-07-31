@@ -293,6 +293,13 @@
     <string name="emailverification_title">Verificación de correo electrónico</string>
     <string name="emailverification_message">Verifica tu bandeja de entrada y haga clic en el enlace de verificación que te enviamos para completar el proceso. Una vez verificado, podrás volver a iniciar sesión en la aplicación y disfrutar de todas sus funciones.</string>
     <string name="lackpermissions_message">La aplicación neceista permisos para completar esta acción</string>
+    <string name="lackpermissions_action">Por favor proporciona los permisos requeridos cuando sean solicitados</string>
+    <string name="edit_guest">Editar Invitado</string>
+    <string name="new_task">Nueva Tarea</string>
+    <string name="edit_task">Detalle de la Tarea</string>
+    <string name="edit_payment">Detalle del Pago</string>
+    <string name="comingsoon">No esta disponible por el momento, esperala pronto…</string>
+    <string name="contact_the_developer">Contacta al Desarrollador</string>
 
 
     <string-array name="role" >

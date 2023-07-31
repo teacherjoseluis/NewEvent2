@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defaults>
+    <entry>
+        <key>auto_create_tasks_and_payments</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>enable_foryoutab</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>category_layout</key>
+        <value>card</value>
+    </entry>
+</defaults>
