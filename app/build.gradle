@@ -163,4 +163,5 @@ dependencies {
 //    implementation 'androidx.appcompat:appcompat:1.0.1'
     implementation 'com.google.firebase:firebase-config:20.0.2'
     implementation 'com.google.firebase:firebase-messaging:20.3.0'
+    implementation 'com.github.kcrimi:ToolTipDialog:1.1.4'
 }

@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:background="@drawable/onboard_border"
-            android:backgroundTint="@color/rosaChillonTransparente">
+            android:backgroundTint="@color/rosaChillon">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/onboarding_card"

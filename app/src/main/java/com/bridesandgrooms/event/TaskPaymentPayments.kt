@@ -1,19 +1,27 @@
 package com.bridesandgrooms.event
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.bridesandgrooms.event.Model.Payment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import com.kcrimi.tooltipdialog.ToolTipDialog
 import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlinx.android.synthetic.main.onboardingcard.view.*
+import kotlinx.android.synthetic.main.taskpayment_list.*
 import kotlinx.android.synthetic.main.taskpayment_payments.view.*
 
 class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments {
@@ -23,6 +31,12 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments 
     private lateinit var inf: View
     private lateinit var presenterpayment: TaskPaymentPaymentsPresenter
     private lateinit var recyclerView: RecyclerView
+
+    private val toolTipListener = object : ToolTipDialog.ToolTipListener {
+        override fun onClickToolTip() {
+            TODO("Not yet implemented")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,22 +80,51 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments 
                 val itemTouchHelper = ItemTouchHelper(swipeController)
                 itemTouchHelper.attachToRecyclerView(recyclerView)
         } else if (list.size == 0) {
+            val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentp)
+
+            // Reduce the top margin of the LinearLayout (You can adjust the value as needed)
+            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin) // Replace with the appropriate dimension resource
+            val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+            val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+            params.topMargin = topMarginInPixels
+            params.bottomMargin = bottomMarginInPixels
+            emptystateLayout.layoutParams = params
+
             inflatedView.withnodatataskpaymentp.visibility = ConstraintLayout.VISIBLE
             //inflatedView.onboardingmessage.text = getString(R.string.emptystate_nopaymentsmsg)
             inflatedView.withnodatataskpaymentp.empty_card.onboardingmessage.text =
                 getString(R.string.emptystate_nopaymentsmsg)
             inflatedView.activepaymentslayout.visibility = ConstraintLayout.GONE
-            inflatedView.withnodatataskpaymentp.newtaskbutton.hide()
+            //inflatedView.withnodatataskpaymentp.newtaskbutton.hide()
+
+            val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+            inflatedView.withnodatataskpaymentp.newtaskbutton.startAnimation(fadeAnimation)
+
+            inflatedView.withnodatataskpaymentp.newtaskbutton.setOnClickListener {
+                val newPayment = Intent(context, PaymentCreateEdit::class.java)
+                newPayment.putExtra("userid", "")
+                startActivity(newPayment)
+            }
         }
     }
 
     override fun onTPPaymentsError(inflatedView: View, errcode: String) {
+        val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentp)
+
+        // Reduce the top margin of the LinearLayout (You can adjust the value as needed)
+        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin) // Replace with the appropriate dimension resource
+        val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+        val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+        params.topMargin = topMarginInPixels
+        params.bottomMargin = bottomMarginInPixels
+        emptystateLayout.layoutParams = params
+
         inflatedView.withnodatataskpaymentp.visibility = ConstraintLayout.VISIBLE
         //inflatedView.onboardingmessage.text = getString(R.string.emptystate_nopaymentsmsg)
         inflatedView.withnodatataskpaymentp.empty_card.onboardingmessage.text =
             getString(R.string.emptystate_nopaymentsmsg)
         inflatedView.activepaymentslayout.visibility = ConstraintLayout.GONE
-        inflatedView.withnodatataskpaymentp.newtaskbutton.hide()
+        //inflatedView.withnodatataskpaymentp.newtaskbutton.hide()
     }
 
     @SuppressLint("NotifyDataSetChanged")
