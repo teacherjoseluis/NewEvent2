@@ -1,11 +1,13 @@
 package com.bridesandgrooms.event
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -126,21 +128,54 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         } else if (list.size == 0) {
             //If no tasks are retrieved from the presenter the component is marked as invisible
             inflatedView.activetaskslayout.visibility = ConstraintLayout.GONE
-            inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
-            inflatedView.withnodatataskpaymentt.empty_card.onboardingmessage.text =
+
+            val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentt)
+            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
+            val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+            val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+
+            params.topMargin = topMarginInPixels
+            params.bottomMargin = bottomMarginInPixels
+            emptystateLayout.layoutParams = params
+            emptystateLayout.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.empty_card.onboardingmessage.text =
                 getString(R.string.emptystate_notasksmsg)
-            inflatedView.withnodatataskpaymentt.newtaskbutton.hide()
+
+            val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+            emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+
+            emptystateLayout.newtaskbutton.setOnClickListener {
+                val newTask = Intent(context, TaskCreateEdit::class.java)
+                newTask.putExtra("userid", "")
+                startActivity(newTask)
+            }
         }
     }
 
     override fun onTPTasksError(inflatedView: View, errcode: String) {
         //We are showing the empty state layout and hiding the one that will load with task data
-        inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.VISIBLE
-        //inflatedView.withnodatataskpaymentt.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
-        inflatedView.withnodatataskpaymentt.empty_card.onboardingmessage.text =
+        inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.GONE
+
+        val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentt)
+        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
+        val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+        val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+
+        params.topMargin = topMarginInPixels
+        params.bottomMargin = bottomMarginInPixels
+        emptystateLayout.layoutParams = params
+        emptystateLayout.visibility = ConstraintLayout.VISIBLE
+        emptystateLayout.empty_card.onboardingmessage.text =
             getString(R.string.emptystate_notasksmsg)
-        inflatedView.activetaskslayout.visibility = ConstraintLayout.GONE
-        inflatedView.withnodatataskpaymentt.newtaskbutton.hide()
+
+        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+
+        emptystateLayout.newtaskbutton.setOnClickListener {
+            val newTask = Intent(context, TaskCreateEdit::class.java)
+            newTask.putExtra("userid", "")
+            startActivity(newTask)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

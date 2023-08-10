@@ -142,7 +142,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
 
             //Load with the achievements obtained by the user -------------------------------------------
-            val stepsBeanList = user.onboardingprogress(context!!)
+            val stepsBeanList = user.onboardingprogress(requireContext())
             val stepview = inflatedView.findViewById<HorizontalStepView>(R.id.step_view)
             stepview
                 .setStepViewTexts(stepsBeanList)//总步骤

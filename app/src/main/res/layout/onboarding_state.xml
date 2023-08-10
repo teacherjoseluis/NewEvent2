@@ -34,14 +34,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintBottom_toTopOf="@+id/newtaskbutton"
         app:layout_constraintEnd_toEndOf="parent">
 
         <include
             android:id="@+id/onboarding_card"
-            layout="@layout/onboardingcard" />
+            layout="@layout/tooltip_layout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

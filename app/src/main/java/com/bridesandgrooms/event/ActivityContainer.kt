@@ -57,6 +57,13 @@ class ActivityContainer : AppCompatActivity() {
         loadingscreen = findViewById(R.id.loadingscreen)
         val sidenavView = findViewById<NavigationView>(R.id.sidenav)
 
+        val developer_mail = RemoteConfigSingleton.get_developer_mail()
+
+        if (!developer_mail) {
+            val contactMenuItem = sidenavView.getMenu().findItem(R.id.contact_fragment);
+            contactMenuItem.setVisible(false)
+        }
+
         //If session is empty the user gets redirected to the login screen
 //        usersession = com.example.newevent2.Functions.getUserSession(this)
 //        if (usersession.key == "") {

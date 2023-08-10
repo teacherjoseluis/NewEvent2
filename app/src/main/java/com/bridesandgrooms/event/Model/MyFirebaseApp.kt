@@ -4,7 +4,9 @@ import android.app.Application
 import android.util.Log
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.RemoteConfigSingleton.set_category_layout
+import com.bridesandgrooms.event.RemoteConfigSingleton.set_developer_mail
 import com.bridesandgrooms.event.RemoteConfigSingleton.set_enable_foryoutab
+import com.bridesandgrooms.event.RemoteConfigSingleton.set_video_login
 import com.bridesandgrooms.event.RemoteConfigSingleton.setautocreateTaskPayment
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
@@ -54,12 +56,16 @@ class MyFirebaseApp: Application() {
                     val autocreateTaskPaymentFeature = remoteConfig.getBoolean("auto_create_tasks_and_payments")
                     val enable_foryoutab = remoteConfig.getBoolean("enable_foryoutab")
                     val category_layout = remoteConfig.getString("category_layout")
+                    val developer_mail = remoteConfig.getBoolean("developer_mail")
+                    val video_login = remoteConfig.getBoolean("video_login")
                     //val themeId = remoteConfig.getString("themeOverride")
 
                     // Set the chosen theme to your activity
                     set_category_layout(category_layout)
                     set_enable_foryoutab(enable_foryoutab)
                     setautocreateTaskPayment(autocreateTaskPaymentFeature)
+                    set_developer_mail(developer_mail)
+                    set_video_login(video_login)
                 } else {
                     // Error fetching configurations, use default values
                     // Handle the error case

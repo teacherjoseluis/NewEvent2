@@ -119,16 +119,16 @@
                                         tools:layout_editor_absoluteX="5dp" />
                                 </androidx.constraintlayout.widget.ConstraintLayout>
                 -->
-                <include
-                    android:id="@+id/withnodatataskpaymentt"
-                    layout="@layout/empty_state"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="invisible"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <include
+        android:id="@+id/withnodatataskpaymentt"
+        layout="@layout/empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

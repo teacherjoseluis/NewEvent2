@@ -23,6 +23,12 @@ import kotlinx.android.synthetic.main.login_email.*
 import kotlinx.coroutines.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import android.net.Uri
+import android.view.View
+
+import android.widget.VideoView
+import android.media.MediaPlayer
+import android.media.MediaPlayer.OnCompletionListener
 
 
 class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.SignUpActivity {
@@ -36,7 +42,26 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
     //@OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login0)
+
+        val video_login = RemoteConfigSingleton.get_video_login()
+
+        if (video_login) {
+            setContentView(R.layout.login_video)
+
+            val videoview = findViewById<View>(R.id.videowedding) as VideoView
+            videoview.setOnCompletionListener(OnCompletionListener {
+                videoview.start() //need to make transition seamless.
+            })
+
+            val uri: Uri =
+                Uri.parse("android.resource://" + packageName + "/" + R.raw.weddingvideo4)
+            videoview.setVideoURI(uri)
+            videoview.requestFocus()
+            videoview.start()
+        } else {
+            setContentView(R.layout.login0)
+        }
+        //setContentView(R.layout.login0)
 
         // Facebook Initializations
 //        FacebookSdk.setApplicationId("420436362323049")

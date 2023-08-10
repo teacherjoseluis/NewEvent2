@@ -25,6 +25,7 @@
                 android:icon="@drawable/vector"
                 android:title="@string/settings"/>
             <item
+                android:visible="true"
                 android:id="@+id/contact_fragment"
                 android:icon="@drawable/icons8_important_mail_24"
                 android:title="@string/contact_the_developer"/>

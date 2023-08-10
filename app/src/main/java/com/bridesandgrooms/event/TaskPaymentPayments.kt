@@ -80,27 +80,24 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments 
                 val itemTouchHelper = ItemTouchHelper(swipeController)
                 itemTouchHelper.attachToRecyclerView(recyclerView)
         } else if (list.size == 0) {
-            val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentp)
+            inflatedView.activepaymentslayout.visibility = ConstraintLayout.GONE
 
-            // Reduce the top margin of the LinearLayout (You can adjust the value as needed)
-            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin) // Replace with the appropriate dimension resource
+            val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentp)
+            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
             val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
             val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+
             params.topMargin = topMarginInPixels
             params.bottomMargin = bottomMarginInPixels
             emptystateLayout.layoutParams = params
-
-            inflatedView.withnodatataskpaymentp.visibility = ConstraintLayout.VISIBLE
-            //inflatedView.onboardingmessage.text = getString(R.string.emptystate_nopaymentsmsg)
-            inflatedView.withnodatataskpaymentp.empty_card.onboardingmessage.text =
+            emptystateLayout.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.empty_card.onboardingmessage.text =
                 getString(R.string.emptystate_nopaymentsmsg)
-            inflatedView.activepaymentslayout.visibility = ConstraintLayout.GONE
-            //inflatedView.withnodatataskpaymentp.newtaskbutton.hide()
 
             val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
-            inflatedView.withnodatataskpaymentp.newtaskbutton.startAnimation(fadeAnimation)
+            emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
 
-            inflatedView.withnodatataskpaymentp.newtaskbutton.setOnClickListener {
+            emptystateLayout.newtaskbutton.setOnClickListener {
                 val newPayment = Intent(context, PaymentCreateEdit::class.java)
                 newPayment.putExtra("userid", "")
                 startActivity(newPayment)
@@ -109,22 +106,28 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments 
     }
 
     override fun onTPPaymentsError(inflatedView: View, errcode: String) {
-        val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentp)
+        inflatedView.activepaymentslayout.visibility = ConstraintLayout.GONE
 
-        // Reduce the top margin of the LinearLayout (You can adjust the value as needed)
-        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin) // Replace with the appropriate dimension resource
+        val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentp)
+        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
         val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
         val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+
         params.topMargin = topMarginInPixels
         params.bottomMargin = bottomMarginInPixels
         emptystateLayout.layoutParams = params
-
-        inflatedView.withnodatataskpaymentp.visibility = ConstraintLayout.VISIBLE
-        //inflatedView.onboardingmessage.text = getString(R.string.emptystate_nopaymentsmsg)
-        inflatedView.withnodatataskpaymentp.empty_card.onboardingmessage.text =
+        emptystateLayout.visibility = ConstraintLayout.VISIBLE
+        emptystateLayout.empty_card.onboardingmessage.text =
             getString(R.string.emptystate_nopaymentsmsg)
-        inflatedView.activepaymentslayout.visibility = ConstraintLayout.GONE
-        //inflatedView.withnodatataskpaymentp.newtaskbutton.hide()
+
+        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+
+        emptystateLayout.newtaskbutton.setOnClickListener {
+            val newPayment = Intent(context, PaymentCreateEdit::class.java)
+            newPayment.putExtra("userid", "")
+            startActivity(newPayment)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

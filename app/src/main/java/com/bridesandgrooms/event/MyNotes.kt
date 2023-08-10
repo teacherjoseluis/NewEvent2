@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,7 +17,9 @@ import com.bridesandgrooms.event.MVP.NotePresenter
 import com.bridesandgrooms.event.Model.MyFirebaseApp
 import com.bridesandgrooms.event.Model.Note
 import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlinx.android.synthetic.main.my_notes.view.*
+import kotlinx.android.synthetic.main.my_notes.view.withnodata
 import kotlinx.android.synthetic.main.onboardingcard.view.*
 
 class MyNotes : Fragment(), NotePresenter.NoteActivity {
@@ -97,15 +100,52 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity {
 
         } else if (notelist.size == 0) {
             inflatedView.withdata.visibility = ConstraintLayout.GONE
-            inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
-            inflatedView.onboardingmessage.text = getString(R.string.emptystate_nonotesmsg)
+
+            val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodata)
+            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
+            val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+            val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+
+            params.topMargin = topMarginInPixels
+            params.bottomMargin = bottomMarginInPixels
+            emptystateLayout.layoutParams = params
+
+            emptystateLayout.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_nonotesmsg)
+
+            val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+            emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+
+            emptystateLayout.newtaskbutton.setOnClickListener {
+                val newTask = Intent(context, NoteCreateEdit::class.java)
+                newTask.putExtra("userid", "")
+                startActivity(newTask)
+            }
         }
     }
 
     override fun onNoteError(inflatedView: View, errcode: String) {
         inflatedView.withdata.visibility = ConstraintLayout.GONE
-        inflatedView.withnodata.visibility = ConstraintLayout.VISIBLE
-        inflatedView.onboardingmessage.text = getString(R.string.emptystate_nonotesmsg)
+
+        val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodata)
+        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
+        val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+        val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+
+        params.topMargin = topMarginInPixels
+        params.bottomMargin = bottomMarginInPixels
+        emptystateLayout.layoutParams = params
+
+        emptystateLayout.visibility = ConstraintLayout.VISIBLE
+        emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_nonotesmsg)
+
+        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+
+        emptystateLayout.newtaskbutton.setOnClickListener {
+            val newTask = Intent(context, NoteCreateEdit::class.java)
+            startActivity(newTask)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
