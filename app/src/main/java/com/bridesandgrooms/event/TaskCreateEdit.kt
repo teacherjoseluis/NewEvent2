@@ -194,8 +194,13 @@ class TaskCreateEdit : AppCompatActivity() {
 //                mRewardedAd = null
 //            }
 //        }
-        adManager = AdManagerSingleton.getAdManager()
-        adManager.loadAndShowRewardedAd(this)
+
+        val showads = RemoteConfigSingleton.get_showads()
+
+        if (showads) {
+            adManager = AdManagerSingleton.getAdManager()
+            adManager.loadAndShowRewardedAd(this)
+        }
     }
 
     // The menu will allow the user to mark tasks as deleted or completed but this
@@ -344,26 +349,34 @@ class TaskCreateEdit : AppCompatActivity() {
 
             //------------------------------------------------
             // Request User's feedback
-            val reviewManager: ReviewManager = ReviewManagerFactory.create(this)
+            val reviewbox = RemoteConfigSingleton.get_reviewbox()
 
-            val requestReviewTask: com.google.android.play.core.tasks.Task<ReviewInfo> =
-                reviewManager.requestReviewFlow()
-            requestReviewTask.addOnCompleteListener { request ->
-                if (request.isSuccessful) {
-                    // Request succeeded and a ReviewInfo instance was received
-                    val reviewInfo: ReviewInfo = request.result
-                    val launchReviewTask: com.google.android.play.core.tasks.Task<*> =
-                        reviewManager.launchReviewFlow(this, reviewInfo)
-                    launchReviewTask.addOnCompleteListener {
-                        // The review has finished, continue your app flow.
+            if (reviewbox) {
+                val reviewManager: ReviewManager = ReviewManagerFactory.create(this)
+
+                val requestReviewTask: com.google.android.play.core.tasks.Task<ReviewInfo> =
+                    reviewManager.requestReviewFlow()
+                requestReviewTask.addOnCompleteListener { request ->
+                    if (request.isSuccessful) {
+                        // Request succeeded and a ReviewInfo instance was received
+                        val reviewInfo: ReviewInfo = request.result
+                        val launchReviewTask: com.google.android.play.core.tasks.Task<*> =
+                            reviewManager.launchReviewFlow(this, reviewInfo)
+                        launchReviewTask.addOnCompleteListener {
+                            // The review has finished, continue your app flow.
+                        }
                     }
                 }
             }
             //------------------------------------------------
-            if (adManager.mRewardedAd != null) {
-                adManager.mRewardedAd?.show(this) {}
-            } else {
-                Log.d(TAG, "The rewarded ad wasn't ready yet.")
+            val showads = RemoteConfigSingleton.get_showads()
+
+            if (showads) {
+                if (adManager.mRewardedAd != null) {
+                    adManager.mRewardedAd?.show(this) {}
+                } else {
+                    Log.d(TAG, "The rewarded ad wasn't ready yet.")
+                }
             }
             Thread.sleep(1500)
             finish()

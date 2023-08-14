@@ -1,11 +1,13 @@
 package com.bridesandgrooms.event
 
 object RemoteConfigSingleton {
-    private var autocreateTaskPayment_Feature = true
+    private var autocreateTaskPayment_Feature:Boolean = true
     private var enable_foryoutab = false
     private var category_layout = "card"
-    private var developer_mail = true
+    private var developer_mail = false
     private var video_login = true
+    private var showads = false
+    private var reviewbox = false
 
     fun getautocreateTaskPayment(): Boolean {
         return autocreateTaskPayment_Feature
@@ -51,4 +53,20 @@ object RemoteConfigSingleton {
         this.developer_mail = developer_mail
     }
 
+    fun get_showads(): Boolean {
+        return showads
+    }
+
+    // Setter method
+    fun set_showads(showads: Boolean) {
+        this.showads = showads
+    }
+
+    fun get_reviewbox(): Boolean {
+        return reviewbox
+    }
+    // Setter method
+    fun set_reviewbox(reviewbox: Boolean) {
+        this.reviewbox = reviewbox
+    }
 }

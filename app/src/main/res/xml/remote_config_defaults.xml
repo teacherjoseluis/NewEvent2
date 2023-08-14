@@ -12,4 +12,20 @@
         <key>category_layout</key>
         <value>card</value>
     </entry>
+    <entry>
+        <key>developer_mail</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>video_login</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>showads</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>reviewbox</key>
+        <value>false</value>
+    </entry>
 </defaults>

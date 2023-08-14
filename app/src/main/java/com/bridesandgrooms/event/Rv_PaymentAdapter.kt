@@ -39,13 +39,14 @@ class Rv_PaymentAdapter(
     private val NATIVE_AD_VIEW_TYPE = 2
 
     private val ADS_INTERVAL = 4
+    private val showads = RemoteConfigSingleton.get_showads()
     //--------------------------------------------------
     // For Native Ad Implementation
 
     override fun getItemViewType(position: Int): Int {
-        return if (position > 0 && (position + 1) % ADS_INTERVAL == 0) {
+        return if ((position > 0 && (position + 1) % ADS_INTERVAL == 0) && showads) {
             // It's time to show an ad
-            NATIVE_AD_VIEW_TYPE
+                NATIVE_AD_VIEW_TYPE
         } else {
             // Show a payment item
             DEFAULT_VIEW_TYPE

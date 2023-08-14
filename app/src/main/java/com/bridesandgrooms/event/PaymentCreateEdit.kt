@@ -231,8 +231,12 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 //                mRewardedAd = null
 //            }
 //        }
-        adManager = AdManagerSingleton.getAdManager()
-        adManager.loadAndShowRewardedAd(this)
+        val showads = RemoteConfigSingleton.get_showads()
+
+        if (showads) {
+            adManager = AdManagerSingleton.getAdManager()
+            adManager.loadAndShowRewardedAd(this)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -327,10 +331,14 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
             val resultIntent = Intent()
             setResult(Activity.RESULT_OK, resultIntent)
 
-            if (adManager.mRewardedAd != null) {
-                adManager.mRewardedAd?.show(this) {}
-            } else {
-                Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
+            val showads = RemoteConfigSingleton.get_showads()
+
+            if (showads) {
+                if (adManager.mRewardedAd != null) {
+                    adManager.mRewardedAd?.show(this) {}
+                } else {
+                    Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
+                }
             }
             Thread.sleep(1500)
             finish()

@@ -87,8 +87,12 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         retainInstance = true
 
         // Initialize the MobileAds SDK with your AdMob App ID
-        MobileAds.initialize(context) { initializationStatus ->
-            // You can leave this empty or handle initialization status if needed
+        val showads = RemoteConfigSingleton.get_showads()
+
+        if (showads) {
+            MobileAds.initialize(context) { initializationStatus ->
+                // You can leave this empty or handle initialization status if needed
+            }
         }
 
         //Declaring the colors and fonts to be used by charts
@@ -120,11 +124,15 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     ): View {
         // Inflate the layout for this fragment
         inflatedView = inflater.inflate(R.layout.dashboardcharts, container, false)
-        adView = inflatedView.adView
 
         // Load the ad into the AdView
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+        val showads = RemoteConfigSingleton.get_showads()
+
+        if (showads) {
+            adView = inflatedView.adView
+            val adRequest = AdRequest.Builder().build()
+            adView.loadAd(adRequest)
+        }
 
         //Calling the presenter that will pull of the data I need for this view
         try {

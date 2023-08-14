@@ -49,9 +49,9 @@ class NoteCreateEdit : AppCompatActivity() {
 
 
         val extras = intent.extras
-        noteitem = if (extras!!.containsKey("note")) {
-            intent.getParcelableExtra("note")!!
-        } else {
+        noteitem = if (extras != null && extras.containsKey("note")) ({
+            intent.getParcelableExtra("note")
+        })!! else {
             Note()
         }
 

@@ -18,7 +18,7 @@ android {
         applicationId "com.bridesandgrooms.event"
         minSdkVersion 26
         targetSdkVersion 31
-        versionCode 10
+        versionCode 11
         versionName "1.0"
         // Required ONLY when setting minSdkVersion to 20 or lower
         multiDexEnabled true
