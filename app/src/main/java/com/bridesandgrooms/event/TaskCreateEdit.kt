@@ -54,7 +54,7 @@ class TaskCreateEdit : AppCompatActivity() {
         val apptitle = findViewById<TextView>(R.id.appbartitle)
 
         val extras = intent.extras
-        if (extras!!.containsKey("task")) {
+        if (extras?.containsKey("task") == true) {
             apptitle.text = getString(R.string.edit_task)
         } else {
             apptitle.text = getString(R.string.new_task)

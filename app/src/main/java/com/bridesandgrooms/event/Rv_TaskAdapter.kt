@@ -17,10 +17,8 @@ import com.bridesandgrooms.event.Category.Companion.getCategory
 import com.bridesandgrooms.event.Functions.PermissionUtils
 import com.bridesandgrooms.event.Functions.deleteTask
 import com.bridesandgrooms.event.Functions.editTask
+import com.bridesandgrooms.event.Model.*
 import com.bridesandgrooms.event.Model.Task
-import com.bridesandgrooms.event.Model.TaskDBHelper
-import com.bridesandgrooms.event.Model.TaskModel
-import com.bridesandgrooms.event.Model.UserModel
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -29,9 +27,14 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.material.snackbar.Snackbar
 
+interface ItemSwipeListenerTask {
+    fun onItemSwiped(taskList: MutableList<Task>)
+}
 
-class Rv_TaskAdapter(val taskList: MutableList<Task>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchAdapterAction {
+class Rv_TaskAdapter(
+    private val taskList: MutableList<Task>,
+    private val swipeListener: ItemSwipeListenerTask
+    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchAdapterAction {
 
     lateinit var context: Context
     var taskmodel = TaskModel()
@@ -183,13 +186,9 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
 
             val snackbar =
                 Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
-//                .setAction("UNDO") {
-//                    taskList.add(taskswift)
-//                    notifyItemInserted(taskList.lastIndex)
-//                    taskswift.status = ACTIVETASK
-//                    editTask(context, taskswift)
-//                }
             snackbar.show()
+
+            swipeListener.onItemSwiped(taskList)
         }
     }
 
@@ -199,16 +198,6 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
             PermissionUtils.alertBox(context as Activity)
         } else {
             val taskswift = taskList[position]
-            val taskbackup = Task().apply {
-                name = taskswift.name
-                budget = taskswift.budget
-                date = taskswift.date
-                category = taskswift.category
-                status = taskswift.status
-                createdatetime = taskswift.createdatetime
-            }
-
-            //delNotification(taskswift)
 
             if (action == DELETEACTION) {
                 taskList.removeAt(position)
@@ -216,20 +205,9 @@ class Rv_TaskAdapter(val taskList: MutableList<Task>) :
                 deleteTask(context, taskswift)
 
                 val snackbar = Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
-//                .setAction("UNDO") {
-//                    taskList.add(taskswift)
-//                    notifyItemInserted(taskList.lastIndex)
-//                    taskswift.status = ACTIVETASK
-//                    addTask(context, taskbackup)
-//                    //addNotification(taskbackup)
-//                }
                 snackbar.show()
-            } else if (action == UNDOACTION) {
-                taskList.add(taskswift)
-                notifyItemInserted(taskList.lastIndex)
-                taskswift.status = ACTIVETASK
-                editTask(context, taskswift)
-                //addNotification(taskbackup)
+
+                swipeListener.onItemSwiped(taskList)
             }
         }
     }

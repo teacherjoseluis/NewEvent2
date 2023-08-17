@@ -17,7 +17,14 @@ import com.bridesandgrooms.event.Model.NoteDBHelper
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 
-class Rv_NoteAdapter(private val noteList: MutableList<Note>) :
+interface ItemSwipeListenerNote {
+    fun onItemSwiped(noteList: MutableList<Note>)
+}
+
+class Rv_NoteAdapter(
+    private val noteList: MutableList<Note>,
+    private val swipeListener: ItemSwipeListenerNote
+) :
     RecyclerView.Adapter<Rv_NoteAdapter.ViewHolder>(), ItemTouchAdapterAction {
 
     lateinit var context: Context
@@ -58,12 +65,22 @@ class Rv_NoteAdapter(private val noteList: MutableList<Note>) :
         val notesummary: TextView? = itemView.findViewById(R.id.notesummary)
     }
 
-    override fun onItemSwiftLeft(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftLeft(
+        context: Context,
+        position: Int,
+        recyclerView: RecyclerView,
+        action: String
+    ) {
 
     }
 
-    override fun onItemSwiftRight(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
-        try{
+    override fun onItemSwiftRight(
+        context: Context,
+        position: Int,
+        recyclerView: RecyclerView,
+        action: String
+    ) {
+        try {
             val noteswift = noteList[position]
             Note().apply {
                 title = noteList[position].title
@@ -80,6 +97,8 @@ class Rv_NoteAdapter(private val noteList: MutableList<Note>) :
 
                 val snackbar = Snackbar.make(recyclerView, "Note deleted", Snackbar.LENGTH_LONG)
                 snackbar.show()
+
+                swipeListener.onItemSwiped(noteList)
             }
         } catch (e: Exception) {
             println(e.message)

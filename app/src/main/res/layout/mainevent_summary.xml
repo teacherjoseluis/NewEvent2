@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -179,152 +180,170 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     -->
 
-    <ScrollView
-        android:id="@+id/scrollcategories"
+    <include
+        android:id="@+id/withnodatacategory"
+        layout="@layout/empty_state"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="55dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/withdatacategory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
+            android:id="@+id/scrollcategories"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            app:layout_constraintStart_toStartOf="parent">
+            android:paddingTop="10dp"
+            android:paddingBottom="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/categoryrv"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:paddingBottom="50dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/categoryrv"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:paddingBottom="50dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-2710265419603943/5724473817"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/scrollcategories" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/NewTaskPaymentActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="55dp"
+            android:clickable="true"
+            android:contentDescription="@string/newtaskpaymentactionbutton"
+            app:backgroundTint="@color/azulmasClaro"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:maxImageSize="24dp"
+            app:srcCompat="@drawable/ic_icons8_plus_white"
+            app:tint="@color/white" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/TaskLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/PaymentLayout"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/newtaskimagebutton"
+                android:elevation="2dp"
+                android:outlineAmbientShadowColor="@color/secondaryText"
+                android:src="@drawable/task_done_outline"
+                app:backgroundTint="@color/rosaChillon"
+                app:elevation="2dp"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:maxImageSize="24dp"
+                app:rippleColor="@color/white"
+                app:tint="@color/white"
+                tools:targetApi="p" />
+
+            <TextView
+                style="@style/Overline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="@color/white"
+                android:elevation="2dp"
+                android:padding="5dp"
+                android:text="@string/task"
+                android:textColor="@color/rosaChillon"
+                app:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fabTask"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/PaymentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/NewTaskPaymentActionButton"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabPayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/fabpayment"
+                android:elevation="2dp"
+                android:outlineAmbientShadowColor="@color/secondaryText"
+                android:src="@drawable/invoice"
+                app:backgroundTint="@color/rosaChillon"
+                app:elevation="2dp"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:maxImageSize="24dp"
+                app:rippleColor="@color/white"
+                app:tint="@color/white"
+                tools:targetApi="p" />
+
+            <TextView
+                style="@style/Overline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="@color/white"
+                android:elevation="2dp"
+                android:padding="5dp"
+                android:text="@string/payment"
+                android:textColor="@color/rosaChillon"
+                app:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fabPayment"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible"
-        app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-2710265419603943/5724473817"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollcategories" />
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/NewTaskPaymentActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="55dp"
-        android:clickable="true"
-        app:backgroundTint="@color/azulmasClaro"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="24dp"
-        app:srcCompat="@drawable/ic_icons8_plus_white"
-        app:tint="@color/white"
-        android:contentDescription="@string/newtaskpaymentactionbutton" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/TaskLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="10dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/PaymentLayout"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabTask"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:elevation="2dp"
-            android:outlineAmbientShadowColor="@color/secondaryText"
-            android:src="@drawable/task_done_outline"
-            app:backgroundTint="@color/rosaChillon"
-            app:elevation="2dp"
-            app:fabSize="mini"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="24dp"
-            app:rippleColor="@color/white"
-            app:tint="@color/white"
-            android:contentDescription="@string/newtaskimagebutton"
-            tools:targetApi="p" />
-
-        <TextView
-            style="@style/Overline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:background="@color/white"
-            android:elevation="2dp"
-            android:padding="5dp"
-            android:text="@string/task"
-            android:textColor="@color/rosaChillon"
-            app:elevation="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/fabTask"
-            app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/PaymentLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="10dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/NewTaskPaymentActionButton"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabPayment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:elevation="2dp"
-            android:outlineAmbientShadowColor="@color/secondaryText"
-            android:src="@drawable/invoice"
-            app:backgroundTint="@color/rosaChillon"
-            app:elevation="2dp"
-            app:fabSize="mini"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="24dp"
-            app:rippleColor="@color/white"
-            app:tint="@color/white"
-            android:contentDescription="@string/fabpayment"
-            tools:targetApi="p" />
-
-        <TextView
-            style="@style/Overline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:background="@color/white"
-            android:elevation="2dp"
-            android:padding="5dp"
-            android:text="@string/payment"
-            android:textColor="@color/rosaChillon"
-            app:elevation="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/fabPayment"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

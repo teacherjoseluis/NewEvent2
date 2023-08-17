@@ -116,7 +116,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                         reverseLayout = true
                     }
                 }
-                val rvAdapter = Rv_PaymentAdapter(lifecycleScope, paymentlist)
+                val rvAdapter = Rv_PaymentAdapter2(lifecycleScope, paymentlist)
                 recyclerView.adapter = rvAdapter
             }
 

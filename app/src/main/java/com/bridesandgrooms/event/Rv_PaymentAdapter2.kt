@@ -28,14 +28,10 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-interface ItemSwipeListenerPayment {
-    fun onItemSwiped(paymentList: MutableList<Payment>)
-}
 
-class Rv_PaymentAdapter(
+class Rv_PaymentAdapter2(
     private val coroutineScope: CoroutineScope,
-    private val paymentList: MutableList<Payment>,
-    private val swipeListener: ItemSwipeListenerPayment
+    private val paymentList: MutableList<Payment>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchAdapterAction {
 
     lateinit var context: Context
@@ -185,8 +181,6 @@ class Rv_PaymentAdapter(
                     val snackbar =
                         Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
                     snackbar.show()
-
-                    swipeListener.onItemSwiped(paymentList)
                 }
             } catch (e: Exception) {
                 println(e.message)

@@ -19,10 +19,11 @@ import com.bridesandgrooms.event.Model.TaskModel
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlinx.android.synthetic.main.onboardingcard.view.*
+import kotlinx.android.synthetic.main.taskpayment_payments.view.*
 import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 
 
-class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
+class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks, ItemSwipeListenerTask {
 
     private lateinit var recyclerViewActive: RecyclerView
     private lateinit var recyclerViewComplete: RecyclerView
@@ -52,13 +53,6 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         savedInstanceState: Bundle?
     ): View {
         inf = inflater.inflate(R.layout.taskpayment_tasks, container, false)
-        //Calling the presenter
-
-//        val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
-//        pulltoRefresh.setOnRefreshListener {
-//            presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf, category, status)
-//            pullToRefresh.isRefreshing = false
-//        }
 
         //Tasks are Active and associated to an Active Recyclerview
         recyclerViewActive = inf.ActiveTasksRecyclerView
@@ -94,7 +88,7 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         if (list.size != 0) {
             // Tasks are retrieved from the presenter
             if (status == TaskModel.ACTIVESTATUS) {
-                rvAdapter = Rv_TaskAdapter(list)
+                rvAdapter = Rv_TaskAdapter(list, this)
                 recyclerViewActive.adapter = null
                 recyclerViewActive.adapter = rvAdapter
 
@@ -109,7 +103,7 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
                 val itemTouchHelperA = ItemTouchHelper(swipeController)
                 itemTouchHelperA.attachToRecyclerView(recyclerViewActive)
             } else if (status == TaskModel.COMPLETESTATUS) {
-                rvAdapter = Rv_TaskAdapter(list)
+                rvAdapter = Rv_TaskAdapter(list, this)
                 recyclerViewComplete.adapter = null
                 recyclerViewComplete.adapter = rvAdapter
 
@@ -122,28 +116,35 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
                         null,
                         RIGHTACTIONCOMPLETED
                     )
+                //----------------------------------------------------------------
                 val itemTouchHelper = ItemTouchHelper(swipeControllerC)
                 itemTouchHelper.attachToRecyclerView(recyclerViewComplete)
+                //----------------------------------------------------------------
+                inf.activetaskslayout.visibility = ConstraintLayout.VISIBLE
+                val emptystateLayout =
+                    inf.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentt)
+                emptystateLayout.visibility = ConstraintLayout.GONE
+                //----------------------------------------------------------------
             }
         } else if (list.size == 0) {
             //If no tasks are retrieved from the presenter the component is marked as invisible
             inflatedView.activetaskslayout.visibility = ConstraintLayout.GONE
-
-            val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentt)
+            val emptystateLayout =
+                inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentt)
+            //----------------------------------------------------------------
             val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
-            val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+            val bottomMarginInPixels =
+                resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
             val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
-
             params.topMargin = topMarginInPixels
             params.bottomMargin = bottomMarginInPixels
             emptystateLayout.layoutParams = params
+            //----------------------------------------------------------------
             emptystateLayout.visibility = ConstraintLayout.VISIBLE
             emptystateLayout.empty_card.onboardingmessage.text =
                 getString(R.string.emptystate_notasksmsg)
-
             val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
             emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
-
             emptystateLayout.newtaskbutton.setOnClickListener {
                 val newTask = Intent(context, TaskCreateEdit::class.java)
                 newTask.putExtra("userid", "")
@@ -155,22 +156,21 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
     override fun onTPTasksError(inflatedView: View, errcode: String) {
         //We are showing the empty state layout and hiding the one that will load with task data
         inflatedView.withnodatataskpaymentt.visibility = ConstraintLayout.GONE
-
-        val emptystateLayout = inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentt)
+        val emptystateLayout =
+            inflatedView.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentt)
+        //----------------------------------------------------------------
         val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
         val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
         val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
-
         params.topMargin = topMarginInPixels
         params.bottomMargin = bottomMarginInPixels
         emptystateLayout.layoutParams = params
+        //----------------------------------------------------------------
         emptystateLayout.visibility = ConstraintLayout.VISIBLE
         emptystateLayout.empty_card.onboardingmessage.text =
             getString(R.string.emptystate_notasksmsg)
-
         val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
         emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
-
         emptystateLayout.newtaskbutton.setOnClickListener {
             val newTask = Intent(context, TaskCreateEdit::class.java)
             newTask.putExtra("userid", "")
@@ -186,13 +186,43 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks {
         } catch (e: Exception) {
             println(e.message)
         }
-//        recyclerViewActive.adapter = null
-//        recyclerViewActive.adapter = rvAdapter
     }
 
     companion object {
         const val LEFTACTIONACTIVE = "check"
         const val RIGHTACTIONACTIVE = "delete"
         const val RIGHTACTIONCOMPLETED = "undo"
+    }
+
+    override fun onItemSwiped(taskList: MutableList<Task>) {
+        if (taskList.isEmpty()) {
+            inf.withnodatataskpaymentt.visibility = ConstraintLayout.GONE
+            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentt)
+            //----------------------------------------------------------------
+            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
+            val bottomMarginInPixels =
+                resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+            val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+            params.topMargin = topMarginInPixels
+            params.bottomMargin = bottomMarginInPixels
+            emptystateLayout.layoutParams = params
+            //----------------------------------------------------------------
+            emptystateLayout.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.empty_card.onboardingmessage.text =
+                getString(R.string.emptystate_notasksmsg)
+            val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+            emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+            emptystateLayout.newtaskbutton.setOnClickListener {
+                val newTask = Intent(context, TaskCreateEdit::class.java)
+                newTask.putExtra("userid", "")
+                startActivity(newTask)
+            }
+        } else {
+            //----------------------------------------------------------------
+            inf.activetaskslayout.visibility = ConstraintLayout.VISIBLE
+            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentt)
+            emptystateLayout.visibility = ConstraintLayout.GONE
+            //----------------------------------------------------------------
+        }
     }
 }

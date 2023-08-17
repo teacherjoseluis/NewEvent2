@@ -2,6 +2,7 @@ package com.bridesandgrooms.event.Model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.bridesandgrooms.event.Functions.getlocale
 
 open class Task(
 	var key: String = "",
@@ -26,14 +27,11 @@ open class Task(
 
 	// Secondary constructor for generating a task with dummy values
 	constructor(dummy: Boolean) : this(
-		key = if (dummy) "dummy_key" else "",
+		key = if (dummy) "" else "",
 		name = if (dummy) "Sample Task" else "",
-		date = if (dummy) "2023-12-31" else "",
-		category = if (dummy) "Sample Category" else "",
-		budget = if (dummy) "Sample Budget" else "",
-		status = if (dummy) "Sample Status" else "",
-		eventid = if (dummy) "dummy_event_id" else "",
-		createdatetime = if (dummy) "2023-12-31T12:00:00" else ""
+		date = if (dummy) "31/12/2023" else "",
+		category = if (dummy) "ceremony" else "",
+		budget = if (dummy) "$100.00" else ""
 	)
 
 	override fun writeToParcel(parcel: Parcel, flags: Int) {

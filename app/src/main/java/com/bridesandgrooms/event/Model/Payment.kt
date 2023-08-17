@@ -2,6 +2,7 @@ package com.bridesandgrooms.event.Model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.bridesandgrooms.event.Functions.getlocale
 
 open class Payment(
     var key: String = "",
@@ -28,14 +29,11 @@ open class Payment(
     // Secondary constructor for generating a payment with dummy values
     constructor(dummy: Boolean) : this() {
         if (dummy) {
-            key = "dummy_key"
+            key = ""
             name = "Sample Payment"
-            date = "2023-12-31"
-            category = "Sample Category"
-            amount = "$100"
-            eventid = "dummy_event_id"
-            createdatetime = "2023-12-31T12:00:00"
-            vendorid = "dummy_vendor_id"
+            date = "31/12/2023"
+            category = "ceremony"
+            amount = "$100.00"
         }
     }
 

@@ -24,7 +24,7 @@ class NotePresenter(
     }
 
     interface NoteActivity {
-        fun onNoteSuccess(inflatedView: View, notelist: ArrayList<Note>)
+        fun onNoteSuccess(inflatedView: View, noteList: MutableList<Note>)
         fun onNoteError(inflatedView: View, errcode: String)
     }
 
