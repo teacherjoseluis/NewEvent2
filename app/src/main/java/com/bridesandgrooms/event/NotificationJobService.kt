@@ -40,7 +40,7 @@ class NotificationJobService : JobService() {
         myintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         val pendingIntent =
-            PendingIntent.getActivity(this, 0, myintent, PendingIntent.FLAG_MUTABLE)
+            PendingIntent.getActivity(this, 0, myintent, PendingIntent.FLAG_IMMUTABLE)
 
         val notificationtitle = params!!.extras.getString("title")
         val notificationbody = params.extras.getString("body")

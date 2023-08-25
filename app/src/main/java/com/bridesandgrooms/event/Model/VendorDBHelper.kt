@@ -54,9 +54,17 @@ class VendorDBHelper(context: Context) : CoRAddEditVendor, CoRDeleteVendor {
         values.put("ratingnumber", vendor.ratingnumber)
         values.put("reviews", vendor.reviews)
         values.put("rating", vendor.rating)
-        db.insert("VENDOR", null, values)
-        Log.d(TAG, "Vendor record inserted")
+
+        val vendorExists = getVendorexists(vendor.key)
+
+        if (!vendorExists) {
+            db.insert("VENDOR", null, values)
+            Log.d(TAG, "Vendor record inserted")
+        } else {
+            Log.d(TAG, "Vendor with ID ${vendor.key} already exists, skipping insertion")
+        }
     }
+
 
     private fun getVendorexists(key: String): Boolean {
         var existsflag = false

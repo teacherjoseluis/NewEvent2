@@ -179,6 +179,8 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                                         rvAdapter.onClearSelected()
                                     }
                                 }
+                                Thread.sleep(1500)
+                                finish()
                                 true
                             }
                         } else {
@@ -214,6 +216,8 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                                         rvAdapter.onClearSelected()
                                     }
                                 }
+                                Thread.sleep(1500)
+                                finish()
                                 true
                             }
                         } else {

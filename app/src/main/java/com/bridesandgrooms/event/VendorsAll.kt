@@ -17,6 +17,7 @@ import com.bridesandgrooms.event.ui.ViewAnimation
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlinx.android.synthetic.main.onboardingcard.view.*
+import kotlinx.android.synthetic.main.tableguestsactivity.view.*
 import kotlinx.android.synthetic.main.vendors_all.*
 import kotlinx.android.synthetic.main.vendors_all.view.*
 import java.lang.Exception
@@ -26,6 +27,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     private lateinit var recyclerViewAllVendor: RecyclerView
     private lateinit var presentervendor: VendorsAllPresenter
     private lateinit var rvAdapter: Rv_VendorAdapter
+    private lateinit var inf: View
 
     private val autocompleteplacecode = 1
     private var placeid: String? = null
@@ -67,15 +69,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val inf = inflater.inflate(R.layout.vendors_all, container, false)
-
-        recyclerViewAllVendor = inf.recyclerViewVendors
-        recyclerViewAllVendor.apply {
-            layoutManager = LinearLayoutManager(inf.context).apply {
-                stackFromEnd = true
-                reverseLayout = true
-            }
-        }
+        inf = inflater.inflate(R.layout.vendors_all, container, false)
 
         // Invoking the presenter that will populate the recyclerview
         try {
@@ -159,16 +153,26 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         //inflatedView: View,
         vendorpaymentlist: ArrayList<VendorPayment>
     ) {
-        // There are vendors obtained from the presenter and these are passed to the recyclerview
-        try {
-            rvAdapter = Rv_VendorAdapter(vendorpaymentlist, mContext!!)
-            rvAdapter.notifyDataSetChanged()
-        } catch (e: Exception){
-            println(e.message)
-        }
+        if (vendorpaymentlist.size != 0) {
+            // There are vendors obtained from the presenter and these are passed to the recyclerview
 
-        recyclerViewAllVendor.adapter = null
-        recyclerViewAllVendor.adapter = rvAdapter
+            recyclerViewAllVendor = inf.recyclerViewVendors
+            recyclerViewAllVendor.apply {
+                layoutManager = LinearLayoutManager(inf.context).apply {
+                    stackFromEnd = true
+                    reverseLayout = true
+                }
+            }
+
+            try {
+                rvAdapter = Rv_VendorAdapter(vendorpaymentlist, mContext!!)
+                rvAdapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                println(e.message)
+            }
+
+            recyclerViewAllVendor.adapter = null
+            recyclerViewAllVendor.adapter = rvAdapter
 
 //        swipeController = SwipeControllerTasks(
 //            inflatedView.context,
@@ -180,6 +184,24 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 //        // Adding the Swipe capabilities to the recyclerview
 //        val itemTouchHelper = ItemTouchHelper(swipeController)
 //        itemTouchHelper.attachToRecyclerView(recyclerViewAllVendor)
+            inf.withdatav.visibility = ConstraintLayout.VISIBLE
+            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodatav)
+            emptystateLayout.visibility = ConstraintLayout.GONE
+        } else if (vendorpaymentlist.size == 0) {
+            withdatav.visibility = ConstraintLayout.GONE
+
+            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodatav)
+//        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
+//        val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+//        val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+//
+//        params.topMargin = topMarginInPixels
+//        params.bottomMargin = bottomMarginInPixels
+//        emptystateLayout.layoutParams = params
+
+            emptystateLayout.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_novendorsmsg)
+        }
     }
 
     override fun onVAVendorsError(errcode: String) {
@@ -187,23 +209,52 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         withdatav.visibility = ConstraintLayout.GONE
 
         val emptystateLayout = withnodatav
-        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
-        val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
-        val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
-
-        params.topMargin = topMarginInPixels
-        params.bottomMargin = bottomMarginInPixels
-        emptystateLayout.layoutParams = params
+//        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
+//        val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+//        val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+//
+//        params.topMargin = topMarginInPixels
+//        params.bottomMargin = bottomMarginInPixels
+//        emptystateLayout.layoutParams = params
 
         emptystateLayout.visibility = ConstraintLayout.VISIBLE
         emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_novendorsmsg)
 
-        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
-        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+//        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+//        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+//
+//        emptystateLayout.newtaskbutton.setOnClickListener {
+//            val newTask = Intent(context, VendorCreateEdit::class.java)
+//            startActivity(newTask)
+//        }
 
-        emptystateLayout.newtaskbutton.setOnClickListener {
-            val newTask = Intent(context, VendorCreateEdit::class.java)
-            startActivity(newTask)
+        //This is for the Add button, Vendors can be added from scratch or from the contact list
+
+
+        inf.fabNewVendor.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWVENDOR")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+            // Call to the form to create vendors
+            val newvendor = Intent(context, VendorCreateEdit::class.java)
+            newvendor.putExtra("userid", "")
+            startActivityForResult(newvendor, REQUEST_CODE_VENDOR)
+        }
+
+        inf.fabContactVendor.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "VENDORFROMCONTACTS")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+            // Call to the contact list from which vendors can added from the contacts in the phone
+            val newvendor = Intent(context, ContactsAll::class.java)
+            newvendor.putExtra("vendorid", "")
+            startActivityForResult(newvendor, REQUEST_CODE_CONTACTS)
         }
     }
 

@@ -124,7 +124,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                 "others" -> guestgroup.check(others.id)
                 else -> guestgroup.check(others.id)
             }
-            when (guestitem.rsvp){
+            when (guestitem.rsvp) {
                 "y" -> rsvpgroup.check(chip1.id)
                 "n" -> rsvpgroup.check(chip2.id)
                 "pending" -> rsvpgroup.check(chip3.id)
@@ -258,8 +258,12 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                             lifecycleScope.launch {
                                 deleteGuest(this@GuestCreateEdit, guestitem)
                                 disableControls()
+                                withContext(Dispatchers.IO) {
+                                    Thread.sleep(1500)
+                                }
+                                finish()
                             }
-                        //finish()
+                            //finish()
                         }
                     } // A null listener allows the button to dismiss the dialog and take no further action.
                     .setNegativeButton(android.R.string.no, null)
@@ -274,6 +278,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
 //                button.isEnabled = false
 //                super.onOptionsItemSelected(item)
                 true
+
             }
             else -> {
                 super.onOptionsItemSelected(item)

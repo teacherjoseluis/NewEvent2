@@ -44,15 +44,22 @@ class Rv_TableGuestsAdapter(
         }
 
         p0.count?.text = tableguestsList[p1].count.toString()
-        p0.recyclerView?.apply {
-            layoutManager = LinearLayoutManager(p0.recyclerView.context).apply {
-                stackFromEnd = true
-                reverseLayout = true
-                setRecycledViewPool(viewPool)
+
+        if (p0.recyclerView?.layoutManager == null) {
+            p0.recyclerView?.apply {
+                layoutManager = LinearLayoutManager(p0.recyclerView.context).apply {
+                    stackFromEnd = true
+                    reverseLayout = true
+                    setRecycledViewPool(viewPool)
+                }
             }
         }
-        val rvAdapter = Rv_GuestAdapter(tableguestsList[p1].tableguestlist, context)
-        p0.recyclerView!!.adapter = rvAdapter
+
+        val rvAdapter = p0.recyclerView?.adapter as? Rv_GuestAdapter
+        if (rvAdapter == null) {
+            val newrvAdapter = Rv_GuestAdapter(tableguestsList[p1].tableguestlist, context)
+            p0.recyclerView!!.adapter = newrvAdapter
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

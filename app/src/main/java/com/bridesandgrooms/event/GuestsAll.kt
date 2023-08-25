@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.guests_all.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlinx.android.synthetic.main.onboardingcard.view.*
+import kotlinx.android.synthetic.main.taskpayment_payments.view.*
 import kotlinx.android.synthetic.main.vendors_all.*
 
 
@@ -89,16 +90,16 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
         inf = inflater.inflate(R.layout.guests_all, container, false)
 
-        val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
-
-        pulltoRefresh.setOnRefreshListener {
-            try {
-                presenterguest = GuestsAllPresenter(requireContext(), this)
-            } catch (e: Exception) {
-                println(e.message)
-            }
-            pullToRefresh.isRefreshing = false
-        }
+//        val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
+//
+//        pulltoRefresh.setOnRefreshListener {
+//            try {
+//                presenterguest = GuestsAllPresenter(requireContext(), this)
+//            } catch (e: Exception) {
+//                println(e.message)
+//            }
+//            pullToRefresh.isRefreshing = false
+//        }
 
         recyclerViewAllGuests = inf.recyclerViewGuests
         recyclerViewAllGuests.apply {
@@ -218,20 +219,27 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         //inflatedView: View,
         list: ArrayList<Guest>
     ) {
-//        recyclerViewAllGuests = inflatedView.recyclerViewGuests
-//        recyclerViewAllGuests.apply {
-//            layoutManager = LinearLayoutManager(inflatedView.context).apply {
-//                stackFromEnd = true
-//                reverseLayout = true
-//            }
-//        }
-        rvAdapter = Rv_GuestAdapter(list, requireContext())
-        rvAdapter.notifyDataSetChanged()
-        //rvAdapter.notifyDataSetChanged()
+        if (list.size != 0) {
+            recyclerViewAllGuests = inf.recyclerViewGuests
+            recyclerViewAllGuests.apply {
+                layoutManager = LinearLayoutManager(inf.context).apply {
+                    stackFromEnd = true
+                    reverseLayout = true
+                }
+            }
 
-        recyclerViewAllGuests.adapter = null
-        recyclerViewAllGuests.adapter = rvAdapter
-        contactlist = clone(list)
+
+            try {
+                rvAdapter = Rv_GuestAdapter(list, requireContext())
+                rvAdapter.notifyDataSetChanged()
+                //rvAdapter.notifyDataSetChanged()
+            } catch (e: java.lang.Exception) {
+                println(e.message)
+            }
+
+            recyclerViewAllGuests.adapter = null
+            recyclerViewAllGuests.adapter = rvAdapter
+            contactlist = clone(list)
 
 //        swipeController = SwipeControllerTasks(
 //            inflatedView.context,
@@ -242,6 +250,76 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //        )
 //        val itemTouchHelper = ItemTouchHelper(swipeController)
 //        itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
+            //----------------------------------------------------------------
+            inf.withdata.visibility = ConstraintLayout.VISIBLE
+            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodata)
+            emptystateLayout.visibility = ConstraintLayout.GONE
+            //----------------------------------------------------------------
+        } else if (list.size == 0) {
+            withdata.visibility = ConstraintLayout.GONE
+
+            val emptystateLayout = withnodata
+            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
+            val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
+            val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+
+            params.topMargin = topMarginInPixels
+            params.bottomMargin = bottomMarginInPixels
+            emptystateLayout.layoutParams = params
+
+            emptystateLayout.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_noguestsmsg)
+
+//        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+//        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+//
+//        emptystateLayout.newtaskbutton.setOnClickListener {
+//            val newTask = Intent(context, GuestCreateEdit::class.java)
+//            startActivity(newTask)
+            //}
+            ViewAnimation.init(inf.NewGuest)
+            ViewAnimation.init(inf.ContactGuest)
+
+            inf.floatingActionButtonGuest.setOnClickListener()
+            {
+                isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonGuest, !isRotate)
+                if (isRotate) {
+                    ViewAnimation.showIn(NewGuest)
+                    ViewAnimation.showIn(ContactGuest)
+                } else {
+                    ViewAnimation.showOut(NewGuest)
+                    ViewAnimation.showOut(ContactGuest)
+                }
+            }
+            inf.fabNewGuest.setOnClickListener {
+                // ------- Analytics call ----------------
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWGUEST")
+                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+                MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+                //----------------------------------------
+
+                val newguest = Intent(context, GuestCreateEdit::class.java)
+                newguest.putExtra("userid", "")
+
+                startActivityForResult(newguest, REQUEST_CODE_GUESTS)
+            }
+
+            inf.fabContactGuest.setOnClickListener {
+                // ------- Analytics call ----------------
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTFROMCONTACTS")
+                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+                MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+                //----------------------------------------
+
+                val newguest = Intent(context, ContactsAll::class.java)
+                newguest.putExtra("guestid", "")
+                //startActivity(newguest)
+
+                startActivityForResult(newguest, REQUEST_CODE_CONTACTS)
+            }
+        }
     }
 
     override fun onGAGuestsError(errcode: String) {
@@ -259,12 +337,54 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         emptystateLayout.visibility = ConstraintLayout.VISIBLE
         emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_noguestsmsg)
 
-        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
-        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+//        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
+//        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
+//
+//        emptystateLayout.newtaskbutton.setOnClickListener {
+//            val newTask = Intent(context, GuestCreateEdit::class.java)
+//            startActivity(newTask)
+        //}
+        ViewAnimation.init(inf.NewGuest)
+        ViewAnimation.init(inf.ContactGuest)
 
-        emptystateLayout.newtaskbutton.setOnClickListener {
-            val newTask = Intent(context, GuestCreateEdit::class.java)
-            startActivity(newTask)
+        inf.floatingActionButtonGuest.setOnClickListener()
+        {
+            isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonGuest, !isRotate)
+            if (isRotate) {
+                ViewAnimation.showIn(NewGuest)
+                ViewAnimation.showIn(ContactGuest)
+            } else {
+                ViewAnimation.showOut(NewGuest)
+                ViewAnimation.showOut(ContactGuest)
+            }
+        }
+        inf.fabNewGuest.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWGUEST")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+
+            val newguest = Intent(context, GuestCreateEdit::class.java)
+            newguest.putExtra("userid", "")
+
+            startActivityForResult(newguest, REQUEST_CODE_GUESTS)
+        }
+
+        inf.fabContactGuest.setOnClickListener {
+            // ------- Analytics call ----------------
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTFROMCONTACTS")
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+            //----------------------------------------
+
+            val newguest = Intent(context, ContactsAll::class.java)
+            newguest.putExtra("guestid", "")
+            //startActivity(newguest)
+
+            startActivityForResult(newguest, REQUEST_CODE_CONTACTS)
         }
     }
 

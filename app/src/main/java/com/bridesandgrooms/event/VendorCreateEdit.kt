@@ -40,6 +40,7 @@ import kotlinx.android.synthetic.main.new_vendor.phoneimage
 import kotlinx.android.synthetic.main.new_vendor.phoneinputedit
 import kotlinx.android.synthetic.main.vendor_googlecard.view.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
 
@@ -269,7 +270,11 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                             PermissionUtils.alertBox(this)
                         } else {
                             if (paymentdb.hasVendorPayments(vendoritem.key) == 0) {
-                                deleteVendor(this, vendoritem)
+                                lifecycleScope.launch {
+                                    deleteVendor(this@VendorCreateEdit, vendoritem)
+                                }
+                                Thread.sleep(1500)
+                                finish()
 //                            finish()
                             } else {
                                 //If there are payments associated we will not be able to delete the vendor

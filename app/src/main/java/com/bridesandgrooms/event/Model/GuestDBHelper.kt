@@ -49,9 +49,17 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         values.put("rsvp", guest.rsvp)
         values.put("companion", guest.companion)
         values.put("tableguest", guest.table)
-        db.insert("GUEST", null, values)
-        Log.d(TAG, "Guest record inserted")
+
+        val guestExists = getGuestexists(guest.key)
+
+        if (!guestExists) {
+            db.insert("GUEST", null, values)
+            Log.d(TAG, "Guest record inserted")
+        } else {
+            Log.d(TAG, "Guest with ID ${guest.key} already exists, skipping insertion")
+        }
     }
+
 
     private fun getGuestexists(key: String): Boolean {
         var existsflag = false
@@ -69,9 +77,9 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
     fun getAllGuests(): ArrayList<Guest> {
         val list = ArrayList<Guest>()
         val cursor: Cursor = db.rawQuery("SELECT * FROM GUEST ORDER BY name ASC", null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
+        if (cursor != null && cursor.moveToFirst()) {
+//            if (cursor.count > 0) {
+//                cursor.moveToFirst()
                 do {
                     val guestid = cursor.getString(cursor.getColumnIndex("guestid"))
                     val name = cursor.getString(cursor.getColumnIndex("name"))
@@ -85,7 +93,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
                     list.add(guest)
                     Log.d(TAG, "Guest $guestid record obtained from local DB")
                 } while (cursor.moveToNext())
-            }
+//            }
         }
         cursor.close()
         return list
