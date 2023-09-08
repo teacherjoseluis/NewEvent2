@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/completedtask"
         android:layout_width="300dp"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -24,11 +24,13 @@
 
         <TextView
             android:id="@+id/onboardingmessage"
-            style="@style/Caption"
+            style="@style/CaptionEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="20dp"
-            android:paddingTop="30dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
             android:text="@string/_0"
             android:textColor="@color/rosaChillon"
             app:layout_constraintStart_toStartOf="@id/imageView"

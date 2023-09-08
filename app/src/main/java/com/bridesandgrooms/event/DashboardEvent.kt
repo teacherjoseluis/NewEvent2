@@ -129,6 +129,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         val showads = RemoteConfigSingleton.get_showads()
 
         if (showads) {
+            inflatedView.adView.visibility = ConstraintLayout.VISIBLE
             adView = inflatedView.adView
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)

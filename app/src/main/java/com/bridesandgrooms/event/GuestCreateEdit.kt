@@ -363,9 +363,9 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
             } else if (guestitem.key != "") {
                 editGuest(this, guestitem)
             }
-            withContext(Dispatchers.IO) {
-                Thread.sleep(1500)
-            }
+            //withContext(Dispatchers.IO) {
+                Thread.sleep(2000)
+            //}
             finish()
         }
     }

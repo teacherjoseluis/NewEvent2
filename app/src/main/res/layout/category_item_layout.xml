@@ -64,7 +64,7 @@
 
                         <TextView
                             android:id="@+id/categorytitle"
-                            style="@style/Heading8"
+                            style="@style/Heading9"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
