@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
-import com.bridesandgrooms.event.CoRAddEditPayment
-import com.bridesandgrooms.event.CoRDeletePayment
 import com.bridesandgrooms.event.Model.*
 import com.bridesandgrooms.event.R
 
@@ -27,7 +25,7 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         //------------------------------------------------
 
         // Adding a new record in Firebase
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         paymentmodel.userid = user.userid!!
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -74,7 +72,7 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
 
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         paymentmodel.userid = user.userid!!
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -119,7 +117,7 @@ internal fun editPayment(context: Context, paymentitem: Payment) {
         // Adding Calendar Event
         calendarevent = CalendarEvent(context)
         //---------------------------------------------------
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         paymentmodel.userid = user.userid!!
         paymentmodel.eventid = user.eventid
         //taskmodel.task = taskitem

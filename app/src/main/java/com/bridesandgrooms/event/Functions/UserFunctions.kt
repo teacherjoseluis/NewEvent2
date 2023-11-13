@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
-import com.bridesandgrooms.event.CoRAddEditUser
-import com.bridesandgrooms.event.CoROnboardUser
 import com.bridesandgrooms.event.Model.*
 import com.bridesandgrooms.event.R
 
@@ -26,7 +24,7 @@ internal suspend fun onBoarding(context: Context, useritem: User, eventitem: Eve
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         // Adding a new record in Firebase
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         eventmodel.userid = user.userid!!
         //------------------------------------------------
         // Adding a new record in Local DB

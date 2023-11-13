@@ -9,10 +9,18 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
+import android.util.Log
 import com.bridesandgrooms.event.*
+import com.bridesandgrooms.event.Functions.CoRAddEditEvent
+import com.bridesandgrooms.event.Functions.CoRAddEditPayment
+import com.bridesandgrooms.event.Functions.CoRAddEditTask
+import com.bridesandgrooms.event.Functions.CoRDeletePayment
+import com.bridesandgrooms.event.Functions.CoRDeleteTask
+import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.converttoCalendar
 import com.bridesandgrooms.event.Functions.converttoDate
 import com.bridesandgrooms.event.Model.Event
+import com.bridesandgrooms.event.Model.GuestDBHelper
 import com.bridesandgrooms.event.Model.Payment
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.User
@@ -208,6 +216,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                 null, null, null, null
             )
         } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
         }
         if (managedCursor != null) {
             calendarUriBase = "content://calendar/"
@@ -219,6 +228,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                     null, null, null, null
                 )
             } catch (e: Exception) {
+                Log.e(TAG, e.message.toString())
             }
             if (managedCursor != null) {
                 calendarUriBase = "content://com.android.calendar/"
@@ -227,6 +237,10 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
         calendaruri = calendarUriBase!!
         managedCursor?.close()
         return calendarUriBase
+    }
+
+    companion object {
+        const val TAG = "CalendarEvent"
     }
 
     override fun onAddEditTask(task: Task) {

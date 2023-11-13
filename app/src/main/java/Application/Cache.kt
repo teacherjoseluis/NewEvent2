@@ -109,12 +109,11 @@ class Cache<T : Any> {
         saveBitmaptoSD(context, category, bitmap)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun loadarraylist(kClass: KClass<T>) {
         when (kClass) {
             Task::class -> {
                 val arrayList = taskhelper.getTasks()
-                if (arrayList.size != 0) {
+                if (arrayList!!.size != 0) {
                     taskPresenter.onArrayListT(arrayList)
                 } else {
                     taskPresenter.onEmptyListT()
@@ -122,7 +121,7 @@ class Cache<T : Any> {
             }
 
             Payment::class -> {
-                val arrayList = paymenthelper.getPayments()
+                val arrayList = paymenthelper.getPayments()!!
                 if (arrayList.size != 0) {
                     paymentPresenter.onArrayListP(arrayList)
                 } else {
@@ -131,7 +130,7 @@ class Cache<T : Any> {
             }
 
             Guest::class -> {
-                val arrayList = guesthelper.getAllGuests()
+                val arrayList = guesthelper.getAllGuests()!!
                 if (arrayList.size != 0) {
                     guestPresenter.onArrayListG(arrayList)
                 } else {
@@ -140,7 +139,7 @@ class Cache<T : Any> {
             }
 
             Vendor::class -> {
-                val arrayList = vendorhelper.getAllVendors()
+                val arrayList = vendorhelper.getAllVendors()!!
                 if (arrayList.size != 0) {
                     vendorPresenter.onArrayListV(arrayList)
                 } else {
@@ -149,7 +148,7 @@ class Cache<T : Any> {
             }
 
             Event::class -> {
-                val event = eventhelper.getEvent()
+                val event = eventhelper.getEvent()!!
                 if (event.key != "") {
                     eventPresenter.onEvent(event)
                 } else {
@@ -160,7 +159,6 @@ class Cache<T : Any> {
     }
 
     @SuppressLint("NewApi")
-    @RequiresApi(Build.VERSION_CODES.O)
     fun loadimage(cacheCategory: String) {
         val imagebitmap = getImgfromSD(cacheCategory, contextCache)
         val emptyBitmap = createemptyBitmap(250, 250)

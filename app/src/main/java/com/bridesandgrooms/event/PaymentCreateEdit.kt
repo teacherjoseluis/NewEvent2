@@ -1,11 +1,12 @@
 package com.bridesandgrooms.event
 
-import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,20 +16,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bridesandgrooms.event.MVP.VendorPaymentPresenter
 import com.bridesandgrooms.event.Model.*
-import com.bridesandgrooms.event.ui.TextValidate
-import com.bridesandgrooms.event.ui.dialog.DatePickerFragment
+import com.bridesandgrooms.event.UI.TextValidate
+import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import kotlinx.android.synthetic.main.payment_editdetail.*
+//import kotlinx.android.synthetic.main.payment_editdetail.*
 import java.util.*
 import android.view.View.OnFocusChangeListener
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 
 import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Functions.addPayment
 import com.bridesandgrooms.event.Functions.editPayment
 import com.bridesandgrooms.event.Functions.validateOldDate
-import kotlinx.android.synthetic.main.task_editdetail.*
+import com.bridesandgrooms.event.databinding.PaymentEditdetailBinding
+//import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -39,10 +43,11 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
     private lateinit var optionsmenu: Menu
     private lateinit var presentervendor: VendorPaymentPresenter
     private lateinit var adManager: AdManager
+    private lateinit var binding: PaymentEditdetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.payment_editdetail)
+        binding = DataBindingUtil.setContentView(this, R.layout.payment_editdetail)
 
         // Declaring and enabling the toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -77,26 +82,26 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         //We are making sure that only valid text is entered in the name of the payment
         val taskhelper = TaskDBHelper(this)
         val tasklist = taskhelper.getTasksNames()
-        val itemsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, tasklist)
+        val itemsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, tasklist!!)
 
-        paymentname.setAdapter(itemsAdapter)
-        paymentname.onFocusChangeListener = OnFocusChangeListener { _, p1 ->
+        binding.paymentname.setAdapter(itemsAdapter)
+        binding.paymentname.onFocusChangeListener = OnFocusChangeListener { _, p1 ->
             if (!p1) {
-                paymentname.hint = ""
-                val validationmessage = TextValidate(paymentname).namefieldValidate()
+                binding.paymentname.hint = ""
+                val validationmessage = TextValidate(binding.paymentname).namefieldValidate()
                 if (validationmessage != "") {
-                    paymentname.error = "Error in Payment name: $validationmessage"
+                    binding.paymentname.error = "Error in Payment name: $validationmessage"
                 }
             }
         }
 
         //Erasing any possible error whenever the user clicks again
-        paymentamount.setOnClickListener {
-            paymentamount.error = null
+        binding.paymentamount.setOnClickListener {
+            binding.paymentamount.error = null
         }
 
-        paymentdate.setOnClickListener {
-            paymentdate.error = null
+        binding.paymentdate.setOnClickListener {
+            binding.paymentdate.error = null
             showDatePickerDialog()
         }
 
@@ -140,35 +145,35 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 //        }
 
         if (paymentitem.key != "") {
-            paymentname.setText(paymentitem.name)
-            paymentdate.setText(paymentitem.date)
-            paymentamount.setText(paymentitem.amount)
+            binding.paymentname.setText(paymentitem.name)
+            binding.paymentdate.setText(paymentitem.date)
+            binding.paymentamount.setText(paymentitem.amount)
         }
 
-        savebuttonpayment.setOnClickListener {
+        binding.savebuttonpayment.setOnClickListener {
             var inputvalflag = true
-            paymentname.clearFocus()
-            if (paymentname.text.toString().isEmpty()) {
-                paymentname.error = getString(R.string.error_tasknameinput)
+            binding.paymentname.clearFocus()
+            if (binding.paymentname.text.toString().isEmpty()) {
+                binding.paymentname.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             } else {
-                val validationmessage = TextValidate(paymentname).namefieldValidate()
+                val validationmessage = TextValidate(binding.paymentname).namefieldValidate()
                 if (validationmessage != "") {
-                    paymentname.error = "Error in Payment name: $validationmessage"
+                    binding.paymentname.error = "Error in Payment name: $validationmessage"
                     inputvalflag = false
                 }
             }
-            paymentdate.clearFocus()
-            if (paymentdate.text.toString().isEmpty()) {
-                paymentdate.error = getString(R.string.error_taskdateinput)
+            binding.paymentdate.clearFocus()
+            if (binding.paymentdate.text.toString().isEmpty()) {
+                binding.paymentdate.error = getString(R.string.error_taskdateinput)
                 inputvalflag = false
             }
-            paymentamount.clearFocus()
-            if (paymentamount.text.toString().isEmpty()) {
-                paymentamount.error = getString(R.string.error_taskbudgetinput)
+            binding.paymentamount.clearFocus()
+            if (binding.paymentamount.text.toString().isEmpty()) {
+                binding.paymentamount.error = getString(R.string.error_taskbudgetinput)
                 inputvalflag = false
             }
-            if (groupeditpayment.checkedChipId == -1) {
+            if (binding.groupeditpayment.checkedChipId == -1) {
                 Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
                 inputvalflag = false
             }
@@ -179,7 +184,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                 val actv = findViewById<Spinner>(R.id.vendorspinner)
                 if (actv.selectedItem.toString() != getString(R.string.selectvendor)) {
                     val vendordb = VendorDBHelper(this)
-                    val vendorid = vendordb.getVendorIdByName(actv.selectedItem.toString())
+                    val vendorid = vendordb.getVendorIdByName(actv.selectedItem.toString())!!
                     if (vendorid == "") {
                         Toast.makeText(this, getString(R.string.vendornotfound), Toast.LENGTH_SHORT)
                             .show()
@@ -251,8 +256,8 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_payment -> {
-                if (!PermissionUtils.checkPermissions(applicationContext)) {
-                    PermissionUtils.alertBox(this)
+                if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
+                    PermissionUtils.alertBox(this, "calendar")
                 } else {
                     lifecycleScope.launch {
                         deletePayment(this@PaymentCreateEdit, paymentitem)
@@ -273,11 +278,11 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
     }
 
     private suspend fun disableControls() {
-        paymentname.isEnabled = false
-        paymentamount.isEnabled = false
-        paymentdate.isEnabled = false
-        groupeditpayment.isEnabled = false
-        savebuttonpayment.isEnabled = false
+        binding.paymentname.isEnabled = false
+        binding.paymentamount.isEnabled = false
+        binding.paymentdate.isEnabled = false
+        binding.groupeditpayment.isEnabled = false
+        binding.savebuttonpayment.isEnabled = false
         optionsmenu.clear()
 
         setResult(Activity.RESULT_OK, Intent())
@@ -288,7 +293,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
     // Repeated from TaskCreateEdit
     private fun getCategory(): String {
         var mycategorycode = ""
-        val categoryname = groupeditpayment.findViewById<Chip>(groupeditpayment.checkedChipId).text
+        val categoryname = binding.groupeditpayment.findViewById<Chip>(binding.groupeditpayment.checkedChipId).text
 
         val list = ArrayList(EnumSet.allOf(Category::class.java))
         for (category in list) {
@@ -304,24 +309,24 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
             DatePickerFragment.newInstance((DatePickerDialog.OnDateSetListener { _, p1, p2, p3 ->
                 if (validateOldDate(p1, p2 + 1, p3)) {
                     val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                    paymentdate.setText(selectedDate)
+                    binding.paymentdate.setText(selectedDate)
                 } else {
-                    paymentdate.error = getString(R.string.error_invaliddate)
+                    binding.paymentdate.error = getString(R.string.error_invaliddate)
                 }
             }))
         newFragment.show(supportFragmentManager, "datePicker")
     }
 
     private fun savePayment() {
-        paymentitem.name = paymentname.text.toString()
-        paymentitem.date = paymentdate.text.toString()
-        paymentitem.amount = paymentamount.text.toString()
+        paymentitem.name = binding.paymentname.text.toString()
+        paymentitem.date = binding.paymentdate.text.toString()
+        paymentitem.amount = binding.paymentamount.text.toString()
         paymentitem.category = getCategory()
 
 //        if (!checkPaymentPermissions()) {
 //            alertBox()
-        if (!PermissionUtils.checkPermissions(applicationContext)) {
-            PermissionUtils.alertBox(this)
+        if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
+            PermissionUtils.alertBox(this, "calendar")
         } else {
             if (paymentitem.key == "") {
                 addPayment(this, paymentitem)
@@ -411,6 +416,35 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                 } else {
                     // At least one permission was denied.
                     // You can handle the denial scenario here, such as displaying a message or disabling functionality that requires the permissions.
+                    // Here goes what happens when the permission is not given
+                    binding.withdata.visibility = ConstraintLayout.INVISIBLE
+                    binding.permissions.root.visibility = ConstraintLayout.VISIBLE
+                    val calendarpermissions = Permission.getPermission("calendar")
+                    val resourceId = this.resources.getIdentifier(
+                        calendarpermissions.drawable, "drawable",
+                        this.packageName
+                    )
+                    binding.permissions.root.findViewById<ImageView>(R.id.permissionicon).setImageResource(resourceId)
+
+                    val language = this.resources.configuration.locales.get(0).language
+                    val permissionwording = when (language) {
+                        "en" -> calendarpermissions.permission_wording_en
+                        else -> calendarpermissions.permission_wording_es
+                    }
+                    binding.permissions.root.findViewById<TextView>(R.id.permissionwording).text = permissionwording
+
+                    val openSettingsButton = binding.permissions.root.findViewById<Button>(R.id.permissionsbutton)
+                    openSettingsButton.setOnClickListener {
+                        // Create an intent to open the app settings for your app
+                        val intent = Intent()
+                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                        val packageName = packageName
+                        val uri = Uri.fromParts("package", packageName, null)
+                        intent.data = uri
+
+                        // Start the intent
+                        startActivity(intent)
+                    }
                 }
             }
             // Add other request codes and handling logic for other permission requests if needed.

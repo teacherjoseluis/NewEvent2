@@ -4,8 +4,8 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.bridesandgrooms.event.CoRAddEditEvent
-import com.bridesandgrooms.event.CoROnboardUser
+import com.bridesandgrooms.event.Functions.CoRAddEditEvent
+import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.saveImgtoStorage
 import com.bridesandgrooms.event.MVP.ImagePresenter
 import com.google.firebase.FirebaseException

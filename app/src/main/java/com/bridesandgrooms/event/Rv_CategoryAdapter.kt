@@ -11,12 +11,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.getlocale
+import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.MyFirebaseApp
 import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.google.firebase.analytics.FirebaseAnalytics
+import java.lang.reflect.Field
 
 class rvCategoryAdapter(private val categorylist: List<Category>) :
     RecyclerView.Adapter<rvCategoryAdapter.ViewHolder>() {
@@ -42,7 +47,6 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
     }
 
     @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         if (getlocale().substring(
                 0,
@@ -58,18 +62,19 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
             categorylist[p1].drawable, "drawable",
             context.packageName
         )
+
         p0.categoryimage?.setImageResource(resourceId)
 
         val taskdb = TaskDBHelper(context)
         // The below function gets the statistics for tasks and budgets associated to each category
         val taskstats = taskdb.getCategoryStats(categorylist[p1].code)
-        p0.taskpendinglabel?.text = taskstats.taskpending.toString()
+        p0.taskpendinglabel?.text = taskstats!!.taskpending.toString()
         p0.taskdonelabel?.text = taskstats.taskcompleted.toString()
         p0.taskbudgetlabel?.text = taskstats.sumbudget
 
         val paymentdb = PaymentDBHelper(context)
         // The below function gets the statistics for tasks and budgets associated to each category
-        val paymentstats = paymentdb.getCategoryStats(categorylist[p1].code)
+        val paymentstats = paymentdb.getCategoryStats(categorylist[p1].code)!!
         p0.paymentdonelabel?.text = paymentstats.paymentcompleted.toString()
         p0.paymentbudgetlabel?.text = paymentstats.sumpayments
 

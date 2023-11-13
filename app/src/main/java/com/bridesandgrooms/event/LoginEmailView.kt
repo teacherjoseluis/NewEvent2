@@ -5,40 +5,44 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.MVP.LoginEmailPresenter
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.databinding.LoginEmailBinding
 import com.google.firebase.auth.FirebaseAuthEmailException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import kotlinx.android.synthetic.main.login_email.*
+//import kotlinx.android.synthetic.main.login_email.*
 import kotlinx.coroutines.launch
 
 class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginActivity {
 
+    private lateinit var binding: LoginEmailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_email)
+        binding = DataBindingUtil.setContentView(this, R.layout.login_email)
 
         val email = intent.getStringExtra("email").toString()
         val user = User()
 
         if (email != "") {
             //Login
-            mailinputedit.setText(email)
-            mailinputedit.isEnabled = false
-            horizontalline2.isVisible = false
-            forgotemaillink.isVisible = false
+            binding.mailinputedit.setText(email)
+            binding.mailinputedit.isEnabled = false
+            binding.horizontalline2.isVisible = false
+            binding.forgotemaillink.isVisible = false
         } else {
             //SignUp
-            passwordinput2.isVisible = false
+            binding.passwordinput2.isVisible = false
         }
 
-        button.setOnClickListener {
+        binding.button.setOnClickListener {
             var inputvalflag = true
             if (email != "") {
-                if (mailinputedit.text.toString().isEmpty()) {
-                    mailinputedit.error = getString(R.string.error_valid_emailaccount)
+                if (binding.mailinputedit.text.toString().isEmpty()) {
+                    binding.mailinputedit.error = getString(R.string.error_valid_emailaccount)
                     inputvalflag = false
                 }
 //                if (editTextTextPassword.text.toString()
@@ -80,14 +84,14 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginAc
             }
         }
 
-        forgotemaillink.setOnClickListener {
+        binding.forgotemaillink.setOnClickListener {
             var inputvalflag = true
-            if (mailinputedit.text.toString().isEmpty()) {
-                mailinputedit.error = getString(R.string.error_valid_emailaccount)
+            if (binding.mailinputedit.text.toString().isEmpty()) {
+                binding.mailinputedit.error = getString(R.string.error_valid_emailaccount)
                 inputvalflag = false
             }
             if (inputvalflag) {
-                val userEmail = mailinputedit.text.toString()
+                val userEmail = binding.mailinputedit.text.toString()
                 val user = User()
                 lifecycleScope.launch {
                     try {

@@ -92,7 +92,7 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
     }
 
     override fun onEmptyListG() {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         val guest = GuestModel()
         guest.getAllGuestList(
             user.userid!!,

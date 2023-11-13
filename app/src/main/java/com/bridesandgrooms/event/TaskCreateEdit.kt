@@ -1,32 +1,39 @@
 package com.bridesandgrooms.event
 
-import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.*
-import com.bridesandgrooms.event.Model.*
+import com.bridesandgrooms.event.Model.Category
+import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.Task
-import com.bridesandgrooms.event.ui.TextValidate
-import com.bridesandgrooms.event.ui.dialog.DatePickerFragment
+import com.bridesandgrooms.event.databinding.TaskEditdetailBinding
+import com.bridesandgrooms.event.UI.TextValidate
+import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import kotlinx.android.synthetic.main.task_editdetail.*
+//import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
@@ -36,11 +43,11 @@ class TaskCreateEdit : AppCompatActivity() {
     private lateinit var taskitem: Task
     private lateinit var optionsmenu: Menu
     private lateinit var adManager: AdManager
-
+    private lateinit var binding: TaskEditdetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.task_editdetail)
+        binding = DataBindingUtil.setContentView(this, R.layout.task_editdetail)
 
         //This call checks the status of Firebase connection
         //checkFirebaseconnection()
@@ -72,23 +79,23 @@ class TaskCreateEdit : AppCompatActivity() {
 
         //I intend here to validate the name field and not invalid text is coming here
         //it's validated as soon as the user moves away
-        taskname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+        binding.taskname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
             if (!p1) {
-                val validationmessage = TextValidate(taskname).namefieldValidate()
+                val validationmessage = TextValidate(binding.taskname).namefieldValidate()
                 if (validationmessage != "") {
                     //I'm afraid I'm not localizing this one for the moment
-                    taskname.error = "Error in Task name: $validationmessage"
+                    binding.taskname.error = "Error in Task name: $validationmessage"
                 }
             }
         }
 
         //As soon as it's touched, the error message disappears
-        taskbudget.setOnClickListener {
-            taskbudget.error = null
+        binding.taskbudget.setOnClickListener {
+            binding.taskbudget.error = null
         }
 
-        taskdate.setOnClickListener {
-            taskdate.error = null
+        binding.taskdate.setOnClickListener {
+            binding.taskdate.error = null
             showDatePickerDialog()
         }
 
@@ -115,36 +122,36 @@ class TaskCreateEdit : AppCompatActivity() {
 
         //Loads task fields as we are editing an existing task
         if (taskitem.key != "") {
-            taskname.setText(taskitem.name)
-            taskdate.setText(taskitem.date)
-            taskbudget.setText(taskitem.budget)
+            binding.taskname.setText(taskitem.name)
+            binding.taskdate.setText(taskitem.date)
+            binding.taskbudget.setText(taskitem.budget)
         }
 
-        savebuttontask.setOnClickListener {
+        binding.savebuttontask.setOnClickListener {
             var inputvalflag = true
-            taskname.clearFocus()
-            if (taskname.text.toString().isEmpty()) {
-                taskname.error = getString(R.string.error_tasknameinput)
+            binding.taskname.clearFocus()
+            if (binding.taskname.text.toString().isEmpty()) {
+                binding.taskname.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             } else {
-                val validationmessage = TextValidate(taskname).namefieldValidate()
+                val validationmessage = TextValidate(binding.taskname).namefieldValidate()
                 if (validationmessage != "") {
-                    taskname.error = "Error in Task name: $validationmessage"
+                    binding.taskname.error = "Error in Task name: $validationmessage"
                     inputvalflag = false
                 }
             }
 
-            taskdate.clearFocus()
-            if (taskdate.text.toString().isEmpty()) {
-                taskdate.error = getString(R.string.error_taskdateinput)
+            binding.taskdate.clearFocus()
+            if (binding.taskdate.text.toString().isEmpty()) {
+                binding.taskdate.error = getString(R.string.error_taskdateinput)
                 inputvalflag = false
             }
-            taskbudget.clearFocus()
-            if (taskbudget.text.toString().isEmpty()) {
-                taskbudget.error = getString(R.string.error_taskbudgetinput)
+            binding.taskbudget.clearFocus()
+            if (binding.taskbudget.text.toString().isEmpty()) {
+                binding.taskbudget.error = getString(R.string.error_taskbudgetinput)
                 inputvalflag = false
             }
-            if (groupedittask.checkedChipId == -1) {
+            if (binding.groupedittask.checkedChipId == -1) {
                 Toast.makeText(
                     this,
                     getString(R.string.error_taskcategoryinput),
@@ -231,8 +238,8 @@ class TaskCreateEdit : AppCompatActivity() {
                         .setPositiveButton(
                             android.R.string.yes
                         ) { _, _ ->
-                            if (!PermissionUtils.checkPermissions(applicationContext)) {
-                                PermissionUtils.alertBox(this)
+                            if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
+                                PermissionUtils.alertBox(this, "calendar")
                             } else {
                                 lifecycleScope.launch {
                                     deleteTask(this@TaskCreateEdit, taskitem)
@@ -259,8 +266,8 @@ class TaskCreateEdit : AppCompatActivity() {
                 } else if (taskitem.status == Rv_TaskAdapter.COMPLETETASK) {
                     taskitem.status = Rv_TaskAdapter.ACTIVETASK
                 }
-                if (!PermissionUtils.checkPermissions(applicationContext)) {
-                    PermissionUtils.alertBox(this)
+                if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
+                    PermissionUtils.alertBox(this, "calendar")
                 } else {
                     lifecycleScope.launch {
                         editTask(this@TaskCreateEdit, taskitem)
@@ -288,11 +295,11 @@ class TaskCreateEdit : AppCompatActivity() {
     }
 
     private suspend fun disableControls() {
-        taskname.isEnabled = false
-        taskbudget.isEnabled = false
-        taskdate.isEnabled = false
-        groupedittask.isEnabled = false
-        savebuttontask.isEnabled = false
+        binding.taskname.isEnabled = false
+        binding.taskbudget.isEnabled = false
+        binding.taskdate.isEnabled = false
+        binding.groupedittask.isEnabled = false
+        binding.savebuttontask.isEnabled = false
         optionsmenu.clear()
 
         setResult(Activity.RESULT_OK, Intent())
@@ -304,7 +311,7 @@ class TaskCreateEdit : AppCompatActivity() {
     // this function retrieves the name of the category to be saved in the DB
     private fun getCategory(): String {
         var mycategorycode = ""
-        val categoryname = groupedittask.findViewById<Chip>(groupedittask.checkedChipId).text
+        val categoryname = binding.groupedittask.findViewById<Chip>(binding.groupedittask.checkedChipId).text
 
         val list = ArrayList(EnumSet.allOf(Category::class.java))
         for (category in list) {
@@ -320,24 +327,24 @@ class TaskCreateEdit : AppCompatActivity() {
             DatePickerFragment.newInstance((DatePickerDialog.OnDateSetListener { _, p1, p2, p3 ->
                 if (validateOldDate(p1, p2 + 1, p3)) {
                     val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                    taskdate.setText(selectedDate)
+                    binding.taskdate.setText(selectedDate)
                 } else {
-                    taskdate.error = getString(R.string.error_invaliddate)
+                    binding.taskdate.error = getString(R.string.error_invaliddate)
                 }
             }))
         newFragment.show(supportFragmentManager, "datePicker")
     }
 
     private fun saveTask() {
-        taskitem.name = taskname.text.toString()
-        taskitem.date = taskdate.text.toString()
-        taskitem.budget = taskbudget.text.toString()
+        taskitem.name = binding.taskname.text.toString()
+        taskitem.date =binding.taskdate.text.toString()
+        taskitem.budget = binding.taskbudget.text.toString()
         taskitem.category = getCategory()
 
 //        if (!checkPermissions()) {
 //            alertBox()
-        if (!PermissionUtils.checkPermissions(applicationContext)) {
-            PermissionUtils.alertBox(this)
+        if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
+            PermissionUtils.alertBox(this, "calendar")
         } else {
             if (taskitem.key == "") {
                 addTask(applicationContext, taskitem)
@@ -449,6 +456,35 @@ class TaskCreateEdit : AppCompatActivity() {
                 } else {
                     // At least one permission was denied.
                     // You can handle the denial scenario here, such as displaying a message or disabling functionality that requires the permissions.
+                    // Here goes what happens when the permission is not given
+                    binding.withdata.visibility = ConstraintLayout.INVISIBLE
+                    binding.permissions.root.visibility = ConstraintLayout.VISIBLE
+                    val calendarpermissions = Permission.getPermission("calendar")
+                    val resourceId = this.resources.getIdentifier(
+                        calendarpermissions.drawable, "drawable",
+                        this.packageName
+                    )
+                    binding.permissions.root.findViewById<ImageView>(R.id.permissionicon).setImageResource(resourceId)
+
+                    val language = this.resources.configuration.locales.get(0).language
+                    val permissionwording = when (language) {
+                        "en" -> calendarpermissions.permission_wording_en
+                        else -> calendarpermissions.permission_wording_es
+                    }
+                    binding.permissions.root.findViewById<TextView>(R.id.permissionwording).text = permissionwording
+
+                    val openSettingsButton = binding.permissions.root.findViewById<Button>(R.id.permissionsbutton)
+                    openSettingsButton.setOnClickListener {
+                        // Create an intent to open the app settings for your app
+                        val intent = Intent()
+                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                        val packageName = packageName
+                        val uri = Uri.fromParts("package", packageName, null)
+                        intent.data = uri
+
+                        // Start the intent
+                        startActivity(intent)
+                    }
                 }
             }
             // Add other request codes and handling logic for other permission requests if needed.

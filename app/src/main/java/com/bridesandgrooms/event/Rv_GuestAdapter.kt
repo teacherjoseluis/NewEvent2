@@ -10,7 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.deleteGuest
 import com.bridesandgrooms.event.Model.Guest
-import com.bridesandgrooms.event.ui.LetterAvatar
+import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
+import com.bridesandgrooms.event.UI.LetterAvatar
 import com.google.android.material.snackbar.Snackbar
 import com.redmadrobot.acronymavatar.AvatarView
 

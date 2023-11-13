@@ -1,7 +1,12 @@
 package com.bridesandgrooms.event
 
+//import dev.sasikanth.colorsheet.ColorSheet
+//import dev.sasikanth.colorsheet.utils.ColorSheetUtils
+//import kotlinx.android.synthetic.main.new_note.*
+
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -11,13 +16,14 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Model.MyFirebaseApp
 import com.bridesandgrooms.event.Model.Note
 import com.bridesandgrooms.event.Model.NoteDBHelper
+import com.bridesandgrooms.event.databinding.NewNoteBinding
 import com.google.firebase.analytics.FirebaseAnalytics
-import dev.sasikanth.colorsheet.ColorSheet
-import dev.sasikanth.colorsheet.utils.ColorSheetUtils
-import kotlinx.android.synthetic.main.new_note.*
+import com.madrapps.pikolo.listeners.SimpleColorSelectionListener
+import java.lang.String
 import java.sql.Date
 import java.sql.Time
 import java.text.SimpleDateFormat
@@ -28,13 +34,15 @@ class NoteCreateEdit : AppCompatActivity() {
     private lateinit var noteitem: Note
     private lateinit var loadingview: View
     private lateinit var withdataview: View
+    private lateinit var binding: NewNoteBinding
+
     lateinit var mContext: Context
     private var colorSelected = ""
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.new_note)
+        binding = DataBindingUtil.setContentView(this, R.layout.new_note)
 
         // Toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -58,40 +66,35 @@ class NoteCreateEdit : AppCompatActivity() {
         val noteid = noteitem.noteid
 
         if (noteid != "") {
-            notetitle.setText(noteitem.title)
-            editTextTextMultiLine.setText(noteitem.body)
+            binding.notetitle.setText(noteitem.title)
+            binding.editTextTextMultiLine.setText(noteitem.body)
             colorSelected = noteitem.color
         }
 
-        notetitle.setOnClickListener {
-            notetitle.error = null
+        binding.notetitle.setOnClickListener {
+            binding.notetitle.error = null
         }
 
-        editTextTextMultiLine.setOnClickListener {
-            editTextTextMultiLine.error = null
+        binding.editTextTextMultiLine.setOnClickListener {
+            binding.editTextTextMultiLine.error = null
         }
 
-        btnSelectColorBg.setOnClickListener {
-            val colors = resources.getIntArray(R.array.rainbow)
-            ColorSheet().colorPicker(
-                colors = colors,
-                noColorOption = true,
-                listener = { color ->
-                    it.focusSearch(View.FOCUS_DOWN)?.requestFocus()
-//                    btnSelectColorBg.backgroundTintList = ColorStateList.valueOf(color)
-                    colorSelected = ColorSheetUtils.colorToHex(color)
-                })
-                .show(supportFragmentManager)
-        }
+        binding.colorPicker.setColorSelectionListener(object : SimpleColorSelectionListener() {
+            override fun onColorSelected(color: Int) {
+                // Do whatever you want with the color
+                colorSelected = String.format("#%06X", 0xFFFFFF and color)
+                binding.editTextTextMultiLine.background.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
+            }
+        })
 
-        button.setOnClickListener {
+        binding.button.setOnClickListener {
             var inputvalflag = true
-            if (notetitle.text.toString().isEmpty()) {
-                notetitle.error = getString(R.string.error_tasknameinput)
+            if (binding.notetitle.text.toString().isEmpty()) {
+                binding.notetitle.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             }
-            if (editTextTextMultiLine.text.toString().isEmpty()) {
-                editTextTextMultiLine.error = getString(R.string.error_bodyinput)
+            if (binding.editTextTextMultiLine.text.toString().isEmpty()) {
+                binding.editTextTextMultiLine.error = getString(R.string.error_bodyinput)
                 inputvalflag = false
             }
             if (inputvalflag) {
@@ -106,7 +109,7 @@ class NoteCreateEdit : AppCompatActivity() {
         val shareitem = menu.findItem(R.id.share_note)
 
         shareitem.setOnMenuItemClickListener {
-            if (notetitle.text.toString().isEmpty() && editTextTextMultiLine.text.toString()
+            if (binding.notetitle.text.toString().isEmpty() && binding.editTextTextMultiLine.text.toString()
                     .isEmpty()
             ) {
                 Toast.makeText(
@@ -125,7 +128,7 @@ class NoteCreateEdit : AppCompatActivity() {
 
                 val intent = Intent(Intent.ACTION_SEND)
                 val shareBody =
-                    getString(R.string.title)+": " + notetitle.text.toString() + getString(R.string.note)+": " + editTextTextMultiLine.text.toString()
+                    getString(R.string.title)+": " + binding.notetitle.text.toString() + getString(R.string.note)+": " + binding.editTextTextMultiLine.text.toString()
                 intent.type = "text/plain"
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.note))
                 intent.putExtra(Intent.EXTRA_TEXT, shareBody)
@@ -155,8 +158,8 @@ class NoteCreateEdit : AppCompatActivity() {
         loadingview.visibility = ConstraintLayout.VISIBLE
         withdataview.visibility = ConstraintLayout.GONE
 
-        noteitem.title = notetitle.text.toString()
-        noteitem.body = editTextTextMultiLine.text.toString()
+        noteitem.title = binding.notetitle.text.toString()
+        noteitem.body = binding.editTextTextMultiLine.text.toString()
         noteitem.color = colorSelected
         noteitem.lastupdateddatetime = sdf.format(notedatetime)
 

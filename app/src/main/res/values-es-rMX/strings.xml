@@ -14,13 +14,11 @@
     <string name="amount">Monto: </string>
     <string name="error_taskbudgetinput">Monto es requerido!</string>
     <string name="are_you_bride_groom">Eres Novio/Novia?</string>
-    <string name="clearvendor_warning">Estás seguro(a) de quitar al proveedor de este pago?</string>
     <string name="delete_confirmation">Estás seguro(a) de borrar?</string>
     <string name="delete_entry">Estás seguro(a) de borrar esto?</string>
     <string name="at_what_time">A qué hora?</string>
     <string name="error_eventtimeinput">A qué hora es tu Evento?</string>
     <string name="author">Autor</string>
-    <string name="available">Disponible</string>
     <string name="error_valid_emailaccount">Se requiere una cuenta de correo válida</string>
     <string name="baby">Bebé</string>
     <string name="blogimage">Imagen de Blog</string>
@@ -34,9 +32,7 @@
     <string name="categoryavatar">Avatar de categoría</string>
     <string name="categoryimage">Imagen de la categoría</string>
     <string name="error_taskcategoryinput">La categoría es requerida</string>
-    <string name="success_password_reset_email">Revisa tu cuenta de correo por un correo de reseteo de contraseña</string>
     <string name="child">Niño(a)</string>
-    <string name="clearvendor">Remover proveedor</string>
     <string name="clockicon">Ícono de reloj</string>
     <string name="companions">Acompañantes</string>
     <string name="complete_task">Completar</string>
@@ -83,11 +79,9 @@
     <string name="guest_information">Información del Invitado</string>
     <string name="guests">Invitados</string>
     <string name="home">Inicio</string>
-    <string name="language">Idioma</string>
     <string name="letsplantogether">Vamos a planear juntos</string>
     <string name="loading_blog_posts_to_show">Cargando publicaciones…</string>
     <string name="loading">Cargando…</string>
-    <string name="localization">Localización</string>
     <string name="location">Ubicación</string>
     <string name="login">Conectarse</string>
     <string name="logoff">Desconectarse</string>
@@ -113,7 +107,6 @@
     <string name="none">Ninguno</string>
     <string name="no">No</string>
     <string name="note">Nota</string>
-    <string name="note_color">color de nota</string>
     <string name="notes">Notas</string>
     <string name="or">o</string>
     <string name="terms_of_user_and_privacy_policy_agreement"><![CDATA[Al registrarte, significa que estas de acuerdo con la política de privacidad de Brides & Grooms así como sus términos y condiciones]]></string>
@@ -121,7 +114,6 @@
     <string name="payment">Pago</string>
     <string name="payment_amount">Monto del Pago</string>
     <string name="fabpayment">Botón de Pago</string>
-    <string name="payment_detail">Detalles del Pago</string>
     <string name="payment_due_date">Fecha límite de pago</string>
     <string name="payments">Pagos</string>
     <string name="pending">Pendiente</string>
@@ -150,15 +142,12 @@
     <string name="share_note">Compartir Nota</string>
     <string name="sign_up">Regístrate</string>
     <string name="signupbutton">Botón de registro</string>
-    <string name="spent">Gastado</string>
     <string name="status">Estado</string>
     <string name="submit">Enviar</string>
     <string name="success_email_login">Te has conectado exitósamente por correo</string>
-    <string name="success_sn_login">Te has conectado exitósamente por redes socales</string>
     <string name="success_logout">Te has desconectado exitósamente</string>
     <string name="summary">Resumen</string>
     <string name="table">Mesa</string>
-    <string name="table_twopoints">Mesa:</string>
     <string name="task">Tarea</string>
     <string name="taskbudget">Presupuesto de la Tarea</string>
     <string name="taskbudgetimage">Imagen del presupuesto de la Tarea</string>
@@ -168,17 +157,12 @@
     <string name="taskpendingimage">Imagen de Tarea pendiente</string>
     <string name="tasks">Tareas</string>
     <string name="terms_and_conditions">Términos y Condiciones</string>
-    <string name="error_emailaccountnotfound">La cuenta de correo no se encontró, necesitas registrarte primero</string>
     <string name="error_emailaccountexists">La cuenta de correo que intentas usar ya existe</string>
-    <string name="error_emailpasswordincorrect">La contraseña es incorrecta</string>
-    <string name="there_are_no_elements_to_show">No hay nada que ver por aquí</string>
     <string name="error_noemailclient">No hay aplicaciones de correo instaladas en tu dispositivo</string>
     <string name="there_are_no_guests_yet_invited">No hay tienes invitados aún</string>
-    <string name="there_is_no_activity_to_show">No hay actividad para mostrar</string>
     <string name="password_requiredformat">La contraseña consta de 8 caractéres, 1 mayúscula, 1 número y 1 símbolo</string>
     <string name="login_error_message">Hubo un error al tratar de conectarse</string>
     <string name="error_gettingdata">Hubo un error tratando de obtener datos del evento</string>
-    <string name="failure_sn_login">Hubo un error tratando de conectarse</string>
     <string name="failed_email_login">Hubo un problema tratando de conectarse o la cuenta no existe</string>
     <string name="error_emailsignup">Hubo un problema tratando de registrarse</string>
     <string name="time">Hora</string>
@@ -202,11 +186,9 @@
     <string name="what_s_your_name">Cuál es tu nombre?</string>
     <string name="what_day_is_your_event">Cuál es el día de tu evento?</string>
     <string name="error_eventdateinput">Cuál es la fecha de tu evento?</string>
-    <string name="error_eventlocationinput">Cuál es la ubicación de tu evento?</string>
     <string name="error_eventnameinput">Cómo llamamos a tu evento?</string>
     <string name="where_will_you_celebrate">Dónde te celebrarás?</string>
     <string name="yes">si</string>
-    <string name="failed_account_verification">Tu cuenta no pudo ser verificada</string>
     <string name="success_account_verification">Tu cuenta fue verificada exitósamente</string>
     <string name="notverified_email_login">Tu correo electrónico no ha sido verificado</string>
     <string name="your_progress">Tu progreso</string>
@@ -222,7 +204,6 @@
     <string name="failededitpayment">Hubo un error al intentar editar el pago </string>
     <string name="error_rsvpinput">RSVP es requerido</string>
     <string name="error_companioninput">Información del acompañante es requerida</string>
-    <string name="error_tableinput">Información de la mesa es requerida</string>
     <string name="error_guestname">Error en el nombre del Invitado: </string>
     <string name="genericmessage">Asunto</string>
     <string name="successaddvendor">Proveedor creado exitósamente</string>
@@ -245,7 +226,6 @@
     <string name="errorsharenote">No es posible compartir la nota ya que el título o el contenido están vacíos</string>
     <string name="error_bodyinput">Contenido es requerido</string>
     <string name="shareusing">Comparte usando</string>
-    <string name="error_eventname">Error en el nombre del Evento: </string>
     <string name="error_timeinput">Hora es requerida</string>
     <string name="error_locationinput">Ubicación es requerida</string>
     <string name="pickercanceled">Selector Cancelado.</string>
@@ -257,8 +237,6 @@
     <string name="erroreditguest">Hubo un error al intentar editar al invitado </string>
     <string name="successadduser">Usuario creado exitósamente</string>
     <string name="erroradduser">Hubo un error al intentar crear al usuario </string>
-    <string name="successdeleteuser">Usuario borrado exitósamente </string>
-    <string name="errordeleteuser">Hubo un error al intentar borrar al usuario </string>
     <string name="successedituser">Usuario editado exitósamente</string>
     <string name="erroredituser">Hubo un error al intentar editar al usuario </string>
     <string name="googlesearch">Buscar por Google</string>
@@ -282,34 +260,30 @@
     <string name="resetpwderror_invalidcredentials">La dirección de correo electrónico proporcionada es inválida. Por favor, verifica que no haya errores de escritura e intenta nuevamente</string>
     <string name="resetpwderror_authmailexception">Hubo un error al enviar el correo electrónico de restablecimiento de contraseña. Por favor, intenta de nuevo más tarde</string>
     <string name="onboarding_message_createtask">Bienvenido ! Empecemos por crear una tarea para tu evento.</string>
-    <string name="emptystate_noguestsmsg">Actualmente no hay invitados a tu evento pero los puedes agregar aquí</string>
-    <string name="emptystate_nonotesmsg">Actualmente no hay Notas pero las puedes agregar aquí</string>
-    <string name="emptystate_nopaymentsmsg">Actualmente no existen pagos para esta categoría en la app, puedes ir atrás y agregar algunas</string>
-    <string name="emptystate_notasksmsg">Actualmente no existen tareas para esta categoría en la app, puedes ir atrás y agregar algunas</string>
-    <string name="emptystate_novendorsmsg">Actualmente no hay vendedores para tu evento pero los puedes agregar aquí</string>
+    <string name="emptystate_noguestsmsg">Actualmente no hay invitados a tu evento pero los puedes agregar aquí.</string>
+    <string name="emptystate_nonotesmsg">Actualmente no hay Notas pero las puedes agregar aquí.</string>
+    <string name="emptystate_nopaymentsmsg">Actualmente no existen pagos para esta categoría en la app, puedes ir atrás y agregar algunas.</string>
+    <string name="emptystate_notasksmsg">Actualmente no existen tareas para esta categoría en la app, puedes ir atrás y agregar algunas.</string>
+    <string name="emptystate_novendorsmsg">Actualmente no hay vendedores para tu evento pero los puedes agregar aquí.</string>
     <string name="notattending">No asiste</string>
     <string name="error_networkconnectivity">Hay un problema con tu conexión a Internet, asegurate de estar conectado para continuar</string>
     <string name="error_networkconnection">Existe un problema al intentar conectartse a la red. Para poder llevar a cabo esta acción necesitas asegurarte que exista acceso a Internet.</string>
     <string name="emailverification_title">Verificación de correo electrónico</string>
     <string name="emailverification_message">Verifica tu bandeja de entrada y haga clic en el enlace de verificación que te enviamos para completar el proceso. Una vez verificado, podrás volver a iniciar sesión en la aplicación y disfrutar de todas sus funciones.</string>
     <string name="lackpermissions_message">La aplicación neceista permisos para completar esta acción</string>
-    <string name="lackpermissions_action">Por favor proporciona los permisos requeridos cuando sean solicitados</string>
     <string name="edit_guest">Editar Invitado</string>
     <string name="new_task">Nueva Tarea</string>
     <string name="edit_task">Detalle de la Tarea</string>
     <string name="edit_payment">Detalle del Pago</string>
     <string name="comingsoon">No esta disponible por el momento, esperala pronto…</string>
     <string name="contact_the_developer">Contacta al Desarrollador</string>
+    <string name="pick_a_color">Selecciona un color</string>
+    <string name="default_task_date">Fecha de la Tarea</string>
 
 
     <string-array name="role" >
         <item>Novia</item>
         <item>Novio</item>
-    </string-array>
-
-    <string-array name="language" >
-        <item>English</item>
-        <item>Español</item>
     </string-array>
 
 </resources>

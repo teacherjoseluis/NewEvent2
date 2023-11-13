@@ -14,7 +14,7 @@ class NotePresenter(
 
     init {
         val notedb = NoteDBHelper(context)
-        val notearray = notedb.getAllNotes()
+        val notearray = notedb.getAllNotes()!!
 
         if (notearray.size == 0){
             fragment.onNoteError(view, ERRCODENOTE)

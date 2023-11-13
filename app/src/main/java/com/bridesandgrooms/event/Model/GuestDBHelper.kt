@@ -7,13 +7,12 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.bridesandgrooms.event.CoRAddEditGuest
-import com.bridesandgrooms.event.CoRDeleteGuest
+import com.bridesandgrooms.event.Functions.CoRAddEditGuest
+import com.bridesandgrooms.event.Functions.CoRDeleteGuest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
+class GuestDBHelper(val context: Context) : CoRAddEditGuest, CoRDeleteGuest {
 
-    private val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
     lateinit var guest: Guest
     var key = ""
     var nexthandler: CoRAddEditGuest? = null
@@ -21,6 +20,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
 
     @ExperimentalCoroutinesApi
     suspend fun firebaseImport(userid: String) : Boolean {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val guestList: ArrayList<Guest>
         val eventModel = EventModel()
         try {
@@ -34,13 +34,17 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
                 insert(guestItem)
             }
         } catch (e: Exception){
-            println(e.message)
+            Log.e(TAG, e.message.toString())
             throw FirebaseDataImportException("Error importing Guest data: $e")
+        }
+        finally {
+            db.close()
         }
         return true
     }
 
     fun insert(guest: Guest) {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val values = ContentValues()
         values.put("guestid", guest.key)
         values.put("name", guest.name)
@@ -52,32 +56,48 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
 
         val guestExists = getGuestexists(guest.key)
 
-        if (!guestExists) {
-            db.insert("GUEST", null, values)
-            Log.d(TAG, "Guest record inserted")
-        } else {
-            Log.d(TAG, "Guest with ID ${guest.key} already exists, skipping insertion")
+        try {
+            if (!guestExists) {
+                db.insert("GUEST", null, values)
+                Log.d(TAG, "Guest record inserted")
+            } else {
+                Log.d(TAG, "Guest with ID ${guest.key} already exists, skipping insertion")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+        }
+        finally {
+            db.close()
         }
     }
 
 
     private fun getGuestexists(key: String): Boolean {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         var existsflag = false
-        val cursor: Cursor = db.rawQuery("SELECT * FROM GUEST WHERE guestid = '$key'", null)
-        if (cursor != null) {
+        try {
+            val cursor: Cursor = db.rawQuery("SELECT * FROM GUEST WHERE guestid = '$key'", null)
             if (cursor.count > 0) {
                 existsflag = true
             }
+            cursor.close()
+            return existsflag
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return false
         }
-        cursor.close()
-        return existsflag
+        finally {
+            db.close()
+        }
     }
 
     @SuppressLint("Range")
-    fun getAllGuests(): ArrayList<Guest> {
+    fun getAllGuests(): ArrayList<Guest>? {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val list = ArrayList<Guest>()
-        val cursor: Cursor = db.rawQuery("SELECT * FROM GUEST ORDER BY name ASC", null)
-        if (cursor != null && cursor.moveToFirst()) {
+        try {
+            val cursor: Cursor = db.rawQuery("SELECT * FROM GUEST ORDER BY name ASC", null)
+            if (cursor.moveToFirst()) {
 //            if (cursor.count > 0) {
 //                cursor.moveToFirst()
                 do {
@@ -94,12 +114,19 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
                     Log.d(TAG, "Guest $guestid record obtained from local DB")
                 } while (cursor.moveToNext())
 //            }
+            }
+            cursor.close()
+            return list
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        } finally {
+            db.close()
         }
-        cursor.close()
-        return list
     }
 
     fun update(guest: Guest) {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val values = ContentValues()
         values.put("guestid", guest.key)
         values.put("name", guest.name)
@@ -109,21 +136,36 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         values.put("companion", guest.companion)
         values.put("tableguest", guest.table)
 
-        val retVal = db.update("GUEST", values, "guestid = '${guest.key}'", null)
-        if (retVal >= 1) {
-            Log.d(TAG, "Guest ${guest.key} updated")
-        } else {
-            Log.d(TAG, "Guest ${guest.key} not updated")
+        try {
+            val retVal = db.update("GUEST", values, "guestid = '${guest.key}'", null)
+            if (retVal >= 1) {
+                Log.d(TAG, "Guest ${guest.key} updated")
+            } else {
+                Log.d(TAG, "Guest ${guest.key} not updated")
+            }
+            //db.close()
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
         }
-        //db.close()
+        finally {
+            db.close()
+        }
     }
 
     fun delete(guest: Guest) {
-        val retVal = db.delete("GUEST", "guestid = '${guest.key}'", null)
-        if (retVal >= 1) {
-            Log.d(TAG, "Guest ${guest.key} deleted")
-        } else {
-            Log.d(TAG, "Guest ${guest.key} not deleted")
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        try {
+            val retVal = db.delete("GUEST", "guestid = '${guest.key}'", null)
+            if (retVal >= 1) {
+                Log.d(TAG, "Guest ${guest.key} deleted")
+            } else {
+                Log.d(TAG, "Guest ${guest.key} not deleted")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+        }
+        finally {
+            db.close()
         }
         //db.close()
     }
@@ -135,6 +177,7 @@ class GuestDBHelper(context: Context) : CoRAddEditGuest, CoRDeleteGuest {
             update(guest)
         }
         nexthandler?.onAddEditGuest(guest)
+        Log.i("GuestDBHelper", "onAddEditGuest reached")
     }
 
     override fun onDeleteGuest(guest: Guest) {

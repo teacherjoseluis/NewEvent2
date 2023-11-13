@@ -39,8 +39,8 @@ class DashboardView : AppCompatActivity() {
             this,
             drawerLayout,
             toolbar,
-            R.string.nav_app_bar_open_drawer_description,
-            R.string.nav_app_bar_navigate_up_description
+            0,
+            0
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -49,7 +49,7 @@ class DashboardView : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         userdbhelper = UserDBHelper(this)
-        usersession = userdbhelper.getUser(userdbhelper.getUserKey())
+        usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
         if (usersession.userid == "") {
             val loginactivity =
                 Intent(this, LoginView::class.java)

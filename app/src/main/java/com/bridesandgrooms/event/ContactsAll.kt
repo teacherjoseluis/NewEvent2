@@ -5,12 +5,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.*
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,12 +26,17 @@ import com.bridesandgrooms.event.Functions.addVendor
 import com.bridesandgrooms.event.Functions.contacttoGuest
 import com.bridesandgrooms.event.Functions.contacttoVendor
 import com.bridesandgrooms.event.MVP.ContactsAllPresenter
+import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Contact
 import com.bridesandgrooms.event.Model.Guest
+import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.Vendor
-import kotlinx.android.synthetic.main.contacts_all.*
-import kotlinx.android.synthetic.main.contacts_all.view.*
-import kotlinx.android.synthetic.main.vendors_all.view.*
+import com.bridesandgrooms.event.UI.OnItemClickListener
+import com.bridesandgrooms.event.databinding.ContactsAllBinding
+import com.google.android.material.chip.Chip
+//import kotlinx.android.synthetic.main.contacts_all.*
+//import kotlinx.android.synthetic.main.contacts_all.view.*
+//import kotlinx.android.synthetic.main.vendors_all.view.*
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
@@ -42,15 +53,40 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
     private lateinit var presenterguest: ContactsAllPresenter
     private lateinit var apptitle: TextView
     private lateinit var rvAdapter: Rv_ContactAdapter
-    private lateinit var loadingview: View
-    private lateinit var withdataview: View
+    //private lateinit var loadingview: View
+    //private lateinit var withdataview: View
+    //private lateinit var permissionsview: View
+    private lateinit var binding: ContactsAllBinding
     lateinit var mContext: Context
 
     private var callerclass = ""
 
+//    private val requestPermissionLauncher =
+//        registerForActivityResult(
+//            ActivityResultContracts.RequestPermission()
+//        ) { isGranted: Boolean ->
+//            if (isGranted) {
+//                // Permission is granted. Continue the action or workflow in your
+//                // app.
+//                try {
+//                    presenterguest = ContactsAllPresenter(this, this)
+//                } catch (e: Exception) {
+//                    println(e.message)
+//                }
+//            } else {
+//                // Explain to the user that the feature is unavailable because the
+//                // feature requires a permission that the user has denied. At the
+//                // same time, respect the user's decision. Don't link to system
+//                // settings in an effort to convince the user to change their
+//                // decision.
+//            }
+//        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.contacts_all)
+        //setContentView(R.layout.contacts_all)
+        binding = DataBindingUtil.setContentView(this, R.layout.contacts_all)
+
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
@@ -68,17 +104,13 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         apptitle = findViewById(R.id.appbartitle)
         apptitle.text = getString(R.string.title_contacts)
 
-        loadingview = findViewById(R.id.loadingscreen)
-        withdataview = findViewById(R.id.withdata)
+        //loadingview = findViewById(R.id.loadingscreen)
+        //withdataview = findViewById(R.id.withdata)
+        //permissionsview = findViewById(R.id.permissions)
 
         //Checking for permissions to read the contacts information
-        if (checkSelfPermission(Manifest.permission.READ_CONTACTS) ==
-            PackageManager.PERMISSION_DENIED
-        ) {
-            //permission denied
-            val permissions = arrayOf(Manifest.permission.READ_CONTACTS)
-            //show popup to request runtime permission
-            requestPermissions(permissions, PERMISSION_CODE)
+        if (!PermissionUtils.checkPermissions(applicationContext, "contact")) {
+            PermissionUtils.alertBox(this, "contact")
         } else {
             //permission already granted
             // Call the presenter
@@ -112,7 +144,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                 val filteredModelList = filter(contactlist, p0)
                 //The list is updated based on this search criteria
                 rvAdapter = Rv_ContactAdapter(filteredModelList as ArrayList<Contact>)
-                recyclerViewAllContacts.adapter = rvAdapter
+                binding.recyclerViewContacts.adapter = rvAdapter
                 return true
             }
         })
@@ -138,15 +170,16 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         return filteredModelList
     }
 
+    //-- Need to migrate to Databinding:
     override fun onGAContacts(list: ArrayList<Contact>) {
-        recyclerViewContacts.apply {
+        binding.recyclerViewContacts.apply {
             layoutManager = LinearLayoutManager(this@ContactsAll).apply {
                 stackFromEnd = true
                 reverseLayout = true
             }
             rvAdapter = Rv_ContactAdapter(list)
-            recyclerViewAllContacts = recyclerViewContacts
-            recyclerViewAllContacts.adapter = rvAdapter
+            //recyclerViewAllContacts = binding.recyclerViewContacts
+            binding.recyclerViewContacts.adapter = rvAdapter
             contactlist = clone(list)
 
             if (callerclass == "guest") {
@@ -202,8 +235,8 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                             //Enable the menu exclusive for vendors
                             vendormenu.isEnabled = true
                             vendormenu.setOnMenuItemClickListener {
-                                loadingview.visibility = ConstraintLayout.VISIBLE
-                                withdataview.visibility = ConstraintLayout.GONE
+                                binding.loadingscreen.root.visibility = ConstraintLayout.VISIBLE
+                                binding.withdata.visibility = ConstraintLayout.GONE
                                 when (it.itemId) {
                                     R.id.add_vendor -> {
                                         for (ind in countselected) {
@@ -238,16 +271,16 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
     override fun onAddEditGuest(guest: Guest) {
         //Callbacks whenever adding the Guest ends,
         // this will hide the loading view and return to the normal layout
-        (mContext as ContactsAll).loadingview.visibility = ConstraintLayout.GONE
-        (mContext as ContactsAll).withdataview.visibility = ConstraintLayout.VISIBLE
+        binding.loadingscreen.root.visibility = ConstraintLayout.GONE
+        binding.withdata.visibility = ConstraintLayout.VISIBLE
         GuestsAll.guestcreated_flag = 1
     }
 
     override fun onAddEditVendor(vendor: Vendor) {
         //Callbacks whenever adding the Vendor ends,
         // this will hide the loading view and return to the normal layout
-        (mContext as ContactsAll).loadingview.visibility = ConstraintLayout.GONE
-        (mContext as ContactsAll).withdataview.visibility = ConstraintLayout.VISIBLE
+        binding.loadingscreen.root.visibility = ConstraintLayout.GONE
+        binding.withdata.visibility = ConstraintLayout.VISIBLE
         VendorsAll.vendorcreated_flag = 1
     }
 
@@ -269,9 +302,41 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                         println(e.message)
                     }
                 }
+                else {
+                    // Here goes what happens when the permission is not given
+                    binding.permissions.root.visibility = ConstraintLayout.VISIBLE
+                    val contactpermissions = Permission.getPermission("contact")
+                    val resourceId = this.resources.getIdentifier(
+                        contactpermissions.drawable, "drawable",
+                        this.packageName
+                    )
+                    binding.permissions.root.findViewById<ImageView>(R.id.permissionicon).setImageResource(resourceId)
+
+                    val language = this.resources.configuration.locales.get(0).language
+                    val permissionwording = when (language) {
+                            "en" -> contactpermissions.permission_wording_en
+                            else -> contactpermissions.permission_wording_es
+                        }
+                    binding.permissions.root.findViewById<TextView>(R.id.permissionwording).text = permissionwording
+
+                    val openSettingsButton = binding.permissions.root.findViewById<Button>(R.id.permissionsbutton)
+                    openSettingsButton.setOnClickListener {
+                        // Create an intent to open the app settings for your app
+                        val intent = Intent()
+                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                        val packageName = packageName
+                        val uri = Uri.fromParts("package", packageName, null)
+                        intent.data = uri
+
+                        // Start the intent
+                        startActivity(intent)
+                    }
+                }
             }
         }
     }
+
+
 
     override fun onSupportNavigateUp(): Boolean {
         finish()

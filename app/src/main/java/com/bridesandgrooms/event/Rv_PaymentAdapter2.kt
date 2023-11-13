@@ -14,10 +14,12 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.PermissionUtils
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.deletePayment
-import com.bridesandgrooms.event.Model.Note
+import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Payment
 import com.bridesandgrooms.event.Model.UserModel
+import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -127,12 +129,12 @@ class Rv_PaymentAdapter2(
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
         // Set the media view.
-        adView.mediaView = adView.findViewById(R.id.ad_media)
+        //adView.mediaView = adView.findViewById(R.id.ad_media)
 
         // The headline and mediaContent are guaranteed to be in every NativeAd.
         //(adView.headlineView as TextView).text = nativeAd.headline
-        adView.mediaView.setMediaContent(nativeAd.mediaContent)
-        adView.mediaView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+        adView.mediaView?.setMediaContent(nativeAd.mediaContent)
+        adView.mediaView?.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
 
         // This method tells the Google Mobile Ads SDK that you have finished populating your
         // native ad view with this native ad.
@@ -165,8 +167,8 @@ class Rv_PaymentAdapter2(
         recyclerView: RecyclerView,
         action: String
     ) {
-        if (!PermissionUtils.checkPermissions(context)) {
-            PermissionUtils.alertBox(context as Activity)
+        if (!PermissionUtils.checkPermissions(context, "calendar")) {
+            PermissionUtils.alertBox(context as Activity, "calendar")
         } else {
             try {
                 val paymentswift = paymentList[position]

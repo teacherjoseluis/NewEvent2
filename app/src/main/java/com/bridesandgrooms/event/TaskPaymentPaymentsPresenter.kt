@@ -29,19 +29,18 @@ class TaskPaymentPaymentsPresenter(
 //                }
             }
         }
-        fragment.onTPPayments(view, filteredpaymentlistactive)
+        fragment.onTPPayments(filteredpaymentlistactive)
     }
 
     override fun onPaymentListError(errcode: String) {
-        fragment.onTPPaymentsError(view, PaymentPresenter.ERRCODEPAYMENTS)
+        fragment.onTPPaymentsError(PaymentPresenter.ERRCODEPAYMENTS)
     }
 
     interface TPPayments {
         fun onTPPayments(
-            inflatedView: View,
             list: ArrayList<Payment>
         )
 
-        fun onTPPaymentsError(inflatedView: View, errcode: String)
+        fun onTPPaymentsError(errcode: String)
     }
 }

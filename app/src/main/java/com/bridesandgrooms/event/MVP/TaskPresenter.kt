@@ -64,7 +64,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
     }
 
     override fun onEmptyListT() {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         // This is when I receive an empty list of Tasks from the cache
         val task = TaskModel()
         task.getAllTasksList(

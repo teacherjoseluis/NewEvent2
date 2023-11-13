@@ -9,26 +9,30 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
+import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.MyFirebaseApp
 import com.bridesandgrooms.event.Model.TaskDBHelper
-import com.bridesandgrooms.event.ui.ViewAnimation
+import com.bridesandgrooms.event.databinding.MaineventSummaryBinding
+import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.empty_state.view.*
-import kotlinx.android.synthetic.main.mainevent_summary.*
-import kotlinx.android.synthetic.main.mainevent_summary.view.*
-import kotlinx.android.synthetic.main.onboardingcard.view.*
-import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
+//import kotlinx.android.synthetic.main.empty_state.view.*
+//import kotlinx.android.synthetic.main.mainevent_summary.*
+//import kotlinx.android.synthetic.main.mainevent_summary.view.*
+//import kotlinx.android.synthetic.main.onboardingcard.view.*
+//import kotlinx.android.synthetic.main.taskpayment_tasks.view.*
 
 class EventCategories : Fragment() {
 
     private lateinit var recyclerViewCategory: RecyclerView
-    private lateinit var inf: View
+    private lateinit var inf: MaineventSummaryBinding
     private lateinit var list: ArrayList<Category>
     private var isRotate = false
     private val REQUEST_CODE_TASK = 4
@@ -38,11 +42,11 @@ class EventCategories : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        inf = inflater.inflate(R.layout.mainevent_summary, container, false)
+        inf = DataBindingUtil.inflate(inflater, R.layout.mainevent_summary, container, false)
 
         // Getting the list of categories that I'm actually going to show from the local DB
         val taskdb = TaskDBHelper(requireContext())
-        list = taskdb.getActiveCategories()
+        list = taskdb.getActiveCategories()!!
 
         if (list.isNotEmpty()) {
             //Creating the recyclerview to show the Categories, 2 columns
@@ -103,12 +107,12 @@ class EventCategories : Fragment() {
                 isRotate = ViewAnimation.rotateFab(inf.NewTaskPaymentActionButton, !isRotate)
                 if (isRotate) {
                     //when it rotates, it shows the two additional options to create Tasks and Payments
-                    ViewAnimation.showIn(TaskLayout)
-                    ViewAnimation.showIn(PaymentLayout)
+                    ViewAnimation.showIn(inf.TaskLayout)
+                    ViewAnimation.showIn(inf.PaymentLayout)
                 } else {
                     // when it's not rotating, both options are hidden
-                    ViewAnimation.showOut(TaskLayout)
-                    ViewAnimation.showOut(PaymentLayout)
+                    ViewAnimation.showOut(inf.TaskLayout)
+                    ViewAnimation.showOut(inf.PaymentLayout)
                 }
             }
 
@@ -149,12 +153,12 @@ class EventCategories : Fragment() {
             //If no tasks are retrieved from the presenter the component is marked as invisible
             inf.withdatacategory.visibility = ConstraintLayout.GONE
 
-            val emptystateLayout =
-                inf.findViewById<ConstraintLayout>(R.id.withnodatacategory)
+            val emptystateLayout = inf.withnodatacategory
+                //inf.findViewById<ConstraintLayout>(R.id.withnodatacategory)
             val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
             //----------------------------------------------------------------
-            emptystateLayout.visibility = ConstraintLayout.VISIBLE
-            emptystateLayout.empty_card.onboardingmessage.text =
+            emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.emptyCard.onboardingmessage.text =
                 getString(R.string.emptystate_notasksmsg)
             emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
             emptystateLayout.newtaskbutton.setOnClickListener {
@@ -163,7 +167,7 @@ class EventCategories : Fragment() {
                 startActivity(newTask)
             }
         }
-        return inf
+        return inf.root
     }
 
     //Hopefully this doesn't break
@@ -171,7 +175,7 @@ class EventCategories : Fragment() {
         super.onResume()
 
         val taskdb = TaskDBHelper(requireContext())
-        list = taskdb.getActiveCategories()
+        list = taskdb.getActiveCategories()!!
 
         if (list.isNotEmpty()) {
             //Creating the recyclerview to show the Categories, 2 columns
@@ -185,17 +189,16 @@ class EventCategories : Fragment() {
             recyclerViewCategory.adapter = rvAdapter
 
             inf.withdatacategory.visibility = ConstraintLayout.VISIBLE
-            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodatacategory)
-            emptystateLayout.visibility = ConstraintLayout.GONE
+            val emptystateLayout = inf.withnodatacategory
+            emptystateLayout.root.visibility = ConstraintLayout.GONE
         } else {
             inf.withdatacategory.visibility = ConstraintLayout.GONE
 
-            val emptystateLayout =
-                inf.findViewById<ConstraintLayout>(R.id.withnodatacategory)
+            val emptystateLayout = inf.withnodatacategory
             val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
             //----------------------------------------------------------------
-            emptystateLayout.visibility = ConstraintLayout.VISIBLE
-            emptystateLayout.empty_card.onboardingmessage.text =
+            emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.emptyCard.onboardingmessage.text =
                 getString(R.string.emptystate_notasksmsg)
             emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
             emptystateLayout.newtaskbutton.setOnClickListener {
@@ -213,7 +216,7 @@ class EventCategories : Fragment() {
             val taskdb = TaskDBHelper(requireContext())
             val list = taskdb.getActiveCategories()
 
-            val rvAdapter = rvCategoryAdapter(list)
+            val rvAdapter = rvCategoryAdapter(list!!)
             recyclerViewCategory.adapter = rvAdapter
         }
     }

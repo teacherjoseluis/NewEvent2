@@ -24,12 +24,14 @@ import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FetchPlaceResponse
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.main.summary_weddinglocation.*
+//import kotlinx.android.synthetic.main.summary_weddinglocation.*
 import java.io.*
 import java.nio.file.Paths
 import java.util.*
+import kotlin.io.path.isReadable
 
 
 private val storage = Firebase.storage
@@ -43,29 +45,39 @@ fun getImgfromStorage(
     userid: String,
     eventid: String
 ): StorageReference {
-    return storage.getReferenceFromUrl("gs://brides-n-grooms.appspot.com/images/$userid/$eventid/$category.PNG")
+    val referenceUrl = "gs://brides-n-grooms.appspot.com/images/$userid/$eventid/$category.PNG"
+
+    try {
+        return storage.getReferenceFromUrl(referenceUrl)
+    } catch (e: StorageException) {
+        // Log the StorageException
+        Log.e("StorageException", "Error code: ${e.errorCode}, Message: ${e.message}")
+
+        // You can return a default reference or perform any other necessary action here
+        // For example, you can return null or show an error message to the user
+        return storage.reference // Return a default reference or handle it as needed
+    }
 }
 
 //Function to retrieve an image from Shared Preferences
 //IN: Category of the image needed
 //OUT: Image URL
-@RequiresApi(Build.VERSION_CODES.O)
 fun getImgfromSD(category: String, context: Context): Bitmap {
     var bitmapimage: Bitmap?
     val imagepath_firstoption =
         Paths.get(
             //context.getExternalFilesDir(null)?.absolutePath, "Images", "$category.PNG"
             context.getExternalFilesDir(null)?.absolutePath, "$category.PNG"
-        ).toString()
-    bitmapimage = BitmapFactory.decodeFile(imagepath_firstoption)
-    if (bitmapimage == null) {
-        val imagepath_secondoption =
-            Paths.get(
-                context.getExternalFilesDir(null)?.absolutePath, "Images", "$category.PNG"
-                //context.getExternalFilesDir(null)?.absolutePath, "$category.PNG"
-            ).toString()
-
-        bitmapimage = BitmapFactory.decodeFile(imagepath_secondoption)
+        )
+    val imagepath_secondoption =
+        Paths.get(
+            context.getExternalFilesDir(null)?.absolutePath, "Images", "$category.PNG"
+            //context.getExternalFilesDir(null)?.absolutePath, "$category.PNG"
+        )
+    if (imagepath_firstoption.isReadable()) {
+        bitmapimage = BitmapFactory.decodeFile(imagepath_firstoption.toString())
+    } else {
+        bitmapimage = BitmapFactory.decodeFile(imagepath_secondoption.toString())
     }
     if (bitmapimage == null) {
         bitmapimage = createemptyBitmap(250, 250)!!
@@ -154,24 +166,32 @@ fun saveImgtoStorage(category: String, userid: String, eventid: String, uri: Uri
     val imageRef = storageRef.child("images/$userid/$eventid/$category.PNG")
     val uploadTask = imageRef.putFile(uri)
 
-    uploadTask.addOnFailureListener {
-        return@addOnFailureListener
-    }.addOnSuccessListener {
-        return@addOnSuccessListener
+    uploadTask.addOnFailureListener { exception ->
+        // Handle the exception and log the error
+        Log.e("StorageException", "Error uploading $category image: ${exception.message}", exception)
+    }.addOnSuccessListener { taskSnapshot ->
+        // Handle the success case if needed
+        // You can access the download URL of the uploaded file using taskSnapshot.metadata?.reference?.downloadUrl
     }
 }
 
 fun saveURLImgtoSD(category: String, uri: Uri?, context: Context) {
     val path = "Images"
-    val downloadmanager: DownloadManager =
+    val downloadManager: DownloadManager =
         context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-    val request: DownloadManager.Request = DownloadManager.Request(uri)
-        .setTitle(category)
-        .setDescription("Downloading")
-        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-        .setDestinationInExternalFilesDir(context, path, "$category.PNG")
-    downloadmanager.enqueue(request)
-    Log.d("ImageFunctions", "Download $category image from Firebase to Local Storage")
+
+    try {
+        val request: DownloadManager.Request = DownloadManager.Request(uri)
+            .setTitle(category)
+            .setDescription("Downloading")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+            .setDestinationInExternalFilesDir(context, path, "$category.PNG")
+        downloadManager.enqueue(request)
+        Log.d("ImageFunctions", "Download $category image from Firebase to Local Storage")
+    } catch (e: Exception) {
+        // Handle the exception and log the error
+        Log.e("ImageFunctions", "Error downloading $category image: ${e.message}", e)
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -187,7 +207,6 @@ fun saveBitmaptoSD(context: Context, category: String, bitmap: Bitmap) {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
         out.flush()
         out.close()
-
     } catch (e: Exception) {
         Toast.makeText(
             context,

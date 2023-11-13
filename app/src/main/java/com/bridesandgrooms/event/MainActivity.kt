@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.yalantis.ucrop.UCrop
 import com.bumptech.glide.load.DataSource
@@ -29,13 +30,13 @@ import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.EventDBHelper
 import com.bridesandgrooms.event.Model.EventModel
 import com.bridesandgrooms.event.Model.MyFirebaseApp
-import com.bridesandgrooms.event.ui.TextValidate
-import com.bridesandgrooms.event.ui.dialog.DatePickerFragment
+import com.bridesandgrooms.event.databinding.EventformLayoutBinding
+import com.bridesandgrooms.event.UI.TextValidate
+import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.eventform_layout.*
-import kotlinx.android.synthetic.main.task_editdetail.*
+//import kotlinx.android.synthetic.main.eventform_layout.*
+//import kotlinx.android.synthetic.main.task_editdetail.*
 import java.io.File
-import java.util.*
 
 class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresenter.EventItem {
 
@@ -50,10 +51,11 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
 
     private lateinit var presenterevent: EventPresenter
     private lateinit var imagePresenter: ImagePresenter
+    private lateinit var binding: EventformLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.eventform_layout)
+        binding = DataBindingUtil.setContentView(this, R.layout.eventform_layout)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -67,65 +69,65 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
         }
         presenterevent.getEventDetail()
 
-        eventname.setOnClickListener {
-            eventname.error = null
+        binding.eventname.setOnClickListener {
+            binding.eventname.error = null
         }
 
-        eventname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+        binding.eventname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
             if (!p1) {
-                val validationmessage = TextValidate(taskname).namefieldValidate()
+                val validationmessage = TextValidate(binding.eventname).namefieldValidate()
                 if (validationmessage != "") {
-                    val errormsg = getString(R.string.error_eventname)
+                    val errormsg = binding.eventname.toString()
                     errormsg.plus(validationmessage)
-                    eventname.error = errormsg
+                    binding.eventname.error = errormsg
                 }
             }
         }
 
-        eventdate.setOnClickListener {
-            eventdate.error = null
+        binding.eventdate.setOnClickListener {
+            binding.eventdate.error = null
             showDatePickerDialog()
         }
 
-        eventtime.setOnClickListener {
-            eventtime.error = null
+        binding.eventtime.setOnClickListener {
+            binding.eventtime.error = null
             showTimePickerDialog()
         }
 
-        eventlocation.setOnClickListener {
-            eventlocation.error = null
+        binding.eventlocation.setOnClickListener {
+            binding.eventlocation.error = null
             val locationmap = Intent(this, MapsActivity::class.java)
             startActivityForResult(locationmap, autocompletePlaceCode)
         }
 
-        editImageActionButton.setOnClickListener {
+        binding.editImageActionButton.setOnClickListener {
             showImagePickerDialog()
         }
 
-        savebutton.setOnClickListener {
+        binding.savebutton.setOnClickListener {
             var inputvalflag = true
-            if (eventname.text.toString().isEmpty()) {
-                eventname.error = getString(R.string.error_tasknameinput)
+            if (binding.eventname.text.toString().isEmpty()) {
+                binding.eventname.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             } else {
-                val validationmessage = TextValidate(eventname).namefieldValidate()
+                val validationmessage = TextValidate(binding.eventname).namefieldValidate()
                 if (validationmessage != "") {
-                    val errormsg = getString(R.string.error_eventname)
+                    val errormsg = binding.eventname.toString()
                     errormsg.plus(validationmessage)
-                    eventname.error = errormsg
+                    binding.eventname.error = errormsg
                     inputvalflag = false
                 }
             }
-            if (eventdate.text.toString().isEmpty()) {
-                eventdate.error = getString(R.string.error_taskdateinput)
+            if (binding.eventdate.text.toString().isEmpty()) {
+                binding.eventdate.error = getString(R.string.error_taskdateinput)
                 inputvalflag = false
             }
-            if (eventtime.text.toString().isEmpty()) {
-                eventtime.error = getString(R.string.error_timeinput)
+            if (binding.eventtime.text.toString().isEmpty()) {
+                binding.eventtime.error = getString(R.string.error_timeinput)
                 inputvalflag = false
             }
-            if (eventlocation.text.toString().isEmpty()) {
-                eventlocation.error = getString(R.string.error_locationinput)
+            if (binding.eventlocation.text.toString().isEmpty()) {
+                binding.eventlocation.error = getString(R.string.error_locationinput)
                 inputvalflag = false
             }
             if (inputvalflag) {
@@ -139,16 +141,16 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
             DatePickerFragment.newInstance((DatePickerDialog.OnDateSetListener { _, p1, p2, p3 ->
                 if (validateOldDate(p1, p2 + 1, p3)) {
                     val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                    eventdate.setText(selectedDate)
+                    binding.eventdate.setText(selectedDate)
                 } else {
-                    eventdate.error = getString(R.string.error_invaliddate)
+                    binding.eventdate.error = getString(R.string.error_invaliddate)
                 }
             }))
         newFragment.show(supportFragmentManager, "datePicker")
     }
 
     private fun showTimePickerDialog() {
-        val newFragment = TimePickerFragment(eventtime)
+        val newFragment = TimePickerFragment(binding.eventtime)
         newFragment.show(supportFragmentManager, "Time Picker")
     }
 
@@ -203,17 +205,17 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
     }
 
     private fun saveEvent() {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         val event = Event().apply {
             key = eventkey
             placeid = eventplaceid
             latitude = eventlatitude
             longitude = eventlongitude
             address = eventaddress
-            name = eventname.text.toString()
-            date = eventdate.text.toString()
-            time = eventtime.text.toString()
-            location = eventlocation.text.toString()
+            name = binding.eventname.text.toString()
+            date = binding.eventdate.text.toString()
+            time = binding.eventtime.text.toString()
+            location = binding.eventlocation.text.toString()
         }
         val eventmodel = EventModel()
         eventmodel.editEvent(user.userid!!, event, object : EventModel.FirebaseSaveSuccess {
@@ -264,7 +266,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
             eventlatitude = data.getDoubleExtra("place_latitude", 0.0)
             eventlongitude = data.getDoubleExtra("place_longitude", 0.0)
             eventaddress = data.getStringExtra("place_address").toString()
-            eventlocation.setText(placenameString)
+            binding.eventlocation.setText(placenameString)
         }
 
 //        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
@@ -309,7 +311,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
                 Glide.with(this@MainActivity)
                     .load(uri)
                     .apply(RequestOptions.circleCropTransform())
-                    .into(eventimage)
+                    .into(binding.eventimage)
             }
         }
     }
@@ -343,14 +345,14 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
                     return false
                 }
             }).placeholder(R.drawable.avatar2)
-            .into(eventimage)
+            .into(binding.eventimage)
     }
 
     override fun onEvent(event: Event) {
-        eventname.setText(event.name)
-        eventdate.setText(event.date)
-        eventtime.setText(event.time)
-        eventlocation.setText(event.location)
+        binding.eventname.setText(event.name)
+        binding.eventdate.setText(event.date)
+        binding.eventtime.setText(event.time)
+        binding.eventlocation.setText(event.location)
         eventplaceid = event.placeid
         eventlatitude = event.latitude
         eventlongitude = event.longitude

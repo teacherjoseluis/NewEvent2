@@ -3,8 +3,8 @@ package com.bridesandgrooms.event.Model
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.bridesandgrooms.event.CoRAddEditPayment
-import com.bridesandgrooms.event.CoRDeletePayment
+import com.bridesandgrooms.event.Functions.CoRAddEditPayment
+import com.bridesandgrooms.event.Functions.CoRDeletePayment
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi

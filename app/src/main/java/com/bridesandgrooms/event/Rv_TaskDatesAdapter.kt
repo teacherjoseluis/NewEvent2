@@ -70,8 +70,12 @@ class Rv_TaskDatesAdapter(
             p0.journaldate?.text =
                 stringdate.substring(0, stringdate.lastIndexOf('.')).trim()
         } else {
-            p0.journaldate?.text =
-                stringdate.substring(0, stringdate.lastIndexOf(',')).trim()
+            try {
+                p0.journaldate?.text = stringdate.substring(0, stringdate.lastIndexOf(',')).trim()
+            } catch (e: StringIndexOutOfBoundsException) {
+                //p0.journaldate?.text = context.getString(R.string.default_task_date)
+                p0.journaldate?.text = stringdate
+            }
         }
 
         p0.recyclerView?.apply {

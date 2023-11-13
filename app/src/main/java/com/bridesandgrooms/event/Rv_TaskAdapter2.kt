@@ -9,14 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.cardview.widget.CardView
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
-import com.bridesandgrooms.event.Category.Companion.getCategory
+import com.bridesandgrooms.event.Model.Category.Companion.getCategory
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.Model.TaskModel
 import com.bridesandgrooms.event.Model.UserModel
-import kotlinx.android.synthetic.main.task_item_layout2.view.*
+//import kotlinx.android.synthetic.main.task_item_layout2.view.*
 
 class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
     RecyclerView.Adapter<Rv_TaskAdapter2.ViewHolder>() {
@@ -54,7 +55,8 @@ class Rv_TaskAdapter2(val taskList: MutableList<Task>) :
             }
         )
         //p0.itemView.taskcard.setCardBackgroundColor(getCategory(taskList[p1].category).colorbackground.toColorInt())
-        p0.itemView.taskcard.setCardBackgroundColor(
+        p0.itemView.findViewById<CardView>(R.id.taskcard).setCardBackgroundColor(
+        //p0.itemView.taskcard.setCardBackgroundColor(
             when (taskList[p1].status) {
                 "C" -> getCategory(taskList[p1].category).colorinactivebackground.toColorInt()
                 else -> getCategory(taskList[p1].category).colorbackground.toColorInt()

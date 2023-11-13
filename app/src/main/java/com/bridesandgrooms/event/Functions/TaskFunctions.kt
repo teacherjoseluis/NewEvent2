@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
-import com.bridesandgrooms.event.CoRAddEditTask
-import com.bridesandgrooms.event.CoRDeleteTask
 import com.bridesandgrooms.event.Model.*
 import com.bridesandgrooms.event.R
 
@@ -27,7 +25,7 @@ internal fun addTask(context: Context, taskitem: Task) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         // Adding a new record in Firebase
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         taskmodel.userid = user.userid!!
         taskmodel.eventid = user.eventid
         //------------------------------------------------
@@ -72,7 +70,7 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         // Updating User information in Local DB
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         taskmodel.userid = user.userid!!
         taskmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -119,7 +117,7 @@ internal fun editTask(context: Context, taskitem: Task) {
         // Updating User information in Local DB
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         taskmodel.userid = user.userid!!
         taskmodel.eventid = user.eventid
         //taskmodel.task = taskitem

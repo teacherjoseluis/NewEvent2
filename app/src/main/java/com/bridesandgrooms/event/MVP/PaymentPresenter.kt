@@ -139,7 +139,7 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
     }
 
     override fun onEmptyListP() {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         val payment = PaymentModel()
         payment.getPaymentsList(
             user.userid!!,

@@ -3,9 +3,12 @@ package com.bridesandgrooms.event
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import com.bridesandgrooms.event.Model.Category
+import com.bridesandgrooms.event.databinding.PaymentEditdetailBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import kotlinx.android.synthetic.main.payment_editdetail.*
+//import kotlinx.android.synthetic.main.payment_editdetail.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -15,9 +18,11 @@ class Payment_EditDetail : AppCompatActivity() {
     var userid = ""
     var eventid = ""
 
+    private lateinit var binding: PaymentEditdetailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.payment_editdetail)
+        binding = DataBindingUtil.setContentView(this, R.layout.payment_editdetail)
 
         payment = intent.getParcelableExtra("payment")!!
         userid = intent.getStringExtra("userid").toString()
@@ -37,28 +42,23 @@ class Payment_EditDetail : AppCompatActivity() {
                 chipgroupedit.check(chip.id)
             }
         }
-            val paymentname = findViewById<TextView>(R.id.paymentname)
-            paymentname.text = payment.name
+            binding.paymentname.setText(payment.name)
+            binding.paymentdate.setText(payment.date)
+            binding.paymentamount.setText(payment.amount)
 
-            val paymentdate = findViewById<TextView>(R.id.paymentdate)
-            paymentdate.text = payment.date
-
-            val paymentamount = findViewById<TextView>(R.id.paymentamount)
-            paymentamount.text = payment.amount
-
-        paymentname.setOnClickListener {
-            paymentname.error = null
+        binding.paymentname.setOnClickListener {
+            binding.paymentname.error = null
         }
 
-        paymentdate.setOnClickListener {
-            paymentdate.error = null
-            paymentdate.text = com.bridesandgrooms.event.ui.Functions.showDatePickerDialog(
+        binding.paymentdate.setOnClickListener {
+            binding.paymentdate.error = null
+            binding.paymentdate.setText(com.bridesandgrooms.event.UI.Functions.showDatePickerDialog(
                 supportFragmentManager
-            )
+            ))
         }
 
-        paymentamount.setOnClickListener {
-            paymentamount.error = null
+        binding.paymentamount.setOnClickListener {
+            binding.paymentamount.error = null
         }
 
         //---------------------------------------------------------------------------------//
@@ -72,21 +72,21 @@ class Payment_EditDetail : AppCompatActivity() {
         }
         //-------------------------------------------------------------------------------//
 
-        groupeditpayment.isSingleSelection = true
+        binding.groupeditpayment.isSingleSelection = true
 
-        savebuttonpayment.setOnClickListener()
+        binding.savebuttonpayment.setOnClickListener()
         {
             var inputvalflag = true
-            if (paymentname.text.toString().isEmpty()) {
-                paymentname.error = "Payment name is required!"
+            if (binding.paymentname.text.toString().isEmpty()) {
+                binding.paymentname.error = "Payment name is required!"
                 inputvalflag = false
             }
-            if (paymentdate.text.toString().isEmpty()) {
-                paymentdate.error = "Payment date is required!"
+            if (binding.paymentdate.text.toString().isEmpty()) {
+                binding.paymentdate.error = "Payment date is required!"
                 inputvalflag = false
             }
-            if (paymentamount.text.toString().isEmpty()) {
-                paymentamount.error = "Payment amount is required!"
+            if (binding.paymentamount.text.toString().isEmpty()) {
+                binding.paymentamount.error = "Payment amount is required!"
                 inputvalflag = false
             }
 //            if (groupedit.checkedChipId == -1) {
@@ -102,9 +102,9 @@ class Payment_EditDetail : AppCompatActivity() {
     }
 
     private fun savePayment() {
-        payment.name = paymentname.text.toString()
-        payment.date = paymentdate.text.toString()
-        payment.amount = paymentamount.text.toString()
+        payment.name = binding.paymentname.text.toString()
+        payment.date = binding.paymentdate.text.toString()
+        payment.amount = binding.paymentamount.text.toString()
 
 //        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
 //        val chiptextvalue = chipselected.text.toString()

@@ -11,23 +11,25 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.MVP.TableGuestsActivityPresenter
 import com.bridesandgrooms.event.Model.MyFirebaseApp
 import com.bridesandgrooms.event.Model.TableGuests
-import com.bridesandgrooms.event.ui.ViewAnimation
+import com.bridesandgrooms.event.databinding.TableguestsactivityBinding
+import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.empty_state.view.*
-import kotlinx.android.synthetic.main.onboardingcard.view.*
-import kotlinx.android.synthetic.main.tableguestsactivity.*
-import kotlinx.android.synthetic.main.tableguestsactivity.view.*
-import kotlinx.android.synthetic.main.tableguestsactivity.view.adView
-import kotlinx.android.synthetic.main.taskpayment_payments.view.*
+//import kotlinx.android.synthetic.main.empty_state.view.*
+//import kotlinx.android.synthetic.main.onboardingcard.view.*
+//import kotlinx.android.synthetic.main.tableguestsactivity.*
+//import kotlinx.android.synthetic.main.tableguestsactivity.view.*
+//import kotlinx.android.synthetic.main.tableguestsactivity.view.adView
+//import kotlinx.android.synthetic.main.taskpayment_payments.view.*
 import kotlin.collections.ArrayList
 
 class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestList {
@@ -35,7 +37,7 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
     private lateinit var recyclerViewActivity: RecyclerView
     private lateinit var presenterguest: TableGuestsActivityPresenter
     private var isRotate = false
-    private lateinit var inf: View
+    private lateinit var inf: TableguestsactivityBinding
 
     private val REQUEST_CODE_CONTACTS = 1 //ContactsAll
     private val REQUEST_CODE_GUESTS = 2
@@ -47,11 +49,11 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
     ): View? {
 
         // Inflate the layout for this fragment
-        inf = inflater.inflate(R.layout.tableguestsactivity, container, false)
+        inf = DataBindingUtil.inflate(inflater, R.layout.tableguestsactivity, container, false)
 
         recyclerViewActivity = inf.tableguestsparentrv
         recyclerViewActivity.apply {
-            layoutManager = LinearLayoutManager(inf.context).apply {
+            layoutManager = LinearLayoutManager(inf.root.context).apply {
                 stackFromEnd = true
                 reverseLayout = true
                 isNestedScrollingEnabled = false
@@ -108,11 +110,11 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
         {
             isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonGuestTG, !isRotate)
             if (isRotate) {
-                ViewAnimation.showIn(NewGuestTG)
-                ViewAnimation.showIn(ContactGuestTG)
+                ViewAnimation.showIn(inf.NewGuestTG)
+                ViewAnimation.showIn(inf.ContactGuestTG)
             } else {
-                ViewAnimation.showOut(NewGuestTG)
-                ViewAnimation.showOut(ContactGuestTG)
+                ViewAnimation.showOut(inf.NewGuestTG)
+                ViewAnimation.showOut(inf.ContactGuestTG)
             }
         }
 
@@ -127,7 +129,7 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
             newguest.putExtra("guestid", "")
             startActivityForResult(newguest, REQUEST_CODE_CONTACTS)
         }
-        return inf
+        return inf.root
     }
 
     override fun onTableGuestList(list: ArrayList<TableGuests>) {
@@ -148,12 +150,12 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
             recyclerViewActivity.adapter = rvAdapter
 
             inf.withdata.visibility = ConstraintLayout.VISIBLE
-            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodata)
-            emptystateLayout.visibility = ConstraintLayout.GONE
+            val emptystateLayout = inf.withnodata
+            emptystateLayout.root.visibility = ConstraintLayout.GONE
         } else if (list.size == 0) {
             inf.withdata.visibility = ConstraintLayout.GONE
             val emptystateLayout =
-                inf.findViewById<ConstraintLayout>(R.id.withnodata)
+                inf.withnodata
             //----------------------------------------------------------------
 //            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
 //            val bottomMarginInPixels =
@@ -163,8 +165,8 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
 //            params.bottomMargin = bottomMarginInPixels
 //            emptystateLayout.layoutParams = params
             //----------------------------------------------------------------
-            emptystateLayout.visibility = ConstraintLayout.VISIBLE
-            emptystateLayout.empty_card.onboardingmessage.text =
+            emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.emptyCard.onboardingmessage.text =
                 getString(R.string.emptystate_noguestsmsg)
         }
     }
@@ -172,7 +174,7 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
     override fun onTableGuestListError(errcode: String) {
         inf.withdata.visibility = ConstraintLayout.GONE
         val emptystateLayout =
-            inf.findViewById<ConstraintLayout>(R.id.withnodata)
+            inf.withnodata
         //----------------------------------------------------------------
 //            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
 //            val bottomMarginInPixels =
@@ -182,8 +184,8 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
 //            params.bottomMargin = bottomMarginInPixels
 //            emptystateLayout.layoutParams = params
         //----------------------------------------------------------------
-        emptystateLayout.visibility = ConstraintLayout.VISIBLE
-        emptystateLayout.empty_card.onboardingmessage.text =
+        emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
+        emptystateLayout.emptyCard.onboardingmessage.text =
             getString(R.string.emptystate_noguestsmsg)
     }
 

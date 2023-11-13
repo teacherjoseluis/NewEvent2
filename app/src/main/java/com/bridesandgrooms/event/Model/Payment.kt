@@ -2,7 +2,6 @@ package com.bridesandgrooms.event.Model
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.bridesandgrooms.event.Functions.getlocale
 
 open class Payment(
     var key: String = "",

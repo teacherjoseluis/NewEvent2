@@ -19,7 +19,7 @@ import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bridesandgrooms.event.Functions.Blog
 import com.bridesandgrooms.event.Model.MyFirebaseApp
-import com.bridesandgrooms.event.ui.Functions.texttrimming
+import com.bridesandgrooms.event.UI.Functions.texttrimming
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.storage.FirebaseStorage
 import com.firebase.ui.storage.images.FirebaseImageLoader

@@ -22,8 +22,8 @@
         android:title="@string/guests"/>
 
     <item
-        android:id="@+id/notes"
-        android:icon="@drawable/icons8_edit"
-        android:title="@string/notes"/>
+        android:id="@+id/vendor"
+        android:icon="@drawable/noun_vendor_4311400"
+        android:title="@string/vendor"/>
 
 </menu>

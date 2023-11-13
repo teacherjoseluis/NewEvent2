@@ -6,27 +6,28 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.view.animation.AnimationUtils
 import android.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bridesandgrooms.event.Functions.clone
 import com.bridesandgrooms.event.MVP.GuestsAllPresenter
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.MyFirebaseApp
-import com.bridesandgrooms.event.ui.ViewAnimation
+import com.bridesandgrooms.event.databinding.GuestsAllBinding
+import com.bridesandgrooms.event.UI.SwipeControllerTasks
+import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.empty_state.view.*
-import kotlinx.android.synthetic.main.guests_all.*
-import kotlinx.android.synthetic.main.guests_all.view.*
+//import kotlinx.android.synthetic.main.empty_state.view.*
+//import kotlinx.android.synthetic.main.guests_all.*
+//import kotlinx.android.synthetic.main.guests_all.view.*
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlinx.android.synthetic.main.onboardingcard.view.*
-import kotlinx.android.synthetic.main.taskpayment_payments.view.*
-import kotlinx.android.synthetic.main.vendors_all.*
+//import kotlinx.android.synthetic.main.onboardingcard.view.*
+//import kotlinx.android.synthetic.main.taskpayment_payments.view.*
+//import kotlinx.android.synthetic.main.vendors_all.*
 
 
 class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
@@ -37,7 +38,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
     private lateinit var recyclerViewAllGuests: RecyclerView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var presenterguest: GuestsAllPresenter
-    private lateinit var inf: View
+    private lateinit var inf: GuestsAllBinding
     private lateinit var rvAdapter: Rv_GuestAdapter
     private lateinit var swipeController: SwipeControllerTasks
 
@@ -87,8 +88,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        inf = inflater.inflate(R.layout.guests_all, container, false)
+        inf = DataBindingUtil.inflate(inflater, R.layout.guests_all, container, false)
 
 //        val pulltoRefresh = inf.findViewById<SwipeRefreshLayout>(R.id.pullToRefresh)
 //
@@ -103,14 +103,14 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 
         recyclerViewAllGuests = inf.recyclerViewGuests
         recyclerViewAllGuests.apply {
-            layoutManager = LinearLayoutManager(inf.context).apply {
+            layoutManager = LinearLayoutManager(inf.root.context).apply {
                 stackFromEnd = true
                 reverseLayout = true
             }
         }
 
 //        val swipeController = SwipeControllerTasks(
-//            inf.context,
+//            inf.root.context,
 //            rvAdapter,
 //            recyclerViewAllGuests,
 //            null,
@@ -132,29 +132,29 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         {
             isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonGuest, !isRotate)
             if (isRotate) {
-                ViewAnimation.showIn(NewGuest)
-                ViewAnimation.showIn(ContactGuest)
+                ViewAnimation.showIn(inf.NewGuest)
+                ViewAnimation.showIn(inf.ContactGuest)
             } else {
-                ViewAnimation.showOut(NewGuest)
-                ViewAnimation.showOut(ContactGuest)
+                ViewAnimation.showOut(inf.NewGuest)
+                ViewAnimation.showOut(inf.ContactGuest)
             }
         }
 
-        inf.fabNewGuest.setOnClickListener {
+        inf.NewGuest.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWGUEST")
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "inf.NewGuest")
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
             MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
-            val newguest = Intent(context, GuestCreateEdit::class.java)
-            newguest.putExtra("userid", "")
+            val NewGuest = Intent(context, GuestCreateEdit::class.java)
+            NewGuest.putExtra("userid", "")
 
-            startActivityForResult(newguest, REQUEST_CODE_GUESTS)
+            startActivityForResult(NewGuest, REQUEST_CODE_GUESTS)
         }
 
-        inf.fabContactGuest.setOnClickListener {
+        inf.ContactGuest.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTFROMCONTACTS")
@@ -162,13 +162,13 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
             MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
-            val newguest = Intent(context, ContactsAll::class.java)
-            newguest.putExtra("guestid", "")
-            //startActivity(newguest)
+            val NewGuest = Intent(context, ContactsAll::class.java)
+            NewGuest.putExtra("guestid", "")
+            //startActivity(inf.NewGuest)
 
-            startActivityForResult(newguest, REQUEST_CODE_CONTACTS)
+            startActivityForResult(NewGuest, REQUEST_CODE_CONTACTS)
         }
-        return inf
+        return inf.root
     }
 
 //    override fun onResume() {
@@ -222,7 +222,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         if (list.size != 0) {
             recyclerViewAllGuests = inf.recyclerViewGuests
             recyclerViewAllGuests.apply {
-                layoutManager = LinearLayoutManager(inf.context).apply {
+                layoutManager = LinearLayoutManager(inf.root.context).apply {
                     stackFromEnd = true
                     reverseLayout = true
                 }
@@ -252,23 +252,23 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
 //        itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
             //----------------------------------------------------------------
             inf.withdata.visibility = ConstraintLayout.VISIBLE
-            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodata)
-            emptystateLayout.visibility = ConstraintLayout.GONE
+            val emptystateLayout = inf.withnodata
+            emptystateLayout.root.visibility = ConstraintLayout.GONE
             //----------------------------------------------------------------
         } else if (list.size == 0) {
-            withdata.visibility = ConstraintLayout.GONE
+            inf.withdata.visibility = ConstraintLayout.GONE
 
-            val emptystateLayout = withnodata
+            val emptystateLayout = inf.withnodata
             val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
             val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
-            val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+            val params = emptystateLayout.root.layoutParams as ViewGroup.MarginLayoutParams
 
             params.topMargin = topMarginInPixels
             params.bottomMargin = bottomMarginInPixels
-            emptystateLayout.layoutParams = params
+            emptystateLayout.root.layoutParams = params
 
-            emptystateLayout.visibility = ConstraintLayout.VISIBLE
-            emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_noguestsmsg)
+            emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.emptyCard.onboardingmessage.text = getString(R.string.emptystate_noguestsmsg)
 
 //        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
 //        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
@@ -284,28 +284,28 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
             {
                 isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonGuest, !isRotate)
                 if (isRotate) {
-                    ViewAnimation.showIn(NewGuest)
-                    ViewAnimation.showIn(ContactGuest)
+                    ViewAnimation.showIn(inf.NewGuest)
+                    ViewAnimation.showIn(inf.ContactGuest)
                 } else {
-                    ViewAnimation.showOut(NewGuest)
-                    ViewAnimation.showOut(ContactGuest)
+                    ViewAnimation.showOut(inf.NewGuest)
+                    ViewAnimation.showOut(inf.ContactGuest)
                 }
             }
-            inf.fabNewGuest.setOnClickListener {
+            inf.NewGuest.setOnClickListener {
                 // ------- Analytics call ----------------
                 val bundle = Bundle()
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWGUEST")
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "inf.NewGuest")
                 bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
                 MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
                 //----------------------------------------
 
-                val newguest = Intent(context, GuestCreateEdit::class.java)
-                newguest.putExtra("userid", "")
+                val NewGuest = Intent(context, GuestCreateEdit::class.java)
+                NewGuest.putExtra("userid", "")
 
-                startActivityForResult(newguest, REQUEST_CODE_GUESTS)
+                startActivityForResult(NewGuest, REQUEST_CODE_GUESTS)
             }
 
-            inf.fabContactGuest.setOnClickListener {
+            inf.ContactGuest.setOnClickListener {
                 // ------- Analytics call ----------------
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTFROMCONTACTS")
@@ -313,29 +313,29 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
                 MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
                 //----------------------------------------
 
-                val newguest = Intent(context, ContactsAll::class.java)
-                newguest.putExtra("guestid", "")
-                //startActivity(newguest)
+                val NewGuest = Intent(context, ContactsAll::class.java)
+                NewGuest.putExtra("guestid", "")
+                //startActivity(inf.NewGuest)
 
-                startActivityForResult(newguest, REQUEST_CODE_CONTACTS)
+                startActivityForResult(NewGuest, REQUEST_CODE_CONTACTS)
             }
         }
     }
 
     override fun onGAGuestsError(errcode: String) {
-        withdata.visibility = ConstraintLayout.GONE
+        inf.withdata.visibility = ConstraintLayout.GONE
 
-        val emptystateLayout = withnodata
+        val emptystateLayout = inf.withnodata
         val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
         val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
-        val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
+        val params = emptystateLayout.root.layoutParams as ViewGroup.MarginLayoutParams
 
         params.topMargin = topMarginInPixels
         params.bottomMargin = bottomMarginInPixels
-        emptystateLayout.layoutParams = params
+        emptystateLayout.root.layoutParams = params
 
-        emptystateLayout.visibility = ConstraintLayout.VISIBLE
-        emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_noguestsmsg)
+        emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
+        emptystateLayout.emptyCard.onboardingmessage.text = getString(R.string.emptystate_noguestsmsg)
 
 //        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
 //        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
@@ -351,28 +351,28 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         {
             isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonGuest, !isRotate)
             if (isRotate) {
-                ViewAnimation.showIn(NewGuest)
-                ViewAnimation.showIn(ContactGuest)
+                ViewAnimation.showIn(inf.NewGuest)
+                ViewAnimation.showIn(inf.ContactGuest)
             } else {
-                ViewAnimation.showOut(NewGuest)
-                ViewAnimation.showOut(ContactGuest)
+                ViewAnimation.showOut(inf.NewGuest)
+                ViewAnimation.showOut(inf.ContactGuest)
             }
         }
-        inf.fabNewGuest.setOnClickListener {
+        inf.NewGuest.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "NEWGUEST")
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "inf.NewGuest")
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
             MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
-            val newguest = Intent(context, GuestCreateEdit::class.java)
-            newguest.putExtra("userid", "")
+            val NewGuest = Intent(context, GuestCreateEdit::class.java)
+            NewGuest.putExtra("userid", "")
 
-            startActivityForResult(newguest, REQUEST_CODE_GUESTS)
+            startActivityForResult(NewGuest, REQUEST_CODE_GUESTS)
         }
 
-        inf.fabContactGuest.setOnClickListener {
+        inf.ContactGuest.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTFROMCONTACTS")
@@ -380,11 +380,11 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
             MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
 
-            val newguest = Intent(context, ContactsAll::class.java)
-            newguest.putExtra("guestid", "")
-            //startActivity(newguest)
+            val NewGuest = Intent(context, ContactsAll::class.java)
+            NewGuest.putExtra("guestid", "")
+            //startActivity(inf.NewGuest)
 
-            startActivityForResult(newguest, REQUEST_CODE_CONTACTS)
+            startActivityForResult(NewGuest, REQUEST_CODE_CONTACTS)
         }
     }
 

@@ -46,7 +46,7 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
     }
 
     override fun onEmptyListV() {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         val vendor = VendorModel()
         vendor.getAllVendorList(
             user.userid!!,

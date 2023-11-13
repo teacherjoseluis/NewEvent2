@@ -10,6 +10,7 @@ import com.bridesandgrooms.event.*
 import com.bridesandgrooms.event.Model.*
 
 var vendormodel = VendorModel()
+@SuppressLint("StaticFieldLeak")
 lateinit var vendordbhelper: VendorDBHelper
 private lateinit var usermodel: UserModel
 @SuppressLint("StaticFieldLeak")
@@ -21,7 +22,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
     try {
         //------------------------------------------------
         // Adding a new record in Firebase
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         vendormodel.userid = user.userid!!
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -80,7 +81,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
 
 internal fun deleteVendor(context: Context, vendoritem: Vendor) {
     try {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         vendormodel.userid = user.userid!!
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -124,7 +125,7 @@ internal fun deleteVendor(context: Context, vendoritem: Vendor) {
 internal fun editVendor(context: Context, vendoritem: Vendor) {
     try {
         //---------------------------------------------------
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         vendormodel.userid = user.userid!!
         vendormodel.eventid = user.eventid
         //taskmodel.task = taskitem

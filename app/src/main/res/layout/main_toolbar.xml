@@ -16,6 +16,7 @@
     app:title=" "
     tools:ignore="Overdraw"
     app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:layout_scrollFlags="scroll|enterAlways"
 >
 
     <androidx.constraintlayout.widget.ConstraintLayout

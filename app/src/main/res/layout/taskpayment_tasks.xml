@@ -1,134 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/pewter"
-    tools:context=".TaskPaymentTasks">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
-        android:id="@+id/scrollviewt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/activetaskslayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <!--
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/constraintLayout18"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <TextView
-                            android:id="@+id/textView19"
-                            style="@style/Heading6"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:gravity="center"
-                            android:text="Active Tasks"
-                            android:textColor="@color/rosaChillon"
-                            app:layout_constraintBottom_toTopOf="@+id/line"
-                            app:layout_constraintStart_toStartOf="parent" />
-
-                        <View
-                            android:id="@+id/line"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/rosaChillon"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
--->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/ActiveTasksRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="60dp"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:stackFromEnd="true"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-                <!--
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:id="@+id/completedtaskslayout"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-
-                                    <androidx.constraintlayout.widget.ConstraintLayout
-                                        android:id="@+id/constraintLayout19"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent">
-
-                                        <TextView
-                                            android:id="@+id/textView18"
-                                            style="@style/Heading6"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginBottom="5dp"
-                                            android:gravity="center"
-                                            android:text="Completed Tasks"
-                                            android:textColor="@color/rosaChillon"
-                                            app:layout_constraintBottom_toTopOf="@+id/line2"
-                                            app:layout_constraintStart_toStartOf="parent" />
-
-                                        <View
-                                            android:id="@+id/line2"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="1dp"
-                                            android:background="@color/rosaChillon"
-                                            app:layout_constraintBottom_toBottomOf="parent"
-                                            app:layout_constraintStart_toStartOf="parent" />
-
-                                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                                    <androidx.recyclerview.widget.RecyclerView
-                                        android:id="@+id/CompleteTasksRecyclerView"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="10dp"
-                                        android:paddingBottom="100dp"
-                                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout19"
-                                        app:stackFromEnd="true"
-                                        tools:layout_editor_absoluteX="5dp" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-                -->
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
-    <include
-        android:id="@+id/withnodatataskpaymentt"
-        layout="@layout/empty_state"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="@color/pewter"
+        tools:context=".TaskPaymentTasks">
+
+        <ScrollView
+            android:id="@+id/scrollviewt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/activetaskslayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <!--
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraintLayout18"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/textView19"
+                                style="@style/Heading6"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:gravity="center"
+                                android:text="Active Tasks"
+                                android:textColor="@color/rosaChillon"
+                                app:layout_constraintBottom_toTopOf="@+id/line"
+                                app:layout_constraintStart_toStartOf="parent" />
+
+                            <View
+                                android:id="@+id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/rosaChillon"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+    -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/ActiveTasksRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="60dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:stackFromEnd="true" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!--
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:id="@+id/completedtaskslayout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:id="@+id/constraintLayout19"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent">
+
+                                            <TextView
+                                                android:id="@+id/textView18"
+                                                style="@style/Heading6"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginBottom="5dp"
+                                                android:gravity="center"
+                                                android:text="Completed Tasks"
+                                                android:textColor="@color/rosaChillon"
+                                                app:layout_constraintBottom_toTopOf="@+id/line2"
+                                                app:layout_constraintStart_toStartOf="parent" />
+
+                                            <View
+                                                android:id="@+id/line2"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="1dp"
+                                                android:background="@color/rosaChillon"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent" />
+
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                        <androidx.recyclerview.widget.RecyclerView
+                                            android:id="@+id/CompleteTasksRecyclerView"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="10dp"
+                                            android:paddingBottom="100dp"
+                                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                            app:layout_constraintTop_toBottomOf="@+id/constraintLayout19"
+                                            app:stackFromEnd="true"
+                                            tools:layout_editor_absoluteX="5dp" />
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    -->
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <include
+            android:id="@+id/withnodatataskpaymentt"
+            layout="@layout/empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

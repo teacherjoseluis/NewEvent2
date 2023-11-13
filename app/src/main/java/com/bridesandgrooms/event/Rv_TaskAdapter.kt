@@ -13,12 +13,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.bridesandgrooms.event.Category.Companion.getCategory
+import com.bridesandgrooms.event.Model.Category.Companion.getCategory
 import com.bridesandgrooms.event.Functions.PermissionUtils
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.deleteTask
 import com.bridesandgrooms.event.Functions.editTask
 import com.bridesandgrooms.event.Model.*
 import com.bridesandgrooms.event.Model.Task
+import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -151,12 +153,12 @@ class Rv_TaskAdapter(
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
         // Set the media view.
-        adView.mediaView = adView.findViewById(R.id.ad_media)
+        //adView.mediaView = adView.findViewById(R.id.ad_media)
 
         // The headline and mediaContent are guaranteed to be in every NativeAd.
         //(adView.headlineView as TextView).text = nativeAd.headline
-        adView.mediaView.setMediaContent(nativeAd.mediaContent)
-        adView.mediaView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+        adView.mediaView?.setMediaContent(nativeAd.mediaContent)
+        adView.mediaView?.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
 
         // This method tells the Google Mobile Ads SDK that you have finished populating your
         // native ad view with this native ad.
@@ -194,8 +196,8 @@ class Rv_TaskAdapter(
 
     override fun onItemSwiftRight(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         //val user = com.example.newevent2.Functions.getUserSession(context!!)
-        if (!PermissionUtils.checkPermissions(context)) {
-            PermissionUtils.alertBox(context as Activity)
+        if (!PermissionUtils.checkPermissions(context, "calendar")) {
+            PermissionUtils.alertBox(context as Activity, "calendar")
         } else {
             val taskswift = taskList[position]
 

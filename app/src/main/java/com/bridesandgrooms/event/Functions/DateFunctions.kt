@@ -75,7 +75,7 @@ internal fun isEventDate(mContext: Context): Int {
     //0 if it's the day of the event
     //> 1, days have passed since the event
     //< 1, days yet to pass since the event
-    return if (event.date == "") {
+    return if (event!!.date == "") {
         1
     } else {
         daystoDate(converttoDate(event.date))

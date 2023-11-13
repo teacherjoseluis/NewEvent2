@@ -25,9 +25,12 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.baoyachi.stepview.HorizontalStepView
+import com.bridesandgrooms.event.Functions.PermissionUtils
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -44,8 +47,7 @@ import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.MyFirebaseApp
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.User
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.PieChart
+import com.bridesandgrooms.event.databinding.DashboardchartsBinding
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
@@ -56,12 +58,12 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.chartcard_layoutpayment.view.*
-import kotlinx.android.synthetic.main.dashboardcharts.view.*
-import kotlinx.android.synthetic.main.empty_state.view.*
-import kotlinx.android.synthetic.main.onboardingcard.view.*
-import kotlinx.android.synthetic.main.summary_weddingguests.view.*
-import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
+//import kotlinx.android.synthetic.main.chartcard_layoutpayment.view.*
+//import kotlinx.android.synthetic.main.dashboardcharts.view.*
+//import kotlinx.android.synthetic.main.empty_state.view.*
+//import kotlinx.android.synthetic.main.onboardingcard.view.*
+//import kotlinx.android.synthetic.main.summary_weddingguests.view.*
+//import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
 
 class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     DashboardEventPresenter.PaymentStats, DashboardEventPresenter.GuestStats,
@@ -79,7 +81,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     private var tfRegular: Typeface? = null
     private var tfLight: Typeface? = null
 
-    private lateinit var inflatedView: View
+    private lateinit var inf: DashboardchartsBinding
     private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +92,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         val showads = RemoteConfigSingleton.get_showads()
 
         if (showads) {
-            MobileAds.initialize(context) { initializationStatus ->
+            MobileAds.initialize(requireContext()) { initializationStatus ->
                 // You can leave this empty or handle initialization status if needed
             }
         }
@@ -123,36 +125,37 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        inflatedView = inflater.inflate(R.layout.dashboardcharts, container, false)
+        inf = DataBindingUtil.inflate(inflater, R.layout.dashboardcharts, container, false)
 
         // Load the ad into the AdView
         val showads = RemoteConfigSingleton.get_showads()
 
         if (showads) {
-            inflatedView.adView.visibility = ConstraintLayout.VISIBLE
-            adView = inflatedView.adView
+            inf.adView.visibility = ConstraintLayout.VISIBLE
+            adView = inf.adView
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)
         }
 
         //Calling the presenter that will pull of the data I need for this view
         try {
-            dashboardEP = DashboardEventPresenter(requireContext(), this, inflatedView)
+            dashboardEP = DashboardEventPresenter(requireContext(), this, inf.root)
         } catch (e: Exception) {
             println(e.message)
         }
         //this needs to evaluate if it's true to continue the process, else it will stop it
-        user = userdbhelper.getUser(userdbhelper.getUserKey())
+        user = userdbhelper.getUser(userdbhelper.getUserKey())!!
 
         if (user.hastask == "Y" || user.haspayment == "Y") {
-            inflatedView.withnodata1.visibility = ConstraintLayout.GONE
-            inflatedView.withdata.visibility = ConstraintLayout.VISIBLE
+            inf.withnodata1.root.visibility = ConstraintLayout.GONE
+            inf.withdata.visibility = ConstraintLayout.VISIBLE
             //----------------------------------------------------------------------------------
 
 
             //Load with the achievements obtained by the user -------------------------------------------
             val stepsBeanList = user.onboardingprogress(requireContext())
-            val stepview = inflatedView.findViewById<HorizontalStepView>(R.id.step_view)
+            val stepview = inf.root.findViewById<HorizontalStepView>(R.id.step_view)
+
             stepview
                 .setStepViewTexts(stepsBeanList)//总步骤
                 .setTextSize(12)//set textSize
@@ -200,9 +203,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 )//设置StepsViewIndicator AttentionIcon
             //--------------------------------------------------------------------------------------------
 
-            val weddingphotodetail =
-                inflatedView.findViewById<LinearLayout>(R.id.weddingphotodetail)
-            weddingphotodetail.setOnClickListener {
+            val weddingphotodetail = inf.weddingphotodetail
+            weddingphotodetail.root.setOnClickListener {
                 // ------- Analytics call ----------------
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "EDITEVENT")
@@ -216,7 +218,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 startActivityForResult(editevent, SUCCESS_RETURN)
             }
 
-            val weddingprogress = inflatedView.findViewById<ConstraintLayout>(R.id.weddingprogress)
+            val weddingprogress = inf.root.findViewById<ConstraintLayout>(R.id.weddingprogress)
             weddingprogress.setOnClickListener {
                 // ------- Analytics call ----------------
                 val bundle = Bundle()
@@ -244,42 +246,42 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 Toast.LENGTH_SHORT
             ).show()
             Log.i("EventSummary.TAG", "No data was obtained from the Event")
-            inflatedView.withdata.visibility = ConstraintLayout.GONE
-            inflatedView.onboarding.visibility = ConstraintLayout.VISIBLE
-            inflatedView.onboarding_card.onboardingmessage.text =
+            inf.withdata.visibility = ConstraintLayout.GONE
+            inf.onboarding.root.visibility = ConstraintLayout.VISIBLE
+            inf.withnodata1.emptyCard.onboardingmessage.text =
                 getString(R.string.onboarding_message_createtask)
 
-            val bottomView = this.activity?.findViewById<BottomNavigationView>(R.id.bottomnav)!!
+            val bottomView = activity?.findViewById<BottomNavigationView>(R.id.bottomnav)!!
             for (i in 0 until bottomView.menu.size()) {
                 bottomView.menu.getItem(i).isEnabled = false
             }
 
-            //inflatedView.withnodata1.newtaskbutton.visibility = FloatingActionButton.VISIBLE
+            //inf.withnodata1.newtaskbutton.visibility = FloatingActionButton.VISIBLE
             val mAlphaAnimation = AnimationUtils.loadAnimation(context, R.xml.alpha_animation)
-            inflatedView.onboarding.newtaskbutton.startAnimation(mAlphaAnimation)
-            inflatedView.onboarding.newtaskbutton.setOnClickListener {
+            inf.onboarding.newtaskbutton.startAnimation(mAlphaAnimation)
+            inf.onboarding.newtaskbutton.setOnClickListener {
                 val newtask = Intent(activity, TaskCreateEdit::class.java)
                 startActivity(newtask)
             }
         }
-        return inflatedView
+        return inf.root
     }
 
     @SuppressLint("SetTextI18n")
     override fun onTasksStats(
-        inflatedView: View,
         taskpending: Int,
         taskcompleted: Int,
         sumbudget: Float,
         task: Task
     ) {
-        val cardlayoutinvisible = inflatedView.findViewById<View>(R.id.taskchartnodata)
-        cardlayoutinvisible.visibility = View.GONE
+        val cardlayoutinvisible = inf.taskchartnodata
+        cardlayoutinvisible.root.visibility = View.GONE
 
-        val cardlayout = inflatedView.findViewById<View>(R.id.taskchart)
-        cardlayout.visibility = View.VISIBLE
-        val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
-        val charttask = cardlayout.findViewById<PieChart>(R.id.charttask)
+        val cardlayout = inf.taskchart
+        cardlayout.root.visibility = View.VISIBLE
+
+        val cardtitle = cardlayout.cardtitle
+        val charttask = cardlayout.charttask
 
         val chartcolors = ArrayList<Int>()
         for (c in BandG_Colors) chartcolors.add(c)
@@ -356,14 +358,14 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             //----------------------------------------
         }
 
-        val duenextcard = inflatedView.findViewById<View>(R.id.duenextcard)
+        val duenextcard = inf.duenextcard
         if (task.key == "") {
-            duenextcard.visibility = View.GONE
+            duenextcard.root.visibility = View.GONE
         } else {
-            val cardname = duenextcard.findViewById<TextView>(R.id.cardtitle)
-            val cardsecondarytext = duenextcard.findViewById<TextView>(R.id.secondarytext)
-            val action1Button = duenextcard.findViewById<Button>(R.id.action1)
-            val action2Button = duenextcard.findViewById<Button>(R.id.action2)
+            val cardname = duenextcard.cardtitle
+            val cardsecondarytext = duenextcard.secondarytext
+            val action1Button = duenextcard.action1
+            val action2Button = duenextcard.action2
 
             cardname.text = getString(R.string.duenext)
             //cardsecondarytext.text = "${task.name} due by ${task.date}"
@@ -391,29 +393,32 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
     }
 
-    override fun onTaskStatsError(inflatedView: View, errcode: String) {
-        inflatedView.withdata.taskchart.visibility = ConstraintLayout.GONE
-        inflatedView.withdata.taskchartnodata.visibility = ConstraintLayout.VISIBLE
-//        inflatedView.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
-//        inflatedView.withnodata.newtaskbutton.setOnClickListener {
+    override fun onTaskStatsError(errcode: String) {
+
+        val cardlayoutvisible = inf.taskchart
+        val cardlayoutinvisible = inf.taskchartnodata
+
+        cardlayoutvisible.root.visibility = ConstraintLayout.GONE
+        cardlayoutinvisible.root.visibility = ConstraintLayout.VISIBLE
+//        inf.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
+//        inf.withnodata.newtaskbutton.setOnClickListener {
 //            val newtask = Intent(activity, TaskCreateEdit::class.java)
 //            startActivity(newtask)
 //        }
     }
 
     override fun onPaymentsStats(
-        inflatedView: View,
         countpayment: Int,
         sumpayment: Float,
         sumbudget: Float
     ) {
-        val cardlayoutinvisible = inflatedView.findViewById<View>(R.id.paymentchartnodata)
-        cardlayoutinvisible.visibility = View.GONE
+        val cardlayoutinvisible = inf.paymentchartnodata
+        cardlayoutinvisible.root.visibility = View.GONE
 
-        val cardlayout = inflatedView.findViewById<View>(R.id.paymentchart)
-        cardlayout.visibility = View.VISIBLE
-        val cardtitle = cardlayout.findViewById<TextView>(R.id.cardtitle)
-        val chartpayment = cardlayout.findViewById<BarChart>(R.id.chartpayment)
+        val cardlayout = inf.paymentchart
+        cardlayout.root.visibility = View.VISIBLE
+        val cardtitle = cardlayout.cardtitle
+        val chartpayment = cardlayout.chartpayment
         chartpayment.description.isEnabled = false
 
         val chartcolors = ArrayList<Int>()
@@ -506,22 +511,27 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
     }
 
-    override fun onPaymentsStatsError(inflatedView: View, errcode: String) {
-        inflatedView.withdata.paymentchart.visibility = ConstraintLayout.GONE
-        inflatedView.withdata.paymentchartnodata.visibility = ConstraintLayout.VISIBLE
-        inflatedView.withdata.paymentchartnodata.cardtitle.text = getString(R.string.payments)
+    override fun onPaymentsStatsError(errcode: String) {
+        val cardlayoutvisible = inf.paymentchart
+        val cardlayoutinvisible = inf.paymentchartnodata
+
+        cardlayoutvisible.root.visibility = ConstraintLayout.GONE
+        cardlayoutinvisible.root.visibility = ConstraintLayout.VISIBLE
+        cardlayoutinvisible.cardtitle.text = getString(R.string.payments)
     }
 
     override fun onGuestConfirmation(
-        inflatedView: View,
         confirmed: Int,
         rejected: Int,
         pending: Int
     ) {
-        val cardlayoutinvisible = inflatedView.findViewById<View>(R.id.noguestlayout)
+        val cardlayoutvisible = inf.guestlayout
+        cardlayoutvisible.visibility = View.VISIBLE
+
+        val cardlayoutinvisible = inf.noguestlayout
         cardlayoutinvisible.visibility = View.GONE
 
-        inflatedView.dashboard_vertical_layout_5.setOnClickListener {
+        inf.dashboardVerticalLayout5.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTINFOCARD")
@@ -529,34 +539,33 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
         }
-
-        inflatedView.acceptednumber.text = confirmed.toString()
-        inflatedView.rejectednumber.text = rejected.toString()
-        inflatedView.pendingnumber.text = pending.toString()
+        inf.guestlayout.findViewById<TextView>(R.id.acceptednumber).text  = confirmed.toString()
+        inf.guestlayout.findViewById<TextView>(R.id.rejectednumber).text = rejected.toString()
+        inf.guestlayout.findViewById<TextView>(R.id.pendingnumber).text = pending.toString()
     }
 
-    override fun onGuestConfirmationError(inflatedView: View, errcode: String) {
-        inflatedView.guestlayout.visibility = ConstraintLayout.GONE
-        inflatedView.noguestlayout.visibility = ConstraintLayout.VISIBLE
+    override fun onGuestConfirmationError(errcode: String) {
+        inf.guestlayout.visibility = ConstraintLayout.GONE
+        inf.noguestlayout.visibility = ConstraintLayout.VISIBLE
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onEvent(context: Context, inflatedview: View, event: Event) {
+    override fun onEvent(context: Context, event: Event) {
         placeid = event.placeid
 
-        inflatedview.findViewById<TextView>(R.id.eventname).text = event.name
-        inflatedview.findViewById<TextView>(R.id.eventdate).text = event.date
-        inflatedview.findViewById<TextView>(R.id.eventaddress).text = event.location
-        inflatedview.findViewById<TextView>(R.id.eventfulladdress).text = event.address
+        inf.weddingphotodetail.eventname.text =  event.name
+        inf.weddingphotodetail.eventdate.text = event.date
+        inf.weddinglocation2.eventaddress.text = event.location
+        inf.weddinglocation2.eventfulladdress.text = event.address
 
         var daysleft = 0
         try {
             daysleft = daystoDate(converttoDate(event.date))
         } catch (e: Exception) {
-            user.softlogout(activity!!)
+            user.softlogout(requireActivity())
         }
 
-        inflatedview.findViewById<TextView>(R.id.deadline).text = try {
+        inf.weddingphotodetail.deadline.text = try {
             daysleft.toString().plus(" ").plus(
                 getString(
                     R.string.daysleft
@@ -568,13 +577,13 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
 
         // Load thumbnail
-        imagePresenter = ImagePresenter(context, this, inflatedview)
+        imagePresenter = ImagePresenter(context, this, inf.root)
         imagePresenter.getEventImage()
         //TODO Waiting this to fail and see how it's used
         // imagePresenter.apiKey = resources.getString(R.string.google_maps_key)
         imagePresenter.getPlaceImage()
 
-        inflatedview.weddinglocation2.setOnClickListener {
+        inf.weddinglocation2.root.setOnClickListener {
             // ------- Analytics call ----------------
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "LOCATIONEVENT")
@@ -596,7 +605,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
     }
 
-    override fun onEventError(inflatedview: View, errorcode: String) {
+    override fun onEventError(inf: View, errorcode: String) {
         Toast.makeText(
             context,
             getString(R.string.error_gettingdata),
@@ -609,8 +618,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         drawerlayout.visibility = ConstraintLayout.VISIBLE
     }
 
-    override fun onEventImage(context: Context, inflatedView: View?, packet: Any) {
-        val wedavater = inflatedView!!.findViewById<ImageView>(R.id.weddingavatar)
+    override fun onEventImage(context: Context, inf: View?, packet: Any) {
+        val wedavater = inf!!.findViewById<ImageView>(R.id.weddingavatar)
 
         Glide.with(context)
             .load(packet)
@@ -639,23 +648,15 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         Log.i("EventSummary.TAG", "Image for the event is loaded")
     }
 
-    override fun onPlaceImage(context: Context, inflatedView: View?, image: Bitmap) {
-        inflatedView!!.placesimage.setImageBitmap(image)
+    override fun onPlaceImage(context: Context, image: Bitmap) {
+        inf.weddinglocation2.placesimage.setImageBitmap(image)
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    override fun onEmptyPlaceImageSD(inflatedView: View?) {
+    override fun onEmptyPlaceImageSD() {
         //Checking for permissions to read the contacts information
-        if (ContextCompat.checkSelfPermission(
-                activity!!.applicationContext,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) ==
-            PackageManager.PERMISSION_DENIED
-        ) {
-            //permission denied
-            val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            //show popup to request runtime permission
-            requestPermissions(permissions, PERMISSION_CODE)
+        if (!PermissionUtils.checkPermissions(requireActivity().applicationContext, "storage")) {
+            PermissionUtils.alertBox(requireActivity().applicationContext, "storage")
         } else {
             //permission already granted
             getImgfromPlaces(
@@ -663,7 +664,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 placeid,
                 resources.getString(R.string.google_maps_key),
                 ImagePresenter.PLACEIMAGE,
-                inflatedView!!.placesimage
+                inf.weddinglocation2.placesimage
             )
         }
     }
@@ -701,7 +702,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                         placeid,
                         resources.getString(R.string.google_maps_key),
                         ImagePresenter.PLACEIMAGE,
-                        inflatedView.placesimage
+                        inf.weddinglocation2.placesimage
                     )
                 }
             }

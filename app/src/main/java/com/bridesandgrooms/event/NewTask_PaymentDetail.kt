@@ -4,18 +4,24 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Model.Payment
-import kotlinx.android.synthetic.main.payment_editdetail.*
+import com.bridesandgrooms.event.databinding.PaymentEditdetailBinding
+
+//import kotlinx.android.synthetic.main.payment_editdetail.*
 
 
 class NewTask_PaymentDetail : AppCompatActivity(){
     var userid = ""
     var eventid = ""
 
+    private lateinit var binding: PaymentEditdetailBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.payment_editdetail)
+        binding = DataBindingUtil.setContentView(this, R.layout.payment_editdetail)
+
         userid = intent.getStringExtra("userid").toString()
         eventid = intent.getStringExtra("eventid").toString()
 
@@ -29,35 +35,35 @@ class NewTask_PaymentDetail : AppCompatActivity(){
 
         //groupedit.isSingleSelection = true
 
-        paymentname.setOnClickListener {
-            paymentname.error = null
+        binding.paymentname.setOnClickListener {
+            binding.paymentname.error = null
         }
 
-        paymentdate.setOnClickListener {
-            paymentdate.error = null
-            paymentdate.setText(
-                com.bridesandgrooms.event.ui.Functions.showDatePickerDialog(
+        binding.paymentdate.setOnClickListener {
+            binding.paymentdate.error = null
+            binding.paymentdate.setText(
+                com.bridesandgrooms.event.UI.Functions.showDatePickerDialog(
                     supportFragmentManager
                 ).replace(" ","")
             )
         }
 
-        paymentamount.setOnClickListener {
-            paymentamount.error = null
+        binding.paymentamount.setOnClickListener {
+            binding.paymentamount.error = null
         }
 
-        savebuttonpayment.setOnClickListener {
+        binding.savebuttonpayment.setOnClickListener {
             var inputvalflag = true
-            if (paymentname.text.toString().isEmpty()) {
-                paymentname.error = "Payment name is required!"
+            if (binding.paymentname.text.toString().isEmpty()) {
+                binding.paymentname.error = "Payment name is required!"
                 inputvalflag = false
             }
-            if (paymentdate.text.toString().isEmpty()) {
-                paymentdate.error = "Payment date is required!"
+            if (binding.paymentdate.text.toString().isEmpty()) {
+                binding.paymentdate.error = "Payment date is required!"
                 inputvalflag = false
             }
-            if (paymentamount.text.toString().isEmpty()) {
-                paymentamount.error = "Payment amount is required!"
+            if (binding.paymentamount.text.toString().isEmpty()) {
+                binding.paymentamount.error = "Payment amount is required!"
                 inputvalflag = false
             }
 //            if (groupedit.checkedChipId == -1) {
@@ -73,9 +79,9 @@ class NewTask_PaymentDetail : AppCompatActivity(){
 
     private fun savePayment() {
         val payment = Payment()
-        payment.name = paymentname.text.toString()
-        payment.date = paymentdate.text.toString()
-        payment.amount = paymentamount.text.toString()
+        payment.name = binding.paymentname.text.toString()
+        payment.date = binding.paymentdate.text.toString()
+        payment.amount = binding.paymentamount.text.toString()
 
         val usersession =
             application.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)

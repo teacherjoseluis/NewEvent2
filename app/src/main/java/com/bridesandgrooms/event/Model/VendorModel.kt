@@ -3,8 +3,8 @@ package com.bridesandgrooms.event.Model
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.bridesandgrooms.event.CoRAddEditVendor
-import com.bridesandgrooms.event.CoRDeleteVendor
+import com.bridesandgrooms.event.Functions.CoRAddEditVendor
+import com.bridesandgrooms.event.Functions.CoRDeleteVendor
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
+class VendorModel : CoRAddEditVendor, CoRDeleteVendor{
 
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val myRef = database.reference

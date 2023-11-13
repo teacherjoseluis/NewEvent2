@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -8,17 +9,17 @@ apply plugin: 'com.google.firebase.firebase-perf'
 
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "30.0.2"
+    namespace = "com.bridesandgrooms.event"
+    compileSdkVersion 34
 
     defaultConfig {
-        configurations.all{
+        configurations.configureEach {
             resolutionStrategy {force 'androidx.core:core-ktx:1.6.0'}
         }
         applicationId "com.bridesandgrooms.event"
         minSdkVersion 26
-        targetSdkVersion 31
-        versionCode 12
+        targetSdkVersion 34
+        versionCode 13
         versionName "1.0"
         // Required ONLY when setting minSdkVersion to 20 or lower
         multiDexEnabled true
@@ -49,79 +50,118 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             //signingConfig signingConfigs.release
         }
+        old_gradle {
+        }
     }
+
+//    task runAppiumTests(type: Exec) {
+//        workingDir "C:\\Users\\josel\\Downloads\\BridalAndGroom2\\BridalAndGroom"
+//        commandLine "cmd", "/c", "mvn", "test", "-P", "BS_Samsung_Galaxy_S21"
+//        standardOutput = new ByteArrayOutputStream()
+//        errorOutput = new ByteArrayOutputStream()
+//
+//        doLast {
+//            println "Running Maven tests..."
+//            def result = exec {
+//                // The working directory is set to the one specified above
+//                workingDir workingDir
+//                commandLine "cmd", "/c", "mvn", "test", "-P", "BS_Samsung_Galaxy_S21"
+//                standardOutput = standardOutput
+//                errorOutput = errorOutput
+//            }
+//
+//            println "Command: ${result.commandLine}"
+//            println "Standard Output: ${result.standardOutput.toString()}"
+//            println "Error Output: ${result.errorOutput.toString()}"
+//
+//            if (result.exitValue() == 0) {
+//                println "Tests executed successfully."
+//            } else {
+//                throw new GradleException("Maven tests failed.")
+//            }
+//        }
+//    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
         // Flag to enable support for the new language APIs
         //coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
-        jvmTarget = '1.8'
- //       useIR = true
+        jvmTarget = '11'
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
     }
+
+    // Configure your custom task to run at the end of the build
+//    gradle.assembleRelease {
+//        tasks.whenTaskAdded { task ->
+//            if (task.name == "assembleRelease") {
+//                // Ensure that runAppiumTests runs after assembleRelease
+//                task.finalizedBy runAppiumTests
+//            }
+//        }
+//    }
 }
-
-
 
 repositories {
     mavenCentral()
     google()
     maven { url "https://jitpack.io" }
     maven { url "https://maven.google.com" }
-    jcenter()
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment:2.1.0'
-    implementation 'androidx.navigation:navigation-ui:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
-    implementation 'com.google.android.libraries.places:places:2.3.0'
-    implementation 'com.google.firebase:firebase-storage-ktx:19.1.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+    //implementation 'androidx.navigation:navigation-fragment-ktx:2.7.2'
+    //implementation 'androidx.navigation:navigation-ui-ktx:2.7.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.android.libraries.places:places:3.2.0'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.2.1'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.google.firebase:firebase-analytics:17.2.2'
-    implementation 'com.google.firebase:firebase-database-ktx:19.2.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+    implementation 'com.google.firebase:firebase-database-ktx:20.2.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     kapt 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.firebaseui:firebase-ui-storage:4.3.2'
+    implementation 'com.firebaseui:firebase-ui-storage:8.0.2'
     implementation 'com.github.yalantis:ucrop:2.2.6'
     //implementation("com.vanniktech:android-image-cropper:4.3.3")
     //implementation 'com.github.CanHub:Android-Image-Cropper:4.5.0'
     //implementation 'com.github.yalantis:ucrop:2.2.6-native'
-    implementation 'androidx.vectordrawable:vectordrawable:1.2.0-alpha01'
+    implementation 'androidx.vectordrawable:vectordrawable:1.2.0-beta01'
     implementation 'com.github.BlacKCaT27:CurrencyEditText:2.0.2'
     //coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     //implementation 'com.github.kizitonwose:CalendarView:1.0.0'
-    implementation 'com.applandeo:material-calendar-view:1.7.0'
+    implementation 'com.applandeo:material-calendar-view:1.9.0-rc06'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation platform('com.google.firebase:firebase-bom:30.4.1')
     implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
 //    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
     //implementation 'com.google.firebase:firebase-admin:7.0.1'
-    implementation 'androidx.core:core:1.3.2'
+    implementation 'androidx.core:core-ktx:1.12.0'
     // implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
 //    implementation("androidx.compose.ui:ui:1.0.0-beta07")
 //    // Tooling support (Previews, etc.)
@@ -144,24 +184,24 @@ dependencies {
     implementation 'com.airbnb.android:lottie:3.6.0'
     implementation 'com.github.mohammadatif:CircularImageView:1.0.1'
     implementation 'com.redmadrobot:acronym-avatar:2.0'
-    implementation "dev.sasikanth:colorsheet:1.0.1"
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.1'
+    implementation 'com.github.madrapps:pikolo:2.0.2'
+    implementation 'com.google.firebase:firebase-crashlytics:18.4.3'
     implementation 'com.google.firebase:firebase-perf-ktx'
     implementation 'com.github.Dan629pl:nordan-material-dialog-android:1.0.7'
     implementation 'com.google.android.play:core-ktx:1.8.1'
-    implementation 'com.google.firebase:firebase-core:19.0.1'
-    implementation 'com.google.android.gms:play-services-tagmanager:17.0.1'
-    implementation 'com.google.firebase:firebase-analytics:19.0.1'
-    implementation 'com.google.firebase:firebase-messaging:22.0.0'
-    implementation 'com.google.firebase:firebase-ads:20.4.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
+    implementation 'com.google.firebase:firebase-core:21.1.1'
+    implementation 'com.google.android.gms:play-services-tagmanager:18.0.3'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+    implementation 'com.google.firebase:firebase-messaging:23.2.1'
+    implementation 'com.google.firebase:firebase-ads:22.4.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1'
 
     implementation 'com.android.support:support-annotations:28.0.0'
     annotationProcessor 'com.android.support:support-annotations:28.0.0'
     //implementation 'me.gujun.android.taggroup:library:1.4@aar'
 //    implementation 'co.lujun:androidtagview:1.1.7'
 //    implementation 'androidx.appcompat:appcompat:1.0.1'
-    implementation 'com.google.firebase:firebase-config:20.0.2'
-    implementation 'com.google.firebase:firebase-messaging:20.3.0'
+    implementation 'com.google.firebase:firebase-config:21.4.1'
+    implementation 'com.google.firebase:firebase-messaging:23.2.1'
     implementation 'com.github.kcrimi:ToolTipDialog:1.1.4'
 }

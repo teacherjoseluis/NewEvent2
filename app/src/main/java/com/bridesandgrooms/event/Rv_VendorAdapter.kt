@@ -11,8 +11,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.sumStrings
 import com.bridesandgrooms.event.Model.VendorPayment
-import com.bridesandgrooms.event.ui.Functions.texttrimming
-import com.bridesandgrooms.event.ui.LetterAvatar
+import com.bridesandgrooms.event.UI.Functions.texttrimming
+import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
+import com.bridesandgrooms.event.UI.LetterAvatar
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -126,12 +127,12 @@ class Rv_VendorAdapter(private val contactlist: ArrayList<VendorPayment>, val co
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
         // Set the media view.
-        adView.mediaView = adView.findViewById(R.id.ad_media)
+        //adView.mediaView = adView.findViewById(R.id.ad_media)
 
         // The headline and mediaContent are guaranteed to be in every NativeAd.
         //(adView.headlineView as TextView).text = nativeAd.headline
-        adView.mediaView.setMediaContent(nativeAd.mediaContent)
-        adView.mediaView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+        adView.mediaView?.setMediaContent(nativeAd.mediaContent)
+        adView.mediaView?.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
 
         // This method tells the Google Mobile Ads SDK that you have finished populating your
         // native ad view with this native ad.

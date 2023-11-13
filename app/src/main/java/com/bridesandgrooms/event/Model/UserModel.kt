@@ -4,6 +4,16 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.*
+import com.bridesandgrooms.event.Functions.CoRAddEditGuest
+import com.bridesandgrooms.event.Functions.CoRAddEditPayment
+import com.bridesandgrooms.event.Functions.CoRAddEditTask
+import com.bridesandgrooms.event.Functions.CoRAddEditUser
+import com.bridesandgrooms.event.Functions.CoRAddEditVendor
+import com.bridesandgrooms.event.Functions.CoRDeleteGuest
+import com.bridesandgrooms.event.Functions.CoRDeletePayment
+import com.bridesandgrooms.event.Functions.CoRDeleteTask
+import com.bridesandgrooms.event.Functions.CoRDeleteVendor
+import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.converttoString
 import com.bridesandgrooms.event.Functions.currentDateTime
 import kotlinx.coroutines.tasks.await
@@ -322,6 +332,7 @@ class UserModel(
         editUserShortName(user)
         editUserRole(user)
         nexthandleru?.onAddEditUser(user)
+        Log.i("UserModel", "onAddEditGuest reached")
     }
 
     interface FirebaseSuccessUser {

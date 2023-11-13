@@ -2,14 +2,12 @@ package com.bridesandgrooms.event
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
 
 
 private const val NOTIF_CHANNEL_ID = "primary_notification_channel"
@@ -39,8 +37,8 @@ class NotificationJobService : JobService() {
         myintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         myintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        val pendingIntent =
-            PendingIntent.getActivity(this, 0, myintent, PendingIntent.FLAG_IMMUTABLE)
+//        val pendingIntent =
+//            PendingIntent.getActivity(this, 0, myintent, PendingIntent.FLAG_IMMUTABLE)
 
         val notificationtitle = params!!.extras.getString("title")
         val notificationbody = params.extras.getString("body")
@@ -48,15 +46,15 @@ class NotificationJobService : JobService() {
 //        val task = gson.fromJson(json, Task::class.java)
 
         // Configure NotificationBuilder
-        val builder = NotificationCompat.Builder(this, NOTIF_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-            .setContentTitle(notificationtitle)
-            .setContentText(notificationbody)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
+//        val builder = NotificationCompat.Builder(this, NOTIF_CHANNEL_ID)
+//            .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+//            .setContentTitle(notificationtitle)
+//            .setContentText(notificationbody)
+//            .setAutoCancel(true)
+//            .setContentIntent(pendingIntent)
 
         // Make the Notification
-        notificationManager.notify("firebaseconnectivity", 0, builder.build())
+//        notificationManager.notify("firebaseconnectivity", 0, builder.build())
 
 
         // False to let system know that the job is completed by the end of onStartJob(),

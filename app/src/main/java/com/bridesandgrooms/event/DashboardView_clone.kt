@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.Model.UserDBHelper
 import com.google.android.material.tabs.TabLayout
@@ -23,8 +24,8 @@ class DashboardView_clone : Fragment() {
         val viewPager = inf.findViewById<View>(R.id.dashboardpager) as ViewPager
 
         //Getting the user currently loaded
-        userdbhelper = UserDBHelper(activity!!.applicationContext)
-        val userSession = userdbhelper.getUser(userdbhelper.getUserKey())
+        userdbhelper = UserDBHelper(requireActivity().applicationContext)
+        val userSession = userdbhelper.getUser(userdbhelper.getUserKey())!!
 
         //Setting up the pager adapter for this view
         val adapter =

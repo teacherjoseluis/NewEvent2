@@ -5,6 +5,8 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.*
+import com.bridesandgrooms.event.Functions.CoRAddEditGuest
+import com.bridesandgrooms.event.Functions.CoRDeleteGuest
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.*
@@ -229,6 +231,7 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
             editGuest(userid, eventid, guest)
             nexthandler?.onAddEditGuest(guest)
         }
+        Log.i("GuestModel", "onAddEditGuest reached")
     }
 
     override fun onDeleteGuest(guest: Guest) {

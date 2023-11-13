@@ -4,7 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.bridesandgrooms.event.ui.dialog.DatePickerFragment
+import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
 import TimePickerFragment
 import android.Manifest
 import android.app.Activity
@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.onBoarding
 import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.User
-import kotlinx.android.synthetic.main.onboarding_name.*
+//import kotlinx.android.synthetic.main.onboarding_name.*
 import kotlinx.coroutines.*
 import android.content.Context
 import android.telephony.TelephonyManager
@@ -24,11 +24,13 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Functions.addPayment
 import com.bridesandgrooms.event.Functions.addTask
 import com.bridesandgrooms.event.Model.Payment
 import com.bridesandgrooms.event.Model.Task
-import com.bridesandgrooms.event.RemoteConfigSingleton.getautocreateTaskPayment
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.getautocreateTaskPayment
+import com.bridesandgrooms.event.databinding.OnboardingNameBinding
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -51,6 +53,7 @@ class OnboardingView : AppCompatActivity() {
 
     private lateinit var userSession: User
     private lateinit var taskitem: com.bridesandgrooms.event.Model.Task
+    private lateinit var binding: OnboardingNameBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +64,7 @@ class OnboardingView : AppCompatActivity() {
         userSession.language = this.resources.configuration.locales.get(0).language
         userSession.language = this.resources.configuration.locales.get(0).country
 
-        setContentView(R.layout.onboarding_name)
+        binding = DataBindingUtil.setContentView(this, R.layout.onboarding_name)
 
         //---------- Places loading -------------
         if (!Places.isInitialized()) {
@@ -90,57 +93,57 @@ class OnboardingView : AppCompatActivity() {
         //---------------------------------------
 
         // Hide Layout for Onboarding Event
-        eventonboaarding.visibility = ConstraintLayout.INVISIBLE
-        submitevent.visibility = Button.INVISIBLE
+        binding.eventonboaarding.visibility = ConstraintLayout.INVISIBLE
+        binding.submitevent.visibility = Button.INVISIBLE
 
-        nameinputedit.setOnClickListener {
-            nameinputedit.error = null
+        binding.nameinputedit.setOnClickListener {
+            binding.nameinputedit.error = null
         }
 
-        submituser.setOnClickListener {
+        binding.submituser.setOnClickListener {
             var inputvalflag = true
-            if (nameinputedit.text.toString().isEmpty()) {
-                nameinputedit.error = getString(R.string.error_shortnameinput)
+            if (binding.nameinputedit.text.toString().isEmpty()) {
+                binding.nameinputedit.error = getString(R.string.error_shortnameinput)
                 inputvalflag = false
             }
 
             if (inputvalflag) {
-                userSession.shortname = nameinputedit.text.toString()
+                userSession.shortname = binding.nameinputedit.text.toString()
 
                 // Hide Layout for Onboarding Name and show Onboarding Event
-                nameonboaarding.visibility = ConstraintLayout.INVISIBLE
-                submituser.visibility = Button.INVISIBLE
+                binding.nameonboaarding.visibility = ConstraintLayout.INVISIBLE
+                binding.submituser.visibility = Button.INVISIBLE
 
-                eventonboaarding.visibility = ConstraintLayout.VISIBLE
-                submitevent.visibility = Button.VISIBLE
+                binding.eventonboaarding.visibility = ConstraintLayout.VISIBLE
+                binding.submitevent.visibility = Button.VISIBLE
 
-                etname.setOnClickListener {
-                    etname.error = null
+                binding.etname.setOnClickListener {
+                    binding.etname.error = null
                 }
 
-                etname.onFocusChangeListener = object : OnFocusChangeListener {
+                binding.etname.onFocusChangeListener = object : OnFocusChangeListener {
                     override fun onFocusChange(v: View?, hasFocus: Boolean) {
                         hideSoftKeyboard()
                     }
                 }
 
-                etPlannedDate.setOnClickListener {
-                    etPlannedDate.error = null
+                binding.etPlannedDate.setOnClickListener {
+                    binding.etPlannedDate.error = null
                     showDatePickerDialog()
                 }
 
-                etPlannedDate.onFocusChangeListener = object : OnFocusChangeListener {
+                binding.etPlannedDate.onFocusChangeListener = object : OnFocusChangeListener {
                     override fun onFocusChange(v: View?, hasFocus: Boolean) {
                         hideSoftKeyboard()
                     }
                 }
 
-                etPlannedTime.setOnClickListener {
-                    etPlannedTime.error = null
+                binding.etPlannedTime.setOnClickListener {
+                    binding.etPlannedTime.error = null
                     showTimePickerDialog()
                 }
 
-                etPlannedTime.onFocusChangeListener = object : OnFocusChangeListener {
+                binding.etPlannedTime.onFocusChangeListener = object : OnFocusChangeListener {
                     override fun onFocusChange(v: View?, hasFocus: Boolean) {
                         hideSoftKeyboard()
                     }
@@ -188,19 +191,19 @@ class OnboardingView : AppCompatActivity() {
 //                    }
 //                })
 
-                submitevent.setOnClickListener {
+                binding.submitevent.setOnClickListener {
                     var inputvalflag: Boolean
                     inputvalflag = true
-                    if (etname.text.toString().isEmpty()) {
-                        etname.error = getString(R.string.error_eventnameinput)
+                    if (binding.etname.text.toString().isEmpty()) {
+                        binding.etname.error = getString(R.string.error_eventnameinput)
                         inputvalflag = false
                     }
-                    if (etPlannedDate.text.toString().isEmpty()) {
-                        etPlannedDate.error = getString(R.string.error_eventdateinput)
+                    if (binding.etPlannedDate.text.toString().isEmpty()) {
+                        binding.etPlannedDate.error = getString(R.string.error_eventdateinput)
                         inputvalflag = false
                     }
-                    if (etPlannedTime.text.toString().isEmpty()) {
-                        etPlannedTime.error = getString(R.string.error_eventtimeinput)
+                    if (binding.etPlannedTime.text.toString().isEmpty()) {
+                        binding.etPlannedTime.error = getString(R.string.error_eventtimeinput)
                         inputvalflag = false
                     }
 //                    if (etlocation.text.toString().isEmpty()) {
@@ -213,13 +216,13 @@ class OnboardingView : AppCompatActivity() {
                             latitude = eventlatitude
                             longitude = eventlongitude
                             address = eventaddress.toString()
-                            name = etname.text.toString()
-                            date = etPlannedDate.text.toString()
-                            time = etPlannedTime.text.toString()
+                            name = binding.etname.text.toString()
+                            date = binding.etPlannedDate.text.toString()
+                            time = binding.etPlannedTime.text.toString()
                             location = eventlocationname.toString()
                         }
 
-                        userSession.role = when (spinner.selectedItemPosition) {
+                        userSession.role = when (binding.spinner.selectedItemPosition) {
                             0 -> "Bride"
                             1 -> "Groom"
                             else -> "Bride"
@@ -318,13 +321,13 @@ class OnboardingView : AppCompatActivity() {
             DatePickerFragment.newInstance(DatePickerDialog.OnDateSetListener { _, year, month, day ->
                 // +1 because January is zero
                 val selectedDate = day.toString() + "/" + (month + 1) + "/" + year
-                etPlannedDate.setText(selectedDate)
+                binding.etPlannedDate.setText(selectedDate)
             })
         newFragment.show(supportFragmentManager, "datePicker")
     }
 
     private fun showTimePickerDialog() {
-        val newFragment = TimePickerFragment(etPlannedTime)
+        val newFragment = TimePickerFragment(binding.etPlannedTime)
         newFragment.show(supportFragmentManager, "Time Picker")
 
     }

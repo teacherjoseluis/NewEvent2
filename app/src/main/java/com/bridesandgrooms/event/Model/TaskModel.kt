@@ -3,8 +3,8 @@ package com.bridesandgrooms.event.Model
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.bridesandgrooms.event.CoRAddEditTask
-import com.bridesandgrooms.event.CoRDeleteTask
+import com.bridesandgrooms.event.Functions.CoRAddEditTask
+import com.bridesandgrooms.event.Functions.CoRDeleteTask
 import com.bridesandgrooms.event.Functions.userdbhelper
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
@@ -17,7 +17,7 @@ import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class TaskModel : CoRAddEditTask, CoRDeleteTask {
+class TaskModel : CoRAddEditTask, CoRDeleteTask{
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
@@ -362,11 +362,11 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
         }
 
     override fun onAddEditTask(task: Task) {
-        //val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         if (task.key == "") {
             addTask(
                 //userid,
-                userdbhelper.getUserKey(),
+                user.userid!!,
                 eventid,
                 task,
                 object : FirebaseAddEditTaskSuccess {
@@ -378,7 +378,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
                 })
         } else if (task.key != "") {
             editTask(
-                userdbhelper.getUserKey(), eventid, task, object : FirebaseAddEditTaskSuccess {
+                user.userid!!, eventid, task, object : FirebaseAddEditTaskSuccess {
                     override fun onTaskAddedEdited(flag: Boolean, task: Task) {
                         if (flag) {
                             nexthandler?.onAddEditTask(task)
@@ -390,8 +390,9 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
     }
 
     override fun onDeleteTask(task: Task) {
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         deleteTask(
-            userdbhelper.getUserKey(),
+            user.userid!!,
             eventid,
             task,
             object : FirebaseDeleteTaskSuccess {

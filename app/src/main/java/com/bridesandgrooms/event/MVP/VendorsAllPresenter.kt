@@ -22,7 +22,7 @@ class VendorsAllPresenter(
         val vendorpaymentlist = ArrayList<VendorPayment>()
         val paymentDB = PaymentDBHelper(context)
         list.forEach { vendor ->
-            val amountlist = paymentDB.getVendorPayments(vendor.key)
+            val amountlist = paymentDB.getVendorPayments(vendor.key)!!
             vendorpaymentlist.add(VendorPayment(vendor, amountlist))
         }
         fragment.onVAVendors(vendorpaymentlist)

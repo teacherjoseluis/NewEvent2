@@ -7,29 +7,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.editUser
 import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.Model.MyFirebaseApp
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.databinding.SettingsBinding
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.settings.*
-import kotlinx.android.synthetic.main.settings.view.*
+//import kotlinx.android.synthetic.main.settings.*
+//import kotlinx.android.synthetic.main.settings.view.*
 import kotlinx.coroutines.launch
 
 class Settings : Fragment(), IOnBackPressed {
 
     lateinit var usersession: User
+    private lateinit var inf: SettingsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val inf = inflater.inflate(R.layout.settings, container, false)
+        inf = DataBindingUtil.inflate(inflater, R.layout.settings, container, false)
 
         //Get information about the logged user
-        usersession = userdbhelper.getUser(userdbhelper.getUserKey())
+        usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
 
         //Load the spinner with whatever comes from the user role
         inf.textinput.setText(usersession.shortname)
@@ -50,7 +53,7 @@ class Settings : Fragment(), IOnBackPressed {
 
         inf.textinput.setOnClickListener()
         {
-            textinput.error = null
+            inf.textinput.error = null
         }
 
         //When the user selects via the spinner Bride or Groom, that will be saved in his/her profile
@@ -140,7 +143,7 @@ class Settings : Fragment(), IOnBackPressed {
             intents.putExtras(b)
             requireContext().startActivity(intents)
         }
-        return inf
+        return inf.root
     }
 
     override fun onBackPressed(): Boolean {

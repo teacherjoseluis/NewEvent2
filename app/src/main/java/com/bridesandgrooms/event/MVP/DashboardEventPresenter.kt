@@ -71,7 +71,7 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
                 .compareTo(o2.date)
         })
         val nextactivetask = nextactive(list)
-        fragment.onTasksStats(view, countactive, countcompleted, sumbudget, nextactivetask)
+        fragment.onTasksStats(countactive, countcompleted, sumbudget, nextactivetask)
     }
 
     private fun nextactive(list: ArrayList<Task>): Task {
@@ -86,7 +86,7 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
     }
 
     override fun onTaskListError(errcode: String) {
-        fragment.onTaskStatsError(view, ERRCODETASKS)
+        fragment.onTaskStatsError(ERRCODETASKS)
     }
 
     override fun onPaymentList(list: ArrayList<Payment>) {
@@ -100,11 +100,11 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
             sumpayment += paidamount.toFloat()
             countpayment += 1
         }
-        fragment.onPaymentsStats(view, countpayment, sumpayment, paymentsumbudget)
+        fragment.onPaymentsStats(countpayment, sumpayment, paymentsumbudget)
     }
 
     override fun onPaymentListError(errcode: String) {
-        fragment.onPaymentsStatsError(view, ERRCODEPAYMENTS)
+        fragment.onPaymentsStatsError(ERRCODEPAYMENTS)
     }
 
     override fun onGuestList(list: ArrayList<Guest>) {
@@ -119,17 +119,17 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
                 "pending" -> pending += 1
             }
         }
-        fragment.onGuestConfirmation(view, confirmed, rejected, pending)
+        fragment.onGuestConfirmation(confirmed, rejected, pending)
         presenterevent.getEventDetail()
     }
 
     override fun onGuestListError(errcode: String) {
-        fragment.onGuestConfirmationError(view, GuestPresenter.ERRCODEGUESTS)
+        fragment.onGuestConfirmationError(GuestPresenter.ERRCODEGUESTS)
         presenterevent.getEventDetail()
     }
 
     override fun onEvent(event: Event) {
-        fragment.onEvent(context, view, event)
+        fragment.onEvent(context, event)
     }
 
     override fun onEventError(errcode: String) {
@@ -138,43 +138,39 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 
     interface TaskStats {
         fun onTasksStats(
-            inflatedView: View,
             taskpending: Int,
             taskcompleted: Int,
             sumbudget: Float,
             task: Task
         )
 
-        fun onTaskStatsError(inflatedView: View, errcode: String)
+        fun onTaskStatsError(errcode: String)
     }
 
     interface PaymentStats {
         fun onPaymentsStats(
-            inflatedView: View,
             countpayment: Int,
             sumpayment: Float,
             sumbudget: Float
         )
 
-        fun onPaymentsStatsError(inflatedView: View, errcode: String)
+        fun onPaymentsStatsError(errcode: String)
     }
 
     interface GuestStats {
         fun onGuestConfirmation(
-            inflatedView: View,
             confirmed: Int,
             rejected: Int,
             pending: Int
         )
 
         fun onGuestConfirmationError(
-            inflatedView: View,
             errcode: String
         )
     }
 
     interface EventInterface {
-        fun onEvent(context: Context, inflatedview: View, event: Event)
+        fun onEvent(context: Context, event: Event)
         fun onEventError(inflatedview: View, errorcode: String)
     }
 

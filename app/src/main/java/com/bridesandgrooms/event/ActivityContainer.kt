@@ -14,6 +14,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.getUserSession
 import com.bridesandgrooms.event.Functions.isEventDate
 import com.bridesandgrooms.event.Model.User
@@ -23,8 +24,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.nordan.dialog.Animation
 import com.nordan.dialog.NordanAlertDialog
-import kotlinx.android.synthetic.main.header_navview.*
-import kotlinx.android.synthetic.main.header_navview.view.*
+//import kotlinx.android.synthetic.main.header_navview.*
+//import kotlinx.android.synthetic.main.header_navview.view.*
+
 import sendEmail
 
 class ActivityContainer : AppCompatActivity() {
@@ -43,22 +45,32 @@ class ActivityContainer : AppCompatActivity() {
     private val LOGINACTIVITY = 123
     private var back_pressed: Long = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
 //        val themeId = when (getAppTheme()) {
 //            "pink" -> R.style.AppTheme_Pink
 //            "blue" -> R.style.AppTheme_Blue
 //            else -> R.style.AppTheme // Default theme if no override is found
 //        }
+
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activitycontainer)
+
+
+        // Declare the toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        fm.beginTransaction()
+            .replace(R.id.fragment_container, DashboardView_clone())
+            .commit()
 
         drawerLayout = findViewById(R.id.drawerlayout)
         loadingscreen = findViewById(R.id.loadingscreen)
         val sidenavView = findViewById<NavigationView>(R.id.sidenav)
 
         val developer_mail = RemoteConfigSingleton.get_developer_mail()
-
         if (!developer_mail) {
             val contactMenuItem = sidenavView.getMenu().findItem(R.id.contact_fragment);
             contactMenuItem.setVisible(false)
@@ -98,9 +110,7 @@ class ActivityContainer : AppCompatActivity() {
 //                .build().show()
 //        }
 
-        // Declare the toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+
 
         // Create the toggle that will open and close the sidebar
         drawerLayout = findViewById(R.id.drawerlayout)
@@ -108,8 +118,10 @@ class ActivityContainer : AppCompatActivity() {
             this,
             drawerLayout,
             toolbar,
-            R.string.nav_app_bar_open_drawer_description,
-            R.string.nav_app_bar_navigate_up_description
+            //R.string.nav_app_bar_open_drawer_description,
+            //R.string.nav_app_bar_navigate_up_description
+            0,
+            0
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -127,22 +139,27 @@ class ActivityContainer : AppCompatActivity() {
                     clickNavItem = R.id.event_fragment
                     newfragment = DashboardView_clone()
                 }
+
                 R.id.task_fragment -> {
                     clickNavItem = R.id.task_fragment
                     newfragment = DashboardActivity()
                 }
-                R.id.vendor_fragment -> {
-                    clickNavItem = R.id.vendor_fragment
-                    newfragment = VendorsAll()
+
+                R.id.notes_fragment -> {
+                    clickNavItem = R.id.notes_fragment
+                    newfragment = MyNotes()
                 }
+
                 R.id.settings_fragment -> {
                     clickNavItem = R.id.settings_fragment
                     newfragment = Settings()
                 }
+
                 R.id.contact_fragment -> {
                     clickNavItem = R.id.contact_fragment
                     sendEmail(this)
                 }
+
                 R.id.account_logoff -> {
                     logoffapp()
                 }
@@ -163,26 +180,30 @@ class ActivityContainer : AppCompatActivity() {
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
                 }
+
                 R.id.events -> {
                     val newfragment = EventCategories()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
                 }
+
                 R.id.tasks -> {
                     val newfragment = DashboardActivity()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
                 }
+
                 R.id.guests -> {
                     val newfragment = TableGuestsActivity()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
                 }
-                R.id.notes -> {
-                    val newfragment = MyNotes()
+
+                R.id.vendor -> {
+                    val newfragment = VendorsAll()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
@@ -203,22 +224,25 @@ class ActivityContainer : AppCompatActivity() {
                 when (clickNavItem) {
                     R.id.event_fragment -> {
                         fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
+                            .replace(R.id.fragment_container, newfragment!!)
                             .commit()
                     }
+
                     R.id.task_fragment -> {
                         fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
+                            .replace(R.id.fragment_container, newfragment!!)
                             .commit()
                     }
-                    R.id.vendor_fragment -> {
+
+                    R.id.notes_fragment -> {
                         fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
+                            .replace(R.id.fragment_container, newfragment!!)
                             .commit()
                     }
+
                     R.id.settings_fragment -> {
                         fm.beginTransaction()
-                            .replace(R.id.fragment_container, newfragment)
+                            .replace(R.id.fragment_container, newfragment!!)
                             .commit()
                     }
                 }

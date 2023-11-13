@@ -26,9 +26,6 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     private lateinit var fragmentMA: MainActivity
     private lateinit var fragmentDE: DashboardEvent
 
-    // Place Image related variables
-    var placeId = ""
-
     constructor(context: Context, fragment: MainActivity) {
         fragmentMA = fragment
         //inflatedView = view
@@ -43,7 +40,6 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
         activefragment = "DE"
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getEventImage() {
         cacheimage = Cache(mContext, this)
         cacheimage.loadimage(EVENTIMAGE)
@@ -70,7 +66,7 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     }
 
     override fun onEmptyEventImage(errorcode: String) {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         val storageRef =
             getImgfromStorage(EVENTIMAGE, user.userid!!, user.eventid)
         cacheimage.save(EVENTIMAGE, storageRef)
@@ -92,7 +88,6 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
         when (activefragment) {
             "DE" -> fragmentDE.onPlaceImage(
                 mContext,
-                inflatedView,
                 image
             )
         }
@@ -101,7 +96,7 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onEmptyPlaceImage(errorcode: String) {
         when (activefragment) {
-            "DE" -> fragmentDE.onEmptyPlaceImageSD(inflatedView)
+            "DE" -> fragmentDE.onEmptyPlaceImageSD()
         }
     }
 
@@ -116,11 +111,10 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     interface PlaceImage {
         fun onPlaceImage(
             context: Context,
-            inflatedView: View?,
             image: Bitmap
         )
 
-        fun onEmptyPlaceImageSD(inflatedView: View?)
+        fun onEmptyPlaceImageSD()
     }
 
     companion object {

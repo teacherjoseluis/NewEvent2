@@ -6,20 +6,21 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.MVP.VendorsAllPresenter
 import com.bridesandgrooms.event.Model.*
-import com.bridesandgrooms.event.ui.ViewAnimation
+import com.bridesandgrooms.event.databinding.VendorsAllBinding
+import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.empty_state.view.*
-import kotlinx.android.synthetic.main.onboardingcard.view.*
-import kotlinx.android.synthetic.main.tableguestsactivity.view.*
-import kotlinx.android.synthetic.main.vendors_all.*
-import kotlinx.android.synthetic.main.vendors_all.view.*
+//import kotlinx.android.synthetic.main.empty_state.view.*
+//import kotlinx.android.synthetic.main.onboardingcard.view.*
+//import kotlinx.android.synthetic.main.tableguestsactivity.view.*
+//import kotlinx.android.synthetic.main.vendors_all.*
+//import kotlinx.android.synthetic.main.vendors_all.view.*
 import java.lang.Exception
 
 class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
@@ -27,7 +28,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
     private lateinit var recyclerViewAllVendor: RecyclerView
     private lateinit var presentervendor: VendorsAllPresenter
     private lateinit var rvAdapter: Rv_VendorAdapter
-    private lateinit var inf: View
+    private lateinit var inf: VendorsAllBinding
 
     private val autocompleteplacecode = 1
     private var placeid: String? = null
@@ -69,8 +70,8 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        inf = inflater.inflate(R.layout.vendors_all, container, false)
 
+        inf = DataBindingUtil.inflate(inflater, R.layout.vendors_all, container, false)
         // Invoking the presenter that will populate the recyclerview
         try {
             presentervendor = VendorsAllPresenter(mContext!!, this)
@@ -87,11 +88,11 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
             //When it's clicked on, the button will rotate and show the additional options
             isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonVendor, !isRotate)
             if (isRotate) {
-                ViewAnimation.showIn(NewVendor)
-                ViewAnimation.showIn(ContactVendor)
+                ViewAnimation.showIn(inf.NewVendor)
+                ViewAnimation.showIn(inf.ContactVendor)
             } else {
-                ViewAnimation.showOut(NewVendor)
-                ViewAnimation.showOut(ContactVendor)
+                ViewAnimation.showOut(inf.NewVendor)
+                ViewAnimation.showOut(inf.ContactVendor)
             }
         }
 
@@ -120,7 +121,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
             newvendor.putExtra("vendorid", "")
             startActivityForResult(newvendor, REQUEST_CODE_CONTACTS)
         }
-        return inf
+        return inf.root
     }
 
 //    override fun onResume() {
@@ -158,7 +159,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 
             recyclerViewAllVendor = inf.recyclerViewVendors
             recyclerViewAllVendor.apply {
-                layoutManager = LinearLayoutManager(inf.context).apply {
+                layoutManager = LinearLayoutManager(inf.root.context).apply {
                     stackFromEnd = true
                     reverseLayout = true
                 }
@@ -185,12 +186,12 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 //        val itemTouchHelper = ItemTouchHelper(swipeController)
 //        itemTouchHelper.attachToRecyclerView(recyclerViewAllVendor)
             inf.withdatav.visibility = ConstraintLayout.VISIBLE
-            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodatav)
-            emptystateLayout.visibility = ConstraintLayout.GONE
+            val emptystateLayout = inf.withnodatav
+            emptystateLayout.root.visibility = ConstraintLayout.GONE
         } else if (vendorpaymentlist.size == 0) {
-            withdatav.visibility = ConstraintLayout.GONE
+            inf.withdatav.visibility = ConstraintLayout.GONE
 
-            val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodatav)
+            val emptystateLayout = inf.withnodatav
 //        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
 //        val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
 //        val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
@@ -199,16 +200,16 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 //        params.bottomMargin = bottomMarginInPixels
 //        emptystateLayout.layoutParams = params
 
-            emptystateLayout.visibility = ConstraintLayout.VISIBLE
-            emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_novendorsmsg)
+            emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
+            emptystateLayout.emptyCard.onboardingmessage.text = getString(R.string.emptystate_novendorsmsg)
         }
     }
 
     override fun onVAVendorsError(errcode: String) {
         // No vendors coming, the regular layout is hidden and the emptystate one is shown
-        withdatav.visibility = ConstraintLayout.GONE
+        inf.withdatav.visibility = ConstraintLayout.GONE
 
-        val emptystateLayout = withnodatav
+        val emptystateLayout = inf.withnodatav
 //        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
 //        val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
 //        val params = emptystateLayout.layoutParams as ViewGroup.MarginLayoutParams
@@ -217,8 +218,8 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
 //        params.bottomMargin = bottomMarginInPixels
 //        emptystateLayout.layoutParams = params
 
-        emptystateLayout.visibility = ConstraintLayout.VISIBLE
-        emptystateLayout.onboardingmessage.text = getString(R.string.emptystate_novendorsmsg)
+        emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
+        emptystateLayout.emptyCard.onboardingmessage.text = getString(R.string.emptystate_novendorsmsg)
 
 //        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
 //        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)

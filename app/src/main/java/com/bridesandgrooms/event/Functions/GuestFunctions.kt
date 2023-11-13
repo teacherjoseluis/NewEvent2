@@ -24,7 +24,7 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         // Adding a new record in Firebase
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         guestmodel.userid = user.userid!!
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -93,7 +93,7 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
         // Updating User information in Local DB
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         guestmodel.userid = user.userid!!
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem
@@ -139,7 +139,7 @@ internal fun editGuest(context: Context, guestitem: Guest) {
         // Updating User information in Local DB
         userdbhelper = UserDBHelper(context)
         //---------------------------------------------------
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())
+        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         guestmodel.userid = user.userid!!
         guestmodel.eventid = user.eventid
         //taskmodel.task = taskitem

@@ -2,7 +2,6 @@ package com.bridesandgrooms.event
 
 import android.content.Context
 import android.util.Log
-import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -45,10 +44,10 @@ class AdManager(private val adDelayTimeMillis: Long) {
                     Log.d(TaskCreateEdit.TAG, "Ad was shown.")
                 }
 
-                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                    // Called when ad fails to show.
-                    Log.d(TaskCreateEdit.TAG, "Ad failed to show.")
-                }
+//                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+//                    // Called when ad fails to show.
+//                    Log.d(TaskCreateEdit.TAG, "Ad failed to show.")
+//                }
 
                 override fun onAdDismissedFullScreenContent() {
                     // Called when ad is dismissed.

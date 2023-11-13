@@ -29,19 +29,18 @@ class TaskPaymentTasksPresenter(
                 }
             }
         }
-        fragment.onTPTasks(view, filteredtasklistactive)
+        fragment.onTPTasks(filteredtasklistactive)
     }
 
     override fun onTaskListError(errcode: String) {
-        fragment.onTPTasksError(view, TaskPresenter.ERRCODETASKS)
+        fragment.onTPTasksError(TaskPresenter.ERRCODETASKS)
     }
 
     interface TPTasks {
         fun onTPTasks(
-            inflatedView: View,
             list: ArrayList<Task>
         )
 
-        fun onTPTasksError(inflatedView: View, errcode: String)
+        fun onTPTasksError(errcode: String)
     }
 }

@@ -14,6 +14,7 @@ import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.Note
 import com.bridesandgrooms.event.Model.NoteDBHelper
+import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 
