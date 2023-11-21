@@ -257,7 +257,8 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         return when (item.itemId) {
             R.id.delete_payment -> {
                 if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
-                    PermissionUtils.alertBox(this, "calendar")
+                    val permissions = PermissionUtils.requestPermissionsList("calendar")
+                    requestPermissions(permissions, PERMISSION_CODE)
                 } else {
                     lifecycleScope.launch {
                         deletePayment(this@PaymentCreateEdit, paymentitem)
@@ -325,8 +326,9 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
 //        if (!checkPaymentPermissions()) {
 //            alertBox()
-        if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
-            PermissionUtils.alertBox(this, "calendar")
+        if (!PermissionUtils.checkPermissions(this, "calendar")) {
+            val permissions = PermissionUtils.requestPermissionsList("calendar")
+            requestPermissions(permissions, PERMISSION_CODE)
         } else {
             if (paymentitem.key == "") {
                 addPayment(this, paymentitem)

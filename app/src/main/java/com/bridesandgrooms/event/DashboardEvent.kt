@@ -656,7 +656,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     override fun onEmptyPlaceImageSD() {
         //Checking for permissions to read the contacts information
         if (!PermissionUtils.checkPermissions(requireActivity().applicationContext, "storage")) {
-            PermissionUtils.alertBox(requireActivity().applicationContext, "storage")
+            val permissions = PermissionUtils.requestPermissionsList("storage")
+            requestPermissions(permissions, PERMISSION_CODE)
         } else {
             //permission already granted
             getImgfromPlaces(

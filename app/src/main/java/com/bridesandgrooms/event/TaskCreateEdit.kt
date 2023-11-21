@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -230,28 +231,29 @@ class TaskCreateEdit : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_task -> {
-                    AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.delete_message))
-                        .setMessage(getString(R.string.delete_entry))
-                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                        // The dialog is automatically dismissed when a dialog button is clicked.
-                        .setPositiveButton(
-                            android.R.string.yes
-                        ) { _, _ ->
-                            if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
-                                PermissionUtils.alertBox(this, "calendar")
-                            } else {
-                                lifecycleScope.launch {
-                                    deleteTask(this@TaskCreateEdit, taskitem)
-                                    disableControls()
-                                }
+                AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.delete_message))
+                    .setMessage(getString(R.string.delete_entry))
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton(
+                        android.R.string.yes
+                    ) { _, _ ->
+                        if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
+                            val permissions = PermissionUtils.requestPermissionsList("calendar")
+                            requestPermissions(permissions, PERMISSION_CODE)
+                        } else {
+                            lifecycleScope.launch {
+                                deleteTask(this@TaskCreateEdit, taskitem)
+                                disableControls()
                             }
                         }
-                        // A null listener allows the button to dismiss the dialog and take no
-                        // further action.
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show()
+                    }
+                    // A null listener allows the button to dismiss the dialog and take no
+                    // further action.
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show()
 //                    val resultIntent = Intent()
 //                    setResult(Activity.RESULT_OK, resultIntent)
 //                    Thread.sleep(1500)
@@ -267,7 +269,8 @@ class TaskCreateEdit : AppCompatActivity() {
                     taskitem.status = Rv_TaskAdapter.ACTIVETASK
                 }
                 if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
-                    PermissionUtils.alertBox(this, "calendar")
+                    val permissions = PermissionUtils.requestPermissionsList("calendar")
+                    requestPermissions(permissions, PERMISSION_CODE)
                 } else {
                     lifecycleScope.launch {
                         editTask(this@TaskCreateEdit, taskitem)
@@ -288,6 +291,7 @@ class TaskCreateEdit : AppCompatActivity() {
 //                super.onOptionsItemSelected(item)
                 true
             }
+
             else -> {
                 super.onOptionsItemSelected(item)
             }
@@ -311,7 +315,8 @@ class TaskCreateEdit : AppCompatActivity() {
     // this function retrieves the name of the category to be saved in the DB
     private fun getCategory(): String {
         var mycategorycode = ""
-        val categoryname = binding.groupedittask.findViewById<Chip>(binding.groupedittask.checkedChipId).text
+        val categoryname =
+            binding.groupedittask.findViewById<Chip>(binding.groupedittask.checkedChipId).text
 
         val list = ArrayList(EnumSet.allOf(Category::class.java))
         for (category in list) {
@@ -337,14 +342,15 @@ class TaskCreateEdit : AppCompatActivity() {
 
     private fun saveTask() {
         taskitem.name = binding.taskname.text.toString()
-        taskitem.date =binding.taskdate.text.toString()
+        taskitem.date = binding.taskdate.text.toString()
         taskitem.budget = binding.taskbudget.text.toString()
         taskitem.category = getCategory()
 
 //        if (!checkPermissions()) {
 //            alertBox()
         if (!PermissionUtils.checkPermissions(applicationContext, "calendar")) {
-            PermissionUtils.alertBox(this, "calendar")
+            val permissions = PermissionUtils.requestPermissionsList("calendar")
+            requestPermissions(permissions, PERMISSION_CODE)
         } else {
             if (taskitem.key == "") {
                 addTask(applicationContext, taskitem)
@@ -442,17 +448,10 @@ class TaskCreateEdit : AppCompatActivity() {
         when (requestCode) {
             TaskCreateEdit.PERMISSION_CODE -> {
                 // Check if all permissions were granted
-                var allPermissionsGranted = true
-                for (result in grantResults) {
-                    if (result != PackageManager.PERMISSION_GRANTED) {
-                        allPermissionsGranted = false
-                        break
-                    }
-                }
-
-                if (allPermissionsGranted) {
-                    // All permissions were granted. Proceed with the desired functionality.
-                    // For example, you can call a method that requires the permissions here.
+                if (grantResults.isNotEmpty() && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED
+                ) {
+                    saveTask()
                 } else {
                     // At least one permission was denied.
                     // You can handle the denial scenario here, such as displaying a message or disabling functionality that requires the permissions.
@@ -464,16 +463,19 @@ class TaskCreateEdit : AppCompatActivity() {
                         calendarpermissions.drawable, "drawable",
                         this.packageName
                     )
-                    binding.permissions.root.findViewById<ImageView>(R.id.permissionicon).setImageResource(resourceId)
+                    binding.permissions.root.findViewById<ImageView>(R.id.permissionicon)
+                        .setImageResource(resourceId)
 
                     val language = this.resources.configuration.locales.get(0).language
                     val permissionwording = when (language) {
                         "en" -> calendarpermissions.permission_wording_en
                         else -> calendarpermissions.permission_wording_es
                     }
-                    binding.permissions.root.findViewById<TextView>(R.id.permissionwording).text = permissionwording
+                    binding.permissions.root.findViewById<TextView>(R.id.permissionwording).text =
+                        permissionwording
 
-                    val openSettingsButton = binding.permissions.root.findViewById<Button>(R.id.permissionsbutton)
+                    val openSettingsButton =
+                        binding.permissions.root.findViewById<Button>(R.id.permissionsbutton)
                     openSettingsButton.setOnClickListener {
                         // Create an intent to open the app settings for your app
                         val intent = Intent()

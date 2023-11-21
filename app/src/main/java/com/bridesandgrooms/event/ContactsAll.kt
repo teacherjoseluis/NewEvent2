@@ -2,6 +2,7 @@ package com.bridesandgrooms.event
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,6 +17,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,6 +55,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
     private lateinit var presenterguest: ContactsAllPresenter
     private lateinit var apptitle: TextView
     private lateinit var rvAdapter: Rv_ContactAdapter
+
     //private lateinit var loadingview: View
     //private lateinit var withdataview: View
     //private lateinit var permissionsview: View
@@ -109,8 +112,12 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         //permissionsview = findViewById(R.id.permissions)
 
         //Checking for permissions to read the contacts information
-        if (!PermissionUtils.checkPermissions(applicationContext, "contact")) {
-            PermissionUtils.alertBox(this, "contact")
+        if (!PermissionUtils.checkPermissions(this, "contact")) {
+            // if (PermissionUtils.alertBox(this)){
+            //PermissionUtils.requestPermissions(this, "contact")
+            // }
+            val permissions = PermissionUtils.requestPermissionsList("contact")
+            requestPermissions(permissions, PERMISSION_CODE)
         } else {
             //permission already granted
             // Call the presenter
@@ -301,8 +308,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                     } catch (e: Exception) {
                         println(e.message)
                     }
-                }
-                else {
+                } else {
                     // Here goes what happens when the permission is not given
                     binding.permissions.root.visibility = ConstraintLayout.VISIBLE
                     val contactpermissions = Permission.getPermission("contact")
@@ -310,16 +316,19 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                         contactpermissions.drawable, "drawable",
                         this.packageName
                     )
-                    binding.permissions.root.findViewById<ImageView>(R.id.permissionicon).setImageResource(resourceId)
+                    binding.permissions.root.findViewById<ImageView>(R.id.permissionicon)
+                        .setImageResource(resourceId)
 
                     val language = this.resources.configuration.locales.get(0).language
                     val permissionwording = when (language) {
-                            "en" -> contactpermissions.permission_wording_en
-                            else -> contactpermissions.permission_wording_es
-                        }
-                    binding.permissions.root.findViewById<TextView>(R.id.permissionwording).text = permissionwording
+                        "en" -> contactpermissions.permission_wording_en
+                        else -> contactpermissions.permission_wording_es
+                    }
+                    binding.permissions.root.findViewById<TextView>(R.id.permissionwording).text =
+                        permissionwording
 
-                    val openSettingsButton = binding.permissions.root.findViewById<Button>(R.id.permissionsbutton)
+                    val openSettingsButton =
+                        binding.permissions.root.findViewById<Button>(R.id.permissionsbutton)
                     openSettingsButton.setOnClickListener {
                         // Create an intent to open the app settings for your app
                         val intent = Intent()
@@ -335,7 +344,6 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
             }
         }
     }
-
 
 
     override fun onSupportNavigateUp(): Boolean {

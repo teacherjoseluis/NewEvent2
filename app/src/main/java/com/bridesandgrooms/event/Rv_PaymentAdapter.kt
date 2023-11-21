@@ -172,9 +172,11 @@ class Rv_PaymentAdapter(
         recyclerView: RecyclerView,
         action: String
     ) {
-        if (!PermissionUtils.checkPermissions(context, "calendar")) {
-            PermissionUtils.alertBox(context as Activity, "calendar")
-        } else {
+//        if (!PermissionUtils.checkPermissions(context, "calendar")) {
+//            if(PermissionUtils.alertBox(context)) {
+//                PermissionUtils.requestPermissions(context as Activity, "calendar")
+//            }
+//        } else {
             try {
                 val paymentswift = paymentList[position]
 
@@ -194,7 +196,7 @@ class Rv_PaymentAdapter(
             } catch (e: Exception) {
                 println(e.message)
             }
-        }
+       // }
     }
 
     companion object {

@@ -59,7 +59,7 @@ object PermissionUtils {
         ActivityCompat.requestPermissions(activity, permissions, TaskCreateEdit.PERMISSION_CODE)
     }
 
-    fun requestPermissions(activity: Activity, permissionType: String) {
+    fun requestPermissionsList(permissionType: String) : Array<String>  {
         val permissions = when (permissionType) {
             "calendar" -> arrayOf(
                 Manifest.permission.READ_CALENDAR,
@@ -76,20 +76,20 @@ object PermissionUtils {
             else -> arrayOf() // Return an empty array if an unsupported permission type is provided
         }
 
-        if (permissions.isNotEmpty()) {
-            ActivityCompat.requestPermissions(activity, permissions, TaskCreateEdit.PERMISSION_CODE)
-        }
+        return permissions
     }
 
-    fun alertBox(context: Context, permissionType: String) {
+    fun alertBox(context: Context) : Boolean {
         val builder = android.app.AlertDialog.Builder(context)
+        var response = false
         builder.setTitle(context.getString(R.string.lackpermissions_message))
         builder.setMessage(context.getString(R.string.lackpermissions_message))
 
         builder.setPositiveButton(
             context.getString(R.string.accept)
         ) { _, _ ->
-            requestPermissions(context as Activity, permissionType)
+            ///requestPermissions(context as Activity, permissionType)
+            response = true
         }
         builder.setNegativeButton(
             "Cancel"
@@ -97,5 +97,6 @@ object PermissionUtils {
 
         val dialog = builder.create()
         dialog.show()
+        return response
     }
 }

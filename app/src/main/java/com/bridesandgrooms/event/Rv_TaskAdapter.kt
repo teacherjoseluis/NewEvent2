@@ -196,9 +196,11 @@ class Rv_TaskAdapter(
 
     override fun onItemSwiftRight(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
         //val user = com.example.newevent2.Functions.getUserSession(context!!)
-        if (!PermissionUtils.checkPermissions(context, "calendar")) {
-            PermissionUtils.alertBox(context as Activity, "calendar")
-        } else {
+//        if (!PermissionUtils.checkPermissions(context, "calendar")) {
+//            if(PermissionUtils.alertBox(context)) {
+//                PermissionUtils.requestPermissions(context as Activity, "calendar")
+//            }
+//        } else {
             val taskswift = taskList[position]
 
             if (action == DELETEACTION) {
@@ -211,7 +213,7 @@ class Rv_TaskAdapter(
 
                 swipeListener.onItemSwiped(taskList)
             }
-        }
+        //}
     }
 
     //-------------------------------------------------------------------------------
