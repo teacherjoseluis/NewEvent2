@@ -29,7 +29,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - teacherjoseluis@gmailc.om
+          - teacherjoseluis@gmail.com
         notify:
           success: true
           failure: false
