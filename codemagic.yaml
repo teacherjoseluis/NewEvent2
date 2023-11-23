@@ -17,6 +17,9 @@ workflows:
       - name: Grant Execute Permission to gradlew
         script: |
           chmod +x gradlew
+      - name: Save variable to ENV file
+        script: | 
+        echo "JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home" >> $CM_ENV
       - name: Build Android release
         script: | 
           LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name "$PACKAGE_NAME")
