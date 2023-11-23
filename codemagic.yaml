@@ -8,6 +8,7 @@ workflows:
         - keystore_reference
       groups:
         - google_play
+        - magic_values
       vars:
         PACKAGE_NAME: "com.bridesandgrooms.event"
     scripts:
@@ -26,7 +27,6 @@ workflows:
           else
               UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
           fi
-          export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
           ./gradlew bundleRelease --stacktrace -PversionCode=$UPDATED_BUILD_NUMBER -PversionName=1.0.$UPDATED_BUILD_NUMBER
     artifacts:
       - app/build/outputs/**/*.aab
