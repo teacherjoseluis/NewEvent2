@@ -28,6 +28,14 @@ workflows:
               UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
           fi
           ./gradlew bundleRelease --stacktrace -PversionCode=$UPDATED_BUILD_NUMBER -PversionName=1.0.$UPDATED_BUILD_NUMBER
+      - name: Set up key.properties
+        script: | 
+          cat >> "$CM_BUILD_DIR/project_directory/android/key.properties" <<EOF
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyPassword=$CM_KEY_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          storeFile=$CM_KEYSTORE_PATH
+          EOF 
     artifacts:
       - app/build/outputs/**/*.aab
     publishing:
