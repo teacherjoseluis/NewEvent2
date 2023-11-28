@@ -12,14 +12,6 @@ workflows:
       vars:
         PACKAGE_NAME: "com.bridesandgrooms.event"
     scripts:
-      - name: Set up key.properties
-        script: | 
-          cat >> "$CM_BUILD_DIR/key.properties" <<EOF
-          storePassword=$CM_KEYSTORE_PASSWORD
-          keyPassword=$CM_KEY_PASSWORD
-          keyAlias=$CM_KEY_ALIAS
-          storeFile=$CM_KEYSTORE_PATH
-          EOF 
       - name: Set Android SDK location
         script: | 
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
@@ -36,6 +28,17 @@ workflows:
               UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
           fi
           ./gradlew bundleRelease --stacktrace -PversionCode=$UPDATED_BUILD_NUMBER -PversionName=1.0.$UPDATED_BUILD_NUMBER
+        - name: Set up key.properties
+          script: | 
+            cat >> "$CM_BUILD_DIR/key.properties" <<EOF
+            storePassword=$CM_KEYSTORE_PASSWORD
+            keyPassword=$CM_KEY_PASSWORD
+            keyAlias=$CM_KEY_ALIAS
+            storeFile=$CM_KEYSTORE_PATH
+            EOF 
+        - name: Signing the bundle
+          script: |
+            jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore $($CM_BUILD_DIR/key.properties) -storepass $(storePassword) -keypass $(keyPassword) $(CM_BUILD_OUTPUT_DIR)/app-release.aab $(keyAlias)
     artifacts:
       - app/build/outputs/**/*.aab
     publishing:
