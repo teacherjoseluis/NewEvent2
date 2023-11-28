@@ -30,7 +30,7 @@ workflows:
           ./gradlew bundleRelease --stacktrace -PversionCode=$UPDATED_BUILD_NUMBER -PversionName=1.0.$UPDATED_BUILD_NUMBER
       - name: Set up key.properties
         script: | 
-          cat >> "$CM_BUILD_DIR/project_directory/android/key.properties" <<EOF
+          cat >> "$CM_BUILD_DIR/key.properties" <<EOF
           storePassword=$CM_KEYSTORE_PASSWORD
           keyPassword=$CM_KEY_PASSWORD
           keyAlias=$CM_KEY_ALIAS
