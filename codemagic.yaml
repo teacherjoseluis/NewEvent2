@@ -38,7 +38,7 @@ workflows:
           EOF 
       - name: Signing the bundle
         script: |
-          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore "$CM_KEYSTORE_PATH/keystore_reference" -storepass "$CM_KEYSTORE_PASSWORD" -keypass "$CM_KEY_PASSWORD" "$CM_BUILD_OUTPUT_DIR/app-release.aab" "$CM_KEY_ALIAS"
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore "$CM_KEYSTORE_PATH" -storepass "$CM_KEYSTORE_PASSWORD" -keypass "$CM_KEY_PASSWORD" "$CM_BUILD_OUTPUT_DIR/app-release.aab" "$CM_KEY_ALIAS"
     artifacts:
       - app/build/outputs/**/*.aab
     publishing:
