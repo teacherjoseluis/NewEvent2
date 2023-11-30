@@ -36,6 +36,16 @@ workflows:
           keyAlias=$CM_KEY_ALIAS
           storeFile=$CM_KEYSTORE_PATH
           EOF
+      - name: Wait for bundle file
+        script: |
+          # Define the path to the bundle file
+          BUNDLE_FILE="${CM_BUILD_OUTPUT_DIR}/app-release.aab"
+      
+          # Wait for the bundle file to be created (poll every 10 seconds)
+          while [ ! -f "$BUNDLE_FILE" ]; do
+              echo "Waiting for bundle file to be created..."
+              sleep 10
+          done
       - name: Set file permissions for app-release.aab
         script: |
           # Change the permissions for app-release.aab
