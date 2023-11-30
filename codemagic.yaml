@@ -39,10 +39,10 @@ workflows:
       - name: Set file permissions for app-release.aab
         script: |
           # Change the permissions for app-release.aab
-          chmod 644 "$CM_BUILD_OUTPUT_DIR"/app-release.aab
+          chmod 644 ${CM_BUILD_OUTPUT_DIR}/app-release.aab
       - name: Signing the bundle
         script: |
-          jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$CM_KEYSTORE_PATH" -storepass "$CM_KEYSTORE_PASSWORD" -keypass "$CM_KEY_PASSWORD" "$CM_BUILD_OUTPUT_DIR"/app-release.aab "$CM_KEY_ALIAS"
+          jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$CM_KEYSTORE_PATH" -storepass "$CM_KEYSTORE_PASSWORD" -keypass "$CM_KEY_PASSWORD" ${CM_BUILD_OUTPUT_DIR}/app-release.aab "$CM_KEY_ALIAS"
     artifacts:
       - app/build/outputs/**/*.aab
     publishing:
