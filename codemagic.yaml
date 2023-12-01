@@ -18,7 +18,7 @@ workflows:
       - name: Grant Execute Permission to gradlew
         script: |
           chmod +x gradlew
-      - name: Build Android release
+      - name: Build_Android_release
         script: | 
           LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name "$PACKAGE_NAME")
           if [ -z $LATEST_GOOGLE_PLAY_BUILD_NUMBER ]; then
@@ -46,6 +46,8 @@ workflows:
               echo "Waiting for bundle file to be created..."
               sleep 10
           done
+        needs: 
+          - Build_Android_release
       - name: Set file permissions for app-release.aab
         script: |
           # Change the permissions for app-release.aab
