@@ -15,10 +15,12 @@ workflows:
       - name: Set Android SDK location
         script: | 
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+          
       - name: Grant Execute Permission to gradlew
         script: |
           chmod +x gradlew
-      - name: Build_Android_release
+          
+      - name: Build Android release
         script: | 
           LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name "$PACKAGE_NAME")
           if [ -z $LATEST_GOOGLE_PLAY_BUILD_NUMBER ]; then
@@ -28,6 +30,8 @@ workflows:
               UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
           fi
           ./gradlew bundleRelease --stacktrace -PversionCode=$UPDATED_BUILD_NUMBER -PversionName=1.0.$UPDATED_BUILD_NUMBER
+          chmod 644 "${CM_BUILD_OUTPUT_DIR}/app-release.aab"
+          
       - name: Set up key.properties
         script: | 
           cat >> "$CM_BUILD_DIR/key.properties" <<EOF
@@ -36,25 +40,27 @@ workflows:
           keyAlias=$CM_KEY_ALIAS
           storeFile=$CM_KEYSTORE_PATH
           EOF
-      - name: Wait for bundle file
-        script: |
-          # Define the path to the bundle file
-          BUNDLE_FILE="${CM_BUILD_OUTPUT_DIR}/app-release.aab"
-      
-          # Wait for the bundle file to be created (poll every 10 seconds)
-          while [ ! -f "$BUNDLE_FILE" ]; do
-              echo "Waiting for bundle file to be created..."
-              sleep 10
-          done
-          needs: 
-            - Build_Android_release
-      - name: Set file permissions for app-release.aab
-        script: |
-          # Change the permissions for app-release.aab
-          chmod 644 "${CM_BUILD_OUTPUT_DIR}/app-release.aab"
+          
+      #- name: Wait for bundle file
+      #  script: |
+      #    # Define the path to the bundle file
+      #    BUNDLE_FILE="${CM_BUILD_OUTPUT_DIR}/app-release.aab"
+      # 
+      #    # Wait for the bundle file to be created (poll every 10 seconds)
+      #    while [ ! -f "$BUNDLE_FILE" ]; do
+      #        echo "Waiting for bundle file to be created..."
+      #        sleep 10
+      #    done
+          
+      #- name: Set file permissions for app-release.aab
+      #  script: |
+      #    # Change the permissions for app-release.aab
+      #    chmod 644 "${CM_BUILD_OUTPUT_DIR}/app-release.aab"
+          
       - name: Signing the bundle
         script: |
           jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$CM_KEYSTORE_PATH" -storepass "$CM_KEYSTORE_PASSWORD" -keypass "$CM_KEY_PASSWORD" ${CM_BUILD_OUTPUT_DIR}/app-release.aab "$CM_KEY_ALIAS"
+          
     artifacts:
       - app/build/outputs/**/*.aab
     publishing:
