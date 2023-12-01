@@ -5,7 +5,7 @@ workflows:
     instance_type: mac_mini_m1
     environment:
       android_signing:
-        - keystore_reference
+        - bridesandgrooms_keystore
       groups:
         - google_play
         - magic_values
