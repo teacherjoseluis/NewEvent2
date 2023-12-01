@@ -46,8 +46,8 @@ workflows:
               echo "Waiting for bundle file to be created..."
               sleep 10
           done
-        needs: 
-          - Build_Android_release
+          needs: 
+            - Build_Android_release
       - name: Set file permissions for app-release.aab
         script: |
           # Change the permissions for app-release.aab
