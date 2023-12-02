@@ -29,6 +29,7 @@ workflows:
           else
               UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
           fi
+          UPDATED_BUILD_NUMBER=$((BUILD_NUMBER + 1))
           ./gradlew bundleRelease --stacktrace -PversionCode=$UPDATED_BUILD_NUMBER -PversionName=1.0.$UPDATED_BUILD_NUMBER
           
       - name: Set up key.properties
