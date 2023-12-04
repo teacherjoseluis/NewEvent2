@@ -1,0 +1,519 @@
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#Fri Sep 15 14:31:10 GMT-06:00 2023\r\ndistributionBase=GRADLE_USER_HOME\r\ndistributionPath=wrapper/dists\r\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-8.1.1-all.zip\r\nzipStoreBase=GRADLE_USER_HOME\r\nzipStorePath=wrapper/dists\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+--- a/gradle/wrapper/gradle-wrapper.properties	(revision 57a862882e158ac7cba7a35b82d7935803914e69)
++++ b/gradle/wrapper/gradle-wrapper.properties	(date 1700679383625)
+@@ -1,6 +1,6 @@
+-#Fri Sep 15 14:31:10 GMT-06:00 2023
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-8.1.1-all.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-8.1.1-bin.zip
++networkTimeout=10000
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
+Index: gradlew.bat
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>@if \"%DEBUG%\" == \"\" @echo off\r\n@rem ##########################################################################\r\n@rem\r\n@rem  Gradle startup script for Windows\r\n@rem\r\n@rem ##########################################################################\r\n\r\n@rem Set local scope for the variables with windows NT shell\r\nif \"%OS%\"==\"Windows_NT\" setlocal\r\n\r\nset DIRNAME=%~dp0\r\nif \"%DIRNAME%\" == \"\" set DIRNAME=.\r\nset APP_BASE_NAME=%~n0\r\nset APP_HOME=%DIRNAME%\r\n\r\n@rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.\r\nset DEFAULT_JVM_OPTS=\r\n\r\n@rem Find java.exe\r\nif defined JAVA_HOME goto findJavaFromJavaHome\r\n\r\nset JAVA_EXE=java.exe\r\n%JAVA_EXE% -version >NUL 2>&1\r\nif \"%ERRORLEVEL%\" == \"0\" goto init\r\n\r\necho.\r\necho ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.\r\necho.\r\necho Please set the JAVA_HOME variable in your environment to match the\r\necho location of your Java installation.\r\n\r\ngoto fail\r\n\r\n:findJavaFromJavaHome\r\nset JAVA_HOME=%JAVA_HOME:\"=%\r\nset JAVA_EXE=%JAVA_HOME%/bin/java.exe\r\n\r\nif exist \"%JAVA_EXE%\" goto init\r\n\r\necho.\r\necho ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%\r\necho.\r\necho Please set the JAVA_HOME variable in your environment to match the\r\necho location of your Java installation.\r\n\r\ngoto fail\r\n\r\n:init\r\n@rem Get command-line arguments, handling Windows variants\r\n\r\nif not \"%OS%\" == \"Windows_NT\" goto win9xME_args\r\n\r\n:win9xME_args\r\n@rem Slurp the command line arguments.\r\nset CMD_LINE_ARGS=\r\nset _SKIP=2\r\n\r\n:win9xME_args_slurp\r\nif \"x%~1\" == \"x\" goto execute\r\n\r\nset CMD_LINE_ARGS=%*\r\n\r\n:execute\r\n@rem Setup the command line\r\n\r\nset CLASSPATH=%APP_HOME%\\gradle\\wrapper\\gradle-wrapper.jar\r\n\r\n@rem Execute Gradle\r\n\"%JAVA_EXE%\" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% \"-Dorg.gradle.appname=%APP_BASE_NAME%\" -classpath \"%CLASSPATH%\" org.gradle.wrapper.GradleWrapperMain %CMD_LINE_ARGS%\r\n\r\n:end\r\n@rem End local scope for the variables with windows NT shell\r\nif \"%ERRORLEVEL%\"==\"0\" goto mainEnd\r\n\r\n:fail\r\nrem Set variable GRADLE_EXIT_CONSOLE if you need the _script_ return code instead of\r\nrem the _cmd.exe /c_ return code!\r\nif  not \"\" == \"%GRADLE_EXIT_CONSOLE%\" exit 1\r\nexit /b 1\r\n\r\n:mainEnd\r\nif \"%OS%\"==\"Windows_NT\" endlocal\r\n\r\n:omega\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradlew.bat b/gradlew.bat
+--- a/gradlew.bat	(revision 57a862882e158ac7cba7a35b82d7935803914e69)
++++ b/gradlew.bat	(date 1700679384243)
+@@ -1,4 +1,20 @@
+-@if "%DEBUG%" == "" @echo off
++@rem
++@rem Copyright 2015 the original author or authors.
++@rem
++@rem Licensed under the Apache License, Version 2.0 (the "License");
++@rem you may not use this file except in compliance with the License.
++@rem You may obtain a copy of the License at
++@rem
++@rem      https://www.apache.org/licenses/LICENSE-2.0
++@rem
++@rem Unless required by applicable law or agreed to in writing, software
++@rem distributed under the License is distributed on an "AS IS" BASIS,
++@rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++@rem See the License for the specific language governing permissions and
++@rem limitations under the License.
++@rem
++
++@if "%DEBUG%"=="" @echo off
+ @rem ##########################################################################
+ @rem
+ @rem  Gradle startup script for Windows
+@@ -9,19 +25,23 @@
+ if "%OS%"=="Windows_NT" setlocal
+ 
+ set DIRNAME=%~dp0
+-if "%DIRNAME%" == "" set DIRNAME=.
++if "%DIRNAME%"=="" set DIRNAME=.
++@rem This is normally unused
+ set APP_BASE_NAME=%~n0
+ set APP_HOME=%DIRNAME%
+ 
++@rem Resolve any "." and ".." in APP_HOME to make it shorter.
++for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
++
+ @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
+-set DEFAULT_JVM_OPTS=
++set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
+ 
+ @rem Find java.exe
+ if defined JAVA_HOME goto findJavaFromJavaHome
+ 
+ set JAVA_EXE=java.exe
+ %JAVA_EXE% -version >NUL 2>&1
+-if "%ERRORLEVEL%" == "0" goto init
++if %ERRORLEVEL% equ 0 goto execute
+ 
+ echo.
+ echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+@@ -35,7 +55,7 @@
+ set JAVA_HOME=%JAVA_HOME:"=%
+ set JAVA_EXE=%JAVA_HOME%/bin/java.exe
+ 
+-if exist "%JAVA_EXE%" goto init
++if exist "%JAVA_EXE%" goto execute
+ 
+ echo.
+ echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%
+@@ -45,38 +65,26 @@
+ 
+ goto fail
+ 
+-:init
+-@rem Get command-line arguments, handling Windows variants
+-
+-if not "%OS%" == "Windows_NT" goto win9xME_args
+-
+-:win9xME_args
+-@rem Slurp the command line arguments.
+-set CMD_LINE_ARGS=
+-set _SKIP=2
+-
+-:win9xME_args_slurp
+-if "x%~1" == "x" goto execute
+-
+-set CMD_LINE_ARGS=%*
+-
+ :execute
+ @rem Setup the command line
+ 
+ set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
+ 
++
+ @rem Execute Gradle
+-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %CMD_LINE_ARGS%
++"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %*
+ 
+ :end
+ @rem End local scope for the variables with windows NT shell
+-if "%ERRORLEVEL%"=="0" goto mainEnd
++if %ERRORLEVEL% equ 0 goto mainEnd
+ 
+ :fail
+ rem Set variable GRADLE_EXIT_CONSOLE if you need the _script_ return code instead of
+ rem the _cmd.exe /c_ return code!
+-if  not "" == "%GRADLE_EXIT_CONSOLE%" exit 1
+-exit /b 1
++set EXIT_CODE=%ERRORLEVEL%
++if %EXIT_CODE% equ 0 set EXIT_CODE=1
++if not ""=="%GRADLE_EXIT_CONSOLE%" exit %EXIT_CODE%
++exit /b %EXIT_CODE%
+ 
+ :mainEnd
+ if "%OS%"=="Windows_NT" endlocal
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.application'\r\napply plugin: 'kotlin-android'\r\n//apply plugin: 'kotlin-android-extensions'\r\napply plugin: 'kotlin-parcelize'\r\napply plugin: 'kotlin-kapt'\r\napply plugin: 'com.google.gms.google-services'\r\napply plugin: 'com.google.firebase.crashlytics'\r\napply plugin: 'com.google.firebase.firebase-perf'\r\n\r\n\r\nandroid {\r\n    namespace = \"com.bridesandgrooms.event\"\r\n    compileSdkVersion 34\r\n\r\n    defaultConfig {\r\n        configurations.configureEach {\r\n            resolutionStrategy {force 'androidx.core:core-ktx:1.6.0'}\r\n        }\r\n        applicationId \"com.bridesandgrooms.event\"\r\n        minSdkVersion 26\r\n        targetSdkVersion 34\r\n        versionCode 13\r\n        versionName \"1.0\"\r\n        // Required ONLY when setting minSdkVersion to 20 or lower\r\n        multiDexEnabled true\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n        vectorDrawables.useSupportLibrary = true\r\n\r\n        //multiDexEnabled true\r\n    }\r\n\r\n//    signingConfigs {\r\n//        release {\r\n//            storeFile file(\"C:/Users/josel/StudioProjects/NewEvent2/KeyStore/keystore.jks\")\r\n//            storePassword \"80ligomA\"\r\n//            keyAlias \"bridesandgrooms_keystore\"\r\n//            keyPassword \"80ligomA\"\r\n//        }\r\n//    }\r\n\r\n//    buildFeatures {\r\n//        // Enables Jetpack Compose for this module\r\n//        compose = true\r\n//    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n            //signingConfig signingConfigs.release\r\n        }\r\n        old_gradle {\r\n        }\r\n    }\r\n\r\n//    task runAppiumTests(type: Exec) {\r\n//        workingDir \"C:\\\\Users\\\\josel\\\\Downloads\\\\BridalAndGroom2\\\\BridalAndGroom\"\r\n//        commandLine \"cmd\", \"/c\", \"mvn\", \"test\", \"-P\", \"BS_Samsung_Galaxy_S21\"\r\n//        standardOutput = new ByteArrayOutputStream()\r\n//        errorOutput = new ByteArrayOutputStream()\r\n//\r\n//        doLast {\r\n//            println \"Running Maven tests...\"\r\n//            def result = exec {\r\n//                // The working directory is set to the one specified above\r\n//                workingDir workingDir\r\n//                commandLine \"cmd\", \"/c\", \"mvn\", \"test\", \"-P\", \"BS_Samsung_Galaxy_S21\"\r\n//                standardOutput = standardOutput\r\n//                errorOutput = errorOutput\r\n//            }\r\n//\r\n//            println \"Command: ${result.commandLine}\"\r\n//            println \"Standard Output: ${result.standardOutput.toString()}\"\r\n//            println \"Error Output: ${result.errorOutput.toString()}\"\r\n//\r\n//            if (result.exitValue() == 0) {\r\n//                println \"Tests executed successfully.\"\r\n//            } else {\r\n//                throw new GradleException(\"Maven tests failed.\")\r\n//            }\r\n//        }\r\n//    }\r\n\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_17\r\n        targetCompatibility JavaVersion.VERSION_17\r\n        // Flag to enable support for the new language APIs\r\n        //coreLibraryDesugaringEnabled true\r\n    }\r\n    kotlinOptions {\r\n        jvmTarget = '11'\r\n    }\r\n\r\n    buildFeatures {\r\n        dataBinding = true\r\n        viewBinding = true\r\n    }\r\n\r\n    // Configure your custom task to run at the end of the build\r\n//    gradle.assembleRelease {\r\n//        tasks.whenTaskAdded { task ->\r\n//            if (task.name == \"assembleRelease\") {\r\n//                // Ensure that runAppiumTests runs after assembleRelease\r\n//                task.finalizedBy runAppiumTests\r\n//            }\r\n//        }\r\n//    }\r\n}\r\n\r\nrepositories {\r\n    mavenCentral()\r\n    google()\r\n    maven { url \"https://jitpack.io\" }\r\n    maven { url \"https://maven.google.com\" }\r\n}\r\n\r\ndependencies {\r\n    implementation fileTree(dir: \"libs\", include: [\"*.jar\"])\r\n    implementation \"org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version\"\r\n    implementation 'androidx.core:core-ktx:1.12.0'\r\n    implementation 'androidx.appcompat:appcompat:1.6.1'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'\r\n    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.2'\r\n    implementation 'androidx.navigation:navigation-ui-ktx:2.7.2'\r\n    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'\r\n    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'\r\n    //implementation 'androidx.navigation:navigation-fragment-ktx:2.7.2'\r\n    //implementation 'androidx.navigation:navigation-ui-ktx:2.7.2'\r\n    implementation 'com.google.android.gms:play-services-maps:18.1.0'\r\n    implementation 'com.google.android.gms:play-services-location:21.0.1'\r\n    implementation 'com.google.android.libraries.places:places:3.2.0'\r\n    implementation 'com.google.firebase:firebase-storage-ktx:20.2.1'\r\n    implementation 'androidx.viewpager2:viewpager2:1.0.0'\r\n    implementation 'androidx.legacy:legacy-support-v4:1.0.0'\r\n    implementation 'androidx.viewpager:viewpager:1.0.0'\r\n    testImplementation 'junit:junit:4.13.2'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.5'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'\r\n    implementation 'com.google.android.material:material:1.9.0'\r\n    implementation 'com.google.firebase:firebase-analytics:21.3.0'\r\n    implementation 'com.google.firebase:firebase-database-ktx:20.2.2'\r\n    implementation 'androidx.cardview:cardview:1.0.0'\r\n    implementation 'com.github.bumptech.glide:glide:4.10.0'\r\n    kapt 'com.github.bumptech.glide:compiler:4.10.0'\r\n    implementation 'com.android.support:multidex:1.0.3'\r\n    implementation 'com.firebaseui:firebase-ui-storage:8.0.2'\r\n    implementation 'com.github.yalantis:ucrop:2.2.6'\r\n    //implementation(\"com.vanniktech:android-image-cropper:4.3.3\")\r\n    //implementation 'com.github.CanHub:Android-Image-Cropper:4.5.0'\r\n    //implementation 'com.github.yalantis:ucrop:2.2.6-native'\r\n    implementation 'androidx.vectordrawable:vectordrawable:1.2.0-beta01'\r\n    implementation 'com.github.BlacKCaT27:CurrencyEditText:2.0.2'\r\n    //coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'\r\n    //implementation 'com.github.kizitonwose:CalendarView:1.0.0'\r\n    implementation 'com.applandeo:material-calendar-view:1.9.0-rc06'\r\n    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'\r\n    implementation platform('com.google.firebase:firebase-bom:30.4.1')\r\n    implementation 'com.google.firebase:firebase-auth-ktx'\r\n    implementation 'com.google.android.gms:play-services-auth:20.7.0'\r\n//    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'\r\n    //implementation 'com.google.firebase:firebase-admin:7.0.1'\r\n    implementation 'androidx.core:core-ktx:1.12.0'\r\n    // implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'\r\n//    implementation(\"androidx.compose.ui:ui:1.0.0-beta07\")\r\n//    // Tooling support (Previews, etc.)\r\n//    implementation(\"androidx.compose.ui:ui-tooling:1.0.0-beta07\")\r\n//    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)\r\n//    implementation(\"androidx.compose.foundation:foundation:1.0.0-beta07\")\r\n//    // Material Design\r\n//    implementation(\"androidx.compose.material:material:1.0.0-beta07\")\r\n//    // Material design icons\r\n//    implementation(\"androidx.compose.material:material-icons-core:1.0.0-beta07\")\r\n//    implementation(\"androidx.compose.material:material-icons-extended:1.0.0-beta07\")\r\n//    // Integration with observables\r\n//    implementation(\"androidx.compose.runtime:runtime-livedata:1.0.0-beta07\")\r\n//    implementation(\"androidx.compose.runtime:runtime-rxjava2:1.0.0-beta07\")\r\n//\r\n//    // UI Tests\r\n//    androidTestImplementation(\"androidx.compose.ui:ui-test-junit4:1.0.0-beta07\")\r\n    implementation 'com.github.baoyachi:StepView:1.9'\r\n    implementation 'com.github.sakshampruthi:custom-loading-screen:1.0.2'\r\n    implementation 'com.airbnb.android:lottie:3.6.0'\r\n    implementation 'com.github.mohammadatif:CircularImageView:1.0.1'\r\n    implementation 'com.redmadrobot:acronym-avatar:2.0'\r\n    implementation 'com.github.madrapps:pikolo:2.0.2'\r\n    implementation 'com.google.firebase:firebase-crashlytics:18.4.3'\r\n    implementation 'com.google.firebase:firebase-perf-ktx'\r\n    implementation 'com.github.Dan629pl:nordan-material-dialog-android:1.0.7'\r\n    implementation 'com.google.android.play:core-ktx:1.8.1'\r\n    implementation 'com.google.firebase:firebase-core:21.1.1'\r\n    implementation 'com.google.android.gms:play-services-tagmanager:18.0.3'\r\n    implementation 'com.google.firebase:firebase-analytics:21.3.0'\r\n    implementation 'com.google.firebase:firebase-messaging:23.2.1'\r\n    implementation 'com.google.firebase:firebase-ads:22.4.0'\r\n    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1'\r\n\r\n    implementation 'com.android.support:support-annotations:28.0.0'\r\n    annotationProcessor 'com.android.support:support-annotations:28.0.0'\r\n    //implementation 'me.gujun.android.taggroup:library:1.4@aar'\r\n//    implementation 'co.lujun:androidtagview:1.1.7'\r\n//    implementation 'androidx.appcompat:appcompat:1.0.1'\r\n    implementation 'com.google.firebase:firebase-config:21.4.1'\r\n    implementation 'com.google.firebase:firebase-messaging:23.2.1'\r\n    implementation 'com.github.kcrimi:ToolTipDialog:1.1.4'\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision 57a862882e158ac7cba7a35b82d7935803914e69)
++++ b/app/build.gradle	(date 1700682580972)
+@@ -89,7 +89,7 @@
+         //coreLibraryDesugaringEnabled true
+     }
+     kotlinOptions {
+-        jvmTarget = '11'
++        jvmTarget = '17'
+     }
+ 
+     buildFeatures {
+Index: gradlew
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#!/usr/bin/env sh\r\n\r\n##############################################################################\r\n##\r\n##  Gradle start up script for UN*X\r\n##\r\n##############################################################################\r\n\r\n# Attempt to set APP_HOME\r\n# Resolve links: $0 may be a link\r\nPRG=\"$0\"\r\n# Need this for relative symlinks.\r\nwhile [ -h \"$PRG\" ] ; do\r\n    ls=`ls -ld \"$PRG\"`\r\n    link=`expr \"$ls\" : '.*-> \\(.*\\)$'`\r\n    if expr \"$link\" : '/.*' > /dev/null; then\r\n        PRG=\"$link\"\r\n    else\r\n        PRG=`dirname \"$PRG\"`\"/$link\"\r\n    fi\r\ndone\r\nSAVED=\"`pwd`\"\r\ncd \"`dirname \\\"$PRG\\\"`/\" >/dev/null\r\nAPP_HOME=\"`pwd -P`\"\r\ncd \"$SAVED\" >/dev/null\r\n\r\nAPP_NAME=\"Gradle\"\r\nAPP_BASE_NAME=`basename \"$0\"`\r\n\r\n# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.\r\nDEFAULT_JVM_OPTS=\"\"\r\n\r\n# Use the maximum available, or set MAX_FD != -1 to use that value.\r\nMAX_FD=\"maximum\"\r\n\r\nwarn () {\r\n    echo \"$*\"\r\n}\r\n\r\ndie () {\r\n    echo\r\n    echo \"$*\"\r\n    echo\r\n    exit 1\r\n}\r\n\r\n# OS specific support (must be 'true' or 'false').\r\ncygwin=false\r\nmsys=false\r\ndarwin=false\r\nnonstop=false\r\ncase \"`uname`\" in\r\n  CYGWIN* )\r\n    cygwin=true\r\n    ;;\r\n  Darwin* )\r\n    darwin=true\r\n    ;;\r\n  MINGW* )\r\n    msys=true\r\n    ;;\r\n  NONSTOP* )\r\n    nonstop=true\r\n    ;;\r\nesac\r\n\r\nCLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar\r\n\r\n# Determine the Java command to use to start the JVM.\r\nif [ -n \"$JAVA_HOME\" ] ; then\r\n    if [ -x \"$JAVA_HOME/jre/sh/java\" ] ; then\r\n        # IBM's JDK on AIX uses strange locations for the executables\r\n        JAVACMD=\"$JAVA_HOME/jre/sh/java\"\r\n    else\r\n        JAVACMD=\"$JAVA_HOME/bin/java\"\r\n    fi\r\n    if [ ! -x \"$JAVACMD\" ] ; then\r\n        die \"ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME\r\n\r\nPlease set the JAVA_HOME variable in your environment to match the\r\nlocation of your Java installation.\"\r\n    fi\r\nelse\r\n    JAVACMD=\"java\"\r\n    which java >/dev/null 2>&1 || die \"ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.\r\n\r\nPlease set the JAVA_HOME variable in your environment to match the\r\nlocation of your Java installation.\"\r\nfi\r\n\r\n# Increase the maximum file descriptors if we can.\r\nif [ \"$cygwin\" = \"false\" -a \"$darwin\" = \"false\" -a \"$nonstop\" = \"false\" ] ; then\r\n    MAX_FD_LIMIT=`ulimit -H -n`\r\n    if [ $? -eq 0 ] ; then\r\n        if [ \"$MAX_FD\" = \"maximum\" -o \"$MAX_FD\" = \"max\" ] ; then\r\n            MAX_FD=\"$MAX_FD_LIMIT\"\r\n        fi\r\n        ulimit -n $MAX_FD\r\n        if [ $? -ne 0 ] ; then\r\n            warn \"Could not set maximum file descriptor limit: $MAX_FD\"\r\n        fi\r\n    else\r\n        warn \"Could not query maximum file descriptor limit: $MAX_FD_LIMIT\"\r\n    fi\r\nfi\r\n\r\n# For Darwin, add options to specify how the application appears in the dock\r\nif $darwin; then\r\n    GRADLE_OPTS=\"$GRADLE_OPTS \\\"-Xdock:name=$APP_NAME\\\" \\\"-Xdock:icon=$APP_HOME/media/gradle.icns\\\"\"\r\nfi\r\n\r\n# For Cygwin, switch paths to Windows format before running java\r\nif $cygwin ; then\r\n    APP_HOME=`cygpath --path --mixed \"$APP_HOME\"`\r\n    CLASSPATH=`cygpath --path --mixed \"$CLASSPATH\"`\r\n    JAVACMD=`cygpath --unix \"$JAVACMD\"`\r\n\r\n    # We build the pattern for arguments to be converted via cygpath\r\n    ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2>/dev/null`\r\n    SEP=\"\"\r\n    for dir in $ROOTDIRSRAW ; do\r\n        ROOTDIRS=\"$ROOTDIRS$SEP$dir\"\r\n        SEP=\"|\"\r\n    done\r\n    OURCYGPATTERN=\"(^($ROOTDIRS))\"\r\n    # Add a user-defined pattern to the cygpath arguments\r\n    if [ \"$GRADLE_CYGPATTERN\" != \"\" ] ; then\r\n        OURCYGPATTERN=\"$OURCYGPATTERN|($GRADLE_CYGPATTERN)\"\r\n    fi\r\n    # Now convert the arguments - kludge to limit ourselves to /bin/sh\r\n    i=0\r\n    for arg in \"$@\" ; do\r\n        CHECK=`echo \"$arg\"|egrep -c \"$OURCYGPATTERN\" -`\r\n        CHECK2=`echo \"$arg\"|egrep -c \"^-\"`                                 ### Determine if an option\r\n\r\n        if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then                    ### Added a condition\r\n            eval `echo args$i`=`cygpath --path --ignore --mixed \"$arg\"`\r\n        else\r\n            eval `echo args$i`=\"\\\"$arg\\\"\"\r\n        fi\r\n        i=$((i+1))\r\n    done\r\n    case $i in\r\n        (0) set -- ;;\r\n        (1) set -- \"$args0\" ;;\r\n        (2) set -- \"$args0\" \"$args1\" ;;\r\n        (3) set -- \"$args0\" \"$args1\" \"$args2\" ;;\r\n        (4) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" ;;\r\n        (5) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" ;;\r\n        (6) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" \"$args5\" ;;\r\n        (7) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" \"$args5\" \"$args6\" ;;\r\n        (8) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" \"$args5\" \"$args6\" \"$args7\" ;;\r\n        (9) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" \"$args5\" \"$args6\" \"$args7\" \"$args8\" ;;\r\n    esac\r\nfi\r\n\r\n# Escape application args\r\nsave () {\r\n    for i do printf %s\\\\n \"$i\" | sed \"s/'/'\\\\\\\\''/g;1s/^/'/;\\$s/\\$/' \\\\\\\\/\" ; done\r\n    echo \" \"\r\n}\r\nAPP_ARGS=$(save \"$@\")\r\n\r\n# Collect all arguments for the java command, following the shell quoting and substitution rules\r\neval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS \"\\\"-Dorg.gradle.appname=$APP_BASE_NAME\\\"\" -classpath \"\\\"$CLASSPATH\\\"\" org.gradle.wrapper.GradleWrapperMain \"$APP_ARGS\"\r\n\r\n# by default we should be in the correct project dir, but when run from Finder on Mac, the cwd is wrong\r\nif [ \"$(uname)\" = \"Darwin\" ] && [ \"$HOME\" = \"$PWD\" ]; then\r\n  cd \"$(dirname \"$0\")\"\r\nfi\r\n\r\nexec \"$JAVACMD\" \"$@\"\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradlew b/gradlew
+--- a/gradlew	(revision 57a862882e158ac7cba7a35b82d7935803914e69)
++++ b/gradlew	(date 1700679384163)
+@@ -1,78 +1,126 @@
+-#!/usr/bin/env sh
++#!/bin/sh
++
++#
++# Copyright © 2015-2021 the original authors.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#      https://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
+ 
+ ##############################################################################
+-##
+-##  Gradle start up script for UN*X
+-##
++#
++#   Gradle start up script for POSIX generated by Gradle.
++#
++#   Important for running:
++#
++#   (1) You need a POSIX-compliant shell to run this script. If your /bin/sh is
++#       noncompliant, but you have some other compliant shell such as ksh or
++#       bash, then to run this script, type that shell name before the whole
++#       command line, like:
++#
++#           ksh Gradle
++#
++#       Busybox and similar reduced shells will NOT work, because this script
++#       requires all of these POSIX shell features:
++#         * functions;
++#         * expansions «$var», «${var}», «${var:-default}», «${var+SET}»,
++#           «${var#prefix}», «${var%suffix}», and «$( cmd )»;
++#         * compound commands having a testable exit status, especially «case»;
++#         * various built-in commands including «command», «set», and «ulimit».
++#
++#   Important for patching:
++#
++#   (2) This script targets any POSIX shell, so it avoids extensions provided
++#       by Bash, Ksh, etc; in particular arrays are avoided.
++#
++#       The "traditional" practice of packing multiple parameters into a
++#       space-separated string is a well documented source of bugs and security
++#       problems, so this is (mostly) avoided, by progressively accumulating
++#       options in "$@", and eventually passing that to Java.
++#
++#       Where the inherited environment variables (DEFAULT_JVM_OPTS, JAVA_OPTS,
++#       and GRADLE_OPTS) rely on word-splitting, this is performed explicitly;
++#       see the in-line comments for details.
++#
++#       There are tweaks for specific operating systems such as AIX, CygWin,
++#       Darwin, MinGW, and NonStop.
++#
++#   (3) This script is generated from the Groovy template
++#       https://github.com/gradle/gradle/blob/HEAD/subprojects/plugins/src/main/resources/org/gradle/api/internal/plugins/unixStartScript.txt
++#       within the Gradle project.
++#
++#       You can find Gradle at https://github.com/gradle/gradle/.
++#
+ ##############################################################################
+ 
+ # Attempt to set APP_HOME
++
+ # Resolve links: $0 may be a link
+-PRG="$0"
+-# Need this for relative symlinks.
+-while [ -h "$PRG" ] ; do
+-    ls=`ls -ld "$PRG"`
+-    link=`expr "$ls" : '.*-> \(.*\)$'`
+-    if expr "$link" : '/.*' > /dev/null; then
+-        PRG="$link"
+-    else
+-        PRG=`dirname "$PRG"`"/$link"
+-    fi
++app_path=$0
++
++# Need this for daisy-chained symlinks.
++while
++    APP_HOME=${app_path%"${app_path##*/}"}  # leaves a trailing /; empty if no leading path
++    [ -h "$app_path" ]
++do
++    ls=$( ls -ld "$app_path" )
++    link=${ls#*' -> '}
++    case $link in             #(
++      /*)   app_path=$link ;; #(
++      *)    app_path=$APP_HOME$link ;;
++    esac
+ done
+-SAVED="`pwd`"
+-cd "`dirname \"$PRG\"`/" >/dev/null
+-APP_HOME="`pwd -P`"
+-cd "$SAVED" >/dev/null
+ 
+-APP_NAME="Gradle"
+-APP_BASE_NAME=`basename "$0"`
+-
+-# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
+-DEFAULT_JVM_OPTS=""
++# This is normally unused
++# shellcheck disable=SC2034
++APP_BASE_NAME=${0##*/}
++APP_HOME=$( cd "${APP_HOME:-./}" && pwd -P ) || exit
+ 
+ # Use the maximum available, or set MAX_FD != -1 to use that value.
+-MAX_FD="maximum"
++MAX_FD=maximum
+ 
+ warn () {
+     echo "$*"
+-}
++} >&2
+ 
+ die () {
+     echo
+     echo "$*"
+     echo
+     exit 1
+-}
++} >&2
+ 
+ # OS specific support (must be 'true' or 'false').
+ cygwin=false
+ msys=false
+ darwin=false
+ nonstop=false
+-case "`uname`" in
+-  CYGWIN* )
+-    cygwin=true
+-    ;;
+-  Darwin* )
+-    darwin=true
+-    ;;
+-  MINGW* )
+-    msys=true
+-    ;;
+-  NONSTOP* )
+-    nonstop=true
+-    ;;
++case "$( uname )" in                #(
++  CYGWIN* )         cygwin=true  ;; #(
++  Darwin* )         darwin=true  ;; #(
++  MSYS* | MINGW* )  msys=true    ;; #(
++  NONSTOP* )        nonstop=true ;;
+ esac
+ 
+ CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+ 
++
+ # Determine the Java command to use to start the JVM.
+ if [ -n "$JAVA_HOME" ] ; then
+     if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+         # IBM's JDK on AIX uses strange locations for the executables
+-        JAVACMD="$JAVA_HOME/jre/sh/java"
++        JAVACMD=$JAVA_HOME/jre/sh/java
+     else
+-        JAVACMD="$JAVA_HOME/bin/java"
++        JAVACMD=$JAVA_HOME/bin/java
+     fi
+     if [ ! -x "$JAVACMD" ] ; then
+         die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
+@@ -81,7 +129,7 @@
+ location of your Java installation."
+     fi
+ else
+-    JAVACMD="java"
++    JAVACMD=java
+     which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+ 
+ Please set the JAVA_HOME variable in your environment to match the
+@@ -89,84 +137,109 @@
+ fi
+ 
+ # Increase the maximum file descriptors if we can.
+-if [ "$cygwin" = "false" -a "$darwin" = "false" -a "$nonstop" = "false" ] ; then
+-    MAX_FD_LIMIT=`ulimit -H -n`
+-    if [ $? -eq 0 ] ; then
+-        if [ "$MAX_FD" = "maximum" -o "$MAX_FD" = "max" ] ; then
+-            MAX_FD="$MAX_FD_LIMIT"
+-        fi
+-        ulimit -n $MAX_FD
+-        if [ $? -ne 0 ] ; then
+-            warn "Could not set maximum file descriptor limit: $MAX_FD"
+-        fi
+-    else
+-        warn "Could not query maximum file descriptor limit: $MAX_FD_LIMIT"
+-    fi
++if ! "$cygwin" && ! "$darwin" && ! "$nonstop" ; then
++    case $MAX_FD in #(
++      max*)
++        # In POSIX sh, ulimit -H is undefined. That's why the result is checked to see if it worked.
++        # shellcheck disable=SC3045
++        MAX_FD=$( ulimit -H -n ) ||
++            warn "Could not query maximum file descriptor limit"
++    esac
++    case $MAX_FD in  #(
++      '' | soft) :;; #(
++      *)
++        # In POSIX sh, ulimit -n is undefined. That's why the result is checked to see if it worked.
++        # shellcheck disable=SC3045
++        ulimit -n "$MAX_FD" ||
++            warn "Could not set maximum file descriptor limit to $MAX_FD"
++    esac
+ fi
+ 
+-# For Darwin, add options to specify how the application appears in the dock
+-if $darwin; then
+-    GRADLE_OPTS="$GRADLE_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$APP_HOME/media/gradle.icns\""
+-fi
++# Collect all arguments for the java command, stacking in reverse order:
++#   * args from the command line
++#   * the main class name
++#   * -classpath
++#   * -D...appname settings
++#   * --module-path (only if needed)
++#   * DEFAULT_JVM_OPTS, JAVA_OPTS, and GRADLE_OPTS environment variables.
+ 
+-# For Cygwin, switch paths to Windows format before running java
+-if $cygwin ; then
+-    APP_HOME=`cygpath --path --mixed "$APP_HOME"`
+-    CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
+-    JAVACMD=`cygpath --unix "$JAVACMD"`
++# For Cygwin or MSYS, switch paths to Windows format before running java
++if "$cygwin" || "$msys" ; then
++    APP_HOME=$( cygpath --path --mixed "$APP_HOME" )
++    CLASSPATH=$( cygpath --path --mixed "$CLASSPATH" )
+ 
+-    # We build the pattern for arguments to be converted via cygpath
+-    ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2>/dev/null`
+-    SEP=""
+-    for dir in $ROOTDIRSRAW ; do
+-        ROOTDIRS="$ROOTDIRS$SEP$dir"
+-        SEP="|"
+-    done
+-    OURCYGPATTERN="(^($ROOTDIRS))"
+-    # Add a user-defined pattern to the cygpath arguments
+-    if [ "$GRADLE_CYGPATTERN" != "" ] ; then
+-        OURCYGPATTERN="$OURCYGPATTERN|($GRADLE_CYGPATTERN)"
+-    fi
++    JAVACMD=$( cygpath --unix "$JAVACMD" )
++
+     # Now convert the arguments - kludge to limit ourselves to /bin/sh
+-    i=0
+-    for arg in "$@" ; do
+-        CHECK=`echo "$arg"|egrep -c "$OURCYGPATTERN" -`
+-        CHECK2=`echo "$arg"|egrep -c "^-"`                                 ### Determine if an option
+-
+-        if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then                    ### Added a condition
+-            eval `echo args$i`=`cygpath --path --ignore --mixed "$arg"`
+-        else
+-            eval `echo args$i`="\"$arg\""
++    for arg do
++        if
++            case $arg in                                #(
++              -*)   false ;;                            # don't mess with options #(
++              /?*)  t=${arg#/} t=/${t%%/*}              # looks like a POSIX filepath
++                    [ -e "$t" ] ;;                      #(
++              *)    false ;;
++            esac
++        then
++            arg=$( cygpath --path --ignore --mixed "$arg" )
+         fi
+-        i=$((i+1))
++        # Roll the args list around exactly as many times as the number of
++        # args, so each arg winds up back in the position where it started, but
++        # possibly modified.
++        #
++        # NB: a `for` loop captures its iteration list before it begins, so
++        # changing the positional parameters here affects neither the number of
++        # iterations, nor the values presented in `arg`.
++        shift                   # remove old arg
++        set -- "$@" "$arg"      # push replacement arg
+     done
+-    case $i in
+-        (0) set -- ;;
+-        (1) set -- "$args0" ;;
+-        (2) set -- "$args0" "$args1" ;;
+-        (3) set -- "$args0" "$args1" "$args2" ;;
+-        (4) set -- "$args0" "$args1" "$args2" "$args3" ;;
+-        (5) set -- "$args0" "$args1" "$args2" "$args3" "$args4" ;;
+-        (6) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" ;;
+-        (7) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" ;;
+-        (8) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" ;;
+-        (9) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" "$args8" ;;
+-    esac
+ fi
+ 
+-# Escape application args
+-save () {
+-    for i do printf %s\\n "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/' \\\\/" ; done
+-    echo " "
+-}
+-APP_ARGS=$(save "$@")
++
++# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
++DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
++
++# Collect all arguments for the java command;
++#   * $DEFAULT_JVM_OPTS, $JAVA_OPTS, and $GRADLE_OPTS can contain fragments of
++#     shell script including quotes and variable substitutions, so put them in
++#     double quotes to make sure that they get re-expanded; and
++#   * put everything else in single quotes, so that it's not re-expanded.
+ 
+-# Collect all arguments for the java command, following the shell quoting and substitution rules
+-eval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS "\"-Dorg.gradle.appname=$APP_BASE_NAME\"" -classpath "\"$CLASSPATH\"" org.gradle.wrapper.GradleWrapperMain "$APP_ARGS"
++set -- \
++        "-Dorg.gradle.appname=$APP_BASE_NAME" \
++        -classpath "$CLASSPATH" \
++        org.gradle.wrapper.GradleWrapperMain \
++        "$@"
+ 
+-# by default we should be in the correct project dir, but when run from Finder on Mac, the cwd is wrong
+-if [ "$(uname)" = "Darwin" ] && [ "$HOME" = "$PWD" ]; then
+-  cd "$(dirname "$0")"
++# Stop when "xargs" is not available.
++if ! command -v xargs >/dev/null 2>&1
++then
++    die "xargs is not available"
+ fi
++
++# Use "xargs" to parse quoted args.
++#
++# With -n1 it outputs one arg per line, with the quotes and backslashes removed.
++#
++# In Bash we could simply go:
++#
++#   readarray ARGS < <( xargs -n1 <<<"$var" ) &&
++#   set -- "${ARGS[@]}" "$@"
++#
++# but POSIX shell has neither arrays nor command substitution, so instead we
++# post-process each arg (as a line of input to sed) to backslash-escape any
++# character that might be a shell metacharacter, then use eval to reverse
++# that process (while maintaining the separation between arguments), and wrap
++# the whole thing up as a single "set" statement.
++#
++# This will of course break if any of these variables contains a newline or
++# an unmatched quote.
++#
++
++eval "set -- $(
++        printf '%s\n' "$DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS" |
++        xargs -n1 |
++        sed ' s~[^-[:alnum:]+,./:=@_]~\\&~g; ' |
++        tr '\n' ' '
++    )" '"$@"'
+ 
+ exec "$JAVACMD" "$@"
+diff --git a/app/codemagic.yaml b/codemagic.yaml
+rename from app/codemagic.yaml
+rename to codemagic.yaml
