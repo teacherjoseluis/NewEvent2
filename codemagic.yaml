@@ -7,7 +7,7 @@ workflows:
       android_signing:
         - bridesandgrooms_keystore
       groups:
-        - google_play
+        - google_credentials
         - magic_values
       vars:
         PACKAGE_NAME: "com.bridesandgrooms.event"
