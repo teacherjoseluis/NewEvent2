@@ -2,6 +2,7 @@ package com.bridesandgrooms.event.Model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.bridesandgrooms.event.Functions.getlocale
 
 open class Task(
 	var key: String = "",
@@ -55,6 +56,22 @@ open class Task(
 
 		override fun newArray(size: Int): Array<Task?> {
 			return arrayOfNulls(size)
+		}
+
+		fun getTaskStatusName(code: String): String {
+			if (getlocale().substring(0, 2) == "es") {
+				return when (code) {
+					"A" -> "Por Completar"
+					"C" -> "Completada"
+					else -> "Por Completar"
+				}
+			} else {
+				return when (code) {
+					"A" -> "To Be Completed"
+					"C" -> "Completed"
+					else -> "To Be Completed"
+				}
+			}
 		}
 	}
 }

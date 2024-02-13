@@ -43,6 +43,14 @@ class Settings : Fragment(), IOnBackPressed {
         }
         inf.spinner.setSelection(position)
 
+        val position2 = when (usersession.country) {
+            "MX" -> 0
+            "CL" -> 1
+            "PE" -> 2
+            else -> 0
+        }
+        inf.spinner2.setSelection(position2)
+
         //Load the spinner with the language selected for the user
 //        val language = when (usersession.language) {
 //            "en" -> 0
@@ -63,6 +71,21 @@ class Settings : Fragment(), IOnBackPressed {
                     0 -> "Bride"
                     1 -> "Groom"
                     else -> "Bride"
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        inf.spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                usersession.country = when (inf.spinner2.selectedItemPosition) {
+                    0 -> "MX"
+                    1 -> "CL"
+                    2 -> "PE"
+                    else -> "MX"
                 }
             }
 

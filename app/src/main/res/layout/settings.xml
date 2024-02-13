@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -113,16 +113,40 @@
                 android:textColor="@color/rosaChillon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+                app:layout_constraintVertical_bias="0.0" />
 
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:entries="@array/role"
                 app:layout_constraintStart_toEndOf="@+id/textView26"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+            <TextView
+                android:id="@+id/textView27"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/whats_your_country"
+                android:textColor="@color/rosaChillon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView26" />
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:entries="@array/country"
+                app:layout_constraintStart_toEndOf="@+id/textView27"
+                app:layout_constraintTop_toBottomOf="@+id/spinner" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

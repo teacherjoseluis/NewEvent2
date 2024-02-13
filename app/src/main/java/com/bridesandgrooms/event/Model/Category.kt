@@ -1,5 +1,7 @@
 package com.bridesandgrooms.event.Model
 
+import com.bridesandgrooms.event.Functions.getlocale
+
 enum class Category(
     val code: String,
     val en_name: String,
@@ -107,6 +109,38 @@ enum class Category(
                 "food" -> Food
                 "guests" -> Guests
                 else -> Venue
+            }
+        }
+
+        fun getCategoryName(code: String): String {
+            if (getlocale().substring(0, 2) == "es") {
+                return when (code) {
+                    "venue" -> Venue.es_name
+                    "photo" -> Photo.es_name
+                    "entertainment" -> Entertainment.es_name
+                    "flowers" -> Flowers.es_name
+                    "transport" -> Transportation.es_name
+                    "ceremony" -> Ceremony.es_name
+                    "accessories" -> Accesories.es_name
+                    "beauty" -> Beauty.es_name
+                    "food" -> Food.es_name
+                    "guests" -> Guests.es_name
+                    else -> Venue.es_name
+                }
+            } else {
+                return when (code) {
+                    "venue" -> Venue.en_name
+                    "photo" -> Photo.en_name
+                    "entertainment" -> Entertainment.en_name
+                    "flowers" -> Flowers.en_name
+                    "transport" -> Transportation.en_name
+                    "ceremony" -> Ceremony.en_name
+                    "accessories" -> Accesories.en_name
+                    "beauty" -> Beauty.en_name
+                    "food" -> Food.en_name
+                    "guests" -> Guests.en_name
+                    else -> Venue.en_name
+                }
             }
         }
 

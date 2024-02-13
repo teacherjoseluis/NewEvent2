@@ -33,6 +33,13 @@ internal fun converttoString(date: Date, style: Int): String {
     return dateFormatter.format(date)
 }
 
+internal fun convertToFilenameString(date: Date): String {
+    // Define the pattern to match your filename requirement
+    val pattern = "yyyyMMdd_HHmmss"
+    val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+    return simpleDateFormat.format(date)
+}
+
 internal fun getlocale() : String {
     return Locale.getDefault().toString()
 }

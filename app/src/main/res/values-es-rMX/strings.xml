@@ -279,11 +279,26 @@
     <string name="contact_the_developer">Contacta al Desarrollador</string>
     <string name="pick_a_color">Selecciona un color</string>
     <string name="default_task_date">Fecha de la Tarea</string>
+    <string name="whats_your_country">País</string>
+    <string name="results_country">Limitada a resultados dentro de este país: </string>
+    <string name="export_tasks">Exportar Tareas como PDF</string>
+    <string name="report_listoftasks">Listado de tareas al</string>
+    <string name="taskbudget_completed">Presupuesto de las Tareas Completadas</string>
+    <string name="taskbudget_notcompleted">Presupuesto de las Tareas Por Completar</string>
+    <string name="task_completed">Completada</string>
+    <string name="task_notcompleted">Por Completar</string>
+    <string name="goback">Regresar</string>
 
 
     <string-array name="role" >
         <item>Novia</item>
         <item>Novio</item>
+    </string-array>
+
+    <string-array name="country" >
+        <item>Mexico</item>
+        <item>Chile</item>
+        <item>Peru</item>
     </string-array>
 
 </resources>

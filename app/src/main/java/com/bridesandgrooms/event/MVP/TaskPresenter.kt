@@ -17,6 +17,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
     private lateinit var fragmentDE: DashboardEventPresenter
     private lateinit var fragmentDA: DashboardActivityPresenter
     private lateinit var fragmentTPT: TaskPaymentTasksPresenter
+    private lateinit var fragmentEPDF: ExportPDFPresenter
 
     private lateinit var cachetask: Cache<Task>
 
@@ -38,6 +39,12 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
         activefragment = "TPT"
     }
 
+    constructor(context: Context, fragment: ExportPDFPresenter) {
+        fragmentEPDF = fragment
+        mContext = context
+        activefragment = "EPDF"
+    }
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun getTasksList() {
         cachetask = Cache(mContext, this)
@@ -53,12 +60,14 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
                 "DE" -> fragmentDE.onTaskListError(ERRCODETASKS)
                 "DA" -> fragmentDA.onTaskListError(ERRCODETASKS)
                 "TPT" -> fragmentTPT.onTaskListError(ERRCODETASKS)
+                "EPDF" -> fragmentEPDF.onTaskListError(ERRCODETASKS)
             }
         } else {
             when (activefragment) {
                 "DE" -> fragmentDE.onTaskList(arrayList)
                 "DA" -> fragmentDA.onTaskList(arrayList)
                 "TPT" -> fragmentTPT.onTaskList(arrayList)
+                "EPDF" -> fragmentEPDF.onTaskList(arrayList)
             }
         }
     }
@@ -81,6 +90,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
                             "DE" -> fragmentDE.onTaskList(arrayList)
                             "DA" -> fragmentDA.onTaskList(arrayList)
                             "TPT" -> fragmentTPT.onTaskList(arrayList)
+                            "EPDF" -> fragmentEPDF.onTaskList(arrayList)
                         }
                     } else {
                         // This is when there is no data coming from Firebase
@@ -88,6 +98,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
                             "DE" -> fragmentDE.onTaskListError(ERRCODETASKS)
                             "DA" -> fragmentDA.onTaskListError(ERRCODETASKS)
                             "TPT" -> fragmentTPT.onTaskListError(ERRCODETASKS)
+                            "EPDF" -> fragmentEPDF.onTaskListError(ERRCODETASKS)
                         }
                     }
                 }

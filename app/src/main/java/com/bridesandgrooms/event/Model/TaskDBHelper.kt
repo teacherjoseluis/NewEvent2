@@ -233,6 +233,60 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask{
         }
     }
 
+    fun getTaskPDFBudgetReport(): TaskPDFBudgetReport? {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val taskPdfBudget = TaskPDFBudgetReport()
+        var sumActiveBudget = 0.0F
+        var sumCompletebudget = 0.0F
+        try {
+            var cursor: Cursor = db.rawQuery(
+                "SELECT budget FROM TASK WHERE status='A'",
+                null
+            )
+            if (cursor != null) {
+                if (cursor.count > 0) {
+                    cursor.moveToFirst()
+                    val re = Regex("[^A-Za-z0-9 ]")
+                    do {
+                        val budget = cursor.getString(cursor.getColumnIndex("budget"))
+                        val budgetamount = re.replace(budget, "").dropLast(2)
+                        sumActiveBudget += budgetamount.toFloat()
+                    } while (cursor.moveToNext())
+                    val formatter = DecimalFormat("$#,###.00")
+                    taskPdfBudget.budgetTasksActive = formatter.format(sumActiveBudget)
+                } else {
+                    taskPdfBudget.budgetTasksActive = "$0.00"
+                }
+            }
+            cursor= db.rawQuery(
+                "SELECT budget FROM TASK WHERE status='C'",
+                null
+            )
+            if (cursor != null) {
+                if (cursor.count > 0) {
+                    cursor.moveToFirst()
+                    val re = Regex("[^A-Za-z0-9 ]")
+                    do {
+                        val budget = cursor.getString(cursor.getColumnIndex("budget"))
+                        val budgetamount = re.replace(budget, "").dropLast(2)
+                        sumCompletebudget += budgetamount.toFloat()
+                    } while (cursor.moveToNext())
+                    val formatter = DecimalFormat("$#,###.00")
+                    taskPdfBudget.budgetTasksCompleted = formatter.format(sumActiveBudget)
+                } else {
+                    taskPdfBudget.budgetTasksCompleted = "$0.00"
+                }
+            }
+            cursor.close()
+            return taskPdfBudget
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        } finally {
+            db.close()
+        }
+    }
+
     fun update(task: Task) {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val values = ContentValues()

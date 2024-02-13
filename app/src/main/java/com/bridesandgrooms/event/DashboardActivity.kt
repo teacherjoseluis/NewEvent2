@@ -6,6 +6,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.MVP.DashboardActivityPresenter
 import com.bridesandgrooms.event.Model.TaskJournal
+import com.bridesandgrooms.event.UI.ExportPDF
 import com.bridesandgrooms.event.databinding.DashboardactivityBinding
 
 //import kotlinx.android.synthetic.main.dashboardactivity.*
@@ -26,11 +30,13 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
     private lateinit var recyclerViewActivity: RecyclerView
     private lateinit var presentertask: DashboardActivityPresenter
     private lateinit var inf: DashboardactivityBinding
+    private lateinit var activitymenu: Menu
 
     private val REQUEST_CODE_TASK = 4
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         retainInstance = true
     }
 
@@ -62,6 +68,25 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
             println(e.message)
         }
         return inf.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.tasklist_menu, menu)
+        activitymenu = menu
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.export_task -> {
+                val exportpdf = Intent(context, ExportPDF::class.java)
+                startActivity(exportpdf)
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

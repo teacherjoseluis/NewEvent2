@@ -62,9 +62,24 @@ class OnboardingView : AppCompatActivity() {
         userSession.email = intent.getStringExtra("email").toString()
         userSession.authtype = intent.getStringExtra("authtype").toString()
         userSession.language = this.resources.configuration.locales.get(0).language
-        userSession.language = this.resources.configuration.locales.get(0).country
+        userSession.country = this.resources.configuration.locales.get(0).country
 
         binding = DataBindingUtil.setContentView(this, R.layout.onboarding_name)
+
+        val position = when (userSession.country) {
+            "MX" -> 0
+            "CL" -> 1
+            "PE" -> 2
+            else -> 0
+        }
+        binding.spinner2.setSelection(position)
+
+        userSession.country = when (binding.spinner2.selectedItemPosition) {
+            0 -> "MX"
+            1 -> "CL"
+            2 -> "PE"
+            else -> "MX"
+        }
 
         //---------- Places loading -------------
         if (!Places.isInitialized()) {
@@ -76,8 +91,9 @@ class OnboardingView : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.etlocation)
                     as AutocompleteSupportFragment
 
-        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        autocompleteFragment.setCountry(tm.simCountryIso)
+        //val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        //autocompleteFragment.setCountry(tm.simCountryIso)
+        autocompleteFragment.setCountry(userSession.country)
         autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT)
         autocompleteFragment.setPlaceFields(
             listOf(
@@ -227,6 +243,13 @@ class OnboardingView : AppCompatActivity() {
                             1 -> "Groom"
                             else -> "Bride"
                         }
+
+//                        userSession.country = when (binding.spinner2.selectedItemPosition) {
+//                            0 -> "MX"
+//                            1 -> "CL"
+//                            2 -> "PE"
+//                            else -> "MX"
+//                        }
 
                         if (!checkPermissions()) {
                             alertBox()

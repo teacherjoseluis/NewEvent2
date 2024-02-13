@@ -130,6 +130,8 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ContactsAll"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".UI.ExportPDF"
+            android:theme="@style/AppTheme"/>
 
 
         <meta-data

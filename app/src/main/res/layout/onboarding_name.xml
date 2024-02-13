@@ -73,6 +73,25 @@
             app:layout_constraintStart_toEndOf="@+id/rolelabel"
             app:layout_constraintTop_toBottomOf="@+id/nameinput" />
 
+        <TextView
+            android:id="@+id/countrylabel"
+            style="@style/Heading6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/whats_your_country"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rolelabel" />
+
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:entries="@array/country"
+            app:layout_constraintStart_toEndOf="@+id/countrylabel"
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -82,6 +101,7 @@
         android:orientation="horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline40">

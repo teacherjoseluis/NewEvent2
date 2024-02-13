@@ -5,7 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.telephony.TelephonyManager
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import com.bridesandgrooms.event.Functions.userdbhelper
+import com.bridesandgrooms.event.databinding.ActivityMapsBinding
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -25,6 +29,10 @@ class MapsActivity : AppCompatActivity() {
 
         eventkey = intent.getStringExtra("eventkey").toString()
 
+        val userSession = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        val country_name = findViewById<TextView>(R.id.country_name)
+        country_name.text = userSession.country
+
         if (!Places.isInitialized()) {
             Places.initialize(applicationContext, getString(R.string.google_maps_key), Locale.US)
         }
@@ -34,8 +42,9 @@ class MapsActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.autocomplete_fragment)
                     as AutocompleteSupportFragment
 
-        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        autocompleteFragment.setCountry(tm.simCountryIso)
+        //val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        //autocompleteFragment.setCountry(tm.simCountryIso)
+        autocompleteFragment.setCountry(userSession.country)
         autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT)
         autocompleteFragment.setPlaceFields(
             listOf(

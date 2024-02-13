@@ -289,11 +289,25 @@
     <string name="contact_the_developer">Contact the Developer</string>
     <string name="pick_a_color">Pick a color</string>
     <string name="default_task_date">Task Date</string>
+    <string name="whats_your_country">Country</string>
+    <string name="results_country">Limited to results in this country: </string>
+    <string name="export_tasks">Export Tasks as PDF</string>
+    <string name="report_listoftasks">List of tasks as of</string>
+    <string name="taskbudget_completed">Budget of Completed Tasks</string>
+    <string name="taskbudget_notcompleted">Budget of Tasks to be Completed</string>
+    <string name="task_completed">Completed</string>
+    <string name="task_notcompleted">To be Completed</string>
+    <string name="goback">Go Back</string>
 
     <string-array name="role" >
         <item>Bride</item>
         <item>Groom</item>
     </string-array>
 
+    <string-array name="country" >
+        <item>Mexico</item>
+        <item>Chile</item>
+        <item>Peru</item>
+    </string-array>
 
 </resources>
