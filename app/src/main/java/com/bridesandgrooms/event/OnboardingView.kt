@@ -109,6 +109,7 @@ class OnboardingView : AppCompatActivity() {
         //---------------------------------------
 
         // Hide Layout for Onboarding Event
+        binding.nameonboaarding.visibility = ConstraintLayout.VISIBLE
         binding.eventonboaarding.visibility = ConstraintLayout.INVISIBLE
         binding.submitevent.visibility = Button.INVISIBLE
 
@@ -138,6 +139,26 @@ class OnboardingView : AppCompatActivity() {
                 }
 
                 binding.etname.onFocusChangeListener = object : OnFocusChangeListener {
+                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                        hideSoftKeyboard()
+                    }
+                }
+
+                binding.etbudget.setOnClickListener {
+                    binding.etbudget.error = null
+                }
+
+                binding.etbudget.onFocusChangeListener = object : OnFocusChangeListener {
+                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                        hideSoftKeyboard()
+                    }
+                }
+
+                binding.etnumberguests.setOnClickListener {
+                    binding.etnumberguests.error = null
+                }
+
+                binding.etnumberguests.onFocusChangeListener = object : OnFocusChangeListener {
                     override fun onFocusChange(v: View?, hasFocus: Boolean) {
                         hideSoftKeyboard()
                     }
@@ -214,6 +235,14 @@ class OnboardingView : AppCompatActivity() {
                         binding.etname.error = getString(R.string.error_eventnameinput)
                         inputvalflag = false
                     }
+                    if (binding.etbudget.text.toString().isEmpty()) {
+                        binding.etbudget.error = getString(R.string.what_s_your_events_budget)
+                        inputvalflag = false
+                    }
+                    if (binding.etnumberguests.text.toString().isEmpty()) {
+                        binding.etnumberguests.error = getString(R.string.how_many_guests)
+                        inputvalflag = false
+                    }
                     if (binding.etPlannedDate.text.toString().isEmpty()) {
                         binding.etPlannedDate.error = getString(R.string.error_eventdateinput)
                         inputvalflag = false
@@ -243,6 +272,9 @@ class OnboardingView : AppCompatActivity() {
                             1 -> "Groom"
                             else -> "Bride"
                         }
+
+                        userSession.eventbudget = binding.etbudget.text.toString()
+                        userSession.numberguests = binding.etnumberguests.text.toString().toInt()
 
 //                        userSession.country = when (binding.spinner2.selectedItemPosition) {
 //                            0 -> "MX"

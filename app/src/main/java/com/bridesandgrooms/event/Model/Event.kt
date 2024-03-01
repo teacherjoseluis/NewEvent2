@@ -1,7 +1,10 @@
 package com.bridesandgrooms.event.Model
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
+import java.text.DecimalFormat
 
 open class Event(
     var key: String = "",
@@ -14,7 +17,8 @@ open class Event(
     var date: String = "",
     var time: String = "",
     var eventid: String = "",
-    var location: String = "") : Parcelable {
+    var location: String = ""
+) : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         key = parcel.readString().toString()

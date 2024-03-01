@@ -298,6 +298,15 @@
     <string name="task_completed">Completed</string>
     <string name="task_notcompleted">To be Completed</string>
     <string name="goback">Go Back</string>
+    <string name="what_s_your_events_budget">What is your event\'s budget?</string>
+    <string name="how_many_guests">How many guests are you planning to invite?</string>
+    <string name="number_guests">Planned Guests</string>
+    <string name="wedding_details">Wedding Details</string>
+    <string name="error_budgetrequired">Budget is required</string>
+    <string name="error_numberguestsrequired">Number of Guests is required</string>
+    <string name="banner_congrats">Congrats! You are within budget</string>
+    <string name="banner_beware">Beware! You are exceeding your budget</string>
+    <string name="wedding_budget">Wedding\'s Budget</string>
 
     <string-array name="role" >
         <item>Bride</item>

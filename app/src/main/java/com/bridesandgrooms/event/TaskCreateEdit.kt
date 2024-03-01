@@ -8,11 +8,15 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Message
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -24,8 +28,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Model.Category
+import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.Task
+import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.Model.UserDBHelper
 import com.bridesandgrooms.event.databinding.TaskEditdetailBinding
 import com.bridesandgrooms.event.UI.TextValidate
 import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
@@ -46,8 +53,18 @@ class TaskCreateEdit : AppCompatActivity() {
     private lateinit var adManager: AdManager
     private lateinit var binding: TaskEditdetailBinding
 
+    //--------------------------------------------------
+    private lateinit var usersession: User
+
+    private var thisTaskBudget: Float = 0F
+    private var thisEventBudget: Float = 0F
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        userdbhelper = UserDBHelper(this)
+        usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        val eventBudget = usersession.eventbudget
+
         binding = DataBindingUtil.setContentView(this, R.layout.task_editdetail)
 
         //This call checks the status of Firebase connection
@@ -151,6 +168,12 @@ class TaskCreateEdit : AppCompatActivity() {
             if (binding.taskbudget.text.toString().isEmpty()) {
                 binding.taskbudget.error = getString(R.string.error_taskbudgetinput)
                 inputvalflag = false
+            } else {
+                val thisTaskBudgetSt = binding.taskbudget.text.toString().replace("[^\\d.]".toRegex(), "")
+                val thisEventBudgetSt = eventBudget.replace("[^\\d.]".toRegex(), "")
+                // Convert the sanitized string to Float
+                thisTaskBudget = thisTaskBudgetSt.toFloatOrNull() ?: 0.0f
+                thisEventBudget = thisEventBudgetSt.toFloatOrNull() ?: 0.0f
             }
             if (binding.groupedittask.checkedChipId == -1) {
                 Toast.makeText(
@@ -161,7 +184,16 @@ class TaskCreateEdit : AppCompatActivity() {
                 inputvalflag = false
             }
             if (inputvalflag) {
-                saveTask()
+                val taskEvent = Task()
+                val taskBudget = taskEvent.getTaskBudget(applicationContext)!!
+                val newEventBalance =
+                    thisEventBudget - (taskBudget + thisTaskBudget)
+                if (newEventBalance > 0) {
+                    showBanner(getString(R.string.banner_congrats), false)
+                    saveTask()
+                } else {
+                    showBanner(getString(R.string.banner_beware), true)
+                }
             }
         }
 
@@ -391,7 +423,7 @@ class TaskCreateEdit : AppCompatActivity() {
                     Log.d(TAG, "The rewarded ad wasn't ready yet.")
                 }
             }
-            Thread.sleep(1500)
+            Thread.sleep(2000)
             finish()
         }
     }
@@ -523,6 +555,20 @@ class TaskCreateEdit : AppCompatActivity() {
 //            }
 //        })
 //    }
+
+    private fun showBanner(message: String, dismiss: Boolean) {
+        //binding.taskname.visibility = View.INVISIBLE
+        val fadeInAnimation = AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
+        binding.bannerCardView.startAnimation(fadeInAnimation)
+
+        binding.bannerCardView.visibility = View.VISIBLE
+        binding.bannerText.text = message
+        //getString(R.string.number_guests)
+        if (dismiss) {
+            binding.dismissButton.visibility = View.VISIBLE
+            binding.dismissButton.setOnClickListener { binding.bannerCardView.visibility = View.INVISIBLE }
+        }
+    }
 
     override fun finish() {
         val returnintent = Intent()

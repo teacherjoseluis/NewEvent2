@@ -2,4 +2,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="emptystate_topmargin">-200dp</dimen>
     <dimen name="emptystate_marginbottom">100dp</dimen>
+    <dimen name="material_padding">16dp</dimen>
+    <!-- Margin around the card or banner -->
+    <dimen name="material_margin">8dp</dimen>
+    <!-- Corner radius for the MaterialCardView -->
+    <dimen name="material_card_corner_radius">4dp</dimen>
 </resources>

@@ -13,7 +13,7 @@ class DatabaseHelper(val context: Context) : SQLiteOpenHelper(
 ) {
 
     private val createusertable =
-        "CREATE TABLE USER (userid TEXT, eventid TEXT, shortname TEXT, email TEXT, country TEXT, language TEXT, createdatetime TEXT, authtype TEXT, imageurl TEXT, role TEXT, hasevent TEXT, hastask TEXT, haspayment TEXT, hasguest TEXT, hasvendor TEXT, tasksactive INTEGER, taskscompleted INTEGER, payments INTEGER, guests INTEGER, status TEXT, vendors TEXT)"
+        "CREATE TABLE USER (userid TEXT, eventid TEXT, shortname TEXT, email TEXT, country TEXT, language TEXT, createdatetime TEXT, authtype TEXT, imageurl TEXT, role TEXT, hasevent TEXT, hastask TEXT, haspayment TEXT, hasguest TEXT, hasvendor TEXT, tasksactive INTEGER, taskscompleted INTEGER, payments INTEGER, guests INTEGER, status TEXT, vendors TEXT, eventbudget TEXT, numberguests INTEGER)"
     private val createtasktable =
         "CREATE TABLE TASK (taskid TEXT, name TEXT, date TEXT, category TEXT, budget TEXT, status TEXT, eventid TEXT, createdatetime TEXT)"
     private val createpaymenttable =

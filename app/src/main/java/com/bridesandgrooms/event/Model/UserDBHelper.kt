@@ -67,6 +67,8 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         values.put("guests", user.guests)
         values.put("status", user.status)
         values.put("vendors", user.vendors)
+        values.put("eventbudget", user.eventbudget)
+        values.put("numberguests", user.numberguests)
         try {
             db.insert("USER", null, values)
             Log.d(TAG, "User record inserted")
@@ -164,6 +166,9 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
                     val taskscompleted = cursor.getInt(cursor.getColumnIndex("taskscompleted"))
                     val payments = cursor.getInt(cursor.getColumnIndex("payments"))
                     val guests = cursor.getInt(cursor.getColumnIndex("guests"))
+                    val vendors = cursor.getInt(cursor.getColumnIndex("vendors"))
+                    val eventbudget = cursor.getString(cursor.getColumnIndex("eventbudget"))
+                    val numberguests = cursor.getInt(cursor.getColumnIndex("numberguests"))
                     user =
                         User(
                             userid,
@@ -185,7 +190,10 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
                             tasksactive,
                             taskscompleted,
                             payments,
-                            guests
+                            guests,
+                            vendors,
+                            eventbudget,
+                            numberguests
                         )
                     Log.d(TAG, "User $userid record obtained from local DB")
                 } while (cursor.moveToNext())
@@ -224,6 +232,9 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         values.put("guests", user.guests)
         values.put("status", user.status)
         values.put("vendors", user.vendors)
+        values.put("eventbudget", user.eventbudget)
+        values.put("numberguests", user.numberguests)
+
 
         try {
             val retVal = db.update("USER", values, "userid = '${user.userid}'", null)

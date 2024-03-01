@@ -13,7 +13,7 @@ import com.bridesandgrooms.event.Functions.CoRDeleteTask
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.text.DecimalFormat
 
-class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask{
+class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
 
     lateinit var task: Task
     var key = ""
@@ -36,8 +36,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask{
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             throw FirebaseDataImportException("Error importing Task data: $e")
-        }
-        finally {
+        } finally {
             db.close()
         }
         return true
@@ -258,7 +257,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask{
                     taskPdfBudget.budgetTasksActive = "$0.00"
                 }
             }
-            cursor= db.rawQuery(
+            cursor = db.rawQuery(
                 "SELECT budget FROM TASK WHERE status='C'",
                 null
             )
@@ -279,6 +278,39 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask{
             }
             cursor.close()
             return taskPdfBudget
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        } finally {
+            db.close()
+        }
+    }
+
+    fun getTasksBudget(): Float? {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        var sumBudget = 0.0F
+        try {
+            var cursor: Cursor = db.rawQuery(
+                "SELECT budget FROM TASK WHERE status IN ('A', 'C')",
+                null
+            )
+            if (cursor != null) {
+                if (cursor.count > 0) {
+                    cursor.moveToFirst()
+                    val re = Regex("[^A-Za-z0-9 ]")
+                    do {
+                        val budget = cursor.getString(cursor.getColumnIndex("budget"))
+                        val budgetamount = re.replace(budget, "").dropLast(2)
+                        sumBudget += budgetamount.toFloat()
+                    } while (cursor.moveToNext())
+                    //val formatter = DecimalFormat("$#,###.00")
+                    //taskPdfBudget.budgetTasksActive = formatter.format(sumBudget)
+                    //} else {
+                    //    taskPdfBudget.budgetTasksActive = "$0.00"
+                }
+            }
+            cursor.close()
+            return sumBudget
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null

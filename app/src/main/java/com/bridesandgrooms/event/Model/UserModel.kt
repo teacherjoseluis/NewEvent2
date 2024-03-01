@@ -16,6 +16,7 @@ import com.bridesandgrooms.event.Functions.CoRDeleteVendor
 import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.converttoString
 import com.bridesandgrooms.event.Functions.currentDateTime
+import com.bridesandgrooms.event.Functions.userdbhelper
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.text.DateFormat
@@ -61,6 +62,12 @@ class UserModel(
     var nexthandlerdelv: CoRDeleteVendor? = null
     var nexthandleron: CoROnboardUser? = null
 
+    private var user: User
+
+    init {
+        user = userdbhelper.getUser(userdbhelper.getUserKey())!!
+    }
+
     fun getUser(dataFetched: FirebaseSuccessUser) {
         val userListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -96,6 +103,8 @@ class UserModel(
                         payments = p0.child("payments").getValue(Int::class.java)!!
                         guests = p0.child("guests").getValue(Int::class.java)!!
                         vendors = p0.child("vendors").getValue(Int::class.java)!!
+                        eventbudget = p0.child("eventbudget").getValue(String::class.java)!!
+                        numberguests = p0.child("numberguests").getValue(Int::class.java)!!
 
                         Log.d(
                             TAG,
@@ -145,7 +154,7 @@ class UserModel(
 
     private fun editUserAddTask(value: Int) {
         coroutineScope.launch {
-            val user = getUser()
+            //val user = getUser()
             userRef.child("tasksactive").setValue(user.tasksactive + value).await()
             Log.d(TAG, "There are currently $value active tasks associated to the User")
         }
@@ -153,7 +162,7 @@ class UserModel(
 
     private fun editUserAddPayment(value: Int) {
         coroutineScope.launch {
-            val user = getUser()
+            //val user = getUser()
             userRef.child("payments").setValue(user.payments + value).await()
             Log.d(TAG, "There are currently $value payments associated to the User")
         }
@@ -161,7 +170,7 @@ class UserModel(
 
     private fun editUserAddGuest(value: Int) {
         coroutineScope.launch {
-            val user = getUser()
+            //val user = getUser()
             userRef.child("guests").setValue(user.guests + value).await()
             Log.d(TAG, "There are currently $value guests associated to the User")
         }
@@ -169,7 +178,7 @@ class UserModel(
 
     private fun editUserAddVendor(value: Int) {
         coroutineScope.launch {
-            val user = getUser()
+            //val user = getUser()
             userRef.child("vendors").setValue(user.vendors + value).await()
             Log.d(TAG, "There are currently $value vendors associated to the User")
         }
@@ -240,6 +249,8 @@ class UserModel(
                 "guests" to 0,
                 "status" to "A",
                 "vendors" to 0,
+                "eventbudget" to user.eventbudget,
+                "numberguests" to user.numberguests,
                 // The below fields are of exclusive use of Firebase to police the authentication
                 // and number of active sessions
                 "session" to "",

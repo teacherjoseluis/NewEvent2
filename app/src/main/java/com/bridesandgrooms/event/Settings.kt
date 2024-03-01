@@ -1,17 +1,26 @@
 package com.bridesandgrooms.event
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.bridesandgrooms.event.Functions.delImgfromSD
 import com.bridesandgrooms.event.Functions.editUser
+import com.bridesandgrooms.event.Functions.replaceImage
 import com.bridesandgrooms.event.Functions.userdbhelper
+import com.bridesandgrooms.event.MVP.ImagePresenter
+import com.bridesandgrooms.event.Model.Event
+import com.bridesandgrooms.event.Model.EventDBHelper
+import com.bridesandgrooms.event.Model.EventModel
 import com.bridesandgrooms.event.Model.MyFirebaseApp
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.SettingsBinding
@@ -63,6 +72,23 @@ class Settings : Fragment(), IOnBackPressed {
         {
             inf.textinput.error = null
         }
+        //-----------------------------------------------------------------------------------
+        inf.budgetinput.setText(usersession.eventbudget.toString())
+        inf.budgetinput.setOnClickListener() {
+            inf.budgetinput.error = null
+        }
+
+        inf.budgetinput.onFocusChangeListener = object : View.OnFocusChangeListener {
+            override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                hideSoftKeyboard()
+            }
+        }
+
+        inf.numberguestsinput.setText(usersession.numberguests.toString())
+        inf.numberguestsinput.setOnClickListener() {
+            inf.numberguestsinput.error = null
+        }
+
 
         //When the user selects via the spinner Bride or Groom, that will be saved in his/her profile
         inf.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -129,6 +155,18 @@ class Settings : Fragment(), IOnBackPressed {
             } else {
                 usersession.shortname = inf.textinput.text.toString()
             }
+            if (inf.budgetinput.text.toString().isEmpty()) {
+                inf.budgetinput.error = getString(R.string.error_budgetrequired)
+                inputvalflag = false
+            } else {
+                usersession.eventbudget = inf.budgetinput.text.toString()
+            }
+            if (inf.numberguestsinput.text.toString().isEmpty()) {
+                inf.numberguestsinput.error = getString(R.string.error_numberguestsrequired)
+                inputvalflag = false
+            } else {
+                usersession.numberguests = inf.numberguestsinput.text.toString().toInt()
+            }
             if (inputvalflag) {
                 //savesettings()
                 lifecycleScope.launch {
@@ -167,6 +205,19 @@ class Settings : Fragment(), IOnBackPressed {
             requireContext().startActivity(intents)
         }
         return inf.root
+    }
+
+    fun Fragment.hideSoftKeyboard() {
+        val activity = activity ?: return // Get the associated activity, return if null
+
+        val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        // Find the currently focused view, so we can grab the correct window token from it.
+        var view = activity.currentFocus
+        // If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(activity)
+        }
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     override fun onBackPressed(): Boolean {
