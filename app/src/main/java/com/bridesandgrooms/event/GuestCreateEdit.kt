@@ -15,6 +15,7 @@ import android.telephony.TelephonyManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -27,7 +28,10 @@ import com.bridesandgrooms.event.Functions.PermissionUtils
 import com.bridesandgrooms.event.Functions.addGuest
 import com.bridesandgrooms.event.Functions.deleteGuest
 import com.bridesandgrooms.event.Functions.editGuest
+import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.Model.Guest
+import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.Model.UserDBHelper
 import com.bridesandgrooms.event.databinding.NewGuestBinding
 import com.bridesandgrooms.event.UI.TextValidate
 import com.google.android.material.chip.Chip
@@ -54,9 +58,15 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
     private lateinit var activitymenu: Menu
     private lateinit var binding: NewGuestBinding
 
+    private lateinit var usersession: User
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        userdbhelper = UserDBHelper(this)
+        usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        val guestMaxNumber = usersession.numberguests
+
         binding = DataBindingUtil.setContentView(this, R.layout.new_guest)
 
         // Toolbar
@@ -230,8 +240,16 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
 //                inputvalflag = false
 //            }
             if (inputvalflag) {
-                lifecycleScope.launch {
-                    saveguest()
+                val guestEvent = Guest()
+                val guestCount = guestEvent.getGuestCount(applicationContext)!!
+                val newGuestBalance = guestMaxNumber - (guestCount + 1)
+                if (newGuestBalance > 0) {
+                    showBanner(getString(R.string.banner_withinguestcount), false)
+                    lifecycleScope.launch {
+                        saveguest()
+                    }
+                } else {
+                    showBanner(getString(R.string.banner_outguestcount), true)
                 }
             }
         }
@@ -301,14 +319,14 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         binding.button.isEnabled = false
 
         setResult(Activity.RESULT_OK, Intent())
-        delay(1500) // Replace Thread.sleep with delay from coroutines
+        delay(2000) // Replace Thread.sleep with delay from coroutines
         finish()
     }
 
     @SuppressLint("SuspiciousIndentation")
     private suspend fun saveguest() {
-        loadingview.visibility = ConstraintLayout.VISIBLE
-        withdataview.visibility = ConstraintLayout.GONE
+        //loadingview.visibility = ConstraintLayout.VISIBLE
+        //withdataview.visibility = ConstraintLayout.GONE
 
         binding.nameinputedit.isEnabled = false
         binding.phoneinputedit.isEnabled = false
@@ -380,6 +398,20 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    private fun showBanner(message: String, dismiss: Boolean) {
+        //binding.taskname.visibility = View.INVISIBLE
+        val fadeInAnimation = AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
+        binding.bannerCardView.startAnimation(fadeInAnimation)
+
+        binding.bannerCardView.visibility = View.VISIBLE
+        binding.bannerText.text = message
+        //getString(R.string.number_guests)
+        if (dismiss) {
+            binding.dismissButton.visibility = View.VISIBLE
+            binding.dismissButton.setOnClickListener { binding.bannerCardView.visibility = View.INVISIBLE }
+        }
     }
 
     override fun finish() {

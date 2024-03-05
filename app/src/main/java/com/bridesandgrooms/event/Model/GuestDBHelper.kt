@@ -125,6 +125,26 @@ class GuestDBHelper(val context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         }
     }
 
+    fun getNumberGuests(): Int? {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        var guestCount = 0
+        try {
+            val cursor: Cursor = db.rawQuery("SELECT count(*) as guestcount FROM GUEST WHERE rsvp <> 'n'", null)
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                guestCount = cursor.getString(cursor.getColumnIndex("guestcount")).toInt()
+                Log.d(TAG, "Guest count obtained from local DB")
+            }
+            cursor.close()
+            return guestCount
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        } finally {
+            db.close()
+        }
+    }
+
     fun update(guest: Guest) {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val values = ContentValues()

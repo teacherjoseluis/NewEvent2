@@ -50,7 +50,8 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
         } else if (caller == "guest") {
             guestCreateEdit = GuestCreateEdit()
             guestCreateEdit.mContext = context
-            val chainofcommand = orderChainAddGuest(guestmodel, guestdbhelper, userdbhelper, usermodel, guestCreateEdit)
+            //val chainofcommand = orderChainAddGuest(guestmodel, guestdbhelper, userdbhelper, usermodel, guestCreateEdit)
+            val chainofcommand = orderChainAddGuest(guestmodel, guestdbhelper, userdbhelper, usermodel)
             chainofcommand.onAddEditGuest(guestitem)
         } else if (caller == "none") {
             val chainofcommand = orderChainAddNone(guestmodel, guestdbhelper, userdbhelper, usermodel)
@@ -148,10 +149,11 @@ internal fun editGuest(context: Context, guestitem: Guest) {
         guestdbhelper = GuestDBHelper(context)
         //taskdbhelper.task = taskitem
         //------------------------------------------------
-        guestCreateEdit = GuestCreateEdit()
-        guestCreateEdit.mContext = context
+        //guestCreateEdit = GuestCreateEdit()
+        //guestCreateEdit.mContext = context
 
-        val chainofcommand = orderChainEdit(guestmodel, guestdbhelper, guestCreateEdit)
+        //val chainofcommand = orderChainEdit(guestmodel, guestdbhelper, guestCreateEdit)
+        val chainofcommand = orderChainEdit(guestmodel, guestdbhelper)
         chainofcommand.onAddEditGuest(guestitem)
         //------------------------------------------------
         // ------- Analytics call ----------------
@@ -163,6 +165,7 @@ internal fun editGuest(context: Context, guestitem: Guest) {
         //------------------------------------------------
         Toast.makeText(context, context.getString(R.string.successeditguest), Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
+        println(e.message)
         val errormsg = context.getString(R.string.erroreditguest)
         errormsg.plus(e.message)
         Toast.makeText(
@@ -265,13 +268,14 @@ private fun orderChainAddGuest(
     guestModel: GuestModel,
     guestDBHelper: GuestDBHelper,
     userdbhelper: UserDBHelper,
-    userModel: UserModel,
-    guestCreateEdit: GuestCreateEdit
+    userModel: UserModel
+//    userModel: UserModel,
+//    guestCreateEdit: GuestCreateEdit
 ): CoRAddEditGuest {
     guestModel.nexthandler = guestDBHelper
     guestDBHelper.nexthandler = userdbhelper
     userdbhelper.nexthandlerg = userModel
-    userModel.nexthandlerg = guestCreateEdit
+    //userModel.nexthandlerg = guestCreateEdit
     return guestModel
 }
 
@@ -302,10 +306,10 @@ private fun orderChainDel(
 
 private fun orderChainEdit(
     guestModel: GuestModel,
-    guestDBHelper: GuestDBHelper,
-    guestCreateEdit: GuestCreateEdit
+    guestDBHelper: GuestDBHelper
+    //guestCreateEdit: GuestCreateEdit
 ): CoRAddEditGuest {
     guestModel.nexthandler = guestDBHelper
-    guestDBHelper.nexthandler = guestCreateEdit
+    //guestDBHelper.nexthandler = guestCreateEdit
     return guestModel
 }

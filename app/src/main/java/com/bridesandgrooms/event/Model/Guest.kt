@@ -1,7 +1,9 @@
 package com.bridesandgrooms.event.Model
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
 
 open class Guest(
     var key: String = "",
@@ -38,6 +40,16 @@ open class Guest(
 
     override fun describeContents(): Int {
         return 0
+    }
+
+    fun getGuestCount(context: Context): Int? {
+        try {
+            val guestDBHelper = GuestDBHelper(context)
+            return guestDBHelper.getNumberGuests()!!
+        } catch (e: Exception) {
+            Log.e(GuestDBHelper.TAG, e.message.toString())
+            return null
+        }
     }
 
     companion object CREATOR : Parcelable.Creator<Guest> {

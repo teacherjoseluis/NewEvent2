@@ -297,6 +297,8 @@
     <string name="banner_congrats">Felicidades! Te encuentras dentro del presupuesto</string>
     <string name="banner_beware">Cuidado! Te estás excediendo de tu prespuesto</string>
     <string name="wedding_budget">Presupuesto de la Boda</string>
+    <string name="banner_withinguestcount">Felicidades! Estás dentro del número de invitados planeados</string>
+    <string name="banner_outguestcount">Cuidado! Haz excedido el número de invitados</string>
 
 
     <string-array name="role" >

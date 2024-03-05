@@ -12,7 +12,7 @@
     <item>
         <shape android:shape="rectangle">
             <size android:width="300dp" android:height="80dp" />
-            <solid android:color="@color/white"/>
+            <solid android:color="@color/colorAccent"/>
             <stroke android:color="@color/rosaChillon"  android:width="2dp"/>
             <corners android:radius="10dp" />
         </shape>
@@ -23,7 +23,7 @@
             android:pivotX="20%" android:pivotY="0%" >
             <shape android:shape="rectangle">
                 <size android:width="24dp" android:height="24dp" />
-                <solid android:color="@color/white"/>
+                <solid android:color="@color/colorAccent"/>
             </shape>
 
         </rotate>

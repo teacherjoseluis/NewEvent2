@@ -240,15 +240,15 @@
     <string name="error_locationinput">Location is required</string>
     <string name="pickercanceled">Picker Canceled.</string>
     <string name="successaddguest">Guest was created successfully</string>
-    <string name="erroraddguest">There was an error trying create the guest </string>
+    <string name="erroraddguest">There was an error trying to create the guest </string>
     <string name="successdeleteguest">Guest was deleted successfully</string>
-    <string name="errordeleteguest">There was an error trying delete the guest </string>
+    <string name="errordeleteguest">There was an error trying to delete the guest </string>
     <string name="successeditguest">Guest was edited successfully</string>
-    <string name="erroreditguest">There was an error trying edit the guest </string>
+    <string name="erroreditguest">There was an error trying to edit the guest </string>
     <string name="successadduser">User was created successfully</string>
-    <string name="erroradduser">There was an error trying create the user </string>
+    <string name="erroradduser">There was an error trying to create the user </string>
     <string name="successedituser">User was edited successfully</string>
-    <string name="erroredituser">There was an error trying edit the user </string>
+    <string name="erroredituser">There was an error trying to edit the user </string>
     <string name="googlesearch">Search by Google</string>
     <string name="selectvendor">Select Vendor</string>
     <string name="selectcategory">Select Category</string>
@@ -307,6 +307,8 @@
     <string name="banner_congrats">Congrats! You are within budget</string>
     <string name="banner_beware">Beware! You are exceeding your budget</string>
     <string name="wedding_budget">Wedding\'s Budget</string>
+    <string name="banner_withinguestcount">Congrats! You are within the number of guests planned</string>
+    <string name="banner_outguestcount">Beware! You are exceeded the number of guests planned</string>
 
     <string-array name="role" >
         <item>Bride</item>

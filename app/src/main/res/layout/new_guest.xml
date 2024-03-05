@@ -28,6 +28,41 @@
             android:id="@+id/toolbar"
             layout="@layout/main_toolbar" />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bannerCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/material_margin"
+            app:cardCornerRadius="@dimen/material_card_corner_radius"
+            android:visibility="invisible"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/pewter"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/material_padding">
+
+                <TextView
+                    android:id="@+id/bannerText"
+                    android:text="Hola"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                <Button
+                    android:id="@+id/dismissButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dismiss"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
