@@ -2,6 +2,7 @@ package com.bridesandgrooms.event
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -57,7 +58,6 @@ class ActivityContainer : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activitycontainer)
 
-
         // Declare the toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -69,6 +69,19 @@ class ActivityContainer : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerlayout)
         loadingscreen = findViewById(R.id.loadingscreen)
         val sidenavView = findViewById<NavigationView>(R.id.sidenav)
+        val headerView = sidenavView.getHeaderView(0)
+        val androidVersion = headerView.findViewById<TextView>(R.id.androidVersionNumber)
+        val androidCode = headerView.findViewById<TextView>(R.id.androidVersionCode)
+
+        try {
+            val packageInfo = this.packageManager.getPackageInfo(this.packageName, 0)
+            androidVersion.text = packageInfo.versionName
+            androidCode.text = packageInfo.versionCode.toString()
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+            androidVersion.text = "0.0"
+            androidCode.text = "0.0"
+        }
 
         val developer_mail = RemoteConfigSingleton.get_developer_mail()
         if (!developer_mail) {
@@ -109,7 +122,6 @@ class ActivityContainer : AppCompatActivity() {
 //                .setPositiveBtnText(getString(R.string.great))
 //                .build().show()
 //        }
-
 
 
         // Create the toggle that will open and close the sidebar

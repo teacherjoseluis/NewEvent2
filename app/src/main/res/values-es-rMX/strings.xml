@@ -299,6 +299,9 @@
     <string name="wedding_budget">Presupuesto de la Boda</string>
     <string name="banner_withinguestcount">Felicidades! Estás dentro del número de invitados planeados</string>
     <string name="banner_outguestcount">Cuidado! Haz excedido el número de invitados</string>
+    <string name="readmore_blog"><u>Leer más</u>.</string>
+    <string name="author_blog">"Autor: "</string>
+    <string name="date_posted">"Publicado: "</string>
 
 
     <string-array name="role" >

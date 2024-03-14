@@ -40,6 +40,17 @@ internal fun convertToFilenameString(date: Date): String {
     return simpleDateFormat.format(date)
 }
 
+internal fun convertToBlogStringDate(inputDate: String): String {
+    // Define the pattern to match your filename requirement
+    val inputPattern = "yyyy-MM-dd'T'HH:mm:ssXXX"
+    val outputPattern = "dd MMM, yyyy"
+    val inputFormat = SimpleDateFormat(inputPattern, Locale.getDefault())
+    val outputFormat = SimpleDateFormat(outputPattern, Locale.getDefault())
+
+    val date = inputFormat.parse(inputDate)
+    return outputFormat.format(date!!)
+}
+
 internal fun getlocale() : String {
     return Locale.getDefault().toString()
 }

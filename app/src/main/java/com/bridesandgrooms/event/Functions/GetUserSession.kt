@@ -37,6 +37,19 @@ internal fun getUserSession(context: Context, category: String): Any {
     }
 }
 
+internal fun getUserSessionInfo(context: Context, category: String): Any {
+    var sharedPreference: SharedPreferences? = null
+    sharedPreference = context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+    return when (category){
+        "email" -> sharedPreference.getString("email", "")!!
+        "user_id" -> sharedPreference.getString("user_id", "")!!
+        "event_id" -> sharedPreference.getString("event_id", "")!!
+        "session_id" -> sharedPreference.getString("session_id", "")!!
+        "last_signed_in_at" -> sharedPreference.getLong("last_signed_in_at", 0L)
+        else -> ""
+    }
+}
+
 internal fun saveUserSession(context: Context, value: String?, valueLong: Long?, category: String) {
     val userSession = context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
     val sessionEditor = userSession!!.edit()

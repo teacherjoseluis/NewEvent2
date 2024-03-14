@@ -65,4 +65,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/menu_navview" />
     </androidx.drawerlayout.widget.DrawerLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

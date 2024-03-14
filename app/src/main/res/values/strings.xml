@@ -308,7 +308,10 @@
     <string name="banner_beware">Beware! You are exceeding your budget</string>
     <string name="wedding_budget">Wedding\'s Budget</string>
     <string name="banner_withinguestcount">Congrats! You are within the number of guests planned</string>
-    <string name="banner_outguestcount">Beware! You are exceeded the number of guests planned</string>
+    <string name="banner_outguestcount">Beware! You are exceeding the number of guests planned</string>
+    <string name="readmore_blog"><u>Read More</u>.</string>
+    <string name="author_blog">"Author: "</string>
+    <string name="date_posted">"Published: "</string>
 
     <string-array name="role" >
         <item>Bride</item>

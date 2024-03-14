@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bridesandgrooms.event.Functions.Blog
+import com.bridesandgrooms.event.Functions.BlogPost
 import com.bridesandgrooms.event.MVP.BlogPresenter
 import com.bridesandgrooms.event.databinding.DashboardblogBinding
 
@@ -55,7 +55,7 @@ class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity {
         }
     }
 
-    override fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<Blog>) {
+    override fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<BlogPost>) {
         //Consider adding a try catch in case there is no data coming from Firebase
         inf.emptyrecyclerview.visibility = View.GONE
         val rvAdapter = Rv_BlogAdapter(bloglist)

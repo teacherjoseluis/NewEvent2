@@ -3,7 +3,7 @@ package com.bridesandgrooms.event.MVP
 import android.content.Context
 import android.view.View
 import com.bridesandgrooms.event.DashboardBlog
-import com.bridesandgrooms.event.Functions.Blog
+import com.bridesandgrooms.event.Functions.BlogPost
 import com.bridesandgrooms.event.Functions.FirebaseGetBlogSuccess
 import com.bridesandgrooms.event.Functions.getBlog
 
@@ -19,7 +19,7 @@ class BlogPresenter(
             else -> "es"
         }
         getBlog(language, object : FirebaseGetBlogSuccess {
-            override fun onGetBlogSuccess(bloglist: java.util.ArrayList<Blog>) {
+            override fun onGetBlogSuccess(bloglist: java.util.ArrayList<BlogPost>) {
                 if (bloglist.isNotEmpty()) {
                     //Blog has elements to be shown
                     fragment.onViewBlogSuccess(inflatedView, bloglist)
@@ -32,7 +32,7 @@ class BlogPresenter(
     }
 
     interface ViewBlogActivity {
-        fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<Blog>)
+        fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<BlogPost>)
         fun onViewBlogError(errcode: String)
     }
 }

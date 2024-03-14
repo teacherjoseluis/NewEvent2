@@ -2,7 +2,7 @@ package com.bridesandgrooms.event.Functions
 
 object RemoteConfigSingleton {
     private var autocreateTaskPayment_Feature:Boolean = true
-    private var enable_foryoutab = false
+    private var enable_foryoutab = true
     private var category_layout = "card"
     private var developer_mail = false
     private var video_login = true

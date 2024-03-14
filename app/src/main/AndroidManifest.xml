@@ -101,7 +101,8 @@
         <activity android:name=".NoteCreateEdit"
             android:theme="@style/AppTheme"/>
         <activity android:name=".Settings"
-            tools:ignore="Instantiatable" />
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustResize"/>
 <!--        <activity android:name=".MainEventView" />-->
         <activity android:name=".DashboardView"
             android:theme="@style/AppTheme"/>
@@ -131,6 +132,8 @@
         <activity android:name=".ContactsAll"
             android:theme="@style/AppTheme"/>
         <activity android:name=".UI.ExportPDF"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".BlogContent"
             android:theme="@style/AppTheme"/>
 
 

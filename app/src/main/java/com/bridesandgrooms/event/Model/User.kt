@@ -137,9 +137,9 @@ class User(
                 }
             }
         }
-        // reviewing if there is an already logged session for the user
-        activeSessionsRef = database.child(authResult.user?.uid!!).child("session")
-        lastSignedInAtRef = database.child(authResult.user?.uid!!).child("last_signed_in_at")
+        // reviewing if there is an already logged session for the user - Need to add a parent node
+        activeSessionsRef = database.child("Session").child(authResult.user?.uid!!).child("session")
+        lastSignedInAtRef = database.child("Session").child(authResult.user?.uid!!).child("last_signed_in_at")
         val activeSessionsSnapshot = try {
             activeSessionsRef.get().await()
         } catch (e: Exception) {
