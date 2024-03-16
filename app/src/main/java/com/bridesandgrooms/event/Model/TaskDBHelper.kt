@@ -21,15 +21,15 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
     var nexthandlerdel: CoRDeleteTask? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(userid: String): Boolean {
+    suspend fun firebaseImport(user: User): Boolean {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val taskList: ArrayList<Task>
         val eventModel = EventModel()
         try {
             db.execSQL("DELETE FROM TASK")
-            val eventKey = eventModel.getEventKey(userid)
+            val eventKey = eventModel.getEventKey(user.userid!!)
             val taskModel = TaskModel()
-            taskList = taskModel.getTasks(userid, eventKey)
+            taskList = taskModel.getTasks(user.userid!!, eventKey)
             for (taskItem in taskList) {
                 insert(taskItem)
             }

@@ -36,7 +36,7 @@ internal fun addPayment(context: Context, paymentitem: Payment) {
         //------------------------------------------------
 
         // Updating User information in Firebase
-        usermodel = UserModel(user.userid)
+        usermodel = UserModel(user)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         val chainofcommand = orderChainAdd(calendarevent, paymentmodel, paymentdbhelper, userdbhelper, usermodel)
@@ -84,7 +84,7 @@ internal fun deletePayment(context: Context, paymentitem: Payment) {
 
 
         // Updating User information in Firebase
-        usermodel = UserModel(user.userid)
+        usermodel = UserModel(user)
         usermodel.paymentsactive = user.payments
         //------------------------------------------------
 

@@ -34,7 +34,7 @@ internal fun addGuest(context: Context, guestitem: Guest, caller: String) {
         //taskdbhelper.task = taskitem
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.userid)
+        usermodel = UserModel(user)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         if (caller == "contact"){
@@ -104,7 +104,7 @@ internal fun deleteGuest(context: Context, guestitem: Guest) {
         guestdbhelper.guest = guestitem
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.userid)
+        usermodel = UserModel(user)
         usermodel.guestsactive = user.guests
         //------------------------------------------------
         // Updating User information in Session

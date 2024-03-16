@@ -37,7 +37,7 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
 
     private val TIME_DELAY = 2000
     private var back_pressed: Long = 0
-    val user = User()
+    var user = User()
 
     private lateinit var authResult: AuthResult
     private lateinit var binding: LoginVideoBinding
@@ -49,7 +49,8 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         val video_login = RemoteConfigSingleton.get_video_login()
 
         if (video_login) {
-            binding = DataBindingUtil.setContentView(this, R.layout.login_video) as LoginVideoBinding
+            binding =
+                DataBindingUtil.setContentView(this, R.layout.login_video) as LoginVideoBinding
 
             val videoview = findViewById<View>(R.id.videowedding) as VideoView
             videoview.setOnCompletionListener(OnCompletionListener {
@@ -64,15 +65,8 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         } else {
             //binding = DataBindingUtil.setContentView(this, R.layout.login0) as Login0Binding
         }
-        //setContentView(R.layout.login0)
 
-        // Facebook Initializations
-//        FacebookSdk.setApplicationId("420436362323049")
-//        FacebookSdk.setClientToken("2d0cd88a18ebf54c93cc70d64edfcddc")
-//        FacebookSdk.sdkInitialize(applicationContext)
-//        mCallbackManager = CallbackManager.Factory.create()
-
-        val user = User()
+        //var user = User()
         // Initial login layout is displayed while the others are hidden
         binding.frame2.visibility = ConstraintLayout.INVISIBLE
         binding.frame3.visibility = ConstraintLayout.INVISIBLE
@@ -125,8 +119,12 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
 //                                )
                                 }
                             } else {
+                                user.userid = firebaseUser!!.uid
+                                user.email = firebaseUser.email!!
+                                user = UserModel(user).getUser()
+
                                 val dbHelper = DatabaseHelper(this@LoginView)
-                                dbHelper.updateLocalDB(firebaseUser!!.uid)
+                                dbHelper.updateLocalDB(user)
                             }
                             onLoginSuccess(firebaseUser!!.email!!)
 
@@ -438,11 +436,9 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
 
                         } else {
                             val dbHelper = DatabaseHelper(this@LoginView)
-                            dbHelper.updateLocalDB(firebaseUser.uid)
+                            user = User().getUser(this@LoginView)
+                            dbHelper.updateLocalDB(user)
                         }
-
-
-
                         onLoginSuccess(firebaseUser.email!!)
                     }
                 }

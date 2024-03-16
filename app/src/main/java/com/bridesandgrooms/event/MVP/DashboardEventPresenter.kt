@@ -173,7 +173,5 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
         fun onEvent(context: Context, event: Event)
         fun onEventError(inflatedview: View, errorcode: String)
     }
-
-
 }
 

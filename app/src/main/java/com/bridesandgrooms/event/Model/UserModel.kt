@@ -33,16 +33,17 @@ import kotlin.coroutines.resume
 
 class UserModel(
     //This user creates and edits Users into Firebase
-    val key: String?
+    var user: User?
 ) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
     CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor, CoRAddEditUser, CoROnboardUser {
+
+    private val key = user?.userid
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     private val uid = FirebaseAuth.getInstance().currentUser?.uid
     private val userRef = FirebaseDatabase.getInstance().getReference("User/$uid")
     private val postRef = myRef.child("User").child(this.key!!)
-    private val activeSessionsRef = myRef.child("session")
     private var firebaseUser = User(key)
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -61,12 +62,6 @@ class UserModel(
     var nexthandlerv: CoRAddEditVendor? = null
     var nexthandlerdelv: CoRDeleteVendor? = null
     var nexthandleron: CoROnboardUser? = null
-
-    private var user: User
-
-    init {
-        user = userdbhelper.getUser(userdbhelper.getUserKey())!!
-    }
 
     fun getUser(dataFetched: FirebaseSuccessUser) {
         val userListenerActive = object : ValueEventListener {
@@ -124,15 +119,65 @@ class UserModel(
 
     @ExperimentalCoroutinesApi
     suspend fun getUser(): User {
-        var user: User? = null
+        //var user: User? = null
         try {
-            user = postRef.awaitsSingle()?.getValue(User::class.java)!!
-            user.userid = postRef.key.toString()
+            Log.d(TAG, "Path where User information is found in Firebase: ${postRef}")
+            //user = postRef.awaitsSingle()?.getValue(User::class.java)!!
+            //user!!.userid = postRef.key.toString()
+            //--------------------------------------------------------------------------------
+            user!!.eventid =
+                postRef.awaitsSingle()?.child("eventid")?.getValue(String::class.java)!!
 
-            val eventmodel = EventModel()
-            user.eventid = eventmodel.getEventKey(user.userid!!)
+            user!!.shortname =
+                postRef.awaitsSingle()?.child("shortname")!!.getValue(String::class.java)!!
+            user!!.email = postRef.awaitsSingle()?.child("email")!!.getValue(String::class.java)!!
+            user!!.country =
+                postRef.awaitsSingle()?.child("country")!!.getValue(String::class.java)!!
+            user!!.language =
+                postRef.awaitsSingle()?.child("language")!!.getValue(String::class.java)!!
+            user!!.createdatetime =
+                postRef.awaitsSingle()?.child("createdatetime")!!.getValue(String::class.java)!!
+            user!!.authtype =
+                postRef.awaitsSingle()?.child("authtype")!!.getValue(String::class.java)!!
+            user!!.imageurl =
+                postRef.awaitsSingle()?.child("imageurl")!!.getValue(String::class.java)!!
+            user!!.role = postRef.awaitsSingle()?.child("role")!!.getValue(String::class.java)!!
+            user!!.hasevent = if (postRef.awaitsSingle()?.hasChild("Event") == true) {
+                "Y"
+            } else {
+                "N"
+            }
+            user!!.hastask =
+                postRef.awaitsSingle()?.child("hastask")!!.getValue(String::class.java)!!
+            user!!.haspayment =
+                postRef.awaitsSingle()?.child("haspayment")!!.getValue(String::class.java)!!
+            user!!.hasguest =
+                postRef.awaitsSingle()?.child("hasguest")!!.getValue(String::class.java)!!
+            user!!.hasvendor =
+                postRef.awaitsSingle()?.child("hasvendor")!!.getValue(String::class.java)!!
+            user!!.tasksactive =
+                postRef.awaitsSingle()?.child("tasksactive")!!.getValue(Int::class.java)!!
+            user!!.taskscompleted =
+                postRef.awaitsSingle()?.child("taskscompleted")!!.getValue(Int::class.java)!!
+            user!!.payments =
+                postRef.awaitsSingle()?.child("payments")!!.getValue(Int::class.java)!!
+            user!!.guests = postRef.awaitsSingle()?.child("guests")!!.getValue(Int::class.java)!!
+            user!!.vendors = postRef.awaitsSingle()?.child("vendors")!!.getValue(Int::class.java)!!
+            user!!.eventbudget =
+                postRef.awaitsSingle()?.child("eventbudget")!!.getValue(Int::class.java)!!
+                    .toString()
+            user!!.numberguests =
+                postRef.awaitsSingle()?.child("numberguests")!!.getValue(Int::class.java)!!
+            user!!.status =
+                postRef.awaitsSingle()?.child("status")!!.getValue(String::class.java)!!
+            //--------------------------------------------------------------------------------
+            Log.d(TAG, "User Key found in Firebase: ${user!!.userid}")
+
+            //val eventmodel = EventModel()
+            //user.eventid = eventmodel.getEventKey(user.userid!!)
+            //Log.d(TAG, "Event Key found in Firebase for the User: ${user.eventid}")
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
         return user!!
     }
@@ -155,7 +200,7 @@ class UserModel(
     private fun editUserAddTask(value: Int) {
         coroutineScope.launch {
             //val user = getUser()
-            userRef.child("tasksactive").setValue(user.tasksactive + value).await()
+            userRef.child("tasksactive").setValue(user!!.tasksactive + value).await()
             Log.d(TAG, "There are currently $value active tasks associated to the User")
         }
     }
@@ -163,7 +208,7 @@ class UserModel(
     private fun editUserAddPayment(value: Int) {
         coroutineScope.launch {
             //val user = getUser()
-            userRef.child("payments").setValue(user.payments + value).await()
+            userRef.child("payments").setValue(user!!.payments + value).await()
             Log.d(TAG, "There are currently $value payments associated to the User")
         }
     }
@@ -171,7 +216,7 @@ class UserModel(
     private fun editUserAddGuest(value: Int) {
         coroutineScope.launch {
             //val user = getUser()
-            userRef.child("guests").setValue(user.guests + value).await()
+            userRef.child("guests").setValue(user!!.guests + value).await()
             Log.d(TAG, "There are currently $value guests associated to the User")
         }
     }
@@ -179,7 +224,7 @@ class UserModel(
     private fun editUserAddVendor(value: Int) {
         coroutineScope.launch {
             //val user = getUser()
-            userRef.child("vendors").setValue(user.vendors + value).await()
+            userRef.child("vendors").setValue(user!!.vendors + value).await()
             Log.d(TAG, "There are currently $value vendors associated to the User")
         }
     }
@@ -303,25 +348,25 @@ class UserModel(
     }
 
     override fun onDeleteTask(task: Task) {
-        editUserAddTask(- 1)
+        editUserAddTask(-1)
         nexthandlerdelt?.onDeleteTask(task)
     }
 
 
     override fun onAddEditPayment(payment: Payment) {
         editUserPaymentflag(PaymentModel.ACTIVEFLAG)
-        editUserAddPayment( 1)
+        editUserAddPayment(1)
         nexthandlerp?.onAddEditPayment(payment)
     }
 
     override fun onDeletePayment(payment: Payment) {
-        editUserAddPayment( - 1)
+        editUserAddPayment(-1)
         nexthandlerpdel?.onDeletePayment(payment)
     }
 
     override fun onAddEditGuest(guest: Guest) {
         editUserGuestflag(GuestModel.ACTIVEFLAG)
-        editUserAddGuest( + 1)
+        editUserAddGuest(+1)
         nexthandlerg?.onAddEditGuest(guest)
     }
 
@@ -331,7 +376,7 @@ class UserModel(
 
     override fun onAddEditVendor(vendor: Vendor) {
         editUserVendorflag(VendorModel.ACTIVEFLAG)
-        editUserAddVendor( + 1)
+        editUserAddVendor(+1)
         nexthandlerv?.onAddEditVendor(vendor)
     }
 

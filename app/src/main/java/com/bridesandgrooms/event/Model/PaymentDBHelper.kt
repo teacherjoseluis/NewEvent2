@@ -20,15 +20,15 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
     var nexthandlerpdel: CoRDeletePayment? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(userid: String): Boolean {
+    suspend fun firebaseImport(user: User): Boolean {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val paymentList: ArrayList<Payment>
         val eventModel = EventModel()
         try {
-            val eventKey = eventModel.getEventKey(userid)
+            val eventKey = eventModel.getEventKey(user.userid!!)
             val paymentModel = PaymentModel()
 
-            paymentList = paymentModel.getPayments(userid, eventKey)
+            paymentList = paymentModel.getPayments(user.userid!!, eventKey)
             db.execSQL("DELETE FROM PAYMENT")
 
             for (paymentItem in paymentList) {

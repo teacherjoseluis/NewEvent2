@@ -19,15 +19,15 @@ class GuestDBHelper(val context: Context) : CoRAddEditGuest, CoRDeleteGuest {
     var nexthandlerdel: CoRDeleteGuest? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(userid: String) : Boolean {
+    suspend fun firebaseImport(user: User) : Boolean {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val guestList: ArrayList<Guest>
         val eventModel = EventModel()
         try {
-            val eventKey = eventModel.getEventKey(userid)
+            val eventKey = eventModel.getEventKey(user.userid!!)
             val guestModel = GuestModel()
 
-            guestList = guestModel.getGuests(userid, eventKey)
+            guestList = guestModel.getGuests(user.userid!!, eventKey)
             db.execSQL("DELETE FROM GUEST")
 
             for (guestItem in guestList){

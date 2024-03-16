@@ -32,7 +32,7 @@ internal fun addVendor(context: Context, vendoritem: Vendor, caller: String) {
         //taskdbhelper.task = taskitem
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.userid)
+        usermodel = UserModel(user)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         if (caller == "contact"){
@@ -91,7 +91,7 @@ internal fun deleteVendor(context: Context, vendoritem: Vendor) {
         vendordbhelper.vendor = vendoritem
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.userid)
+        usermodel = UserModel(user)
         usermodel.vendorsactive = user.vendors
         //------------------------------------------------
         // Updating User information in Session

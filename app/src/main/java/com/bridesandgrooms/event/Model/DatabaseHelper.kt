@@ -44,11 +44,12 @@ class DatabaseHelper(val context: Context) : SQLiteOpenHelper(
         p0.execSQL("DROP TABLE IF EXISTS GUEST")
         p0.execSQL("DROP TABLE IF EXISTS VENDOR")
         p0.execSQL("DROP TABLE IF EXISTS NOTE")
+        p0.execSQL("DROP TABLE IF EXISTS USER")
         onCreate(p0)
     }
 
     @ExperimentalCoroutinesApi
-    suspend fun updateLocalDB(userid : String) : Boolean {
+    suspend fun updateLocalDB(user : User) : Boolean {
         val userDB = UserDBHelper(context)
         val eventDB = EventDBHelper(context)
         val taskDB = TaskDBHelper(context)
@@ -56,12 +57,12 @@ class DatabaseHelper(val context: Context) : SQLiteOpenHelper(
         val guestDB = GuestDBHelper(context)
         val vendorDB = VendorDBHelper(context)
         try {
-            userDB.firebaseImport(userid)
-            eventDB.firebaseImport(userid)
-            taskDB.firebaseImport(userid)
-            paymentDB.firebaseImport(userid)
-            guestDB.firebaseImport(userid)
-            vendorDB.firebaseImport(userid)
+            userDB.firebaseImport(user)
+            eventDB.firebaseImport(user)
+            taskDB.firebaseImport(user)
+            paymentDB.firebaseImport(user)
+            guestDB.firebaseImport(user)
+            vendorDB.firebaseImport(user)
         } catch (e: FirebaseDataImportException){
             println(e.message)
         }
@@ -70,6 +71,6 @@ class DatabaseHelper(val context: Context) : SQLiteOpenHelper(
 
     companion object {
         private const val DATABASENAME = "BDCACHE"
-        private const val DATABASEVERSION = 11
+        private const val DATABASEVERSION = 12
     }
 }

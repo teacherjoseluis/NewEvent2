@@ -31,7 +31,7 @@ internal suspend fun onBoarding(context: Context, useritem: User, eventitem: Eve
         eventdbhelper = EventDBHelper(context)
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(useritem.userid)
+        usermodel = UserModel(useritem)
         //------------------------------------------------
         val chainofcommand = orderChainOnboard(usermodel,userdbhelper,calendarevent, eventmodel, eventdbhelper)
         chainofcommand.onOnboardUser(useritem, eventitem)
@@ -55,7 +55,7 @@ internal suspend fun editUser(context: Context, useritem: User) {
         userdbhelper = UserDBHelper(context)
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(useritem.userid)
+        usermodel = UserModel(useritem)
         //------------------------------------------------
         val chainofcommand = orderChainEdit(usermodel,userdbhelper)
         chainofcommand.onAddEditUser(useritem)

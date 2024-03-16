@@ -17,6 +17,7 @@ import com.google.firebase.auth.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -203,6 +204,23 @@ class User(
         }
     }
 
+    fun getUser(context: Context) : User {
+        val userId = try {
+            getUserSession(context, "user_id") as String
+        } catch (e: Exception) {
+            println(e.message)
+            ""
+        }
+        val userDB = UserDBHelper(context)
+        var user = userDB.getUser(userId)
+
+//        if (user?.userid.isNullOrEmpty()){
+//            user = UserModel(userId).getUser()
+//            userDB.update(user)
+//        }
+        return user!!
+    }
+
     fun logout(activity: Activity) {
         val userId = getUserSession(activity, "user_id").toString()
         activeSessionsRef = database.child(userId).child("session")
@@ -224,40 +242,6 @@ class User(
         mAuth.signOut()
         deleteUserSession(activity)
     }
-
-//    fun signup(view: LoginView, activity: Activity, UserEmail: String, UserPassword: String) {
-//        viewLogin = view
-//        mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
-//            .addOnCompleteListener(activity) { task ->
-//                if (task.isSuccessful) {
-//                    Toast.makeText(
-//                        activity,
-//                        activity.getString(R.string.email_signup_success),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                    verifyaccount(activity)
-//                    viewLogin.onSignUpSuccess()
-//                } else {
-//                    viewLogin.onSignUpError()
-//                    try {
-//                        throw task.exception!!
-//                    } catch (e: FirebaseAuthUserCollisionException) {
-//                        Toast.makeText(
-//                            activity,
-//                            activity.getString(R.string.error_emailaccountexists),
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    } catch (e: Exception) {
-//                        Toast.makeText(
-//                            activity,
-//                            activity.getString(R.string.error_emailsignup),
-//                            //e.message, //There are several errors that can be caught at this point
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//            }
-//    }
 
     suspend fun signup(UserEmail: String, UserPassword: String): Boolean {
         return withContext(Dispatchers.IO) {
@@ -288,26 +272,6 @@ class User(
         }
     }
 
-//    private fun verifyaccount(activity: Activity) {
-//        val user = mAuth.currentUser
-//        user!!.sendEmailVerification()
-//            .addOnCompleteListener(activity) { task ->
-//                if (task.isSuccessful) {
-//                    Toast.makeText(
-//                        activity,
-//                        activity.getString(R.string.success_account_verification),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                } else {
-//                    Toast.makeText(
-//                        activity,
-//                        activity.getString(R.string.failed_account_verification),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            }
-//    }
-
     suspend fun sendPasswordReset(UserEmail: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -332,37 +296,6 @@ class User(
             false
         }
     }
-
-//    fun sendpasswordreset(activity: Activity, userEmail: String) {
-//        mAuth.sendPasswordResetEmail(userEmail)
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    Toast.makeText(
-//                        activity,
-//                        activity.getString(R.string.success_password_reset_email),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                } else {
-//                    try {
-//                        throw task.exception!!
-//                    } catch (e: FirebaseAuthInvalidUserException) {
-//                        //ERROR_USER_NOT_FOUND
-//                        Toast.makeText(
-//                            activity,
-//                            activity.getString(R.string.error_emailaccountnotfound),
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    } catch (e: Exception) {
-//                        Toast.makeText(
-//                            activity,
-//                            activity.getString(R.string.failed_email_login),
-//                            //e.message, //There are several errors that can be caught at this point
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//            }
-//    }
 
     fun onboardingprogress(context: Context): ArrayList<StepBean> {
         val stepsBeanList = arrayListOf<StepBean>()

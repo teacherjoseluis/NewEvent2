@@ -21,11 +21,11 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
 
 
     @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(userid: String) : Boolean {
+    suspend fun firebaseImport(user: User) : Boolean {
         val event: Event
         try {
             val eventModel = EventModel()
-            event = eventModel.getEvent(userid)
+            event = eventModel.getEvent(user.userid!!)
             //update(event)
             Log.d(TAG, "Event record deleted ${event.key}")
             db.execSQL("DELETE FROM EVENT")

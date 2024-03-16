@@ -33,7 +33,7 @@ internal fun addTask(context: Context, taskitem: Task) {
         taskdbhelper = TaskDBHelper(context)
         //------------------------------------------------
         // Updating User information in Firebase
-        usermodel = UserModel(user.userid)
+        usermodel = UserModel(user)
         //usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         val chainofcommand =
@@ -81,7 +81,7 @@ internal fun deleteTask(context: Context, taskitem: Task) {
         //------------------------------------------------
 
         // Updating User information in Firebase
-        usermodel = UserModel(user.userid)
+        usermodel = UserModel(user)
         usermodel.tasksactive = user.tasksactive
         //------------------------------------------------
         val chainofcommand =

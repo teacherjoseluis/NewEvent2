@@ -80,12 +80,15 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
     }
 
     @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(userid: String): Boolean {
+    suspend fun firebaseImport(user: User): Boolean {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
-        val user: User
+        Log.d(TAG, "Starting UserDB record import ${user.userid}")
+        //val user: User
         try {
-            val userModel = UserModel(userid)
-            user = userModel.getUser()
+            val userModel = UserModel(user)
+            Log.d(TAG, "Start getting User record from FireBase")
+            val user = userModel.getUser()
+            Log.d(TAG, "User record obtained from FireBase ${user}")
             db.execSQL("DELETE FROM USER")
             insert(user)
         } catch (e: Exception) {

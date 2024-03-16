@@ -1,6 +1,5 @@
 package com.bridesandgrooms.event
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -58,12 +57,10 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
-//import kotlinx.android.synthetic.main.chartcard_layoutpayment.view.*
-//import kotlinx.android.synthetic.main.dashboardcharts.view.*
-//import kotlinx.android.synthetic.main.empty_state.view.*
-//import kotlinx.android.synthetic.main.onboardingcard.view.*
-//import kotlinx.android.synthetic.main.summary_weddingguests.view.*
-//import kotlinx.android.synthetic.main.summary_weddinglocation.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     DashboardEventPresenter.PaymentStats, DashboardEventPresenter.GuestStats,
@@ -76,6 +73,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     private lateinit var adView: AdView
 
     private var placeid = ""
+    private var showAds = false
 
     private var tfLarge: Typeface? = null
     private var tfRegular: Typeface? = null
@@ -84,14 +82,17 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     private lateinit var inf: DashboardchartsBinding
     private lateinit var user: User
 
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
 
-        // Initialize the MobileAds SDK with your AdMob App ID
-        val showads = RemoteConfigSingleton.get_showads()
+        user = User().getUser(requireContext())
 
-        if (showads) {
+        // Initialize the MobileAds SDK with your AdMob App ID
+        showAds = RemoteConfigSingleton.get_showads()
+        if (showAds) {
             MobileAds.initialize(requireContext()) { initializationStatus ->
                 // You can leave this empty or handle initialization status if needed
             }
@@ -119,7 +120,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceType")
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -127,35 +127,23 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         // Inflate the layout for this fragment
         inf = DataBindingUtil.inflate(inflater, R.layout.dashboardcharts, container, false)
 
-        // Load the ad into the AdView
-        val showads = RemoteConfigSingleton.get_showads()
-
-        if (showads) {
+        if (showAds) {
             inf.adView.visibility = ConstraintLayout.VISIBLE
             adView = inf.adView
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)
         }
 
-        //Calling the presenter that will pull of the data I need for this view
-        try {
-            dashboardEP = DashboardEventPresenter(requireContext(), this, inf.root)
-        } catch (e: Exception) {
-            println(e.message)
-        }
         //this needs to evaluate if it's true to continue the process, else it will stop it
-        user = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        //user = userdbhelper.getUser(userdbhelper.getUserKey())!!
 
         if (user.hastask == "Y" || user.haspayment == "Y") {
             inf.withnodata1.root.visibility = ConstraintLayout.GONE
             inf.withdata.visibility = ConstraintLayout.VISIBLE
             //----------------------------------------------------------------------------------
-
-
             //Load with the achievements obtained by the user -------------------------------------------
             val stepsBeanList = user.onboardingprogress(requireContext())
             val stepview = inf.root.findViewById<HorizontalStepView>(R.id.step_view)
-
             stepview
                 .setStepViewTexts(stepsBeanList)//总步骤
                 .setTextSize(12)//set textSize
@@ -229,6 +217,13 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                     bundle
                 )
                 //----------------------------------------
+            }
+
+            //Calling the presenter that will pull of the data I need for this view
+            try {
+                dashboardEP = DashboardEventPresenter(requireContext(), this, inf.root)
+            } catch (e: Exception) {
+                println(e.message)
             }
 
             //There were children coming out from the Event. Success
@@ -539,7 +534,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             //----------------------------------------
         }
-        inf.guestlayout.findViewById<TextView>(R.id.acceptednumber).text  = confirmed.toString()
+        inf.guestlayout.findViewById<TextView>(R.id.acceptednumber).text = confirmed.toString()
         inf.guestlayout.findViewById<TextView>(R.id.rejectednumber).text = rejected.toString()
         inf.guestlayout.findViewById<TextView>(R.id.pendingnumber).text = pending.toString()
     }
@@ -553,7 +548,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     override fun onEvent(context: Context, event: Event) {
         placeid = event.placeid
 
-        inf.weddingphotodetail.eventname.text =  event.name
+        inf.weddingphotodetail.eventname.text = event.name
         inf.weddingphotodetail.eventdate.text = event.date
         inf.weddinglocation2.eventaddress.text = event.location
         inf.weddinglocation2.eventfulladdress.text = event.address
