@@ -1,5 +1,8 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
+import Application.VendorCreationException
+import Application.VendorDeletionException
 import NetworkUtils
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -13,6 +16,7 @@ import android.os.Bundle
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -29,6 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.PaymentDBHelper
+import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.databinding.NewVendorBinding
 import com.bridesandgrooms.event.UI.TextValidate
@@ -60,11 +65,13 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
     private var placelocation = ""
 
     private lateinit var binding: NewVendorBinding
+    private lateinit var user: User
 
+    @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        user = User().getUser(this)
         binding = DataBindingUtil.setContentView(this, R.layout.new_vendor)
 
         // Declaring and enabling the toolbar
@@ -143,13 +150,23 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                     intents.putExtras(b)
                     startActivity(intents)
                 }
-                getImgfromPlaces(
-                    this,
-                    vendoritem.placeid,
-                    resources.getString(R.string.google_maps_key),
-                    vendoritem.googlevendorname,
-                    binding.googlecard.placesimagevendor
-                )
+                lifecycleScope.launch {
+                    val bitmap = getImgfromPlaces(
+                        this@VendorCreateEdit, // context
+                        vendoritem.placeid,
+                        resources.getString(R.string.google_maps_key),
+                        vendoritem.googlevendorname
+                    )
+
+                    // Handle the loaded bitmap here
+                    if (bitmap != null) {
+                        // Load bitmap into ImageView
+                        binding.googlecard.placesimagevendor.setImageBitmap(bitmap)
+                    } else {
+                        // Handle case when bitmap is null (e.g., show default image)
+                        binding.googlecard.placesimagevendor.setImageResource(R.drawable.avatar2)
+                    }
+                }
             }
         }
 
@@ -264,43 +281,36 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                     .setTitle(getString(R.string.title_delete))
                     .setMessage(getString(R.string.delete_confirmation))
                     .setPositiveButton(android.R.string.yes) { _, _ ->
+                        AnalyticsManager.getInstance()
+                            .trackUserInteraction(SCREEN_NAME, "Delete_Vendor")
                         val paymentdb = PaymentDBHelper(this)
-                        // Let's make sure that there are no payments associated to the vendor
-                        // in order to proceed
-//                        if (!PermissionUtils.checkPermissions(applicationContext)) {
-//                            PermissionUtils.alertBox(this)
-//                        } else {
-                            if (paymentdb.hasVendorPayments(vendoritem.key) == 0) {
-                                lifecycleScope.launch {
-                                    deleteVendor(this@VendorCreateEdit, vendoritem)
-                                }
-                                Thread.sleep(1500)
-                                finish()
-//                            finish()
-                            } else {
-                                //If there are payments associated we will not be able to delete the vendor
-                                Toast.makeText(
-                                    this,
-                                    getString(R.string.error_vendorwithpayments),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                        if (paymentdb.hasVendorPayments(vendoritem.key) == 0) {
+                            try {
+                                deleteVendor(this@VendorCreateEdit, user, vendoritem)
+                            } catch (e: VendorDeletionException) {
+                                AnalyticsManager.getInstance().trackError(
+                                    SCREEN_NAME,
+                                    e.message.toString(),
+                                    "deleteVendor()",
+                                    e.stackTraceToString()
+                                )
+                                Log.e(TAG, e.message.toString())
                             }
-//                        }
+                        } else {
+                            //If there are payments associated we will not be able to delete the vendor
+                            Toast.makeText(
+                                this,
+                                getString(R.string.error_vendorwithpayments),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                    // A null listener allows the binding.button to dismiss the dialog and take no
-                    // further action.
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
-                //true
-                //Disable all controls in the view
-//                binding.nameinputedit.isEnabled = false
-//                binding.phoneinputedit.isEnabled = false
-//                binding.mailinputedit.isEnabled = false
-//                binding.button.isEnabled = false
-//                super.onOptionsItemSelected(item)
                 true
             }
+
             else -> {
                 //true
                 super.onOptionsItemSelected(item)
@@ -336,31 +346,45 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         vendoritem.email = binding.mailinputedit.text.toString()
         vendoritem.category = binding.categoryspinner.selectedItem.toString()
 
-        //Having vendoritem populated allows to decide whether we are adding a new
-        // or editing an existing vendor
-//        if (!PermissionUtils.checkPermissions(applicationContext)) {
-//            PermissionUtils.alertBox(this)
-//        } else {
-            val networkUtils = NetworkUtils(this)
-            if (networkUtils.isNetworkAvailable()) {
-                if (vendoritem.key == "") {
-                    addVendor(this, vendoritem, CALLER)
-                } else if (vendoritem.key != "") {
-                    editVendor(this, vendoritem)
+        val networkUtils = NetworkUtils(this)
+        if (networkUtils.isNetworkAvailable()) {
+            if (vendoritem.key.isEmpty()) {
+                try {
+                    addVendor(this, user, vendoritem)
+                } catch (e: VendorCreationException) {
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        e.message.toString(),
+                        "addVendor()",
+                        e.stackTraceToString()
+                    )
+                    Log.e(TAG, e.message.toString())
                 }
             } else {
-                displayErrorMsg(this, getString(R.string.error_networkconnection))
-                loadingview.visibility = ConstraintLayout.GONE
-                withdataview.visibility = ConstraintLayout.VISIBLE
-                binding.nameinputedit.isEnabled = true
-                binding.phoneinputedit.isEnabled = true
-                binding.mailinputedit.isEnabled = true
-                binding.categoryspinner.isEnabled = true
-                binding.button.isEnabled = true
+                try {
+                    editVendor(this, user, vendoritem)
+                } catch (e: VendorCreationException) {
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        e.message.toString(),
+                        "editVendor()",
+                        e.stackTraceToString()
+                    )
+                    Log.e(TAG, e.message.toString())
+                }
             }
-            Thread.sleep(2000)
-            finish()
-//        }
+        } else {
+            displayErrorMsg(this, getString(R.string.error_networkconnection))
+            loadingview.visibility = ConstraintLayout.GONE
+            withdataview.visibility = ConstraintLayout.VISIBLE
+            binding.nameinputedit.isEnabled = true
+            binding.phoneinputedit.isEnabled = true
+            binding.mailinputedit.isEnabled = true
+            binding.categoryspinner.isEnabled = true
+            binding.button.isEnabled = true
+        }
+        //Thread.sleep(2000)
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -387,7 +411,8 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
             // From what I'm getting, this is only visible when a Vendor is added but not when the user returns
             binding.googlecard.root.visibility = ConstraintLayout.VISIBLE
             binding.googlecard.googlevendorname.text = data?.getStringExtra("place_name")
-            binding.googlecard.ratingnumber.text = data?.getDoubleExtra("place_rating", 0.0).toString()
+            binding.googlecard.ratingnumber.text =
+                data?.getDoubleExtra("place_rating", 0.0).toString()
             binding.googlecard.reviews.text =
                 "(" + data?.getIntExtra("place_userrating", 0).toString() + ")"
             binding.googlecard.rating.rating = data?.getDoubleExtra("place_rating", 0.0)!!.toFloat()
@@ -418,7 +443,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
 
     //This is a callback when the Vendor has been added or edited. The idea is to shut off
     // the loading view when the confirmation that the async process is completed comes
-    override fun onAddEditVendor(vendor: Vendor) {
+    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
         loadingview = findViewById(R.id.loadingscreen)
         withdataview = findViewById(R.id.withdata)
 
@@ -430,7 +455,8 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
     companion object {
         //Permission code
         internal const val PERMISSION_CODE = 1001
-        const val CALLER = "vendor"
+        const val SCREEN_NAME = "Vendor CreateEdit"
+        const val TAG = "VendorCreateEdit"
     }
 }
 

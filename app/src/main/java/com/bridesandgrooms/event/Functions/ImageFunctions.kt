@@ -27,6 +27,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 //import kotlinx.android.synthetic.main.summary_weddinglocation.*
 import java.io.*
 import java.nio.file.Paths
@@ -85,6 +88,7 @@ fun getImgfromSD(category: String, context: Context): Bitmap {
     return bitmapimage
 }
 
+/*
 fun getImgfromPlaces(
     context: Context,
     placeId: String,
@@ -159,6 +163,59 @@ fun getImgfromPlaces(
                 }
         }
 }
+*/
+
+@RequiresApi(Build.VERSION_CODES.R)
+suspend fun getImgfromPlaces(
+    context: Context,
+    placeId: String,
+    apiKey: String,
+    category: String
+): Bitmap? {
+    val fields = listOf(Place.Field.PHOTO_METADATAS)
+
+    // Initialize Places if not already initialized
+    if (!Places.isInitialized()) {
+        Places.initialize(context, apiKey, Locale.US)
+    }
+    val placesClient = Places.createClient(context)
+    val placeRequest = FetchPlaceRequest.builder(placeId, fields).build()
+
+    return withContext(Dispatchers.IO) {
+        try {
+            val response = placesClient.fetchPlace(placeRequest).await()
+
+            val place = response.place
+            val metadata = place.photoMetadatas
+
+            if (metadata == null || metadata.isEmpty()) {
+                Log.w("EventSummary.TAG", "No photo metadata.")
+                return@withContext null
+            }
+            val photoMetadata = metadata.first()
+            val photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                .setMaxWidth(500) // Optional.
+                .setMaxHeight(300) // Optional.
+                .build()
+            val photoResponse = placesClient.fetchPhoto(photoRequest).await()
+
+            val bitmap = photoResponse.bitmap
+
+            // Save bitmap to local storage
+            bitmap?.let {
+                saveBitmaptoSD(context, category, bitmap)
+            }
+
+            return@withContext bitmap
+        } catch (e: Exception) {
+            if (e is ApiException) {
+                Log.e("EventSummary.TAG", "Place not found: ${e.message}")
+            }
+            return@withContext null
+        }
+    }
+}
+
 
 //Function to store an image to Storage
 //IN: Category, userId, EventId

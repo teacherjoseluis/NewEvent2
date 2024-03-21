@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.Model
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -9,10 +10,10 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.Exception
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -22,55 +23,6 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
     private var myRef = database.reference
     var nexthandler: CoRAddEditPayment? = null
     var nexthandlerpdel: CoRDeletePayment? = null
-
-    var userid = ""
-    var eventid = ""
-
-//    fun getPaymentStats(
-//        userid: String,
-//        eventid: String,
-//        category: String,
-//        dataFetched: FirebaseSuccessStatsPayment
-//    ) {
-//        var sumpayment: Float
-//        var countpayment: Int
-//
-//        val postRef =
-//            myRef.child("User").child(userid).child("Event").child(eventid)
-//                .child("Payment")
-//
-//        val paymentListenerActive = object : ValueEventListener {
-//            override fun onDataChange(p0: DataSnapshot) {
-//                countpayment = 0 // Number of Payments made
-//                sumpayment = 0.0f // Amount of Payments
-//
-//                val re = Regex("[^A-Za-z0-9 ]")
-//                for (snapshot in p0.children) {
-//                    val paymentitem = snapshot.getValue(Payment::class.java)!!
-//                    if (category != "") {
-//                        if (paymentitem.category == category) {
-//                            val paidamount = re.replace(paymentitem.amount, "").dropLast(2)
-//                            sumpayment += paidamount.toFloat()
-//                            countpayment += 1
-//                        }
-//                    } else {
-//                        val paidamount = re.replace(paymentitem.amount, "").dropLast(2)
-//                        sumpayment += paidamount.toFloat()
-//                        countpayment += 1
-//                    }
-//                }
-//                Log.d(
-//                    TAG,
-//                    "Current payment stats consists of Number($countpayment), Total($sumpayment)"
-//                )
-//                dataFetched.onPaymentStats(countpayment, sumpayment)
-//            }
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                println("loadPost:onCancelled ${databaseError.toException()}")
-//            }
-//        }
-//        postRef.addValueEventListener(paymentListenerActive)
-//    }
 
     @ExperimentalCoroutinesApi
     suspend fun getPayments(userid: String, eventid: String): ArrayList<Payment> {
@@ -86,7 +38,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
                 paymentList.add(paymentItem)
             }
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
         return paymentList
     }
@@ -101,25 +53,29 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
                 .child("Payment").orderByChild("date")
         val paymentlist = ArrayList<Payment>()
 
-        val paymentlListenerActive = object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onDataChange(p0: DataSnapshot) {
-                paymentlist.clear()
+        try {
+            val paymentlListenerActive = object : ValueEventListener {
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                override fun onDataChange(p0: DataSnapshot) {
+                    paymentlist.clear()
 
-                for (snapshot in p0.children) {
-                    val paymentitem = snapshot.getValue(Payment::class.java)
-                    paymentitem!!.key = snapshot.key.toString()
-                    paymentlist.add(paymentitem)
+                    for (snapshot in p0.children) {
+                        val paymentitem = snapshot.getValue(Payment::class.java)
+                        paymentitem!!.key = snapshot.key.toString()
+                        paymentlist.add(paymentitem)
+                    }
+                    Log.d(TAG, "Number of payments retrieved ${paymentlist.count()}")
+                    dataFetched.onPaymentList(paymentlist)
                 }
-                Log.d(TAG, "Number of payments retrieved ${paymentlist.count()}")
-                dataFetched.onPaymentList(paymentlist)
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
+                override fun onCancelled(databaseError: DatabaseError) {
+                    println("loadPost:onCancelled ${databaseError.toException()}")
+                }
             }
+            postRef.addValueEventListener(paymentlListenerActive)
+        } catch (e: Exception){
+            Log.e(TAG, e.message.toString())
         }
-        postRef.addValueEventListener(paymentlListenerActive)
     }
 
     private fun addPayment(
@@ -149,19 +105,23 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
             "vendorid" to payment.vendorid
         )
 
-        postRef.setValue(paymentadd as Map<String, Any>)
-            .addOnSuccessListener {
-                payment.key = postRef.key.toString()
-                paymentaddedflag.onPaymentAddedEdited(true, payment)
-                Log.d(
-                    TAG,
-                    "Payment ${payment.name} successfully added on ${sdf.format(paymentdatetime)}"
-                )
-            }
-            .addOnFailureListener {
-                paymentaddedflag.onPaymentAddedEdited(false, payment)
-                Log.e(TAG, "Payment ${payment.name} failed to be added")
-            }
+        try {
+            postRef.setValue(paymentadd as Map<String, Any>)
+                .addOnSuccessListener {
+                    payment.key = postRef.key.toString()
+                    paymentaddedflag.onPaymentAddedEdited(true, payment)
+                    Log.d(
+                        TAG,
+                        "Payment ${payment.name} successfully added on ${sdf.format(paymentdatetime)}"
+                    )
+                }
+                .addOnFailureListener {
+                    paymentaddedflag.onPaymentAddedEdited(false, payment)
+                    Log.e(TAG, "Payment ${payment.name} failed to be added")
+                }
+        } catch(e: Exception){
+            Log.e(TAG, e.message.toString())
+        }
     }
 
     private fun editPayment(
@@ -182,15 +142,19 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
             "vendorid" to payment.vendorid
         )
 
-        postRef.setValue(paymentedit as Map<String, Any>)
-            .addOnSuccessListener {
-                paymenteditedflag.onPaymentAddedEdited(true, payment)
-                Log.d(TAG, "Payment ${payment.name} successfully edited")
-            }
-            .addOnFailureListener {
-                paymenteditedflag.onPaymentAddedEdited(false, payment)
-                Log.e(TAG, "Payment ${payment.name} failed to be edited")
-            }
+        try {
+            postRef.setValue(paymentedit as Map<String, Any>)
+                .addOnSuccessListener {
+                    paymenteditedflag.onPaymentAddedEdited(true, payment)
+                    Log.d(TAG, "Payment ${payment.name} successfully edited")
+                }
+                .addOnFailureListener {
+                    paymenteditedflag.onPaymentAddedEdited(false, payment)
+                    Log.e(TAG, "Payment ${payment.name} failed to be edited")
+                }
+        } catch (e: Exception){
+            Log.e(TAG, e.message.toString())
+        }
     }
 
     private fun deletePayment(
@@ -199,7 +163,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
         payment: Payment,
         paymentdeletedflag: FirebaseDeletePaymentSuccess
     ) {
-        val postRef =
+        try {
             myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Payment").child(payment.key)
                 .removeValue()
@@ -211,6 +175,9 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
                     paymentdeletedflag.onPaymentDeleted(false, payment)
                     Log.e(TAG, "Payment ${payment.name} failed to be deleted")
                 }
+        } catch (e: Exception){
+            Log.e(TAG, e.message.toString())
+        }
     }
 
     @ExperimentalCoroutinesApi
@@ -237,25 +204,25 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override fun onAddEditPayment(payment: Payment) {
-        if (payment.key == "") {
+    override fun onAddEditPayment(context: Context, user: User, payment: Payment) {
+        if (payment.key.isEmpty()) {
             addPayment(
-                userid,
-                eventid,
+                user.userid!!,
+                user.eventid,
                 payment,
                 object : FirebaseAddEditPaymentSuccess {
                     override fun onPaymentAddedEdited(flag: Boolean, payment: Payment) {
                         if (flag) {
-                            nexthandler?.onAddEditPayment(payment)
+                            nexthandler?.onAddEditPayment(context, user, payment)
                         }
                     }
                 })
-        } else if (payment.key != "") {
+        } else if (payment.key.isNotEmpty()) {
             editPayment(
-                userid, eventid, payment, object : FirebaseAddEditPaymentSuccess {
+                user.userid!!, user.eventid, payment, object : FirebaseAddEditPaymentSuccess {
                     override fun onPaymentAddedEdited(flag: Boolean, payment: Payment) {
                         if (flag) {
-                            nexthandler?.onAddEditPayment(payment)
+                            nexthandler?.onAddEditPayment(context, user, payment)
                         }
                     }
                 }
@@ -263,15 +230,15 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
         }
     }
 
-    override fun onDeletePayment(payment: Payment) {
+    override fun onDeletePayment(context: Context, user: User, payment: Payment) {
         deletePayment(
-            userid,
-            eventid,
+            user.userid!!,
+            user.eventid,
             payment,
             object : FirebaseDeletePaymentSuccess {
                 override fun onPaymentDeleted(flag: Boolean, payment: Payment) {
                     if (flag) {
-                        nexthandlerpdel?.onDeletePayment(payment)
+                        nexthandlerpdel?.onDeletePayment(context, user, payment)
                     }
                 }
             })
@@ -295,5 +262,4 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
         const val INACTIVEFLAG = "N"
         const val TAG = "PaymentModel"
     }
-
 }

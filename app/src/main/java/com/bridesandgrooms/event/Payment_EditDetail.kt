@@ -15,8 +15,6 @@ import kotlin.collections.ArrayList
 class Payment_EditDetail : AppCompatActivity() {
 
     var payment = com.bridesandgrooms.event.Model.Payment()
-    var userid = ""
-    var eventid = ""
 
     private lateinit var binding: PaymentEditdetailBinding
 
@@ -25,8 +23,8 @@ class Payment_EditDetail : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.payment_editdetail)
 
         payment = intent.getParcelableExtra("payment")!!
-        userid = intent.getStringExtra("userid").toString()
-        eventid = intent.getStringExtra("eventid").toString()
+        //userid = intent.getStringExtra("userid").toString()
+        //eventid = intent.getStringExtra("eventid").toString()
 
         val chipgroupedit = findViewById<ChipGroup>(R.id.groupeditpayment)
         chipgroupedit.isSingleSelection = true

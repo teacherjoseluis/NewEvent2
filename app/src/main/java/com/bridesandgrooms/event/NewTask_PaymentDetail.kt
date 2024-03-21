@@ -12,9 +12,6 @@ import com.bridesandgrooms.event.databinding.PaymentEditdetailBinding
 
 
 class NewTask_PaymentDetail : AppCompatActivity(){
-    var userid = ""
-    var eventid = ""
-
     private lateinit var binding: PaymentEditdetailBinding
 
 
@@ -22,8 +19,8 @@ class NewTask_PaymentDetail : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.payment_editdetail)
 
-        userid = intent.getStringExtra("userid").toString()
-        eventid = intent.getStringExtra("eventid").toString()
+        //userid = intent.getStringExtra("userid").toString()
+        //eventid = intent.getStringExtra("eventid").toString()
 
         // Toolbar
         setSupportActionBar(findViewById(R.id.toolbar))

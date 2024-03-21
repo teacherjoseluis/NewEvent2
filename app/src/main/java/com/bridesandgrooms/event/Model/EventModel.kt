@@ -23,7 +23,6 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
     var nexthandlere: CoRAddEditEvent? = null
     var nexthandleron: CoROnboardUser? = null
 
-    var userid = ""
     lateinit var event: Event
 
     //Need to convert this one into a suspend function
@@ -58,7 +57,7 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
 
         //Save Event image in Storage
         if (uri != null) {
-            saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)
+            saveImgtoStorage(ImagePresenter.EVENTIMAGE, user.userid!!, eventid, uri)
         }
 //            { error, _ ->
 //                if (error != null) {
@@ -99,36 +98,12 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         savesuccessflag.onSaveSuccess(event.key)
     }
 
-//    fun getEventkey(
-//        userid: String,
-//        dataFetched: FirebaseSuccessListenerEventKey
-//    ) {
-//        var eventkey = ""
-//        val postRef =
-//            myRef.child("User").child(userid).child("Event").limitToFirst(1)
-//
-//        val eventListenerActive = object : ValueEventListener {
-//            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-//            override fun onDataChange(p0: DataSnapshot) {
-//                for (snapchild in p0.children){
-//                    eventkey = snapchild.key.toString()
-//                }
-//                dataFetched.onEvent(eventkey)
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                println("loadPost:onCancelled ${databaseError.toException()}")
-//            }
-//        }
-//        postRef.addValueEventListener(eventListenerActive)
-//    }
-
     @ExperimentalCoroutinesApi
     suspend fun getEventKey(userid: String): String {
+        var eventkey = ""
         val postRef =
             myRef.child("User").child(userid).child("Event").limitToFirst(1)
         return try {
-            var eventkey = ""
             for (snapchild in postRef.awaitsSingle()?.children!!) {
                 eventkey = snapchild.key.toString()
             }

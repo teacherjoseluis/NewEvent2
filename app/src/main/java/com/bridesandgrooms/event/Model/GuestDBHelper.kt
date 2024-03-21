@@ -14,7 +14,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class GuestDBHelper(val context: Context) : CoRAddEditGuest, CoRDeleteGuest {
 
     lateinit var guest: Guest
-    var key = ""
     var nexthandler: CoRAddEditGuest? = null
     var nexthandlerdel: CoRDeleteGuest? = null
 
@@ -132,7 +131,7 @@ class GuestDBHelper(val context: Context) : CoRAddEditGuest, CoRDeleteGuest {
             val cursor: Cursor = db.rawQuery("SELECT count(*) as guestcount FROM GUEST WHERE rsvp <> 'n'", null)
             if (cursor.count > 0) {
                 cursor.moveToFirst()
-                guestCount = cursor.getString(cursor.getColumnIndex("guestcount")).toInt()
+                guestCount = cursor.getString(cursor.getColumnIndexOrThrow("guestcount")).toInt()
                 Log.d(TAG, "Guest count obtained from local DB")
             }
             cursor.close()
@@ -190,19 +189,19 @@ class GuestDBHelper(val context: Context) : CoRAddEditGuest, CoRDeleteGuest {
         //db.close()
     }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override fun onAddEditGuest(context: Context, user:User, guest: Guest) {
         if (!getGuestexists(guest.key)) {
             insert(guest)
         } else {
             update(guest)
         }
-        nexthandler?.onAddEditGuest(guest)
+        nexthandler?.onAddEditGuest(context, user, guest)
         Log.i("GuestDBHelper", "onAddEditGuest reached")
     }
 
-    override fun onDeleteGuest(guest: Guest) {
+    override fun onDeleteGuest(context: Context, user:User, guest: Guest) {
         delete(guest)
-        nexthandlerdel?.onDeleteGuest(guest)
+        nexthandlerdel?.onDeleteGuest(context, user, guest)
     }
 
     companion object {

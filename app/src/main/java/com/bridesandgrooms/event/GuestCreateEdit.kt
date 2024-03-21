@@ -1,5 +1,9 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
+import Application.GuestCreationException
+import Application.GuestDeletionException
+import Application.TaskCreationException
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -12,6 +16,7 @@ import android.os.Bundle
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,18 +25,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
-import com.bridesandgrooms.event.Functions.CoRAddEditGuest
-import com.bridesandgrooms.event.Functions.PermissionUtils
 import com.bridesandgrooms.event.Functions.addGuest
 import com.bridesandgrooms.event.Functions.deleteGuest
 import com.bridesandgrooms.event.Functions.editGuest
-import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.User
-import com.bridesandgrooms.event.Model.UserDBHelper
 import com.bridesandgrooms.event.databinding.NewGuestBinding
 import com.bridesandgrooms.event.UI.TextValidate
 import com.google.android.material.chip.Chip
@@ -39,98 +39,60 @@ import com.google.android.material.textfield.TextInputEditText
 //import kotlinx.android.synthetic.main.new_guest.*
 //import kotlinx.android.synthetic.main.task_editdetail.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
+class GuestCreateEdit : AppCompatActivity() {
 
     private var chiptextvalue: String? = null
     private var categoryrsvp: String = ""
     private var categorycompanions: String = ""
     private var categoryguests: String = ""
 
-    private lateinit var guestitem: Guest
-    private lateinit var loadingview: View
-    private lateinit var withdataview: View
-    lateinit var mContext: Context
+    private lateinit var guestItem: Guest
     private lateinit var activitymenu: Menu
     private lateinit var binding: NewGuestBinding
 
-    private lateinit var usersession: User
+    private lateinit var userSession: User
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userdbhelper = UserDBHelper(this)
-        usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
-        val guestMaxNumber = usersession.numberguests
-
         binding = DataBindingUtil.setContentView(this, R.layout.new_guest)
+        userSession = User().getUser(this)
+        //loadingview = findViewById(R.id.loadingscreen)
+        //withdataview = findViewById(R.id.withdata)
 
-        // Toolbar
+        val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
+        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val apptitle = findViewById<TextView>(R.id.appbartitle)
+        val guestMaxNumber = userSession.numberguests
+        val extras = intent.extras
+
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        val extras = intent.extras
-        val apptitle = findViewById<TextView>(R.id.appbartitle)
-
         if (extras!!.containsKey("guest")) {
             apptitle.text = getString(R.string.edit_guest)
+            guestItem = intent.getParcelableExtra("guest")!!
         } else {
             apptitle.text = getString(R.string.new_guest)
+            guestItem = Guest()
         }
 
-        loadingview = findViewById(R.id.loadingscreen)
-        withdataview = findViewById(R.id.withdata)
-
-        guestitem = if (extras!!.containsKey("guest")) {
-            intent.getParcelableExtra("guest")!!
-        } else {
-            Guest()
-        }
-
-        val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
-        mPhoneNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
-        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-
-//        if (guestitem.key != "") {
-//            val guestmodel = GuestModel()
-//            val user = com.example.newevent2.Functions.getUserSession(applicationContext!!)
-//            guestmodel.getGuestdetail(
-//                user.key,
-//                user.eventid,
-//                guestid,
-//                object : GuestModel.FirebaseSuccessGuest {
-//                    override fun onGuest(guest: Guest) {
-//                        binding.nameinputedit.setText(guest.name)
-//                        binding.phoneinputedit.setText(guest.phone)
-//                        tableinputedit.setText(guest.table)
-//
-//                        guestitem.key = guest.key
-//                        guestitem.name = guest.name
-//                        guestitem.phone = guest.phone
-//                        guestitem.email = guest.email
-//                        guestitem.rsvp = guest.rsvp
-//                        guestitem.companion = guest.companion
-//                        guestitem.table = guest.table
-//                    }
-//                })
-//        }
-
-        if (guestitem.name != "") {
-            binding.nameinputedit.setText(guestitem.name)
-            binding.phoneinputedit.setText(guestitem.phone)
+        if (guestItem.name.isNotEmpty()) {
+            binding.nameinputedit.setText(guestItem.name)
+            binding.phoneinputedit.setText(guestItem.phone)
             //tableinputedit.setText(guestitem.table)
-            when (guestitem.companion) {
+            when (guestItem.companion) {
                 "adult" -> binding.companionsgroup.check(binding.chipadult.id)
                 "child" -> binding.companionsgroup.check(binding.chipchild.id)
                 "baby" -> binding.companionsgroup.check(binding.chipbaby.id)
                 else -> binding.companionsgroup.check(binding.chipnone.id)
             }
-            when (guestitem.table) {
+            when (guestItem.table) {
                 "family" -> binding.guestgroup.check(binding.chipfamily.id)
                 "extendedfamily" -> binding.guestgroup.check(binding.chipextended.id)
                 "familyfriends" -> binding.guestgroup.check(binding.chipfamfriends.id)
@@ -139,7 +101,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                 "others" -> binding.guestgroup.check(binding.others.id)
                 else -> binding.guestgroup.check(binding.others.id)
             }
-            when (guestitem.rsvp) {
+            when (guestItem.rsvp) {
                 "y" -> binding.rsvpgroup.check(binding.chip1.id)
                 "n" -> binding.rsvpgroup.check(binding.chip2.id)
                 "pending" -> binding.rsvpgroup.check(binding.chip3.id)
@@ -166,6 +128,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
             binding.phoneinputedit.error = null
         }
 
+        mPhoneNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
         mPhoneNumber.setOnFocusChangeListener { p0, p1 ->
             PhoneNumberUtils.formatNumber(
                 mPhoneNumber.text.toString(),
@@ -174,6 +137,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         }
 
         binding.phoneimage.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Phone_Call")
             if (!binding.phoneinputedit.text.isNullOrBlank()) {
                 val intent = Intent(
                     Intent.ACTION_DIAL,
@@ -184,6 +148,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         }
 
         binding.mailimage.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Send_Mail")
             if (!binding.mailinputedit.text.isNullOrBlank()) {
                 try {
                     val intent = Intent(Intent.ACTION_SENDTO)
@@ -191,26 +156,21 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                     intent.putExtra(Intent.EXTRA_EMAIL, binding.mailinputedit.text.toString())
                     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.genericmessage))
                     startActivity(intent)
-                } catch (ex: ActivityNotFoundException) {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.error_noemailclient),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                } catch (e: ActivityNotFoundException) {
+                    displayToastMsg(getString(R.string.error_noemailclient) + e.toString())
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        e.message.toString(),
+                        "Send Mail",
+                        e.stackTraceToString()
+                    )
+                    Log.e(TAG, e.message.toString())
                 }
             }
         }
 
-//        tableinputedit.setOnClickListener {
-//            tableinputedit.error = null
-//        }
-
-//        mtaggroup.setOnTagClickListener { TagGroup.OnTagClickListener {
-//            Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_LONG).show()
-//        }
-//        }
-
         binding.button.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Guest")
             var inputvalflag = true
             if (binding.nameinputedit.text.toString().isEmpty()) {
                 binding.nameinputedit.error = getString(R.string.error_tasknameinput)
@@ -230,24 +190,21 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
                 inputvalflag = false
             }
             if (binding.guestgroup.checkedChipId == -1) {
-                Toast.makeText(this, "Guest category is required", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    this,
+                    getString(R.string.guest_category_is_required), Toast.LENGTH_SHORT
+                )
                     .show()
                 inputvalflag = false
             }
-//            if (tableinputedit.text.toString().isEmpty()) {
-//                Toast.makeText(this, getString(R.string.error_tableinput), Toast.LENGTH_SHORT)
-//                    .show()
-//                inputvalflag = false
-//            }
+
             if (inputvalflag) {
                 val guestEvent = Guest()
-                val guestCount = guestEvent.getGuestCount(applicationContext)!!
+                val guestCount = guestEvent.getGuestCount(this)!!
                 val newGuestBalance = guestMaxNumber - (guestCount + 1)
                 if (newGuestBalance > 0) {
                     showBanner(getString(R.string.banner_withinguestcount), false)
-                    lifecycleScope.launch {
-                        saveguest()
-                    }
+                    saveguest()
                 } else {
                     showBanner(getString(R.string.banner_outguestcount), true)
                 }
@@ -256,7 +213,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (guestitem.key != "") {
+        if (guestItem.key.isNotEmpty()) {
             menuInflater.inflate(R.menu.guests_menu2, menu)
             activitymenu = menu
             val guestmenu = activitymenu.findItem(R.id.remove_guest)
@@ -270,38 +227,32 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
             R.id.remove_guest -> {
                 AlertDialog.Builder(this)
                     .setTitle(getString(R.string.delete_message))
-                    .setMessage(getString(R.string.delete_entry)) // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setMessage(getString(R.string.delete_entry))
                     .setPositiveButton(
                         android.R.string.yes
                     ) { dialog, which ->
-//                        if (!PermissionUtils.checkPermissions(applicationContext)) {
-//                            PermissionUtils.alertBox(this)
-//                        } else {
-                            lifecycleScope.launch {
-                                deleteGuest(this@GuestCreateEdit, guestitem)
-                                disableControls()
-                                withContext(Dispatchers.IO) {
-                                    Thread.sleep(1500)
-                                }
-                                finish()
-                            }
-                            //finish()
-                       //}
+                        AnalyticsManager.getInstance()
+                            .trackUserInteraction(SCREEN_NAME, "Delete_Guest")
+                        try {
+                            deleteGuest(this@GuestCreateEdit, userSession, guestItem)
+                            disableControls()
+                        } catch (e: GuestDeletionException) {
+                            displayToastMsg(getString(R.string.errorGuestDeletion) + e.toString())
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                e.message.toString(),
+                                "deleteGuest()",
+                                e.stackTraceToString()
+                            )
+                            Log.e(TAG, e.message.toString())
+                        }
+                        finish()
+
                     } // A null listener allows the button to dismiss the dialog and take no further action.
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show()
-                //Disable all controls in the view
-//                binding.nameinputedit.isEnabled = false
-//                binding.phoneinputedit.isEnabled = false
-//                binding.mailinputedit.isEnabled = false
-//                binding.rsvpgroup.isEnabled = false
-//                binding.companionsgroup.isEnabled = false
-//                binding.button.isEnabled = false
-//                super.onOptionsItemSelected(item)
                 true
-
             }
 
             else -> {
@@ -310,7 +261,7 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         }
     }
 
-    private suspend fun disableControls() {
+    private fun disableControls() {
         binding.nameinputedit.isEnabled = false
         binding.phoneinputedit.isEnabled = false
         binding.mailinputedit.isEnabled = false
@@ -319,15 +270,12 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         binding.button.isEnabled = false
 
         setResult(Activity.RESULT_OK, Intent())
-        delay(2000) // Replace Thread.sleep with delay from coroutines
+        //delay(2000) // Replace Thread.sleep with delay from coroutines
         finish()
     }
 
     @SuppressLint("SuspiciousIndentation")
-    private suspend fun saveguest() {
-        //loadingview.visibility = ConstraintLayout.VISIBLE
-        //withdataview.visibility = ConstraintLayout.GONE
-
+    private fun saveguest() {
         binding.nameinputedit.isEnabled = false
         binding.phoneinputedit.isEnabled = false
         binding.mailinputedit.isEnabled = false
@@ -373,26 +321,49 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
             categoryguests = "notattending"
         }
 
-        guestitem.rsvp = categoryrsvp
-        guestitem.companion = categorycompanions
-        guestitem.table = categoryguests
-        guestitem.name = binding.nameinputedit.text.toString()
-        guestitem.phone = binding.phoneinputedit.text.toString()
-        guestitem.email = binding.mailinputedit.text.toString()
+        guestItem.rsvp = categoryrsvp
+        guestItem.companion = categorycompanions
+        guestItem.table = categoryguests
+        guestItem.name = binding.nameinputedit.text.toString()
+        guestItem.phone = binding.phoneinputedit.text.toString()
+        guestItem.email = binding.mailinputedit.text.toString()
 
-//        if (!PermissionUtils.checkPermissions(applicationContext)) {
-//            PermissionUtils.alertBox(this)
-//        } else {
-            if (guestitem.key == "") {
-                addGuest(this, guestitem, CALLER)
-            } else if (guestitem.key != "") {
-                editGuest(this, guestitem)
+        if (guestItem.key.isEmpty()) {
+            lifecycleScope.launch {
+                try {
+                    addGuest(applicationContext, userSession, guestItem)
+                } catch (e: GuestCreationException) {
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        e.message.toString(),
+                        "addGuest()",
+                        e.stackTraceToString()
+                    )
+                    withContext(Dispatchers.Main) {
+                        displayToastMsg(getString(R.string.errorGuestCreation) + e.toString())
+                    }
+                    Log.e(TaskCreateEdit.TAG, e.message.toString())
+                }
             }
-            //withContext(Dispatchers.IO) {
-            Thread.sleep(2000)
-            //}
-            finish()
-        //}
+
+        } else {
+            //lifecycleScope.launch {
+            try {
+                editGuest(applicationContext, userSession, guestItem)
+            } catch (e: TaskCreationException) {
+                AnalyticsManager.getInstance().trackError(
+                    SCREEN_NAME,
+                    e.message.toString(),
+                    "editGuest()",
+                    e.stackTraceToString()
+                )
+                //withContext(Dispatchers.Main) {
+                displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                //}
+                Log.e(TaskCreateEdit.TAG, e.message.toString())
+            }
+        }
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -410,8 +381,18 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
         //getString(R.string.number_guests)
         if (dismiss) {
             binding.dismissButton.visibility = View.VISIBLE
-            binding.dismissButton.setOnClickListener { binding.bannerCardView.visibility = View.INVISIBLE }
+            binding.dismissButton.setOnClickListener {
+                binding.bannerCardView.visibility = View.INVISIBLE
+            }
         }
+    }
+
+    private fun displayToastMsg(message: String) {
+        Toast.makeText(
+            this@GuestCreateEdit,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun finish() {
@@ -423,16 +404,18 @@ class GuestCreateEdit : AppCompatActivity(), CoRAddEditGuest {
     companion object {
         //Permission code
         //internal const val PERMISSION_CODE = 1001
+        const val SCREEN_NAME = "Guest_CreateEdit"
+        const val TAG = "GuestCreateEdit"
         const val CALLER = "guest"
     }
 
-    override fun onAddEditGuest(guest: Guest) {
-        this.loadingview = findViewById(R.id.loadingscreen)
-        this.withdataview = findViewById(R.id.withdata)
-
-        (mContext as GuestCreateEdit).loadingview.visibility = ConstraintLayout.GONE
-        (mContext as GuestCreateEdit).withdataview.visibility = ConstraintLayout.VISIBLE
-        GuestsAll.guestcreated_flag = 1
-    }
+//    override fun onAddEditGuest(guest: Guest) {
+//        this.loadingview = findViewById(R.id.loadingscreen)
+//        this.withdataview = findViewById(R.id.withdata)
+//
+//        (mContext as GuestCreateEdit).loadingview.visibility = ConstraintLayout.GONE
+//        (mContext as GuestCreateEdit).withdataview.visibility = ConstraintLayout.VISIBLE
+//        GuestsAll.guestcreated_flag = 1
+//    }
 }
 

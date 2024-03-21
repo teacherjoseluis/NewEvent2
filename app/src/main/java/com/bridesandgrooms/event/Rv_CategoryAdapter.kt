@@ -3,25 +3,20 @@ package com.bridesandgrooms.event
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.getlocale
 import com.bridesandgrooms.event.Model.Category
-import com.bridesandgrooms.event.Model.MyFirebaseApp
+import Application.MyFirebaseApp
 import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.google.firebase.analytics.FirebaseAnalytics
-import java.lang.reflect.Field
 
 class rvCategoryAdapter(private val categorylist: List<Category>) :
     RecyclerView.Adapter<rvCategoryAdapter.ViewHolder>() {

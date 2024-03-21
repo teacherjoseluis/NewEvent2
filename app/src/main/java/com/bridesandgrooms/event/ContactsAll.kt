@@ -1,5 +1,7 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
+import Application.GuestCreationException
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -9,11 +11,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -25,77 +29,55 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Functions.addGuest
 import com.bridesandgrooms.event.Functions.addVendor
-import com.bridesandgrooms.event.Functions.contacttoGuest
-import com.bridesandgrooms.event.Functions.contacttoVendor
 import com.bridesandgrooms.event.MVP.ContactsAllPresenter
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Contact
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
+import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.UI.OnItemClickListener
 import com.bridesandgrooms.event.databinding.ContactsAllBinding
 import com.google.android.material.chip.Chip
+import kotlinx.coroutines.Dispatchers
 //import kotlinx.android.synthetic.main.contacts_all.*
 //import kotlinx.android.synthetic.main.contacts_all.view.*
 //import kotlinx.android.synthetic.main.vendors_all.view.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAddEditGuest,
-    CoRAddEditVendor {
+class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts {
 
     private var contactlist = ArrayList<Contact>()
     private var guestlist = ArrayList<Guest>()
 
     private lateinit var activitymenu: Menu
-    private lateinit var recyclerViewAllContacts: RecyclerView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var presenterguest: ContactsAllPresenter
     private lateinit var apptitle: TextView
     private lateinit var rvAdapter: Rv_ContactAdapter
-
-    //private lateinit var loadingview: View
-    //private lateinit var withdataview: View
-    //private lateinit var permissionsview: View
     private lateinit var binding: ContactsAllBinding
-    lateinit var mContext: Context
+
+    private lateinit var userSession: User
 
     private var callerclass = ""
-
-//    private val requestPermissionLauncher =
-//        registerForActivityResult(
-//            ActivityResultContracts.RequestPermission()
-//        ) { isGranted: Boolean ->
-//            if (isGranted) {
-//                // Permission is granted. Continue the action or workflow in your
-//                // app.
-//                try {
-//                    presenterguest = ContactsAllPresenter(this, this)
-//                } catch (e: Exception) {
-//                    println(e.message)
-//                }
-//            } else {
-//                // Explain to the user that the feature is unavailable because the
-//                // feature requires a permission that the user has denied. At the
-//                // same time, respect the user's decision. Don't link to system
-//                // settings in an effort to convince the user to change their
-//                // decision.
-//            }
-//        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.contacts_all)
+        userSession = User().getUser(this)
         binding = DataBindingUtil.setContentView(this, R.layout.contacts_all)
 
+        apptitle = findViewById(R.id.appbartitle)
+        apptitle.text = getString(R.string.title_contacts)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        // There are different behaviors whether this is a Guest or Vendor calling the class
+
         val extras = intent.extras
         callerclass = if (extras!!.containsKey("guestid")) {
             "guest"
@@ -103,36 +85,29 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
             "vendor"
         }
 
-        //Declaring the title and layout views
-        apptitle = findViewById(R.id.appbartitle)
-        apptitle.text = getString(R.string.title_contacts)
-
-        //loadingview = findViewById(R.id.loadingscreen)
-        //withdataview = findViewById(R.id.withdata)
-        //permissionsview = findViewById(R.id.permissions)
-
-        //Checking for permissions to read the contacts information
         if (!PermissionUtils.checkPermissions(this, "contact")) {
-            // if (PermissionUtils.alertBox(this)){
-            //PermissionUtils.requestPermissions(this, "contact")
-            // }
             val permissions = PermissionUtils.requestPermissionsList("contact")
             requestPermissions(permissions, PERMISSION_CODE)
         } else {
-            //permission already granted
-            // Call the presenter
             try {
                 presenterguest = ContactsAllPresenter(this, this)
             } catch (e: Exception) {
-                println(e.message)
+                AnalyticsManager.getInstance().trackError(
+                    SCREEN_NAME,
+                    e.message.toString(),
+                    "ContactsAllPresenter",
+                    e.stackTraceToString()
+                )
+                Log.e(TAG, e.message.toString())
             }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.guests_menu, menu)
-
-        //This header will have the ability to filter contacts based on user's input
+        activitymenu = menu
+        activitymenu.findItem(R.id.add_guest).isEnabled = false
+        activitymenu.findItem(R.id.add_vendor).isEnabled = false
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
         searchView.isIconified = false
@@ -149,22 +124,14 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
 
             override fun onQueryTextChange(p0: String?): Boolean {
                 val filteredModelList = filter(contactlist, p0)
-                //The list is updated based on this search criteria
                 rvAdapter = Rv_ContactAdapter(filteredModelList as ArrayList<Contact>)
                 binding.recyclerViewContacts.adapter = rvAdapter
                 return true
             }
         })
-        //By default menus are disabled
-        activitymenu = menu
-        val guestmenu = activitymenu.findItem(R.id.add_guest)
-        guestmenu.isEnabled = false
-        val vendormenu = activitymenu.findItem(R.id.add_vendor)
-        vendormenu.isEnabled = false
         return true
     }
 
-    //Filter function needed to search for specific elements in the contact list
     private fun filter(models: ArrayList<Contact>, query: String?): List<Contact> {
         val lowerCaseQuery = query!!.toLowerCase(Locale.ROOT)
         val filteredModelList: ArrayList<Contact> = ArrayList()
@@ -177,7 +144,6 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         return filteredModelList
     }
 
-    //-- Need to migrate to Databinding:
     override fun onGAContacts(list: ArrayList<Contact>) {
         binding.recyclerViewContacts.apply {
             layoutManager = LinearLayoutManager(this@ContactsAll).apply {
@@ -185,85 +151,120 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
                 reverseLayout = true
             }
             rvAdapter = Rv_ContactAdapter(list)
-            //recyclerViewAllContacts = binding.recyclerViewContacts
             binding.recyclerViewContacts.adapter = rvAdapter
             contactlist = clone(list)
 
-            if (callerclass == "guest") {
-                rvAdapter.mOnItemClickListener = object : OnItemClickListener {
-                    @SuppressLint("SetTextI18n")
-                    override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
-                        if (countselected.size != 0) {
-                            //Updates the appbar with the number of contacts selected
-                            apptitle.text = "${countselected.size} selected"
-                            val guestmenu = activitymenu.findItem(R.id.add_guest)
-                            // Only then we can enable the Guest menu
-                            guestmenu.isEnabled = true
-                            guestmenu.setOnMenuItemClickListener {
-                                //Enabling a loading view to allow the async call to comeback
-                                //31-May - turning off
-                                //loadingview.visibility = ConstraintLayout.VISIBLE
-                                //withdataview.visibility = ConstraintLayout.GONE
-                                when (it.itemId) {
-                                    R.id.add_guest -> {
-                                        for (ind in countselected) {
-                                            //Converting whatever contacts we selected to Guest items
-                                            val guest =
-                                                contacttoGuest(context, contactlist[ind].key)
-                                            guestlist.add(guest)
-                                            lifecycleScope.launch {
-                                                addGuest(context, guest, CALLER)
+            when (callerclass) {
+                "guest" -> {
+                    rvAdapter.mOnItemClickListener = object : OnItemClickListener {
+                        @SuppressLint("SetTextI18n")
+                        override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
+                            AnalyticsManager.getInstance()
+                                .trackUserInteraction(SCREEN_NAME, "Add_Guest")
+                            if (countselected.size != 0) {
+                                apptitle.text = "${countselected.size} selected"
+                                activitymenu.findItem(R.id.add_guest).apply {
+                                    isEnabled = true
+                                    setOnMenuItemClickListener {
+                                        when (it.itemId) {
+                                            R.id.add_guest -> {
+                                                apptitle.text = getString(R.string.title_contacts)
+                                                for (ind in countselected) {
+                                                    val guest =
+                                                        Guest().contacttoGuest(
+                                                            context,
+                                                            contactlist[ind].key
+                                                        )
+                                                    guestlist.add(guest)
+                                                    //lifecycleScope.launch {
+                                                        try {
+                                                            addGuest(context, userSession, guest)
+                                                        } catch (e: GuestCreationException) {
+                                                            AnalyticsManager.getInstance()
+                                                                .trackError(
+                                                                    SCREEN_NAME,
+                                                                    e.message.toString(),
+                                                                    "addGuest()",
+                                                                    e.stackTraceToString()
+                                                                )
+                                                            Log.e(TAG, e.message.toString())
+                                                            //withContext(Dispatchers.Main) {
+                                                                displayToastMsg(getString(R.string.errorGuestCreation) + e.toString())
+                                                            //}
+                                                        }
+                                                    //}
+                                                }
+                                                rvAdapter.onClearSelected()
                                             }
                                         }
-                                        apptitle.text = getString(R.string.title_contacts)
-                                        rvAdapter.onClearSelected()
+                                        //Thread.sleep(1500)
+                                        finish()
+                                        true
                                     }
                                 }
-                                Thread.sleep(1500)
-                                finish()
-                                true
+                            } else {
+                                //Disable the menu as nothing is selected
+                                apptitle.text = getString(R.string.title_contacts)
+                                activitymenu.findItem(R.id.add_guest).isEnabled = false
                             }
-                        } else {
-                            //Disable the menu as nothing is selected
-                            apptitle.text = getString(R.string.title_contacts)
-                            val guestmenu = activitymenu.findItem(R.id.add_guest)
-                            guestmenu.isEnabled = false
                         }
                     }
+
                 }
-            } else if (callerclass == "vendor") {
-                rvAdapter.mOnItemClickListener = object : OnItemClickListener {
-                    @SuppressLint("SetTextI18n")
-                    override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
-                        if (countselected.size != 0) {
-                            //Updates the appbar with the number of elements selected
-                            apptitle.text = "${countselected.size} selected"
-                            val vendormenu = activitymenu.findItem(R.id.add_vendor)
-                            //Enable the menu exclusive for vendors
-                            vendormenu.isEnabled = true
-                            vendormenu.setOnMenuItemClickListener {
-                                binding.loadingscreen.root.visibility = ConstraintLayout.VISIBLE
-                                binding.withdata.visibility = ConstraintLayout.GONE
-                                when (it.itemId) {
-                                    R.id.add_vendor -> {
-                                        for (ind in countselected) {
-                                            //Converting the contacts to Vendors and adding them
-                                            val vendor =
-                                                contacttoVendor(context, contactlist[ind].key)
-                                            addVendor(context, vendor, CALLER)
+
+                "vendor" -> {
+                    rvAdapter.mOnItemClickListener = object : OnItemClickListener {
+                        @SuppressLint("SetTextI18n")
+                        override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
+                            AnalyticsManager.getInstance()
+                                .trackUserInteraction(SCREEN_NAME, "Add_Vendor")
+                            if (countselected.size != 0) {
+                                apptitle.text = "${countselected.size} selected"
+                                activitymenu.findItem(R.id.add_vendor).apply {
+                                    isEnabled = true
+                                    setOnMenuItemClickListener {
+                                        binding.loadingscreen.root.visibility =
+                                            ConstraintLayout.VISIBLE
+                                        binding.withdata.visibility = ConstraintLayout.GONE
+                                        when (it.itemId) {
+                                            R.id.add_vendor -> {
+                                                apptitle.text = getString(R.string.title_contacts)
+                                                for (ind in countselected) {
+                                                    val vendor =
+                                                        Vendor().contacttoVendor(
+                                                            context,
+                                                            contactlist[ind].key
+                                                        )
+                                                    //lifecycleScope.launch {
+                                                        try {
+                                                            addVendor(context, userSession, vendor)
+                                                        } catch (e: GuestCreationException) {
+                                                            AnalyticsManager.getInstance()
+                                                                .trackError(
+                                                                    SCREEN_NAME,
+                                                                    e.message.toString(),
+                                                                    "addVendor()",
+                                                                    e.stackTraceToString()
+                                                                )
+                                                            Log.e(TAG, e.message.toString())
+                                                            //withContext(Dispatchers.Main) {
+                                                                displayToastMsg(getString(R.string.errorVendorCreation) + e.toString())
+                                                            //}
+                                                        }
+                                                    //}
+                                                }
+                                                rvAdapter.onClearSelected()
+                                            }
                                         }
-                                        apptitle.text = getString(R.string.title_contacts)
-                                        rvAdapter.onClearSelected()
+                                        //Thread.sleep(1500)
+                                        finish()
+                                        true
                                     }
                                 }
-                                Thread.sleep(1500)
-                                finish()
-                                true
+                            } else {
+                                apptitle.text = getString(R.string.title_contacts)
+                                activitymenu.findItem(R.id.add_vendor).isEnabled = false
                             }
-                        } else {
-                            apptitle.text = getString(R.string.title_contacts)
-                            val vendormenu = activitymenu.findItem(R.id.add_vendor)
-                            vendormenu.isEnabled = false
                         }
                     }
                 }
@@ -275,21 +276,15 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         TODO("Not yet implemented")
     }
 
-    override fun onAddEditGuest(guest: Guest) {
-        //Callbacks whenever adding the Guest ends,
-        // this will hide the loading view and return to the normal layout
-        binding.loadingscreen.root.visibility = ConstraintLayout.GONE
-        binding.withdata.visibility = ConstraintLayout.VISIBLE
-        GuestsAll.guestcreated_flag = 1
-    }
-
-    override fun onAddEditVendor(vendor: Vendor) {
-        //Callbacks whenever adding the Vendor ends,
-        // this will hide the loading view and return to the normal layout
-        binding.loadingscreen.root.visibility = ConstraintLayout.GONE
-        binding.withdata.visibility = ConstraintLayout.VISIBLE
-        VendorsAll.vendorcreated_flag = 1
-    }
+//    override fun onAddEditGuest(context: Context, user: User, guest: Guest) {
+//        binding.loadingscreen.root.visibility = ConstraintLayout.GONE
+//        binding.withdata.visibility = ConstraintLayout.VISIBLE
+//    }
+//
+//    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
+//        binding.loadingscreen.root.visibility = ConstraintLayout.GONE
+//        binding.withdata.visibility = ConstraintLayout.VISIBLE
+//    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -351,6 +346,14 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
         return true
     }
 
+    private fun displayToastMsg(message: String) {
+        Toast.makeText(
+            this@ContactsAll,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
     override fun finish() {
         val returnintent = Intent()
         val returnbundle = Bundle()
@@ -363,6 +366,8 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts, CoRAdd
     companion object {
         internal const val PERMISSION_CODE = 1001
         const val CALLER = "contact"
+        const val SCREEN_NAME = "Contacts_All"
+        const val TAG = "ContactsAll"
     }
 }
 

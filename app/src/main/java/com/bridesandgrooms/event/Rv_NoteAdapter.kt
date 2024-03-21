@@ -1,10 +1,12 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +33,6 @@ class Rv_NoteAdapter(
     lateinit var context: Context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        // Instantiates a layout XML file into its corresponding View objects
         val v = LayoutInflater.from(p0.context).inflate(R.layout.note_item_layout, p0, false)
         context = p0.context
         return ViewHolder(v)
@@ -81,6 +82,7 @@ class Rv_NoteAdapter(
         recyclerView: RecyclerView,
         action: String
     ) {
+        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"Delete Note")
         try {
             val noteswift = noteList[position]
             Note().apply {
@@ -89,7 +91,6 @@ class Rv_NoteAdapter(
                 color = noteList[position].color
                 lastupdateddatetime = noteList[position].lastupdateddatetime
             }
-
             val notedb = NoteDBHelper(context)
             if (action == DELETEACTION) {
                 noteList.removeAt(position)
@@ -98,17 +99,17 @@ class Rv_NoteAdapter(
 
                 val snackbar = Snackbar.make(recyclerView, "Note deleted", Snackbar.LENGTH_LONG)
                 snackbar.show()
-
                 swipeListener.onItemSwiped(noteList)
             }
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
     }
 
     companion object {
         const val DELETEACTION = "delete"
         const val TAG = "Rv_NoteAdapter"
+        const val SCREEN_NAME = "Rv NoteAdapter"
     }
 }
 

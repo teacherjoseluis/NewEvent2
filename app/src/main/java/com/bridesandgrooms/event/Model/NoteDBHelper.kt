@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
 class NoteDBHelper(val context: Context) {
 
     lateinit var note: Note
-    var key = ""
+    //var key = ""
 
     fun insert(note: Note) {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase

@@ -1,11 +1,11 @@
 package com.bridesandgrooms.event.Model
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.Functions.CoRAddEditTask
 import com.bridesandgrooms.event.Functions.CoRDeleteTask
-import com.bridesandgrooms.event.Functions.userdbhelper
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,173 +23,6 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask{
     private var myRef = database.reference
     var nexthandler: CoRAddEditTask? = null
     var nexthandlerdel: CoRDeleteTask? = null
-
-    //-------------------------------------------------
-    //var key = ""
-    var userid = ""
-    var eventid = ""
-    //lateinit var taskmodel: Task
-    //-------------------------------------------------
-
-//    fun getTaskStats(
-//        userid: String,
-//        eventid: String,
-//        category: String,
-//        dataFetched: FirebaseSuccessStatsTask
-//    ) {
-//        var sumbudget: Float
-//        var countactive: Int
-//        var countcompleted: Int
-//
-//        val postRef =
-//            myRef.child("User").child(userid).child("Event").child(eventid)
-//                .child("Task")
-//
-//        val taskListenerActive = object : ValueEventListener {
-//            override fun onDataChange(p0: DataSnapshot) {
-//                countactive = 0 // Active/Open Tasks
-//                countcompleted = 0 // Tasks Completed
-//                sumbudget = 0.0f // Budget Amount for all Tasks
-//
-//                val re = Regex("[^A-Za-z0-9 ]")
-//                for (snapshot in p0.children) {
-//                    val taskitem = snapshot.getValue(Task::class.java)!!
-//                    if (category != "") {
-//                        if (taskitem.category == category) {
-//                            val budgetamount = re.replace(taskitem.budget, "").dropLast(2)
-//                            sumbudget += budgetamount.toFloat()
-//                            if (taskitem.status == "A") {
-//                                countactive += 1
-//                            } else if (taskitem.status == "C") {
-//                                countcompleted += 1
-//                            }
-//                        }
-//                    } else {
-//                        val budgetamount = re.replace(taskitem.budget, "").dropLast(2)
-//                        sumbudget += budgetamount.toFloat()
-//                        if (taskitem!!.status == "A") {
-//                            countactive += 1
-//                        } else if (taskitem.status == "C") {
-//                            countcompleted += 1
-//                        }
-//                    }
-//                }
-//                Log.d(
-//                    TAG,
-//                    "Current task stats consists of Active($countactive), Completed($countcompleted), Budget($sumbudget)"
-//                )
-//                dataFetched.onTasksStats(countactive, countcompleted, sumbudget)
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                println("loadPost:onCancelled ${databaseError.toException()}")
-//            }
-//        }
-//        postRef.addValueEventListener(taskListenerActive)
-//    }
-
-//    fun getTasksBudget(userid: String, eventid: String, dataFetched: FirebaseSuccessTaskBudget) {
-//        var sumbudget: Float
-//        val postRef =
-//            myRef.child("User").child(userid).child("Event").child(eventid)
-//                .child("Task")
-//        val taskListenerActive = object : ValueEventListener {
-//            override fun onDataChange(p0: DataSnapshot) {
-//                sumbudget = 0.0f // Budget Amount for all Tasks
-//
-//                val re = Regex("[^A-Za-z0-9 ]")
-//                for (snapshot in p0.children) {
-//                    val taskitem = snapshot.getValue(Task::class.java)!!
-//                    val budgetamount = re.replace(taskitem.budget, "").dropLast(2)
-//                    sumbudget += budgetamount.toFloat()
-//                }
-//                Log.d(TAG, "Current task Budget($sumbudget)")
-//                dataFetched.onTasksBudget(sumbudget)
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                println("loadPost:onCancelled ${error.toException()}")
-//            }
-//        }
-//        postRef.addValueEventListener(taskListenerActive)
-//    }
-
-//    fun getDueNextTask(
-//        userid: String,
-//        eventid: String,
-//        dataFetched: FirebaseSuccessTask
-//    ) {
-//        val postRef =
-//            myRef.child("User").child(userid).child("Event").child(eventid)
-//                .child("Task")
-//                .orderByChild("date")
-//        val taskListenerActive = object : ValueEventListener {
-//            override fun onDataChange(p0: DataSnapshot) {
-//                var duenexttask = Task()
-//                val todaydate = Date()
-//                for (snapshot in p0.children) {
-//                    val taskitem = snapshot.getValue(Task::class.java)!!
-//                    if (taskitem.status == "A") {
-//                        if (todaydate.before(SimpleDateFormat("dd/MM/yyyy").parse(taskitem.date))) {
-//                            taskitem!!.key = snapshot.key.toString()
-//                            duenexttask = taskitem
-//                            break
-//                        }
-//                    }
-//                }
-//                Log.d(TAG, "Next due task is ${duenexttask.key}")
-//                dataFetched.onTask(duenexttask)
-//            }
-//
-//            override fun onCancelled(p0: DatabaseError) {
-//                println("loadPost:onCancelled ${p0.toException()}")
-//            }
-//        }
-//        postRef.addValueEventListener(taskListenerActive)
-//    }
-
-    //    fun getTasksList(
-//        userid: String,
-//        eventid: String,
-//        category: String,
-//        status: String,
-//        dataFetched: FirebaseSuccessTaskList
-//    ) {
-//        val postRef =
-//            myRef.child("User").child(userid).child("Event").child(eventid)
-//                .child("Task").orderByChild("date")
-//        var tasklist = ArrayList<Task>()
-//
-//        val tasklListenerActive = object : ValueEventListener {
-//            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-//            override fun onDataChange(p0: DataSnapshot) {
-//                tasklist.clear()
-//
-//                for (snapshot in p0.children) {
-//                    val taskitem = snapshot.getValue(Task::class.java)
-//
-//                    if (taskitem!!.status == status) {
-//                        if (category != "") {
-//                            if (taskitem!!.category == category) {
-//                                taskitem!!.key = snapshot.key.toString()
-//                                tasklist.add(taskitem!!)
-//                            }
-//                        } else {
-//                            taskitem!!.key = snapshot.key.toString()
-//                            tasklist.add(taskitem!!)
-//                        }
-//                    }
-//                }
-//                Log.d(TAG, "Number of tasks retrieved ${tasklist.count()}")
-//                dataFetched.onTaskList(tasklist)
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                println("loadPost:onCancelled ${databaseError.toException()}")
-//            }
-//        }
-//        postRef.addValueEventListener(tasklListenerActive)
-//    }
 
     @ExperimentalCoroutinesApi
     suspend fun getTasks(userid: String, eventid: String): ArrayList<Task> {
@@ -361,27 +194,28 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask{
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override fun onAddEditTask(task: Task) {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
-        if (task.key == "") {
+    override fun onAddEditTask(context: Context, user: User, task: Task) {
+//        val userdbhelper = UserDBHelper(context)
+//        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        if (task.key.isEmpty()) {
             addTask(
                 //userid,
                 user.userid!!,
-                eventid,
+                user.eventid,
                 task,
                 object : FirebaseAddEditTaskSuccess {
                     override fun onTaskAddedEdited(flag: Boolean, task: Task) {
                         if (flag) {
-                            nexthandler?.onAddEditTask(task)
+                            nexthandler?.onAddEditTask(context, user, task)
                         }
                     }
                 })
-        } else if (task.key != "") {
+        } else {
             editTask(
-                user.userid!!, eventid, task, object : FirebaseAddEditTaskSuccess {
+                user.userid!!, user.eventid, task, object : FirebaseAddEditTaskSuccess {
                     override fun onTaskAddedEdited(flag: Boolean, task: Task) {
                         if (flag) {
-                            nexthandler?.onAddEditTask(task)
+                            nexthandler?.onAddEditTask(context, user, task)
                         }
                     }
                 }
@@ -389,16 +223,17 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask{
         }
     }
 
-    override fun onDeleteTask(task: Task) {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
+    override fun onDeleteTask(context: Context, user:User, task: Task) {
+//        val userdbhelper = UserDBHelper(context)
+//        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         deleteTask(
             user.userid!!,
-            eventid,
+            user.eventid,
             task,
             object : FirebaseDeleteTaskSuccess {
                 override fun onTaskDeleted(flag: Boolean) {
                     if (flag) {
-                        nexthandlerdel?.onDeleteTask(task)
+                        nexthandlerdel?.onDeleteTask(context, user, task)
                     }
                 }
             })

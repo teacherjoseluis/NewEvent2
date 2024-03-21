@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.MVP.TableGuestsActivityPresenter
-import com.bridesandgrooms.event.Model.MyFirebaseApp
+import Application.MyFirebaseApp
 import com.bridesandgrooms.event.Model.TableGuests
 import com.bridesandgrooms.event.databinding.TableguestsactivityBinding
 import com.bridesandgrooms.event.UI.ViewAnimation

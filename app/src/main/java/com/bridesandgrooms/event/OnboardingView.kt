@@ -1,5 +1,8 @@
 package com.bridesandgrooms.event
 
+import Application.PaymentCreationException
+import Application.TaskCreationException
+import Application.UserOnboardingException
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +22,7 @@ import com.bridesandgrooms.event.Model.User
 import kotlinx.coroutines.*
 import android.content.Context
 import android.telephony.TelephonyManager
+import android.util.Log
 import android.view.View
 
 import android.view.View.OnFocusChangeListener
@@ -52,19 +56,17 @@ class OnboardingView : AppCompatActivity() {
     private var back_pressed: Long = 0
 
     private lateinit var userSession: User
-    private lateinit var taskitem: com.bridesandgrooms.event.Model.Task
     private lateinit var binding: OnboardingNameBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userSession = User()
-        userSession.userid = intent.getStringExtra("userid").toString()
-        userSession.email = intent.getStringExtra("email").toString()
-        userSession.authtype = intent.getStringExtra("authtype").toString()
-        userSession.language = this.resources.configuration.locales.get(0).language
-        userSession.country = this.resources.configuration.locales.get(0).country
-
-        binding = DataBindingUtil.setContentView(this, R.layout.onboarding_name)
+        userSession = User().apply {
+            userid = intent.getStringExtra("userid").toString()
+            email = intent.getStringExtra("email").toString()
+            authtype = intent.getStringExtra("authtype").toString()
+            language = this@OnboardingView.resources.configuration.locales.get(0).language
+            userSession.country = this@OnboardingView.resources.configuration.locales.get(0).country
+        }
 
         val position = when (userSession.country) {
             "MX" -> 0
@@ -72,6 +74,8 @@ class OnboardingView : AppCompatActivity() {
             "PE" -> 2
             else -> 0
         }
+
+        binding = DataBindingUtil.setContentView(this, R.layout.onboarding_name)
         binding.spinner2.setSelection(position)
 
         userSession.country = when (binding.spinner2.selectedItemPosition) {
@@ -91,8 +95,6 @@ class OnboardingView : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.etlocation)
                     as AutocompleteSupportFragment
 
-        //val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        //autocompleteFragment.setCountry(tm.simCountryIso)
         autocompleteFragment.setCountry(userSession.country)
         autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT)
         autocompleteFragment.setPlaceFields(
@@ -107,7 +109,6 @@ class OnboardingView : AppCompatActivity() {
             )
         )
         //---------------------------------------
-
         // Hide Layout for Onboarding Event
         binding.nameonboaarding.visibility = ConstraintLayout.VISIBLE
         binding.eventonboaarding.visibility = ConstraintLayout.INVISIBLE
@@ -186,11 +187,6 @@ class OnboardingView : AppCompatActivity() {
                     }
                 }
 
-//                etlocation.setOnClickListener {
-//                    val locationmap = Intent(this, MapsActivity::class.java)
-//                    startActivityForResult(locationmap, autocompletePlaceCode)
-
-
                 autocompleteFragment.setOnPlaceSelectedListener(object :
                     PlaceSelectionListener {
                     override fun onPlaceSelected(p0: Place) {
@@ -199,20 +195,6 @@ class OnboardingView : AppCompatActivity() {
                         eventlongitude = p0.latLng!!.longitude
                         eventaddress = p0.address
                         eventlocationname = p0.name
-                        //etlocation.setText(eventlocationname)
-
-//                            val resultIntent = Intent()
-                        //resultIntent.putExtra("eventid", eventkey)
-                        //resultIntent.putExtra("place_name", p0.name)
-                        //resultIntent.putExtra("place_id", p0.id)
-                        //resultIntent.putExtra("place_latitude", p0.latLng!!.latitude)
-                        //resultIntent.putExtra("place_longitude", p0.latLng!!.longitude)
-                        //resultIntent.putExtra("place_address", p0.address)
-//                            resultIntent.putExtra("place_phone", p0.phoneNumber)
-//                            resultIntent.putExtra("place_rating", p0.rating)
-//                            resultIntent.putExtra("place_userrating", p0.userRatingsTotal)
-//                            setResult(Activity.RESULT_OK, resultIntent)
-//                            finish()
                     }
 
                     override fun onError(p0: Status) {
@@ -220,13 +202,6 @@ class OnboardingView : AppCompatActivity() {
                         //Toast.makeText(applicationContext, "" + p0.toString(), Toast.LENGTH_LONG).show();
                     }
                 })
-//                }
-
-//                etlocation.setOnFocusChangeListener(object : View.OnFocusChangeListener {
-//                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-//                        hideSoftKeyboard()
-//                    }
-//                })
 
                 binding.submitevent.setOnClickListener {
                     var inputvalflag: Boolean
@@ -251,10 +226,6 @@ class OnboardingView : AppCompatActivity() {
                         binding.etPlannedTime.error = getString(R.string.error_eventtimeinput)
                         inputvalflag = false
                     }
-//                    if (etlocation.text.toString().isEmpty()) {
-//                        etlocation.error = getString(R.string.error_eventlocationinput)
-//                        inputvalflag = false
-//                    }
                     if (inputvalflag) {
                         val event = Event().apply {
                             placeid = eventplaceid.toString()
@@ -276,35 +247,35 @@ class OnboardingView : AppCompatActivity() {
                         userSession.eventbudget = binding.etbudget.text.toString()
                         userSession.numberguests = binding.etnumberguests.text.toString().toInt()
 
-//                        userSession.country = when (binding.spinner2.selectedItemPosition) {
-//                            0 -> "MX"
-//                            1 -> "CL"
-//                            2 -> "PE"
-//                            else -> "MX"
-//                        }
-
                         if (!checkPermissions()) {
                             alertBox()
                         } else {
                             lifecycleScope.launch {
-                                //addUser - Remote & Local
-
-                                //2/26/2022 -- We need to merge the functionality to create the event within add user
-                                //as the whole flow for creating the user works but I cannot say the same for the event
-                                //this will make a pretty long chain of responsibility but otherwise this won't be working
-                                //addUser(this@OnboardingView, userSession)
-                                //addEvent - Remote & Local
-                                //addEvent(this@OnboardingView, event)
-                                if (!getautocreateTaskPayment()) {
+                                try {
+                                    val autocreateTaskPayment = getautocreateTaskPayment()
+                                    if (!autocreateTaskPayment) {
+                                        val taskitem = Task(dummy = true)
+                                        val paymentitem = Payment(dummy = true)
+                                        try {
+                                            addTask(applicationContext, userSession, taskitem)
+                                            addPayment(applicationContext, userSession, paymentitem)
+                                        } catch (e: TaskCreationException) {
+                                            displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                                        } catch (e: PaymentCreationException) {
+                                            displayToastMsg(getString(R.string.errorPaymentCreation) + e.toString())
+                                        }
+                                    }
                                     onBoarding(this@OnboardingView, userSession, event)
-                                } else {
-                                    val taskitem = Task(dummy = true)
-                                    val paymentitem = Payment(dummy = true)
-                                    onBoarding(this@OnboardingView, userSession, event)
-                                    addTask(applicationContext, taskitem)
-                                    addPayment(applicationContext, paymentitem)
+                                    withContext(Dispatchers.Main) {
+                                        displayToastMsg(getString(R.string.successadduser))
+                                        displayToastMsg(getString(R.string.eventcreated))
+                                    }
+                                } catch (e: UserOnboardingException) {
+                                    displayToastMsg(getString(R.string.errorUserOnboarding) + e.toString())
+                                } catch (e: Exception) {
+                                    Log.d(TAG, e.toString())
                                 }
-                                delay(1000)
+                                //delay(1000)
                                 finish()
                             }
                         }
@@ -315,19 +286,6 @@ class OnboardingView : AppCompatActivity() {
             }
         }
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (resultCode == Activity.RESULT_OK && requestCode == autocompletePlaceCode) {
-//            val placenameString = data?.getStringExtra("place_name")
-//            eventplaceid = data!!.getStringExtra("place_id").toString()
-//            eventlatitude = data.getDoubleExtra("place_latitude", 0.0)
-//            eventlongitude = data.getDoubleExtra("place_longitude", 0.0)
-//            eventaddress = data.getStringExtra("place_address").toString()
-//            etlocation.setText(placenameString)
-//        }
-//    }
 
     private fun alertBox() {
         val builder = android.app.AlertDialog.Builder(this)
@@ -394,6 +352,14 @@ class OnboardingView : AppCompatActivity() {
         }
     }
 
+    private fun displayToastMsg(message: String) {
+        Toast.makeText(
+            this@OnboardingView,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
     override fun onBackPressed() {
         if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
             userSession.logout(this)
@@ -406,5 +372,9 @@ class OnboardingView : AppCompatActivity() {
             ).show()
         }
         back_pressed = System.currentTimeMillis()
+    }
+
+    companion object {
+        private const val TAG = "OnboardingView"
     }
 }

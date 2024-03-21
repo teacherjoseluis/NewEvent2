@@ -15,8 +15,8 @@ import java.text.DecimalFormat
 
 class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
 
-    lateinit var task: Task
-    var key = ""
+//    lateinit var task: Task
+//    var key = ""
     var nexthandler: CoRAddEditTask? = null
     var nexthandlerdel: CoRDeleteTask? = null
 
@@ -138,7 +138,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             if (cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
-                    val name = cursor.getString(cursor.getColumnIndex("name"))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
                     list.add(name)
                 } while (cursor.moveToNext())
             }
@@ -164,7 +164,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             if (cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
-                    val category = cursor.getString(cursor.getColumnIndex("category"))
+                    val category = cursor.getString(cursor.getColumnIndexOrThrow("category"))
                     val taskcategory = getCategory(category)
                     list.add(taskcategory)
                 } while (cursor.moveToNext())
@@ -191,7 +191,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             if (cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
-                    taskstats.taskpending = cursor.getInt(cursor.getColumnIndex("taskpending"))
+                    taskstats.taskpending = cursor.getInt(cursor.getColumnIndexOrThrow("taskpending"))
                 } while (cursor.moveToNext())
             }
             cursor = db.rawQuery(
@@ -201,7 +201,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             if (cursor != null && cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
-                    taskstats.taskcompleted = cursor.getInt(cursor.getColumnIndex("taskcompleted"))
+                    taskstats.taskcompleted = cursor.getInt(cursor.getColumnIndexOrThrow("taskcompleted"))
                 } while (cursor.moveToNext())
             }
             cursor =
@@ -214,7 +214,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
                     cursor.moveToFirst()
                     val re = Regex("[^A-Za-z0-9 ]")
                     do {
-                        val budget = cursor.getString(cursor.getColumnIndex("budget"))
+                        val budget = cursor.getString(cursor.getColumnIndexOrThrow("budget"))
                         val budgetamount = re.replace(budget, "").dropLast(2)
                         sumbudget += budgetamount.toFloat()
                     } while (cursor.moveToNext())
@@ -247,7 +247,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
                     cursor.moveToFirst()
                     val re = Regex("[^A-Za-z0-9 ]")
                     do {
-                        val budget = cursor.getString(cursor.getColumnIndex("budget"))
+                        val budget = cursor.getString(cursor.getColumnIndexOrThrow("budget"))
                         val budgetamount = re.replace(budget, "").dropLast(2)
                         sumActiveBudget += budgetamount.toFloat()
                     } while (cursor.moveToNext())
@@ -266,7 +266,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
                     cursor.moveToFirst()
                     val re = Regex("[^A-Za-z0-9 ]")
                     do {
-                        val budget = cursor.getString(cursor.getColumnIndex("budget"))
+                        val budget = cursor.getString(cursor.getColumnIndexOrThrow("budget"))
                         val budgetamount = re.replace(budget, "").dropLast(2)
                         sumCompletebudget += budgetamount.toFloat()
                     } while (cursor.moveToNext())
@@ -299,7 +299,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
                     cursor.moveToFirst()
                     val re = Regex("[^A-Za-z0-9 ]")
                     do {
-                        val budget = cursor.getString(cursor.getColumnIndex("budget"))
+                        val budget = cursor.getString(cursor.getColumnIndexOrThrow("budget"))
                         val budgetamount = re.replace(budget, "").dropLast(2)
                         sumBudget += budgetamount.toFloat()
                     } while (cursor.moveToNext())
@@ -363,18 +363,18 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         }
     }
 
-    override fun onAddEditTask(task: Task) {
+    override fun onAddEditTask(context: Context, user: User, task: Task) {
         if (!getTaskexists(task.key)) {
             insert(task)
         } else {
             update(task)
         }
-        nexthandler?.onAddEditTask(task)
+        nexthandler?.onAddEditTask(context, user, task)
     }
 
-    override fun onDeleteTask(task: Task) {
+    override fun onDeleteTask(context: Context, user: User, task: Task) {
         delete(task)
-        nexthandlerdel?.onDeleteTask(task)
+        nexthandlerdel?.onDeleteTask(context, user, task)
     }
 
     companion object {

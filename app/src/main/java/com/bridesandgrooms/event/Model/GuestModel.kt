@@ -1,6 +1,7 @@
 package com.bridesandgrooms.event.Model
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -25,9 +26,6 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     var nexthandler: CoRAddEditGuest? = null
     var nexthandlerdel: CoRDeleteGuest? = null
-
-    var userid = ""
-    var eventid = ""
 
     @ExperimentalCoroutinesApi
     suspend fun getGuests(userid: String, eventid: String): ArrayList<Guest> {
@@ -223,26 +221,26 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override fun onAddEditGuest(guest: Guest) {
-        if (guest.key == "") {
-            guest.key = addGuest(userid, eventid, guest)
-            nexthandler?.onAddEditGuest(guest)
-        } else if (guest.key != "") {
-            editGuest(userid, eventid, guest)
-            nexthandler?.onAddEditGuest(guest)
+    override fun onAddEditGuest(context: Context, user: User, guest: Guest) {
+        if (guest.key.isEmpty()) {
+            guest.key = addGuest(user.userid!!, user.eventid, guest)
+            nexthandler?.onAddEditGuest(context, user, guest)
+        } else {
+            editGuest(user.userid!!, user.eventid, guest)
+            nexthandler?.onAddEditGuest(context, user, guest)
         }
         Log.i("GuestModel", "onAddEditGuest reached")
     }
 
-    override fun onDeleteGuest(guest: Guest) {
+    override fun onDeleteGuest(context: Context, user: User, guest: Guest) {
         deleteGuest(
-            userid,
-            eventid,
+            user.userid!!,
+            user.eventid,
             guest,
             object : FirebaseDeleteGuestSuccess {
                 override fun onGuestDeleted(flag: Boolean, guest: Guest) {
                     if (flag) {
-                        nexthandlerdel?.onDeleteGuest(guest)
+                        nexthandlerdel?.onDeleteGuest(context, user, guest)
                     }
                 }
             })

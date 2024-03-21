@@ -17,7 +17,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
-import com.bridesandgrooms.event.Model.MyFirebaseApp
+import Application.MyFirebaseApp
 import com.bridesandgrooms.event.Model.Note
 import com.bridesandgrooms.event.Model.NoteDBHelper
 import com.bridesandgrooms.event.databinding.NewNoteBinding

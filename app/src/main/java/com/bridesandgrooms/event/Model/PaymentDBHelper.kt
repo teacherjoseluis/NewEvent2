@@ -15,7 +15,7 @@ import java.text.DecimalFormat
 class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePayment {
 
     lateinit var payment: Payment
-    var key = ""
+    //var key = ""
     var nexthandler: CoRAddEditPayment? = null
     var nexthandlerpdel: CoRDeletePayment? = null
 
@@ -82,7 +82,6 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
         }
     }
 
-    @SuppressLint("Range")
     fun getPayments(): ArrayList<Payment>? {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val list = ArrayList<Payment>()
@@ -92,15 +91,15 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
             if (cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
-                    val paymentid = cursor.getString(cursor.getColumnIndex("paymentid"))
-                    val name = cursor.getString(cursor.getColumnIndex("name"))
-                    val date = cursor.getString(cursor.getColumnIndex("date"))
-                    val category = cursor.getString(cursor.getColumnIndex("category"))
-                    val amount = cursor.getString(cursor.getColumnIndex("amount"))
-                    val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
+                    val paymentid = cursor.getString(cursor.getColumnIndexOrThrow("paymentid"))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                    val date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+                    val category = cursor.getString(cursor.getColumnIndexOrThrow("category"))
+                    val amount = cursor.getString(cursor.getColumnIndexOrThrow("amount"))
+                    val eventid = cursor.getString(cursor.getColumnIndexOrThrow("eventid"))
                     val createdatetime =
-                        cursor.getString(cursor.getColumnIndex("createdatetime"))
-                    val vendorid = cursor.getString(cursor.getColumnIndex("vendorid"))
+                        cursor.getString(cursor.getColumnIndexOrThrow("createdatetime"))
+                    val vendorid = cursor.getString(cursor.getColumnIndexOrThrow("vendorid"))
                     val payment =
                         Payment(
                             paymentid,
@@ -136,7 +135,7 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
                 cursor.moveToFirst()
                 val re = Regex("[^A-Za-z0-9 ]")
                 do {
-                    val amount = cursor.getString(cursor.getColumnIndex("amount"))
+                    val amount = cursor.getString(cursor.getColumnIndexOrThrow("amount"))
                     val amountdeformatted = re.replace(amount, "").dropLast(2)
                     list.add(amountdeformatted.toFloat())
                     Log.d(TAG, "Amount $amount record obtained for vendor $vendorkey")
@@ -161,15 +160,15 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
             if (cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
-                    val paymentid = cursor.getString(cursor.getColumnIndex("paymentid"))
-                    val name = cursor.getString(cursor.getColumnIndex("name"))
-                    val date = cursor.getString(cursor.getColumnIndex("date"))
-                    val category = cursor.getString(cursor.getColumnIndex("category"))
-                    val amount = cursor.getString(cursor.getColumnIndex("amount"))
-                    val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
+                    val paymentid = cursor.getString(cursor.getColumnIndexOrThrow("paymentid"))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                    val date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+                    val category = cursor.getString(cursor.getColumnIndexOrThrow("category"))
+                    val amount = cursor.getString(cursor.getColumnIndexOrThrow("amount"))
+                    val eventid = cursor.getString(cursor.getColumnIndexOrThrow("eventid"))
                     val createdatetime =
-                        cursor.getString(cursor.getColumnIndex("createdatetime"))
-                    val vendorid = cursor.getString(cursor.getColumnIndex("vendorid"))
+                        cursor.getString(cursor.getColumnIndexOrThrow("createdatetime"))
+                    val vendorid = cursor.getString(cursor.getColumnIndexOrThrow("vendorid"))
                     val payment =
                         Payment(
                             paymentid,
@@ -248,7 +247,7 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
             if (cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
-                    paymentcount = cursor.getInt(cursor.getColumnIndex("vendorpayment"))
+                    paymentcount = cursor.getInt(cursor.getColumnIndexOrThrow("vendorpayment"))
                 } while (cursor.moveToNext())
             }
             cursor.close()
@@ -305,18 +304,18 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
         }
     }
 
-    override fun onAddEditPayment(payment: Payment) {
+    override fun onAddEditPayment(context: Context, user: User, payment: Payment) {
         if (!getPaymentexists(payment.key)) {
             insert(payment)
         } else {
             update(payment)
         }
-        nexthandler?.onAddEditPayment(payment)
+        nexthandler?.onAddEditPayment(context, user, payment)
     }
 
-    override fun onDeletePayment(payment: Payment) {
+    override fun onDeletePayment(context: Context, user: User, payment: Payment) {
         delete(payment)
-        nexthandlerpdel?.onDeletePayment(payment)
+        nexthandlerpdel?.onDeletePayment(context, user, payment)
     }
 
     companion object {

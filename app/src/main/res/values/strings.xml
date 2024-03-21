@@ -261,7 +261,7 @@
     <string name="pressexit">Press once again to exit!</string>
     <string name="checkverification">Check your inbox for a verification email.</string>
     <string name="eventcreated">Your event was successfully created</string>
-    <string name="error_emailverification">You cannot login at this moment, you need to verify your email account first</string>
+    <string name="error_emailverification">You need to verify your email account first. We have sent a verification email to your account </string>
     <string name="error_usersession">There was a problem with your user session or you are already logged in another device</string>
     <string name="weakpassword">Password must be at least 6 characters long</string>
     <string name="invalidemailpassword">Invalid email or password</string>
@@ -312,6 +312,18 @@
     <string name="readmore_blog"><u>Read More</u>.</string>
     <string name="author_blog">"Author: "</string>
     <string name="date_posted">"Published: "</string>
+    <string name="errorUserOnboarding">There was an unexpected error trying to create/edit your User account</string>
+    <string name="errorTaskCreation">There was an unexpected error trying to create/edit your Task</string>
+    <string name="errorPaymentCreation">There was an unexpected error trying to create/edit your Payment</string>
+    <string name="errorTaskDeletion">There was an unexpected error trying to delete your Task</string>
+    <string name="error_in_payment_name">Error in Payment name: %1$s</string>
+    <string name="error_getting_vendors">There was an error trying to get Vendors</string>
+    <string name="error_in_task_name">Error in Task name: %1$s</string>
+    <string name="errorPaymentDeletion">There was an unexpected error trying to delete your Payment</string>
+    <string name="errorGuestCreation">There was an unexpected error trying to create/edit your Guest</string>
+    <string name="errorVendorCreation">There was an unexpected error trying to create/edit the Vendor</string>
+    <string name="guest_category_is_required">Guest category is required</string>
+    <string name="errorGuestDeletion">There was an unexpected error trying to delete the Guest</string>
 
     <string-array name="role" >
         <item>Bride</item>

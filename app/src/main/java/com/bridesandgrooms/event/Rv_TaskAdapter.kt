@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -36,7 +37,7 @@ interface ItemSwipeListenerTask {
 class Rv_TaskAdapter(
     private val taskList: MutableList<Task>,
     private val swipeListener: ItemSwipeListenerTask
-    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchAdapterAction {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchAdapterAction {
 
     lateinit var context: Context
     var taskmodel = TaskModel()
@@ -48,18 +49,14 @@ class Rv_TaskAdapter(
 
     private val ADS_INTERVAL = 4
     private val showads = RemoteConfigSingleton.get_showads()
-    //--------------------------------------------------
-    // For Native Ad Implementation
+
     override fun getItemViewType(position: Int): Int {
         return if ((position > 0 && (position + 1) % ADS_INTERVAL == 0) && showads) {
-            // It's time to show an ad
             NATIVE_AD_VIEW_TYPE
         } else {
-            // Show a payment item
             DEFAULT_VIEW_TYPE
         }
     }
-    //--------------------------------------------------
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         lateinit var genericViewHolder: RecyclerView.ViewHolder
@@ -70,6 +67,7 @@ class Rv_TaskAdapter(
                 context = p0.context
                 genericViewHolder = TaskViewHolder(v)
             }
+
             NATIVE_AD_VIEW_TYPE -> {
                 val v = LayoutInflater.from(p0.context)
                     .inflate(R.layout.native_ad_layout, p0, false)
@@ -79,26 +77,6 @@ class Rv_TaskAdapter(
         }
         return genericViewHolder
     }
-
-//    override fun onCreateViewHolder(p0: ViewGroup, p1: Int) : ViewHolder {
-//        when(p1){
-//            DEFAULT_VIEW_TYPE-> {
-//                val v = LayoutInflater.from(p0?.context).inflate(R.layout.task_item_layout, p0, false)
-//                context = p0.context
-//                return ViewHolder(v)
-//            }
-//            NATIVE_AD_VIEW_TYPE-> {
-//                val v = LayoutInflater.from(p0?.context).inflate(R.layout.task_item_layout, p0, false)
-//                context = p0.context
-//                return ViewHolder(v)
-//            }
-//            else -> {
-//                val v = LayoutInflater.from(p0?.context).inflate(R.layout., p0, false)
-//                context = p0.context
-//                return ViewHolder(v)
-//            }
-//        }
-//    }
 
     override fun getItemCount(): Int {
         return taskList.size
@@ -120,7 +98,6 @@ class Rv_TaskAdapter(
                         context.packageName
                     )
                     p0.categoryavatar.setImageResource(resourceId)
-
                     p0.itemView.setOnClickListener {
                         val taskdetail = Intent(context, TaskCreateEdit::class.java)
                         taskdetail.putExtra("task", taskList[p1])
@@ -128,16 +105,13 @@ class Rv_TaskAdapter(
                     }
                 }
             }
+
             is NativeAdViewHolder -> {
                 val adLoader = AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110")
                     .forNativeAd {
-//                        NativeAd.OnNativeAdLoadedListener {
                         Log.d("AD1015", it.responseInfo.toString())
                         Log.d("AD1015", it.mediaContent.toString())
                         populateNativeAdView(it, p0.nativeAdView)
-//                            p0.nativeAdView!!.visibility=View.VISIBLE
-//                            p0.nativeAdView!!.setNativeAd(it)
-//                        }
                     }
                     .withAdListener(object : AdListener() {
                         override fun onAdFailedToLoad(p0: LoadAdError) {
@@ -152,16 +126,8 @@ class Rv_TaskAdapter(
     }
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
-        // Set the media view.
-        //adView.mediaView = adView.findViewById(R.id.ad_media)
-
-        // The headline and mediaContent are guaranteed to be in every NativeAd.
-        //(adView.headlineView as TextView).text = nativeAd.headline
         adView.mediaView?.setMediaContent(nativeAd.mediaContent)
         adView.mediaView?.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-
-        // This method tells the Google Mobile Ads SDK that you have finished populating your
-        // native ad view with this native ad.
         adView.setNativeAd(nativeAd)
     }
 
@@ -177,43 +143,54 @@ class Rv_TaskAdapter(
         val nativeAdView: NativeAdView = itemView.findViewById(R.id.nativeAd) as NativeAdView
     }
 
-
-    override fun onItemSwiftLeft(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
+    override fun onItemSwiftLeft(
+        context: Context,
+        position: Int,
+        recyclerView: RecyclerView,
+        action: String
+    ) {
+        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Complete Task")
+        val user = User().getUser(context)
         if (action == CHECKACTION) {
             val taskswift = taskList[position]
             taskList.removeAt(position)
             notifyItemRemoved(position)
             taskswift.status = COMPLETETASK
-            editTask(context, taskswift)
+            try {
+                editTask(context, user, taskswift)
+            } catch (e: Exception) {
+                Log.e(TAG,e.message.toString())
+            }
 
             val snackbar =
                 Snackbar.make(recyclerView, "Task completed", Snackbar.LENGTH_LONG)
             snackbar.show()
-
             swipeListener.onItemSwiped(taskList)
         }
     }
 
-    override fun onItemSwiftRight(context: Context, position: Int, recyclerView: RecyclerView, action: String) {
-        //val user = com.example.newevent2.Functions.getUserSession(context!!)
-//        if (!PermissionUtils.checkPermissions(context, "calendar")) {
-//            if(PermissionUtils.alertBox(context)) {
-//                PermissionUtils.requestPermissions(context as Activity, "calendar")
-//            }
-//        } else {
-            val taskswift = taskList[position]
+    override fun onItemSwiftRight(
+        context: Context,
+        position: Int,
+        recyclerView: RecyclerView,
+        action: String
+    ) {
+        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Delete Task")
+        val user = User().getUser(context)
+        val taskswift = taskList[position]
 
-            if (action == DELETEACTION) {
-                taskList.removeAt(position)
-                notifyItemRemoved(position)
-                deleteTask(context, taskswift)
-
-                val snackbar = Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
-                snackbar.show()
-
-                swipeListener.onItemSwiped(taskList)
+        if (action == DELETEACTION) {
+            taskList.removeAt(position)
+            notifyItemRemoved(position)
+            try {
+            deleteTask(context, user, taskswift)
+            } catch (e: Exception) {
+                Log.e(TAG,e.message.toString())
             }
-        //}
+            val snackbar = Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
+            snackbar.show()
+            swipeListener.onItemSwiped(taskList)
+        }
     }
 
     //-------------------------------------------------------------------------------
@@ -262,6 +239,7 @@ class Rv_TaskAdapter(
         const val DELETEACTION = "delete"
         const val UNDOACTION = "undo"
         const val TAG = "Rv_TaskAdapter"
+        const val SCREEN_NAME = "Rv TaskAdapter"
     }
 }
 

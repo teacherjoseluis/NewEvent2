@@ -9,8 +9,9 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.Functions.getImgfromStorage
-import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.MainActivity
+import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.Model.UserDBHelper
 
 class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
 
@@ -66,7 +67,8 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     }
 
     override fun onEmptyEventImage(errorcode: String) {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
+//        val userdbhelper = UserDBHelper(mContext)
+        val user = User().getUser(mContext)
         val storageRef =
             getImgfromStorage(EVENTIMAGE, user.userid!!, user.eventid)
         cacheimage.save(EVENTIMAGE, storageRef)

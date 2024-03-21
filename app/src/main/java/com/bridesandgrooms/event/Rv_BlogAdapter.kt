@@ -3,10 +3,8 @@ package com.bridesandgrooms.event
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings.Global.getString
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,15 +12,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bridesandgrooms.event.Functions.BlogPost
-import com.bridesandgrooms.event.Model.MyFirebaseApp
-import com.bridesandgrooms.event.UI.Functions.texttrimming
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import Application.MyFirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.storage.FirebaseStorage
 import com.firebase.ui.storage.images.FirebaseImageLoader
@@ -30,7 +25,6 @@ import com.firebase.ui.storage.images.FirebaseImageLoader
 import com.google.firebase.storage.StorageReference
 
 import com.bumptech.glide.module.AppGlideModule
-import com.bumptech.glide.request.RequestOptions
 import java.io.InputStream
 
 

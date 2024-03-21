@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
 import TimePickerFragment
 import android.Manifest
 import android.app.Activity
@@ -29,7 +30,10 @@ import com.bridesandgrooms.event.MVP.ImagePresenter
 import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.EventDBHelper
 import com.bridesandgrooms.event.Model.EventModel
-import com.bridesandgrooms.event.Model.MyFirebaseApp
+import Application.MyFirebaseApp
+import android.util.Log
+import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.Model.UserDBHelper
 import com.bridesandgrooms.event.databinding.EventformLayoutBinding
 import com.bridesandgrooms.event.UI.TextValidate
 import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
@@ -56,19 +60,6 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.eventform_layout)
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        try {
-            presenterevent = EventPresenter(applicationContext, this)
-        } catch (e: Exception) {
-            println(e.message)
-        }
-        presenterevent.getEventDetail()
-
         binding.eventname.setOnClickListener {
             binding.eventname.error = null
         }
@@ -85,26 +76,31 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
         }
 
         binding.eventdate.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Pick_Date")
             binding.eventdate.error = null
             showDatePickerDialog()
         }
 
         binding.eventtime.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Pick_Time")
             binding.eventtime.error = null
             showTimePickerDialog()
         }
 
         binding.eventlocation.setOnClickListener {
             binding.eventlocation.error = null
+            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"GooglePlaces")
             val locationmap = Intent(this, MapsActivity::class.java)
             startActivityForResult(locationmap, autocompletePlaceCode)
         }
 
         binding.editImageActionButton.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Event_Image")
             showImagePickerDialog()
         }
 
         binding.savebutton.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"Edit_Event")
             var inputvalflag = true
             if (binding.eventname.text.toString().isEmpty()) {
                 binding.eventname.error = getString(R.string.error_tasknameinput)
@@ -134,6 +130,24 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
                 saveEvent()
             }
         }
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        try {
+            presenterevent = EventPresenter(applicationContext, this)
+        } catch (e: Exception) {
+            AnalyticsManager.getInstance().trackError(
+                SCREEN_NAME,
+                e.message.toString(),
+                "EventPresenter",
+                e.stackTraceToString()
+            )
+            Log.e(TAG, e.message.toString())
+        }
+        presenterevent.getEventDetail()
     }
 
     private fun showDatePickerDialog() {
@@ -174,14 +188,12 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
     }
 
     companion object {
-        //image pick code
         private const val IMAGE_PICK_CODE = 1000
-
-        //Permission code
         internal const val PERMISSION_CODE = 1001
+        const val SCREEN_NAME = "Main_Activity"
+        const val TAG = "MainActivity"
     }
 
-    //handle requested permission result
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -205,7 +217,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
     }
 
     private fun saveEvent() {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        val user = User().getUser(this)
         val event = Event().apply {
             key = eventkey
             placeid = eventplaceid
@@ -220,8 +232,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
         val eventmodel = EventModel()
         eventmodel.editEvent(user.userid!!, event, object : EventModel.FirebaseSaveSuccess {
             override fun onSaveSuccess(eventid: String) {
-                //Updating local storage
-                val eventdb = EventDBHelper(applicationContext)
+                val eventdb = EventDBHelper(this@MainActivity)
                 eventdb.update(event)
 
                 if (uri != null) {
@@ -241,17 +252,6 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
                 }
             }
         })
-        // ------- Analytics call ----------------
-        val bundle = Bundle()
-        bundle.putString("LOCATION", event.location)
-        bundle.putString("DATE", event.date)
-        bundle.putString("TIME", event.date)
-        bundle.putDouble("LATITUDE", event.latitude)
-        bundle.putDouble("LONGITUDE", event.longitude)
-        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-        MyFirebaseApp.mFirebaseAnalytics.logEvent("EDITEVENT", bundle)
-        //----------------------------------------
-
         val resultIntent = Intent()
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
@@ -269,32 +269,14 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
             binding.eventlocation.setText(placenameString)
         }
 
-//        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-//            uri = data?.data!!
-//            CropImage.activity(uri)
-//                .setMinCropResultSize(80, 80)
-//                .setMaxCropResultSize(800, 800)
-//                .start(this)
-//        }
-//
-//        if (resultCode == Activity.RESULT_OK && requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-//            val result = CropImage.getActivityResult(data)
-//            if (resultCode == Activity.RESULT_OK) {
-//                uri = result.uri
-//                //delImgfromSD("eventimage", this@MainActivity)
-//                //eventimage.setImageURI(uri)
-//                // event_imageurl = uri.lastPathSegment.toString()
-//                Glide.with(this@MainActivity)
-//                    .load(uri)
-//                    .apply(RequestOptions.circleCropTransform())
-//                    .into(eventimage)
-//
-//            }
-//        }
-
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             uri = data?.data!!
-            val destinationUri = Uri.fromFile(File(cacheDir, "cropped_image.jpg")) // Specify the destination file URI for the cropped image
+            val destinationUri = Uri.fromFile(
+                File(
+                    cacheDir,
+                    "cropped_image.jpg"
+                )
+            ) // Specify the destination file URI for the cropped image
             UCrop.of(uri!!, destinationUri)
                 .withAspectRatio(1f, 1f) // Set the desired aspect ratio (change as needed)
                 .withMaxResultSize(800, 800) // Set the maximum result size for the cropped image
@@ -305,9 +287,6 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
             val resultUri = UCrop.getOutput(data!!)
             if (resultUri != null) {
                 uri = resultUri
-                //delImgfromSD("eventimage", this@MainActivity)
-                //eventimage.setImageURI(uri)
-                // event_imageurl = uri.lastPathSegment.toString()
                 Glide.with(this@MainActivity)
                     .load(uri)
                     .apply(RequestOptions.circleCropTransform())
@@ -362,7 +341,13 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
         try {
             imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
         } catch (e: Exception) {
-            println(e.message)
+            AnalyticsManager.getInstance().trackError(
+                SCREEN_NAME,
+                e.message.toString(),
+                "ImagePresenter",
+                e.stackTraceToString()
+            )
+            Log.e(TAG, e.message.toString())
         }
         imagePresenter.getEventImage()
     }

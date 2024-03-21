@@ -251,7 +251,7 @@
     <string name="pressexit">Presiona una vez más para salir!</string>
     <string name="checkverification">Revisa tu inbox por un correo de verificación.</string>
     <string name="eventcreated">Tu evento se creo exitósamente</string>
-    <string name="error_emailverification">No puedes entrar a la aplicacion en este momento, primero tienes que verificar tu email</string>
+    <string name="error_emailverification">Primero tienes que verificar tu email. Hemos enviado un correo de verificación a tu cuenta</string>
     <string name="error_usersession">Hubo un problema con tu sesión o estas registrado en otro dispositivo</string>
     <string name="weakpassword">La contraseña debe tener al menos 6 caracteres</string>
     <string name="invalidemailpassword">Correo electrónico o contraseña inválidos</string>
@@ -302,7 +302,18 @@
     <string name="readmore_blog"><u>Leer más</u>.</string>
     <string name="author_blog">"Autor: "</string>
     <string name="date_posted">"Publicado: "</string>
-
+    <string name="errorUserOnboarding">Hubo un error inesperado al intentar crear tu cuenta de Usuario</string>
+    <string name="errorTaskCreation">Existe un error al tratar de crear la tarea</string>
+    <string name="errorPaymentCreation">Existe un error al tratar de crear el pago</string>
+    <string name="errorTaskDeletion">Existe un error al intentar borrar la tarea</string>
+    <string name="error_in_payment_name">Error en el nombre del pago: %1$s</string>
+    <string name="error_getting_vendors">Error al intentar obtener Proveedores</string>
+    <string name="error_in_task_name">Error en el nombre del pago: %1$s</string>
+    <string name="errorPaymentDeletion">Existe un error al intentar borrar el pago</string>
+    <string name="errorGuestCreation">Existe un error al intentar crear/editar tu Invitado</string>
+    <string name="errorVendorCreation">Existe un error al intentar crear/editar el Vendedor</string>
+    <string name="guest_category_is_required">La categoría del Invitado es requerida</string>
+    <string name="errorGuestDeletion">Existe un error al intentar borrar al Invitado</string>
 
     <string-array name="role" >
         <item>Novia</item>

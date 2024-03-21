@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -27,6 +28,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.baoyachi.stepview.HorizontalStepView
 import com.bridesandgrooms.event.Functions.PermissionUtils
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
@@ -39,11 +41,9 @@ import com.bumptech.glide.request.target.Target
 import com.bridesandgrooms.event.Functions.converttoDate
 import com.bridesandgrooms.event.Functions.daystoDate
 import com.bridesandgrooms.event.Functions.getImgfromPlaces
-import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.MVP.DashboardEventPresenter
 import com.bridesandgrooms.event.MVP.ImagePresenter
 import com.bridesandgrooms.event.Model.Event
-import com.bridesandgrooms.event.Model.MyFirebaseApp
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.DashboardchartsBinding
@@ -56,10 +56,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
@@ -82,24 +78,9 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     private lateinit var inf: DashboardchartsBinding
     private lateinit var user: User
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-
-        user = User().getUser(requireContext())
-
-        // Initialize the MobileAds SDK with your AdMob App ID
-        showAds = RemoteConfigSingleton.get_showads()
-        if (showAds) {
-            MobileAds.initialize(requireContext()) { initializationStatus ->
-                // You can leave this empty or handle initialization status if needed
-            }
-        }
-
-        //Declaring the colors and fonts to be used by charts
-        //-------------------------------------------------------------------------
         val rosaPalido = ContextCompat.getColor(requireContext(), R.color.rosapalido)
         val azulmasClaro = ContextCompat.getColor(requireContext(), R.color.azulmasClaro)
         val palodeRosa = ContextCompat.getColor(requireContext(), R.color.paloderosa)
@@ -117,6 +98,16 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             azulmasClaro,
             palodeRosa
         )
+
+        user = User().getUser(requireContext())
+
+        // Initialize the MobileAds SDK with your AdMob App ID
+        showAds = RemoteConfigSingleton.get_showads()
+        if (showAds) {
+            MobileAds.initialize(requireContext()) { initializationStatus ->
+                // You can leave this empty or handle initialization status if needed
+            }
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceType")
@@ -124,7 +115,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         inf = DataBindingUtil.inflate(inflater, R.layout.dashboardcharts, container, false)
 
         if (showAds) {
@@ -134,9 +124,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             adView.loadAd(adRequest)
         }
 
-        //this needs to evaluate if it's true to continue the process, else it will stop it
-        //user = userdbhelper.getUser(userdbhelper.getUserKey())!!
-
         if (user.hastask == "Y" || user.haspayment == "Y") {
             inf.withnodata1.root.visibility = ConstraintLayout.GONE
             inf.withdata.visibility = ConstraintLayout.VISIBLE
@@ -145,102 +132,72 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             val stepsBeanList = user.onboardingprogress(requireContext())
             val stepview = inf.root.findViewById<HorizontalStepView>(R.id.step_view)
             stepview
-                .setStepViewTexts(stepsBeanList)//总步骤
-                .setTextSize(12)//set textSize
+                .setStepViewTexts(stepsBeanList)
+                .setTextSize(12)
                 .setStepsViewIndicatorCompletedLineColor(
                     ContextCompat.getColor(
                         requireContext(),
                         R.color.azulmasClaro
                     )
-                )//设置StepsViewIndicator完成线的颜色
+                )
                 .setStepsViewIndicatorUnCompletedLineColor(
                     ContextCompat.getColor(
                         requireContext(),
                         R.color.rosaChillon
                     )
-                )//设置StepsViewIndicator未完成线的颜色
+                )
                 .setStepViewComplectedTextColor(
                     ContextCompat.getColor(
                         requireContext(),
                         R.color.azulmasClaro
                     )
-                )//设置StepsView text完成线的颜色
+                )
                 .setStepViewUnComplectedTextColor(
                     ContextCompat.getColor(
                         requireContext(),
                         R.color.rosaChillon
                     )
-                )//设置StepsView text未完成线的颜色
+                )
                 .setStepsViewIndicatorCompleteIcon(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.icons8_checked_rosachillon
                     )
-                )//设置StepsViewIndicator CompleteIcon
+                )
                 .setStepsViewIndicatorDefaultIcon(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.circle_rosachillon
                     )
-                )//设置StepsViewIndicator DefaultIcon
+                )
                 .setStepsViewIndicatorAttentionIcon(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.alert_icon_rosachillon
                     )
-                )//设置StepsViewIndicator AttentionIcon
-            //--------------------------------------------------------------------------------------------
+                )
 
             val weddingphotodetail = inf.weddingphotodetail
             weddingphotodetail.root.setOnClickListener {
-                // ------- Analytics call ----------------
-                val bundle = Bundle()
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "EDITEVENT")
-                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-                MyFirebaseApp.mFirebaseAnalytics.logEvent(
-                    FirebaseAnalytics.Event.SELECT_ITEM,
-                    bundle
-                )
-                //----------------------------------------
+                AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "Edit_Event")
+
                 val editevent = Intent(context, MainActivity::class.java)
                 startActivityForResult(editevent, SUCCESS_RETURN)
             }
 
-            val weddingprogress = inf.root.findViewById<ConstraintLayout>(R.id.weddingprogress)
-            weddingprogress.setOnClickListener {
-                // ------- Analytics call ----------------
-                val bundle = Bundle()
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "MYPROGRESS")
-                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-                MyFirebaseApp.mFirebaseAnalytics.logEvent(
-                    FirebaseAnalytics.Event.SELECT_ITEM,
-                    bundle
-                )
-                //----------------------------------------
-            }
-
-            //Calling the presenter that will pull of the data I need for this view
             try {
                 dashboardEP = DashboardEventPresenter(requireContext(), this, inf.root)
             } catch (e: Exception) {
-                println(e.message)
+                AnalyticsManager.getInstance().trackError(SCREEN_NAME, e.message.toString(), "DashboardEventPresenter", e.stackTraceToString())
+                Log.e(TAG, e.message.toString())
             }
-
-            //There were children coming out from the Event. Success
-            //This section could potentially start launching the next calls
             dashboardEP.getTaskList()
             dashboardEP.getPaymentList()
             dashboardEP.getEvent()
             dashboardEP.getGuestList()
         } else {
-            //Noting to do here. The whole process must end and we need to show a layout
-            //expressing that there is nothing to see here.
-            Toast.makeText(
-                context,
-                "You can start by adding either tasks or payments related to your event",
-                Toast.LENGTH_SHORT
-            ).show()
-            Log.i("EventSummary.TAG", "No data was obtained from the Event")
+            Log.i(TAG, "No data was obtained from the Event")
+
             inf.withdata.visibility = ConstraintLayout.GONE
             inf.onboarding.root.visibility = ConstraintLayout.VISIBLE
             inf.withnodata1.emptyCard.onboardingmessage.text =
@@ -251,10 +208,10 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 bottomView.menu.getItem(i).isEnabled = false
             }
 
-            //inf.withnodata1.newtaskbutton.visibility = FloatingActionButton.VISIBLE
             val mAlphaAnimation = AnimationUtils.loadAnimation(context, R.xml.alpha_animation)
             inf.onboarding.newtaskbutton.startAnimation(mAlphaAnimation)
             inf.onboarding.newtaskbutton.setOnClickListener {
+                AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "New_Task")
                 val newtask = Intent(activity, TaskCreateEdit::class.java)
                 startActivity(newtask)
             }
@@ -297,7 +254,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         val datatask = PieData(dataSettask).apply {
             setValueFormatter(DefaultValueFormatter(0))
             setValueTextSize(14f)
-            //Aqui hay un bug cuando aparentemente no dejo que cargue este control y me muevo a otra pantalla
             setValueTextColor(ContextCompat.getColor(requireContext(), R.color.secondaryText))
             setValueTypeface(tfRegular)
         }
@@ -344,17 +300,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             invalidate()
         }
 
-        charttask.setOnClickListener {
-            // ------- Analytics call ----------------
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "CHARTTASK")
-            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
-            //----------------------------------------
-        }
-
         val duenextcard = inf.duenextcard
-        if (task.key == "") {
+        if (task.key.isEmpty()) {
             duenextcard.root.visibility = View.GONE
         } else {
             val cardname = duenextcard.cardtitle
@@ -363,7 +310,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             val action2Button = duenextcard.action2
 
             cardname.text = getString(R.string.duenext)
-            //cardsecondarytext.text = "${task.name} due by ${task.date}"
             val cardmsg = StringBuilder()
             cardmsg.append(task.name).append(" ").append(getString(R.string.dueby)).append(" ")
                 .append(task.date)
@@ -372,15 +318,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             action2Button.visibility = View.INVISIBLE
 
             action1Button.setOnClickListener {
-                // ------- Analytics call ----------------
-                val bundle = Bundle()
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "DUENEXTTASK")
-                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-                MyFirebaseApp.mFirebaseAnalytics.logEvent(
-                    FirebaseAnalytics.Event.SELECT_ITEM,
-                    bundle
-                )
-                //----------------------------------------
+                AnalyticsManager.getInstance()
+                    .trackNavigationEvent(SCREEN_NAME, "View_DueNext_Task")
                 val taskdetail = Intent(context, TaskCreateEdit::class.java)
                 taskdetail.putExtra("task", task)
                 requireContext().startActivity(taskdetail)
@@ -395,11 +334,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
         cardlayoutvisible.root.visibility = ConstraintLayout.GONE
         cardlayoutinvisible.root.visibility = ConstraintLayout.VISIBLE
-//        inf.withnodata.newtaskbutton.visibility = FloatingActionButton.VISIBLE
-//        inf.withnodata.newtaskbutton.setOnClickListener {
-//            val newtask = Intent(activity, TaskCreateEdit::class.java)
-//            startActivity(newtask)
-//        }
     }
 
     override fun onPaymentsStats(
@@ -420,10 +354,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         for (c in BandG_Colors2) chartcolors.add(c)
         cardtitle.text = getString(R.string.payments)
 
-//        val paymententries = ArrayList<PieEntry>()
-//        paymententries.add(PieEntry(sumpayment, getString(R.string.spent)))
-//        paymententries.add(PieEntry(sumbudget - sumpayment, getString(R.string.available)))
-
         val paymententries1 = ArrayList<BarEntry>()
         paymententries1.add(BarEntry(0f, sumpayment))
 
@@ -431,28 +361,19 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         paymententries2.add(BarEntry(1f, sumbudget))
 
         val dataSetpayment1 = BarDataSet(paymententries1, getString(R.string.payments)).apply {
-            //setDrawIcons(false)
-            //sliceSpace = 3f //separation between slices
-            //iconsOffset = MPPointF(0f, 20f) //position of labels to slices. 40f seems too much
             color = ContextCompat.getColor(requireContext(), R.color.azulmasClaro)
-            //xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
         }
 
         val dataSetpayment2 = BarDataSet(paymententries2, getString(R.string.budget)).apply {
-            //setDrawIcons(false)
-            //sliceSpace = 3f //separation between slices
-            //iconsOffset = MPPointF(0f, 20f) //position of labels to slices. 40f seems too much
             color = ContextCompat.getColor(requireContext(), R.color.rosapalido)
-            //xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
         }
 
-        val dataSetpayment = ArrayList<BarDataSet>()
-        dataSetpayment.add(dataSetpayment1)
-        dataSetpayment.add(dataSetpayment2)
-
+        val dataSetpayment = ArrayList<BarDataSet>().apply {
+            add(dataSetpayment1)
+            add(dataSetpayment2)
+        }
 
         val datapayment = BarData(dataSetpayment as List<IBarDataSet>?).apply {
-            //setValueFormatter(CurrencyValueFormatter())
             barWidth = 0.5f
             setValueTextSize(14f)
             setValueTextColor(ContextCompat.getColor(requireContext(), R.color.secondaryText))
@@ -474,17 +395,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
 
         chartpayment.apply {
-            //setUsePercentValues(true)
-            //description.isEnabled = false
-            //setExtraOffsets(5f, -5f, -20f, 15f) //apparently this is padding
-            //dragDecelerationFrictionCoef = 0.95f
-            //isDrawHoleEnabled = false
-            //rotationAngle = 0f
-            //isRotationEnabled = false
-            //isHighlightPerTapEnabled = true
-            //setEntryLabelColor(ContextCompat.getColor(requireContext(), R.color.secondaryText))
-            //setEntryLabelTypeface(tfRegular)
-            //setEntryLabelTextSize(14f)
             axisLeft.axisMinimum = 0f
             axisRight.axisMinimum = 0f
             axisRight.isEnabled = false
@@ -492,17 +402,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             xAxis.isEnabled = false
             data = datapayment
             setFitBars(true)
-            //highlightValues(null)
             invalidate()
-        }
-
-        chartpayment.setOnClickListener {
-            // ------- Analytics call ----------------
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "CHARTPAYMENT")
-            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
-            //----------------------------------------
         }
     }
 
@@ -526,14 +426,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         val cardlayoutinvisible = inf.noguestlayout
         cardlayoutinvisible.visibility = View.GONE
 
-        inf.dashboardVerticalLayout5.setOnClickListener {
-            // ------- Analytics call ----------------
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTINFOCARD")
-            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
-            //----------------------------------------
-        }
         inf.guestlayout.findViewById<TextView>(R.id.acceptednumber).text = confirmed.toString()
         inf.guestlayout.findViewById<TextView>(R.id.rejectednumber).text = rejected.toString()
         inf.guestlayout.findViewById<TextView>(R.id.pendingnumber).text = pending.toString()
@@ -558,6 +450,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             daysleft = daystoDate(converttoDate(event.date))
         } catch (e: Exception) {
             user.softlogout(requireActivity())
+            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"daystoDate()", e.stackTraceToString())
+            Log.e(TAG, e.message.toString())
         }
 
         inf.weddingphotodetail.deadline.text = try {
@@ -567,24 +461,18 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 )
             )
         } catch (e: Exception) {
-            println(e.message)
+            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(), "daysleft", e.stackTraceToString())
+            Log.e(TAG, e.message.toString())
             ""
         }
 
         // Load thumbnail
         imagePresenter = ImagePresenter(context, this, inf.root)
         imagePresenter.getEventImage()
-        //TODO Waiting this to fail and see how it's used
-        // imagePresenter.apiKey = resources.getString(R.string.google_maps_key)
         imagePresenter.getPlaceImage()
 
         inf.weddinglocation2.root.setOnClickListener {
-            // ------- Analytics call ----------------
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "LOCATIONEVENT")
-            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
-            //----------------------------------------
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Visit_GoogleMaps")
 
             val gmmIntentUri =
                 Uri.parse("geo:${event.latitude},${event.longitude}?z=10&q=${event.location}")
@@ -649,19 +537,28 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onEmptyPlaceImageSD() {
-        //Checking for permissions to read the contacts information
         if (!PermissionUtils.checkPermissions(requireActivity().applicationContext, "storage")) {
             val permissions = PermissionUtils.requestPermissionsList("storage")
             requestPermissions(permissions, PERMISSION_CODE)
         } else {
             //permission already granted
-            getImgfromPlaces(
-                requireContext(),
-                placeid,
-                resources.getString(R.string.google_maps_key),
-                ImagePresenter.PLACEIMAGE,
-                inf.weddinglocation2.placesimage
-            )
+            lifecycleScope.launch {
+                val bitmap = getImgfromPlaces(
+                    requireContext(), // context
+                    placeid,
+                    resources.getString(R.string.google_maps_key),
+                    ImagePresenter.PLACEIMAGE
+                )
+
+                // Handle the loaded bitmap here
+                if (bitmap != null) {
+                    // Load bitmap into ImageView
+                    inf.weddinglocation2.placesimage.setImageBitmap(bitmap)
+                } else {
+                    // Handle case when bitmap is null (e.g., show default image)
+                    inf.weddinglocation2.placesimage.setImageResource(R.drawable.avatar2)
+                }
+            }
         }
     }
 
@@ -677,10 +574,11 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 fm.beginTransaction()
                     .replace(R.id.fragment_container, newfragment)
                     .commit()
-            }, 2000) //1 seconds
+            }, 500) //1 seconds
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -693,13 +591,23 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                     PackageManager.PERMISSION_GRANTED
                 ) {
                     //permission from popup granted
-                    getImgfromPlaces(
-                        requireContext(),
-                        placeid,
-                        resources.getString(R.string.google_maps_key),
-                        ImagePresenter.PLACEIMAGE,
-                        inf.weddinglocation2.placesimage
-                    )
+                    lifecycleScope.launch {
+                        val bitmap = getImgfromPlaces(
+                            requireContext(), // context
+                            placeid,
+                            resources.getString(R.string.google_maps_key),
+                            ImagePresenter.PLACEIMAGE
+                        )
+
+                        // Handle the loaded bitmap here
+                        if (bitmap != null) {
+                            // Load bitmap into ImageView
+                            inf.weddinglocation2.placesimage.setImageBitmap(bitmap)
+                        } else {
+                            // Handle case when bitmap is null (e.g., show default image)
+                            inf.weddinglocation2.placesimage.setImageResource(R.drawable.avatar2)
+                        }
+                    }
                 }
             }
         }
@@ -708,6 +616,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     companion object {
         const val SUCCESS_RETURN = 1
         internal const val PERMISSION_CODE = 1001
+        const val SCREEN_NAME = "Dashboard_Event"
+        const val TAG = "DashboardEvent"
     }
 }
 

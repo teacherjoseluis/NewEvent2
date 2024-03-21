@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -9,19 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.bridesandgrooms.event.Functions.delImgfromSD
 import com.bridesandgrooms.event.Functions.editUser
-import com.bridesandgrooms.event.Functions.replaceImage
-import com.bridesandgrooms.event.Functions.userdbhelper
-import com.bridesandgrooms.event.MVP.ImagePresenter
-import com.bridesandgrooms.event.Model.Event
-import com.bridesandgrooms.event.Model.EventDBHelper
-import com.bridesandgrooms.event.Model.EventModel
-import com.bridesandgrooms.event.Model.MyFirebaseApp
+import Application.MyFirebaseApp
+import Application.UserEditionException
+import android.util.Log
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.SettingsBinding
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -31,7 +26,7 @@ import kotlinx.coroutines.launch
 
 class Settings : Fragment(), IOnBackPressed {
 
-    lateinit var usersession: User
+    //lateinit var usersession: User
     private lateinit var inf: SettingsBinding
 
     override fun onCreateView(
@@ -41,7 +36,8 @@ class Settings : Fragment(), IOnBackPressed {
         inf = DataBindingUtil.inflate(inflater, R.layout.settings, container, false)
 
         //Get information about the logged user
-        usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        //usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        var usersession = User().getUser(requireContext())
 
         //Load the spinner with whatever comes from the user role
         inf.textinput.setText(usersession.shortname)
@@ -170,7 +166,12 @@ class Settings : Fragment(), IOnBackPressed {
             if (inputvalflag) {
                 //savesettings()
                 lifecycleScope.launch {
-                    editUser(requireContext(), usersession)
+                    try {
+                        editUser(requireContext(), usersession)
+                    } catch (e: UserEditionException){
+                        AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(), "EditUser", e.stackTraceToString())
+                        Log.e(TAG, e.message.toString())
+                    }
                 }
             }
         }
@@ -222,5 +223,10 @@ class Settings : Fragment(), IOnBackPressed {
 
     override fun onBackPressed(): Boolean {
         return false
+    }
+
+    companion object {
+        const val SCREEN_NAME = "Settings"
+        const val TAG = "Settings"
     }
 }

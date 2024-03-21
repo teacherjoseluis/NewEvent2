@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.MVP.NotePresenter
-import com.bridesandgrooms.event.Model.MyFirebaseApp
+import Application.MyFirebaseApp
 import com.bridesandgrooms.event.Model.Note
 import com.bridesandgrooms.event.databinding.MyNotesBinding
 import com.bridesandgrooms.event.UI.SwipeControllerTasks

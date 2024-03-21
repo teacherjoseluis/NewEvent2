@@ -3,13 +3,12 @@ package com.bridesandgrooms.event
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Functions.BlogPost
 import com.bridesandgrooms.event.Functions.convertToBlogStringDate
-import com.bridesandgrooms.event.Model.MyFirebaseApp
+import Application.MyFirebaseApp
 import com.bridesandgrooms.event.databinding.BlogContentBinding
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.storage.FirebaseStorage

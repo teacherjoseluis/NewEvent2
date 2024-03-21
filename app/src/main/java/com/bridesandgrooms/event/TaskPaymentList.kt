@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
-import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.TaskModel
 import com.bridesandgrooms.event.Model.User
@@ -33,8 +32,8 @@ class TaskPaymentList : AppCompatActivity() {
 //                Intent(this, LoginView::class.java)
 //            startActivity(loginactivity)
 //        }
-        userdbhelper = UserDBHelper(this)
-        usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
+//        val userdbhelper = UserDBHelper(this)
+//        usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
 
         val passedcategory = intent.getStringExtra("category").toString()
 

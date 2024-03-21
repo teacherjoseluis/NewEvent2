@@ -95,25 +95,8 @@ class User(
                 try {
                     authResult =
                         mAuth.signInWithEmailAndPassword(UserEmail!!, UserPassword!!).await()
-
-                    if (authResult?.user!!.isEmailVerified) {
-                        Toast.makeText(
-                            activity,
-                            activity.getString(R.string.success_email_login),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            activity,
-                            activity.getString(R.string.notverified_email_login),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    if (!authResult?.user!!.isEmailVerified) {
                         authResult.user!!.sendEmailVerification().await()
-                        Toast.makeText(
-                            activity,
-                            activity.getString(R.string.checkverification),
-                            Toast.LENGTH_SHORT
-                        ).show()
                         throw EmailVerificationException("Email account for user ${authResult.user!!} has not been verified")
                     }
                 } catch (e: Exception) {
@@ -124,6 +107,7 @@ class User(
                     }
                 }
             }
+
             else -> {
                 //Trying to implement coroutines here. Email authentication will also need it
                 //val authResult = loginWithSocialNetwork(mAuth, credential!!)!!
@@ -140,7 +124,8 @@ class User(
         }
         // reviewing if there is an already logged session for the user - Need to add a parent node
         activeSessionsRef = database.child("Session").child(authResult.user?.uid!!).child("session")
-        lastSignedInAtRef = database.child("Session").child(authResult.user?.uid!!).child("last_signed_in_at")
+        lastSignedInAtRef =
+            database.child("Session").child(authResult.user?.uid!!).child("last_signed_in_at")
         val activeSessionsSnapshot = try {
             activeSessionsRef.get().await()
         } catch (e: Exception) {
@@ -157,31 +142,24 @@ class User(
         val eventId = eventSnapShot.getValue(String::class.java)
         //-----------------------------------------------------------------------------------------------------------------
         if (activeSessionsSnapshot.exists()) {
-//            val storedSessionID =
-//                activeSessionsSnapshot.getValue(String::class.java)
-//            if (storedSessionID != "") {
-//                // Session ID exists and therefore a user is signed in elsewhere
-//                throw ExistingSessionException("There is an existing session $storedSessionID for user ${authResult?.user!!}")
-//            } else {
-                // extracting the session value from Firebase
-                val currentTimeMillis = System.currentTimeMillis()
-                lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
-                // Session ID does not exist and user can login using this device
-                activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
-                    .await()
+            // extracting the session value from Firebase
+            val currentTimeMillis = System.currentTimeMillis()
+            lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
+            // Session ID does not exist and user can login using this device
+            activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
+                .await()
 
-                // saving authentication variables in the shared preferences
-                saveUserSession(activity, authResult!!.user!!.email.toString(), null, "email")
-                saveUserSession(activity, authResult.user!!.uid, null, "user_id")
-                saveUserSession(activity, eventId, null, "event_id")
-                saveUserSession(
-                    activity,
-                    authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
-                    "session_id"
-                )
-                saveUserSession(activity, null, currentTimeMillis, "last_signed_in_at")
-                return@coroutineScope authResult
-            //}
+            // saving authentication variables in the shared preferences
+            saveUserSession(activity, authResult!!.user!!.email.toString(), null, "email")
+            saveUserSession(activity, authResult.user!!.uid, null, "user_id")
+            saveUserSession(activity, eventId, null, "event_id")
+            saveUserSession(
+                activity,
+                authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
+                "session_id"
+            )
+            saveUserSession(activity, null, currentTimeMillis, "last_signed_in_at")
+            return@coroutineScope authResult
         } else {
             // extracting the session value from Firebase
             val currentTimeMillis = System.currentTimeMillis()
@@ -204,7 +182,7 @@ class User(
         }
     }
 
-    fun getUser(context: Context) : User {
+    fun getUser(context: Context): User {
         val userId = try {
             getUserSession(context, "user_id") as String
         } catch (e: Exception) {
@@ -212,21 +190,14 @@ class User(
             ""
         }
         val userDB = UserDBHelper(context)
-        var user = userDB.getUser(userId)
-
-//        if (user?.userid.isNullOrEmpty()){
-//            user = UserModel(userId).getUser()
-//            userDB.update(user)
-//        }
+        val user = userDB.getUser(userId)
         return user!!
     }
 
     fun logout(activity: Activity) {
         val userId = getUserSession(activity, "user_id").toString()
         activeSessionsRef = database.child(userId).child("session")
-        if (userId != null) {
-            activeSessionsRef.setValue(null)
-        }
+        activeSessionsRef.setValue(null)
         mAuth.signOut()
         deleteUserSession(activity)
         Toast.makeText(activity, activity.getString(R.string.success_logout), Toast.LENGTH_SHORT)
@@ -236,9 +207,7 @@ class User(
     fun softlogout(activity: Activity) {
         val userId = getUserSession(activity, "user_id").toString()
         activeSessionsRef = database.child(userId).child("session")
-        if (userId != null) {
-            activeSessionsRef.setValue(null)
-        }
+        activeSessionsRef.setValue(null)
         mAuth.signOut()
         deleteUserSession(activity)
     }
@@ -254,15 +223,19 @@ class User(
                     is FirebaseAuthUserCollisionException -> {
                         throw e
                     }
+
                     is FirebaseAuthWeakPasswordException -> {
                         throw e
                     }
+
                     is FirebaseAuthInvalidCredentialsException -> {
                         throw e
                     }
+
                     is FirebaseAuthEmailException -> {
                         throw e
                     }
+
                     else -> {
                         throw e
                     }
@@ -282,12 +255,15 @@ class User(
                     is FirebaseAuthInvalidUserException -> {
                         throw e
                     }
+
                     is FirebaseAuthInvalidCredentialsException -> {
                         throw e
                     }
+
                     is FirebaseAuthEmailException -> {
                         throw e
                     }
+
                     else -> {
                         throw e
                     }

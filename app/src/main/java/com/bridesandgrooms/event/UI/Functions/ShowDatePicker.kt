@@ -4,9 +4,8 @@ import android.app.DatePickerDialog
 import androidx.fragment.app.FragmentManager
 import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
 
-var selectedDate = ""
-
 internal fun showDatePickerDialog(supportFragmentManager : FragmentManager) : String {
+    var selectedDate = ""
     val newFragment =
         DatePickerFragment.newInstance(DatePickerDialog.OnDateSetListener { _, year, month, day ->
             // +1 because January is zero

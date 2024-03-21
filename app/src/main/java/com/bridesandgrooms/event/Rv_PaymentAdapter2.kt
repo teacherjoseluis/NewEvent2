@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -18,6 +19,7 @@ import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.deletePayment
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Payment
+import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.UserModel
 import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
 import com.google.android.gms.ads.AdListener
@@ -167,19 +169,17 @@ class Rv_PaymentAdapter2(
         recyclerView: RecyclerView,
         action: String
     ) {
-//        if (!PermissionUtils.checkPermissions(context, "calendar")) {
-//            val permissions = PermissionUtils.requestPermissionsList("calendar")
-//            requestPermissions(permissions, PERMISSION_CODE)
-//        } else {
+        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"Delete Payment")
+        val user = User().getUser(context)
             try {
                 val paymentswift = paymentList[position]
 
                 if (action == DELETEACTION) {
                     paymentList.removeAt(position)
                     notifyItemRemoved(position)
-                    coroutineScope.launch {
-                        deletePayment(context, paymentswift)
-                    }
+                    //coroutineScope.launch {
+                        deletePayment(context, user, paymentswift)
+                    //}
 
                     val snackbar =
                         Snackbar.make(recyclerView, "Payment deleted", Snackbar.LENGTH_LONG)
@@ -194,5 +194,6 @@ class Rv_PaymentAdapter2(
     companion object {
         const val TAG = "Rv_PaymentAdapter"
         const val DELETEACTION = "delete"
+        const val SCREEN_NAME = "Rv PaymentAdapter"
     }
 }

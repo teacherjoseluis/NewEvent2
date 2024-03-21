@@ -23,7 +23,7 @@ class TaskPaymentTasksPresenter(
     override fun onTaskList(list: ArrayList<Task>) {
         val filteredtasklistactive = ArrayList<Task>()
         for (task in list) {
-            if ((task.category == taskcategory) || (taskcategory == "")) {
+            if ((task.category == taskcategory) || (taskcategory.isEmpty())) {
                 if (task.status == status) {
                     filteredtasklistactive.add(task)
                 }

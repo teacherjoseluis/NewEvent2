@@ -1,8 +1,10 @@
 package com.bridesandgrooms.event.Model
 
 import android.content.Context
+import android.database.Cursor
 import android.os.Parcel
 import android.os.Parcelable
+import android.provider.ContactsContract
 import android.util.Log
 
 open class Guest(
@@ -50,6 +52,81 @@ open class Guest(
             Log.e(GuestDBHelper.TAG, e.message.toString())
             return null
         }
+    }
+
+    internal fun contacttoGuest(context: Context, contactid: String): Guest {
+        val contactguest = Guest()
+        val cursor: Cursor?
+        val phonecursor: Cursor?
+        val emailcursor: Cursor?
+
+        val whereclause = StringBuffer()
+        whereclause.append(ContactsContract.Contacts._ID)
+        whereclause.append(" = ")
+        whereclause.append(contactid)
+
+        val whereclausephone = StringBuffer()
+        whereclausephone.append(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
+        whereclausephone.append(" = ")
+        whereclausephone.append(contactid)
+
+        val whereclauseemail = StringBuffer()
+        whereclauseemail.append(ContactsContract.CommonDataKinds.Email.CONTACT_ID)
+        whereclauseemail.append(" = ")
+        whereclauseemail.append(contactid)
+
+        cursor =
+            context.contentResolver.query(
+                ContactsContract.Contacts.CONTENT_URI,
+                null,
+                whereclause.toString(),
+                null, null
+            )
+
+        phonecursor =
+            context.contentResolver.query(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                null,
+                whereclausephone.toString(),
+                null, null
+            )
+
+        emailcursor =
+            context.contentResolver.query(
+                ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                null,
+                whereclauseemail.toString(),
+                null, null
+            )
+
+        cursor?.moveToNext()
+        phonecursor?.moveToNext()
+        emailcursor?.moveToNext()
+
+        contactguest.name =
+            cursor?.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
+                .toString()
+
+        contactguest.phone =
+            try {
+                phonecursor?.getString(phonecursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                    .toString()
+            } catch (e: IndexOutOfBoundsException) {
+                ""
+            }
+        contactguest.email =
+            try {
+                emailcursor?.getString(emailcursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Email.DATA))
+                    .toString()
+            } catch (e: IndexOutOfBoundsException) {
+                ""
+            }
+
+        cursor?.let { cursor.close() }
+        phonecursor?.let { phonecursor.close() }
+        emailcursor?.let { emailcursor.close() }
+
+        return contactguest
     }
 
     companion object CREATOR : Parcelable.Creator<Guest> {

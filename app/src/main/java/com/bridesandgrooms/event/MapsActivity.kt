@@ -8,7 +8,8 @@ import android.telephony.TelephonyManager
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.bridesandgrooms.event.Functions.userdbhelper
+import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.Model.UserDBHelper
 import com.bridesandgrooms.event.databinding.ActivityMapsBinding
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
@@ -29,9 +30,10 @@ class MapsActivity : AppCompatActivity() {
 
         eventkey = intent.getStringExtra("eventkey").toString()
 
-        val userSession = userdbhelper.getUser(userdbhelper.getUserKey())!!
+//        val userdbhelper = UserDBHelper(this)
+        val user = User().getUser(this)
         val country_name = findViewById<TextView>(R.id.country_name)
-        country_name.text = userSession.country
+        country_name.text = user.country
 
         if (!Places.isInitialized()) {
             Places.initialize(applicationContext, getString(R.string.google_maps_key), Locale.US)
@@ -44,7 +46,7 @@ class MapsActivity : AppCompatActivity() {
 
         //val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         //autocompleteFragment.setCountry(tm.simCountryIso)
-        autocompleteFragment.setCountry(userSession.country)
+        autocompleteFragment.setCountry(user.country)
         autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT)
         autocompleteFragment.setPlaceFields(
             listOf(

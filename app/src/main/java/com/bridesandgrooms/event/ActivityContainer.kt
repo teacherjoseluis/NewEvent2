@@ -1,9 +1,11 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -63,14 +65,14 @@ class ActivityContainer : AppCompatActivity() {
         val lastSignedInAt = try {
             getUserSession(this@ActivityContainer, "last_signed_in_at") as Long
         } catch (e: Exception) {
-            println(e.message)
+            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"getUserSession",e.stackTraceToString())
             0L
         }
         // Email Id???
         val emailid = try {
             getUserSession(this@ActivityContainer, "event_id") as String
         } catch (e: Exception) {
-            println(e.message)
+            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"getUserSession",e.stackTraceToString())
             ""
         }
 
@@ -99,6 +101,9 @@ class ActivityContainer : AppCompatActivity() {
         val navView = findViewById<BottomNavigationView>(R.id.bottomnav)
         val androidVersion = headerView.findViewById<TextView>(R.id.androidVersionNumber)
         val androidCode = headerView.findViewById<TextView>(R.id.androidVersionCode)
+        val headershortname =
+            sidenavView.getHeaderView(0).findViewById<TextView>(R.id.headershortname)
+        headershortname.text = usersession.shortname
 
         if (isEventDate(this) == 0) {
             NordanAlertDialog.Builder(this)
@@ -111,17 +116,14 @@ class ActivityContainer : AppCompatActivity() {
                 .build().show()
         }
 
-        val headershortname =
-            sidenavView.getHeaderView(0).findViewById<TextView>(R.id.headershortname)
-        headershortname.text = usersession.shortname
-
         // Populating Android Version and Code
         try {
             val packageInfo = this.packageManager.getPackageInfo(this.packageName, 0)
             androidVersion.text = packageInfo.versionName
             androidCode.text = packageInfo.versionCode.toString()
         } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
+            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"getPackageInfo",e.stackTraceToString())
+            Log.e(TAG, e.message.toString())
             androidVersion.text = "0.0"
             androidCode.text = "0.0"
         }
@@ -138,31 +140,37 @@ class ActivityContainer : AppCompatActivity() {
         sidenavView.setNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.event_fragment -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Home")
                     clickNavItem = R.id.event_fragment
                     newfragment = DashboardView_clone()
                 }
 
                 R.id.task_fragment -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Task")
                     clickNavItem = R.id.task_fragment
                     newfragment = DashboardActivity()
                 }
 
                 R.id.notes_fragment -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Notes")
                     clickNavItem = R.id.notes_fragment
                     newfragment = MyNotes()
                 }
 
                 R.id.settings_fragment -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Settings")
                     clickNavItem = R.id.settings_fragment
                     newfragment = Settings()
                 }
 
                 R.id.contact_fragment -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Contact")
                     clickNavItem = R.id.contact_fragment
                     sendEmail(this)
                 }
 
                 R.id.account_logoff -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_LogOff")
                     logoffapp()
                 }
             }
@@ -176,6 +184,7 @@ class ActivityContainer : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.home -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_Home")
                     val newfragment = DashboardView_clone()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -183,6 +192,7 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 R.id.events -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_EventCategories")
                     val newfragment = EventCategories()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -190,6 +200,7 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 R.id.tasks -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_Tasks")
                     val newfragment = DashboardActivity()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -197,6 +208,7 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 R.id.guests -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_Guests")
                     val newfragment = TableGuestsActivity()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -204,6 +216,7 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 R.id.vendor -> {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_Vendors")
                     val newfragment = VendorsAll()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -256,7 +269,6 @@ class ActivityContainer : AppCompatActivity() {
                     }
                 }
             }
-
             override fun onDrawerStateChanged(newState: Int) {}
         })
 
@@ -332,60 +344,6 @@ class ActivityContainer : AppCompatActivity() {
         dialog.show()
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        //If session is empty the user gets redirected to the login screen
-//        //usersession = com.example.newevent2.Functions.getUserSession(this)
-////        userdbhelper = UserDBHelper(this)
-////        usersession = userdbhelper.getUser(userdbhelper.getUserKey())
-//
-//
-//        val lastSignedInAt = try {
-//            getUserSession(this@ActivityContainer, "last_signed_in_at") as Long
-//        } catch (e: Exception) {
-//            println(e.message)
-//            0L
-//        }
-//
-//        val emailid = try {
-//            getUserSession(this@ActivityContainer, "event_id") as String
-//        } catch (e: Exception) {
-//            println(e.message)
-//            ""
-//        }
-//
-//        val currentTimeMillis = System.currentTimeMillis()
-//        val oneWeekInMillis = 604800000L
-//        //val oneWeekInMillis = 3600000L
-//
-//        //168 hrs
-//        if (currentTimeMillis - lastSignedInAt >= oneWeekInMillis || lastSignedInAt == 0L || emailid == "") {
-//            val loginactivity =
-//                Intent(this, LoginView::class.java)
-//            startActivityForResult(loginactivity, LOGINACTIVITY)
-//        } else {
-//            headershortname.text = usersession.shortname
-//            if (isEventDate(this) == 0) {
-//                NordanAlertDialog.Builder(this)
-//                    .setAnimation(Animation.SLIDE)
-//                    .isCancellable(false)
-//                    .setTitle(getString(R.string.congratulations))
-//                    .setMessage(getString(R.string.weddingday))
-//                    .setIcon(R.drawable.love_animated_gif_2018_8, true)
-//                    .setPositiveBtnText(getString(R.string.great))
-//                    .build().show()
-//            }
-//
-//            var activefragment = fm.findFragmentById(R.id.fragment_container)
-//            if (activefragment == null) {
-//                activefragment = DashboardView_clone()
-//                fm.beginTransaction()
-//                    .add(R.id.fragment_container, activefragment, "DashboardView")
-//                    .commit()
-//            }
-//        }
-//    }
-
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -396,6 +354,11 @@ class ActivityContainer : AppCompatActivity() {
                 super.onBackPressed()
             }
         }
+    }
+
+    companion object {
+        const val TAG = "ActivityContainer"
+        const val SCREEN_NAME = "Activity_Container"
     }
 }
 

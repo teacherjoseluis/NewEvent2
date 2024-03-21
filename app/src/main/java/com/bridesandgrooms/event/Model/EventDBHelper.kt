@@ -10,7 +10,6 @@ import android.util.Log
 import com.bridesandgrooms.event.Functions.CoRAddEditEvent
 import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.saveUserSession
-import com.bridesandgrooms.event.Functions.userdbhelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
@@ -62,8 +61,8 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
         }
 
         //updating eventid in user
-        userdbhelper = UserDBHelper(context)
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        val userdbhelper = UserDBHelper(context)
+        val user = User().getUser(context)
         user.eventid = event.key
         userdbhelper.update(user)
 //        user.saveUserSession(context)

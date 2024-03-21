@@ -15,3 +15,33 @@ class FirebaseDataImportException (message: String) : Exception(message)
 
 // Exception related to Network connectivity
 class NetworkConnectivityException (message: String) : Exception(message)
+
+// Exception thrown during the Onboarding Process for errors in User Function
+class UserOnboardingException (message: String) : Exception(message)
+
+// Exception thrown during the Onboarding Process for errors in User Function
+class UserEditionException (message: String) : Exception(message)
+
+// Exception thrown during Task Creation processes
+class TaskCreationException (message: String) : Exception(message)
+
+// Exception thrown during Task Creation processes
+class TaskDeletionException (message: String) : Exception(message)
+
+// Exception thrown during Payment Creation processes
+class PaymentCreationException (message: String) : Exception(message)
+
+// Exception thrown during Task Creation processes
+class PaymentDeletionException (message: String) : Exception(message)
+
+// Exception thrown during Guest Creation processes
+class GuestCreationException (message: String) : Exception(message)
+
+// Exception thrown during Guest Creation processes
+class GuestDeletionException (message: String) : Exception(message)
+
+// Exception thrown during Vendor Creation processes
+class VendorCreationException (message: String) : Exception(message)
+
+// Exception thrown during Vendor Creation processes
+class VendorDeletionException (message: String) : Exception(message)

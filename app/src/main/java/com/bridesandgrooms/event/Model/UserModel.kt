@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.Model
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -16,7 +17,6 @@ import com.bridesandgrooms.event.Functions.CoRDeleteVendor
 import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.converttoString
 import com.bridesandgrooms.event.Functions.currentDateTime
-import com.bridesandgrooms.event.Functions.userdbhelper
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.text.DateFormat
@@ -341,47 +341,47 @@ class UserModel(
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override fun onAddEditTask(task: Task) {
+    override fun onAddEditTask(context: Context, user: User, task: Task) {
         editUserTaskflag(TaskModel.ACTIVEFLAG)
         editUserAddTask(1)
-        nexthandlert?.onAddEditTask(task)
+        nexthandlert?.onAddEditTask(context, user, task)
     }
 
-    override fun onDeleteTask(task: Task) {
+    override fun onDeleteTask(context: Context, user: User, task: Task) {
         editUserAddTask(-1)
-        nexthandlerdelt?.onDeleteTask(task)
+        nexthandlerdelt?.onDeleteTask(context, user, task)
     }
 
 
-    override fun onAddEditPayment(payment: Payment) {
+    override fun onAddEditPayment(context: Context, user: User, payment: Payment) {
         editUserPaymentflag(PaymentModel.ACTIVEFLAG)
         editUserAddPayment(1)
-        nexthandlerp?.onAddEditPayment(payment)
+        nexthandlerp?.onAddEditPayment(context, user, payment)
     }
 
-    override fun onDeletePayment(payment: Payment) {
+    override fun onDeletePayment(context: Context, user: User, payment: Payment) {
         editUserAddPayment(-1)
-        nexthandlerpdel?.onDeletePayment(payment)
+        nexthandlerpdel?.onDeletePayment(context, user, payment)
     }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override fun onAddEditGuest(context: Context, user: User, guest: Guest) {
         editUserGuestflag(GuestModel.ACTIVEFLAG)
         editUserAddGuest(+1)
-        nexthandlerg?.onAddEditGuest(guest)
+        nexthandlerg?.onAddEditGuest(context, user, guest)
     }
 
-    override fun onDeleteGuest(guest: Guest) {
-        nexthandlerdelg?.onDeleteGuest(guest)
+    override fun onDeleteGuest(context: Context, user: User, guest: Guest) {
+        nexthandlerdelg?.onDeleteGuest(context, user, guest)
     }
 
-    override fun onAddEditVendor(vendor: Vendor) {
+    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
         editUserVendorflag(VendorModel.ACTIVEFLAG)
         editUserAddVendor(+1)
-        nexthandlerv?.onAddEditVendor(vendor)
+        nexthandlerv?.onAddEditVendor(context, user, vendor)
     }
 
-    override fun onDeleteVendor(vendor: Vendor) {
-        nexthandlerdelv?.onDeleteVendor(vendor)
+    override fun onDeleteVendor(context: Context, user: User, vendor: Vendor) {
+        nexthandlerdelv?.onDeleteVendor(context, user, vendor)
     }
 
     override suspend fun onAddEditUser(user: User) {

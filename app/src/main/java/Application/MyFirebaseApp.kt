@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event.Model
+package Application
 
 import android.app.Application
 import android.util.Log

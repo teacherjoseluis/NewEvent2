@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Model.Category
-import com.bridesandgrooms.event.Model.MyFirebaseApp
+import Application.MyFirebaseApp
 import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.databinding.MaineventSummaryBinding
 import com.bridesandgrooms.event.UI.ViewAnimation

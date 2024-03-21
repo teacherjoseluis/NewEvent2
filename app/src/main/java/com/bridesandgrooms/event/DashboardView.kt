@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
-import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.UserDBHelper
 import com.google.android.material.tabs.TabLayout
@@ -48,8 +48,8 @@ class DashboardView : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        userdbhelper = UserDBHelper(this)
-        usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        //usersession = userdbhelper.getUser(userdbhelper.getUserKey())!!
+        var usersession = User().getUser(applicationContext)
         if (usersession.userid == "") {
             val loginactivity =
                 Intent(this, LoginView::class.java)

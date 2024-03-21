@@ -34,8 +34,6 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
     private lateinit var begindate: Calendar
     private lateinit var eventUri: Uri
 
-    var event: ContentValues = ContentValues()
-
     var nexthandlere: CoRAddEditEvent? = null
     var nexthandlert: CoRAddEditTask? = null
     var nexthandlertdel: CoRDeleteTask? = null
@@ -43,9 +41,9 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
     var nexthandlerpdel: CoRDeletePayment? = null
     var nexthandleron: CoROnboardUser? = null
 
-    val cr: ContentResolver = context.contentResolver
 
     private fun addEvent(item: Any) {
+        var event: ContentValues = ContentValues()
         when (item) {
             is Event -> {
                 val eventdate = converttoDate(item.date)
@@ -53,7 +51,6 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
                 event.put(Events.TITLE, item.name)
                 event.put(Events.DESCRIPTION, item.address)
-                //event.put(Events.UID_2445, item.key)
             }
             is Task -> {
                 val taskdate = converttoDate(item.date)
@@ -61,7 +58,6 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
                 event.put(Events.TITLE, item.name)
                 event.put(Events.DESCRIPTION, "Task for the ${item.category} category")
-                //event.put(Events.UID_2445, item.key)
             }
             is Payment -> {
                 val paymentdate = converttoDate(item.date)
@@ -69,7 +65,6 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
                 event.put(Events.TITLE, item.name)
                 event.put(Events.DESCRIPTION, "Payment for the ${item.category} category")
-                //event.put(Events.UID_2445, item.key)
             }
         }
         val calendarId = getCalendarId(context)
@@ -82,12 +77,12 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
             event.put(Events.ALL_DAY, 1)
             event.put(Events.STATUS, 1)
             event.put(Events.HAS_ALARM, 1)
-
-            cr.insert(Events.CONTENT_URI, event)
+            context.contentResolver.insert(Events.CONTENT_URI, event)
         }
     }
 
     private fun editEvent(item: Any) {
+        var event: ContentValues = ContentValues()
         when (item) {
             is Task -> {
                 if (item.eventid != "") {
@@ -106,7 +101,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                     event.put(Events.STATUS, 1)
                     event.put(Events.HAS_ALARM, 1)
 
-                    cr.update(eventUri, event, null, null)
+                    context.contentResolver.update(eventUri, event, null, null)
                 }
             }
 
@@ -128,7 +123,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                     event.put(Events.STATUS, 1)
                     event.put(Events.HAS_ALARM, 1)
 
-                    cr.update(eventUri, event, null, null)
+                    context.contentResolver.update(eventUri, event, null, null)
                 }
             }
         }
@@ -139,7 +134,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
             is Task -> {
                 if (item.eventid != "") {
                     eventUri = ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
-                    cr.delete(eventUri, null, null)
+                    context.contentResolver.delete(eventUri, null, null)
                 }
             }
 
@@ -147,7 +142,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                 if (item.eventid != "") {
                     eventUri =
                         ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
-                    cr.delete(eventUri, null, null)
+                    context.contentResolver.delete(eventUri, null, null)
                 }
             }
         }
@@ -243,36 +238,36 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
         const val TAG = "CalendarEvent"
     }
 
-    override fun onAddEditTask(task: Task) {
-        if (task.key == "") {
+    override fun onAddEditTask(context: Context, user: User, task: Task) {
+        if (task.key.isEmpty()) {
             addEvent(task)
             task.eventid = getNewEventId().toString()
-            nexthandlert?.onAddEditTask(task)
-        } else if (task.key != "") {
+            nexthandlert?.onAddEditTask(context, user, task)
+        } else {
             editEvent(task)
-            nexthandlert?.onAddEditTask(task)
+            nexthandlert?.onAddEditTask(context, user, task)
         }
     }
 
-    override fun onDeleteTask(task: Task) {
+    override fun onDeleteTask(context: Context, user: User, task: Task) {
         deleteEvent(task)
-        nexthandlertdel?.onDeleteTask(task)
+        nexthandlertdel?.onDeleteTask(context, user, task)
     }
 
-    override fun onAddEditPayment(payment: Payment) {
-        if (payment.key == "") {
+    override fun onAddEditPayment(context: Context, user: User, payment: Payment) {
+        if (payment.key.isEmpty()) {
             addEvent(payment)
             payment.eventid = getNewEventId().toString()
-            nexthandlerp?.onAddEditPayment(payment)
-        } else if (payment.key != "") {
+            nexthandlerp?.onAddEditPayment(context, user, payment)
+        } else {
             editEvent(payment)
-            nexthandlerp?.onAddEditPayment(payment)
+            nexthandlerp?.onAddEditPayment(context, user, payment)
         }
     }
 
-    override fun onDeletePayment(payment: Payment) {
+    override fun onDeletePayment(context: Context, user: User, payment: Payment) {
         deleteEvent(payment)
-        nexthandlerpdel?.onDeletePayment(payment)
+        nexthandlerpdel?.onDeletePayment(context, user, payment)
     }
 
     override suspend fun onAddEditEvent(event: Event) {

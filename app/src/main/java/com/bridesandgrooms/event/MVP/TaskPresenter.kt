@@ -4,9 +4,10 @@ import Application.Cache
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.TaskModel
+import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.Model.UserDBHelper
 import kotlin.collections.ArrayList
 
 class TaskPresenter : Cache.TaskArrayListCacheData {
@@ -73,8 +74,8 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
     }
 
     override fun onEmptyListT() {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
-        // This is when I receive an empty list of Tasks from the cache
+//        val userdbhelper = UserDBHelper(mContext)
+        val user = User().getUser(mContext)
         val task = TaskModel()
         task.getAllTasksList(
             user.userid!!,

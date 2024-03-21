@@ -16,7 +16,7 @@ import kotlin.collections.ArrayList
 class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
 
     lateinit var vendor: Vendor
-    var key = ""
+    //var key = ""
     var nexthandler: CoRAddEditVendor? = null
     var nexthandlerdel: CoRDeleteVendor? = null
 
@@ -229,21 +229,20 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
         } finally {
             db.close()
         }
-        //db.close()
     }
 
-    override fun onAddEditVendor(vendor: Vendor) {
+    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
         if (!getVendorexists(vendor.key)) {
             insert(vendor)
         } else {
             update(vendor)
         }
-        nexthandler?.onAddEditVendor(vendor)
+        nexthandler?.onAddEditVendor(context, user, vendor)
     }
 
-    override fun onDeleteVendor(vendor: Vendor) {
+    override fun onDeleteVendor(context: Context, user: User, vendor: Vendor) {
         delete(vendor)
-        nexthandlerdel?.onDeleteVendor(vendor)
+        nexthandlerdel?.onDeleteVendor(context, user, vendor)
     }
 
     companion object {

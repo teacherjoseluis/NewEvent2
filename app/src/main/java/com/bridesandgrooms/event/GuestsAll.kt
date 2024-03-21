@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.clone
 import com.bridesandgrooms.event.MVP.GuestsAllPresenter
 import com.bridesandgrooms.event.Model.Guest
-import com.bridesandgrooms.event.Model.MyFirebaseApp
+import Application.MyFirebaseApp
 import com.bridesandgrooms.event.databinding.GuestsAllBinding
 import com.bridesandgrooms.event.UI.SwipeControllerTasks
 import com.bridesandgrooms.event.UI.ViewAnimation

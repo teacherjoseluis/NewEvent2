@@ -1,11 +1,13 @@
 package com.bridesandgrooms.event.Functions
 
+import android.content.Context
+import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
 
 interface CoRAddEditVendor {
-    fun onAddEditVendor(vendor: Vendor)
+    fun onAddEditVendor(context: Context, user: User, vendor: Vendor)
 }
 
 interface CoRDeleteVendor {
-    fun onDeleteVendor(vendor: Vendor)
+    fun onDeleteVendor(context: Context, user: User, vendor: Vendor)
 }

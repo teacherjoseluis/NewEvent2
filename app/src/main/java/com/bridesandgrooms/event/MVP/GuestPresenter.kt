@@ -6,11 +6,12 @@ import android.content.Context
 import android.os.Build
 import android.provider.ContactsContract
 import androidx.annotation.RequiresApi
-import com.bridesandgrooms.event.Functions.userdbhelper
 import com.bridesandgrooms.event.Model.Contact
 
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.GuestModel
+import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.Model.UserDBHelper
 
 class GuestPresenter : Cache.GuestArrayListCacheData {
 
@@ -92,7 +93,8 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
     }
 
     override fun onEmptyListG() {
-        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
+//        val userdbhelper = UserDBHelper(mContext)
+        val user = User().getUser(mContext)
         val guest = GuestModel()
         guest.getAllGuestList(
             user.userid!!,
