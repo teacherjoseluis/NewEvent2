@@ -314,6 +314,11 @@
     <string name="errorVendorCreation">Existe un error al intentar crear/editar el Vendedor</string>
     <string name="guest_category_is_required">La categoría del Invitado es requerida</string>
     <string name="errorGuestDeletion">Existe un error al intentar borrar al Invitado</string>
+    <string name="task_reminder">Recordatorio de Tareas</string>
+    <string name="payment_reminder">Recordatorio de Pagos</string>
+    <string name="is_due_today">Estas tareas vencen hoy</string>
+    <string name="you_have_tasks">Tienes %1$s tareas</string>
+    <string name="you_have_payments">Tienes %1$s pagos</string>
 
     <string-array name="role" >
         <item>Novia</item>

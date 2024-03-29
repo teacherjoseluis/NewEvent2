@@ -9,8 +9,10 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.bridesandgrooms.event.Functions.CoRAddEditPayment
 import com.bridesandgrooms.event.Functions.CoRDeletePayment
+import com.bridesandgrooms.event.Functions.convertToDBString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.text.DecimalFormat
+import java.util.Date
 
 class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePayment {
 
@@ -186,6 +188,32 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
             }
             cursor.close()
             return list
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        } finally {
+            db.close()
+        }
+    }
+
+    fun getPaymentfromDate(date: Date) : ArrayList<String>? {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val dateString = convertToDBString(date)
+        val nameList = arrayListOf<String>()
+        try {
+            val cursor: Cursor = db.rawQuery(
+                "SELECT name FROM PAYMENT WHERE paymentid IS NOT NULL AND paymentid !='' AND date='$dateString' ORDER BY createdatetime DESC",
+                null
+            )
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                    nameList.add(name)
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+            return nameList
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null

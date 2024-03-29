@@ -44,6 +44,8 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
     private lateinit var binding: PaymentEditdetailBinding
     private lateinit var userSession: User
 
+    private var language = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.payment_editdetail)
@@ -53,7 +55,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         val tasklist = taskhelper.getTasksNames()
 
         val vendorpaymentsection = findViewById<LinearLayout>(R.id.vendorpaymentsection)
-        val language = this.resources.configuration.locales.get(0).language
+        language = this.resources.configuration.locales.get(0).language
         val list = ArrayList(EnumSet.allOf(Category::class.java))
         val chipgroupedit = findViewById<ChipGroup>(R.id.groupeditpayment)
         val itemsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, tasklist!!)
@@ -232,19 +234,28 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         finish()
     }
 
-    // Repeated from TaskCreateEdit
-//    private fun getCategory(): String {
-//        var mycategorycode = ""
-//        val categoryname = binding.groupeditpayment.findViewById<Chip>(binding.groupeditpayment.checkedChipId).text
-//
-//        val list = ArrayList(EnumSet.allOf(Category::class.java))
-//        for (category in list) {
-//            if (categoryname == category.en_name) {
-//                mycategorycode = category.code
-//            }
-//        }
-//        return mycategorycode
-//    }
+    private fun getCategory(): String {
+        val categoryName =
+            binding.groupeditpayment.findViewById<Chip>(binding.groupeditpayment.checkedChipId).text.toString()
+        var myCategory = ""
+        val list = ArrayList(EnumSet.allOf(Category::class.java))
+        for (category in list) {
+            when (language) {
+                "en" -> {
+                    if (categoryName == category.en_name) {
+                        myCategory = category.code
+                    }
+                }
+
+                else -> {
+                    if (categoryName == category.es_name) {
+                        myCategory = category.code
+                    }
+                }
+            }
+        }
+        return myCategory
+    }
 
     private fun showDatePickerDialog() {
         val newFragment =
@@ -263,18 +274,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         paymentItem.name = binding.paymentname.text.toString()
         paymentItem.date = binding.paymentdate.text.toString()
         paymentItem.amount = binding.paymentamount.text.toString()
-        paymentItem.category = {
-            var mycategorycode = ""
-            val categoryname = binding.groupeditpayment.findViewById<Chip>(binding.groupeditpayment.checkedChipId).text
-
-            val list = ArrayList(EnumSet.allOf(Category::class.java))
-            for (category in list) {
-                if (categoryname == category.en_name) {
-                    mycategorycode = category.code
-                }
-            }
-            mycategorycode
-        }.toString()
+        paymentItem.category =  getCategory()
 
         if (!PermissionUtils.checkPermissions(this, "calendar")) {
             val permissions = PermissionUtils.requestPermissionsList("calendar")
@@ -308,7 +308,7 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                     Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
                 }
             }
-            Thread.sleep(1500)
+            //Thread.sleep(1500)
             finish()
         }
     }

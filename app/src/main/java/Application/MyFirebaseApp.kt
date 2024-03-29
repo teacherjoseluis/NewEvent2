@@ -1,6 +1,7 @@
 package Application
 
 import android.app.Application
+import android.content.IntentFilter
 import android.util.Log
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_category_layout
@@ -10,6 +11,7 @@ import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_reviewbox
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_showads
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_video_login
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.setautocreateTaskPayment
+import com.bridesandgrooms.event.NotificationReceiver
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -20,12 +22,21 @@ import com.google.firebase.messaging.FirebaseMessaging
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
-class MyFirebaseApp: Application() {
+class MyFirebaseApp : Application() {
 
-    //var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     override fun onCreate() {
         super.onCreate()
+        // To schedule the periodic work
+
+        val receiver = NotificationReceiver()
+        val intent = IntentFilter("android.intent.action.DATE_CHANGED")
+        applicationContext.registerReceiver(receiver, intent)
+        Log.d(TAG, "Register Broadcast receiver")
+
+//        BG_ReminderScheduler().scheduleReminderJob(this)
+//        Log.d("MyFirebaseApp", "Schedule Reminder Job")
+
         /* Enable disk persistence  */
         FirebaseApp.initializeApp(this)
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
@@ -55,7 +66,8 @@ class MyFirebaseApp: Application() {
                     // Apply the updated configurations in your app
                     //applyRemoteConfigurations()
                     val remoteConfig = FirebaseRemoteConfig.getInstance()
-                    val autocreateTaskPaymentFeature = remoteConfig.getBoolean("auto_create_tasks_and_payments")
+                    val autocreateTaskPaymentFeature =
+                        remoteConfig.getBoolean("auto_create_tasks_and_payments")
                     val enable_foryoutab = remoteConfig.getBoolean("enable_foryoutab")
                     val category_layout = remoteConfig.getString("category_layout")
                     val developer_mail = remoteConfig.getBoolean("developer_mail")
@@ -90,10 +102,13 @@ class MyFirebaseApp: Application() {
                     Log.e(TAG, "Failed to get FCM token")
                 }
             }
+
     }
 
+
     companion object {
-        lateinit var mFirebaseAnalytics : FirebaseAnalytics
+        lateinit var mFirebaseAnalytics: FirebaseAnalytics
+
         //lateinit var mMobileAds: MobileAds
         private const val TAG = "MainActivity"
     }

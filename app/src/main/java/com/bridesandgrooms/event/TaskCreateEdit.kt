@@ -6,7 +6,10 @@ import Application.TaskDeletionException
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.Notification.Action
+import android.app.PendingIntent
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -24,12 +27,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.Task
-import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.TaskEditdetailBinding
 import com.bridesandgrooms.event.UI.TextValidate
@@ -39,9 +40,6 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class TaskCreateEdit : AppCompatActivity() {
@@ -56,6 +54,9 @@ class TaskCreateEdit : AppCompatActivity() {
 
     private var thisTaskBudget: Float = 0F
     private var thisEventBudget: Float = 0F
+    private var language = ""
+
+    //private val receiver = TaskNotificationReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +66,7 @@ class TaskCreateEdit : AppCompatActivity() {
         val eventBudget = userSession.eventbudget
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         val chipgroupedit = findViewById<ChipGroup>(R.id.groupedittask)
-        val language = this.resources.configuration.locales.get(0).language
+        language = this.resources.configuration.locales.get(0).language
         val list = ArrayList(EnumSet.allOf(Category::class.java))
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val extras = intent.extras
@@ -125,6 +126,18 @@ class TaskCreateEdit : AppCompatActivity() {
         }
 
         binding.savebuttontask.setOnClickListener {
+            Log.i(TAG, "Clicked on Save")
+//            val intent = Intent("com.bridesandgrooms.event.NOTIFICATION_RECEIVED")
+//            intent.putExtra("TASK_NAME", "My Dummy Task") // Pass taskName as an extra to the intent
+//
+//
+//            try {
+//                this.sendBroadcast(intent)
+//                Log.i(TAG, "broadcast is called")
+//            } catch (e: Exception) {
+//                Log.e(TAG, e.message.toString())
+//            }
+
             AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Task")
             var inputvalflag = true
             binding.taskname.clearFocus()
@@ -190,6 +203,17 @@ class TaskCreateEdit : AppCompatActivity() {
             adManager.loadAndShowRewardedAd(this)
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        val filter = IntentFilter("android.intent.action.NOTIFICATION_RECEIVED")
+//        registerReceiver(receiver, filter)
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        unregisterReceiver(receiver)
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (taskItem.key.isNotEmpty()) {
@@ -257,19 +281,19 @@ class TaskCreateEdit : AppCompatActivity() {
                     requestPermissions(permissions, PERMISSION_CODE)
                 } else {
                     //lifecycleScope.launch {
-                        try {
-                            editTask(this@TaskCreateEdit, userSession, taskItem)
-                            disableControls()
-                        } catch (e: TaskCreationException) {
-                            displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
-                            AnalyticsManager.getInstance().trackError(
-                                SCREEN_NAME,
-                                e.message.toString(),
-                                "editTask()",
-                                e.stackTraceToString()
-                            )
-                            Log.e(TAG, e.message.toString())
-                        }
+                    try {
+                        editTask(this@TaskCreateEdit, userSession, taskItem)
+                        disableControls()
+                    } catch (e: TaskCreationException) {
+                        displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                        AnalyticsManager.getInstance().trackError(
+                            SCREEN_NAME,
+                            e.message.toString(),
+                            "editTask()",
+                            e.stackTraceToString()
+                        )
+                        Log.e(TAG, e.message.toString())
+                    }
                     //}
                 }
                 true
@@ -325,20 +349,7 @@ class TaskCreateEdit : AppCompatActivity() {
         taskItem.name = binding.taskname.text.toString()
         taskItem.date = binding.taskdate.text.toString()
         taskItem.budget = binding.taskbudget.text.toString()
-        //taskitem.category = getCategory()
-        taskItem.category = {
-            var mycategorycode = ""
-            val categoryname =
-                binding.groupedittask.findViewById<Chip>(binding.groupedittask.checkedChipId).text
-
-            val list = ArrayList(EnumSet.allOf(Category::class.java))
-            for (category in list) {
-                if (categoryname == category.en_name) {
-                    mycategorycode = category.code
-                }
-            }
-            mycategorycode
-        }.toString()
+        taskItem.category = getCategory()
 
         if (!PermissionUtils.checkPermissions(this, "calendar")) {
             val permissions = PermissionUtils.requestPermissionsList("calendar")
@@ -356,27 +367,27 @@ class TaskCreateEdit : AppCompatActivity() {
                         e.stackTraceToString()
                     )
                     //withContext(Dispatchers.Main) {
-                        displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                    displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
                     //}
                     Log.e(TAG, e.message.toString())
                 }
                 //}
             } else {
                 //lifecycleScope.launch {
-                    try {
-                        editTask(applicationContext, userSession, taskItem)
-                    } catch (e: TaskCreationException) {
-                        AnalyticsManager.getInstance().trackError(
-                            SCREEN_NAME,
-                            e.message.toString(),
-                            "editTask()",
-                            e.stackTraceToString()
-                        )
-                        //withContext(Dispatchers.Main) {
-                            displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
-                        //}
-                        Log.e(TAG, e.message.toString())
-                    }
+                try {
+                    editTask(applicationContext, userSession, taskItem)
+                } catch (e: TaskCreationException) {
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        e.message.toString(),
+                        "editTask()",
+                        e.stackTraceToString()
+                    )
+                    //withContext(Dispatchers.Main) {
+                    displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                    //}
+                    Log.e(TAG, e.message.toString())
+                }
                 //}
             }
             val resultIntent = Intent()
@@ -410,7 +421,7 @@ class TaskCreateEdit : AppCompatActivity() {
                     Log.d(TAG, "The rewarded ad wasn't ready yet.")
                 }
             }
-            Thread.sleep(2000)
+            //Thread.sleep(2000)
             finish()
         }
     }
@@ -428,8 +439,6 @@ class TaskCreateEdit : AppCompatActivity() {
                 if (grantResults.isNotEmpty() && grantResults[0] ==
                     PackageManager.PERMISSION_GRANTED
                 ) {
-                    saveTask()
-                } else {
                     binding.withdata.visibility = ConstraintLayout.INVISIBLE
                     binding.permissions.root.visibility = ConstraintLayout.VISIBLE
                     val calendarpermissions = Permission.getPermission("calendar")
@@ -464,6 +473,8 @@ class TaskCreateEdit : AppCompatActivity() {
                 }
             }
         }
+
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -483,6 +494,29 @@ class TaskCreateEdit : AppCompatActivity() {
                 binding.bannerCardView.visibility = View.INVISIBLE
             }
         }
+    }
+
+    private fun getCategory(): String {
+        val categoryName =
+            binding.groupedittask.findViewById<Chip>(binding.groupedittask.checkedChipId).text.toString()
+        var myCategory = ""
+        val list = ArrayList(EnumSet.allOf(Category::class.java))
+        for (category in list) {
+            when (language) {
+                "en" -> {
+                    if (categoryName == category.en_name) {
+                        myCategory = category.code
+                    }
+                }
+
+                else -> {
+                    if (categoryName == category.es_name) {
+                        myCategory = category.code
+                    }
+                }
+            }
+        }
+        return myCategory
     }
 
     private fun displayToastMsg(message: String) {

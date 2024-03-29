@@ -193,45 +193,6 @@ class Rv_TaskAdapter(
         }
     }
 
-    //-------------------------------------------------------------------------------
-    // Creating Notification for Tasks
-    //-------------------------------------------------------------------------------
-//    private fun addNotification(task: Task) {
-//        // Job ID must be unique if you have multiple jobs scheduled
-//        var jobID = NotificationID.getID()
-//
-//        var gson = Gson()
-//        var json = gson.toJson(task)
-//        var bundle = PersistableBundle()
-//        bundle.putString("task", json)
-//
-//        // Get fake user set time (a future time 1 min from current time)
-//        val (userSetHourOfDay, userSetMinute) = getMockUserSetTime()
-//        val timeToWaitBeforeExecuteJob = calculateTimeDifferenceMs(userSetHourOfDay, userSetMinute)
-//        (context.applicationContext.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).run {
-//            schedule(
-//                JobInfo.Builder(
-//                    jobID,
-//                    ComponentName(context, NotificationJobService::class.java)
-//                )
-//                    // job execution will be delayed by this amount of time
-//                    .setMinimumLatency(timeToWaitBeforeExecuteJob)
-//                    // job will be run by this deadline
-//                    .setOverrideDeadline(timeToWaitBeforeExecuteJob)
-//                    .setExtras(bundle)
-//                    .build()
-//            )
-//        }
-//    }
-
-    //-------------------------------------------------------------------------------
-//    private fun delNotification(task: Task) {
-//        val notificationManager =
-//            context.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        notificationManager.cancel(task.key, 0)
-//    }
-    //-------------------------------------------------------------------------------
-
     companion object {
         const val ACTIVETASK = "A"
         const val COMPLETETASK = "C"

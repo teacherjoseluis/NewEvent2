@@ -193,7 +193,7 @@ class NoteCreateEdit : AppCompatActivity() {
                 ).show()
             }
         }
-        Thread.sleep(1500)
+        //Thread.sleep(1500)
         finish()
     }
 

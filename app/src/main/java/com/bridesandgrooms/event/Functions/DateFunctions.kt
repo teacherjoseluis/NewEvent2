@@ -40,6 +40,13 @@ internal fun convertToFilenameString(date: Date): String {
     return simpleDateFormat.format(date)
 }
 
+internal fun convertToDBString(date: Date): String {
+    // Define the pattern to match your filename requirement
+    val pattern = "d/M/yyyy"
+    val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+    return simpleDateFormat.format(date)
+}
+
 internal fun convertToBlogStringDate(inputDate: String): String {
     // Define the pattern to match your filename requirement
     val inputPattern = "yyyy-MM-dd'T'HH:mm:ssXXX"

@@ -325,7 +325,7 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         binding.button.isEnabled = false
 
         setResult(Activity.RESULT_OK, Intent())
-        delay(1500) // Replace Thread.sleep with delay from coroutines
+        //delay(1500) // Replace Thread.sleep with delay from coroutines
         finish()
     }
 

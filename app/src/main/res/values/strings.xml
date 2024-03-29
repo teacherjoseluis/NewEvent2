@@ -324,6 +324,11 @@
     <string name="errorVendorCreation">There was an unexpected error trying to create/edit the Vendor</string>
     <string name="guest_category_is_required">Guest category is required</string>
     <string name="errorGuestDeletion">There was an unexpected error trying to delete the Guest</string>
+    <string name="task_reminder">Task Reminder</string>
+    <string name="payment_reminder">Payment Reminder</string>
+    <string name="is_due_today">There are task(s) due today</string>
+    <string name="you_have_tasks">You have %1$s tasks</string>
+    <string name="you_have_payments">You have %1$s payments</string>
 
     <string-array name="role" >
         <item>Bride</item>

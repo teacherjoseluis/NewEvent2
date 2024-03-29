@@ -9,28 +9,46 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-sdk android:minSdkVersion="26" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
+    <!-- Required by Notifications -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name="Application.MyFirebaseApp"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light"
-        android:fullBackupContent="@xml/backup_descriptor"
-        >
+        android:theme="@style/Theme.AppCompat.Light">
+
+        <receiver
+            android:name="com.bridesandgrooms.event.NotificationReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <!--                <action android:name="com.bridesandgrooms.event.NOTIFICATION_RECEIVED" />-->
+                <!--                <action android:name="android.intent.action.USER_PRESENT" />-->
+                <action android:name="android.intent.action.DATE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
         <!-- Add the service to handle FCM messages -->
         <service
@@ -40,6 +58,13 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name="Application.BG_ReminderJobService"
+            android:enabled="true"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -68,74 +93,87 @@
             android:theme="@style/AppTheme">
             <!--Default Intent Filter-->
         </activity>
-<!--        <activity-->
-<!--            android:name=".Login"-->
-<!--            android:noHistory="true">-->
-<!--            <intent-filter>-->
+        <!--        <activity-->
+        <!--            android:name=".Login"-->
+        <!--            android:noHistory="true">-->
+        <!--            <intent-filter>-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+        <!--            </intent-filter>-->
+        <!--        </activity>-->
 
-<!--        <activity android:name=".EventDetail" />-->
+        <!--        <activity android:name=".EventDetail" />-->
 
         <!--        <activity android:name=".NewTask" />-->
-<!--        <activity android:name=".NewTask_TaskDetail" />-->
+        <!--        <activity android:name=".NewTask_TaskDetail" />-->
         <activity android:name=".NewTask_PaymentDetail" />
-        <activity android:name=".TaskPaymentList"
-            android:theme="@style/AppTheme"/>
-<!--        <activity android:name=".Task_EditDetail" />-->
+        <activity
+            android:name=".TaskPaymentList"
+            android:theme="@style/AppTheme" />
+        <!--        <activity android:name=".Task_EditDetail" />-->
         <activity android:name=".Payment_EditDetail" />
-<!--        <activity android:name=".Event_EditDetail" />-->
-<!--        <activity android:name=".MyContacts" />-->
-        <activity android:name=".GuestCreateEdit"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".VendorCreateEdit"
-            android:theme="@style/AppTheme"/>
-<!--        <activity android:name=".Guest_EditDetail" />-->
-<!--        <activity android:name=".NewVendor" />-->
-<!--        <activity android:name=".Vendor_EditDetail" />-->
-<!--        <activity android:name=".MyCalendar" />-->
-        <activity android:name=".MyNotes"
+        <!--        <activity android:name=".Event_EditDetail" />-->
+        <!--        <activity android:name=".MyContacts" />-->
+        <activity
+            android:name=".GuestCreateEdit"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".VendorCreateEdit"
+            android:theme="@style/AppTheme" />
+        <!--        <activity android:name=".Guest_EditDetail" />-->
+        <!--        <activity android:name=".NewVendor" />-->
+        <!--        <activity android:name=".Vendor_EditDetail" />-->
+        <!--        <activity android:name=".MyCalendar" />-->
+        <activity
+            android:name=".MyNotes"
             tools:ignore="Instantiatable" />
-        <activity android:name=".NoteCreateEdit"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".Settings"
-            tools:ignore="Instantiatable"
-            android:windowSoftInputMode="adjustResize"/>
-<!--        <activity android:name=".MainEventView" />-->
-        <activity android:name=".DashboardView"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".ActivityContainer"
-            android:theme="@style/AppTheme.Launcher"
-            android:exported="true">
+        <activity
+            android:name=".NoteCreateEdit"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Settings"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="Instantiatable" />
+        <!--        <activity android:name=".MainEventView" />-->
+        <activity
+            android:name=".DashboardView"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ActivityContainer"
+            android:exported="true"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity android:name=".Login_Email" />-->
+        <!--        <activity android:name=".Login_Email" />-->
         <!--         <activity android:name=".Onboarding_Name" /> -->
         <!--        <activity android:name=".Onboarding_Event" />-->
-<!--        <activity android:name=".MyEvents" />-->
+        <!--        <activity android:name=".MyEvents" />-->
 
         <activity android:name=".LoginView" />
         <activity android:name=".LoginEmailView" />
-        <activity android:name=".OnboardingView"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".TaskCreateEdit"
+        <activity
+            android:name=".OnboardingView"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".TaskCreateEdit"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".PaymentCreateEdit"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".PaymentCreateEdit"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".ContactsAll"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".UI.ExportPDF"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".BlogContent"
-            android:theme="@style/AppTheme"/>
-
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ContactsAll"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".UI.ExportPDF"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".BlogContent"
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -144,31 +182,32 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-<!--        <activity-->
-<!--            android:name="com.facebook.FacebookActivity"-->
-<!--            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"-->
-<!--            android:label="@string/app_name" />-->
-<!--        <activity-->
-<!--            android:name="com.facebook.CustomTabActivity"-->
-<!--            android:exported="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
+        <!--        <activity-->
+        <!--            android:name="com.facebook.FacebookActivity"-->
+        <!--            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"-->
+        <!--            android:label="@string/app_name" />-->
+        <!--        <activity-->
+        <!--            android:name="com.facebook.CustomTabActivity"-->
+        <!--            android:exported="true">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.VIEW" />-->
 
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+        <!--                <category android:name="android.intent.category.DEFAULT" />-->
+        <!--                <category android:name="android.intent.category.BROWSABLE" />-->
 
-<!--                <data android:scheme="@string/fb_login_protocol_scheme" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+        <!--                <data android:scheme="@string/fb_login_protocol_scheme" />-->
+        <!--            </intent-filter>-->
+        <!--        </activity>-->
 
-<!--        <service android:name=".NotificationJobService"-->
-<!--            android:permission="android.permission.BIND_JOB_SERVICE"-->
-<!--            android:exported="true"-->
-<!--            android:process=":ServiceProcess"/>-->
+        <!--        <service-->
+        <!--            android:name=".NotificationJobService"-->
+        <!--            android:exported="true"-->
+        <!--            android:permission="android.permission.BIND_JOB_SERVICE" />-->
+        <!--            android:process=":ServiceProcess"/>-->
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-2710265419603943~6781887694"/>
+            android:value="ca-app-pub-2710265419603943~6781887694" />
 
     </application>
 

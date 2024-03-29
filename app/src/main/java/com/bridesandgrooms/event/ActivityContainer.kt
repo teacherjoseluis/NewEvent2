@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -45,7 +44,6 @@ class ActivityContainer : AppCompatActivity() {
     private val LOGINACTIVITY = 123
     private var back_pressed: Long = 0
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
@@ -58,6 +56,16 @@ class ActivityContainer : AppCompatActivity() {
             createView()
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        val serviceIntent = Intent(this, BG_BackgroundService::class.java)
+//        try {
+//            startService(serviceIntent)
+//        } catch (e: Exception) {
+//            Log.e(TAG, e.message.toString())
+//        }
+//    }
 
     private fun loginValidation(): Boolean {
         //Evaluate if given the amount passed since the last login, the user should re-login to the app

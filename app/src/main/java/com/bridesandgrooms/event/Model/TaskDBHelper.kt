@@ -10,8 +10,12 @@ import android.util.Log
 import com.bridesandgrooms.event.Model.Category.Companion.getCategory
 import com.bridesandgrooms.event.Functions.CoRAddEditTask
 import com.bridesandgrooms.event.Functions.CoRDeleteTask
+import com.bridesandgrooms.event.Functions.convertToDBString
+import com.bridesandgrooms.event.Functions.converttoString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.text.DateFormat
 import java.text.DecimalFormat
+import java.util.Date
 
 class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
 
@@ -144,6 +148,32 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             }
             cursor.close()
             return list
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        } finally {
+            db.close()
+        }
+    }
+
+    fun getTaskfromDate(date: Date) : ArrayList<String>? {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val dateString = convertToDBString(date)
+        val nameList = arrayListOf<String>()
+        try {
+            val cursor: Cursor = db.rawQuery(
+                "SELECT name FROM TASK WHERE taskid IS NOT NULL AND taskid !='' AND date='$dateString' AND status = 'A' ORDER BY createdatetime DESC",
+                null
+            )
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                    nameList.add(name)
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+            return nameList
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
