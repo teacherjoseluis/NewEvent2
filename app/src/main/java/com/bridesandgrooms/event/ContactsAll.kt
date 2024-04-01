@@ -91,6 +91,7 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts {
         } else {
             try {
                 presenterguest = ContactsAllPresenter(this, this)
+                presenterguest.getContactsList()
             } catch (e: Exception) {
                 AnalyticsManager.getInstance().trackError(
                     SCREEN_NAME,
@@ -300,8 +301,9 @@ class ContactsAll : AppCompatActivity(), ContactsAllPresenter.GAContacts {
                     //permission from popup granted
                     try {
                         presenterguest = ContactsAllPresenter(this, this)
+                        presenterguest.getContactsList()
                     } catch (e: Exception) {
-                        println(e.message)
+                        Log.e(TAG, e.message.toString())
                     }
                 } else {
                     // Here goes what happens when the permission is not given

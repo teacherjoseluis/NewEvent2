@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
@@ -76,8 +77,9 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         // Invoking the presenter that will populate the recyclerview
         try {
             presentervendor = VendorsAllPresenter(mContext!!, this)
+            presentervendor.getVendorList()
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
 
         //This is for the Add button, Vendors can be added from scratch or from the contact list
@@ -143,8 +145,9 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
         super.onResume()
         try {
             presentervendor = VendorsAllPresenter(mContext!!, this)
+            presentervendor.getVendorList()
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
 //        recyclerViewActive.adapter = null
 //        recyclerViewActive.adapter = rvAdapter
@@ -293,13 +296,15 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors {
             //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
             try {
                 presentervendor = VendorsAllPresenter(mContext!!, this)
+                presentervendor.getVendorList()
             } catch (e: Exception) {
-                println(e.message)
+                Log.e(TAG, e.message.toString())
             }
         }
     }
 
     companion object {
         var vendorcreated_flag = 0
+        const val TAG = "VendorsAll"
     }
 }

@@ -1,6 +1,8 @@
 package com.bridesandgrooms.event.MVP
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.TaskPaymentTasks
@@ -16,25 +18,32 @@ class ExportPDFPresenter(
     TaskPresenter.TaskList {
 
     private var presentertask: TaskPresenter = TaskPresenter(context, this)
+    private val mHandler = Handler(Looper.getMainLooper())
 
-    init {
-        presentertask.getTasksList()
+    fun getTasksList() {
+        Thread {
+            presentertask.getTasksList()
+        }.start()
     }
 
     override fun onTaskList(list: ArrayList<Task>) {
-        val filteredtasklistactive = ArrayList<Task>()
-        for (task in list) {
-            if ((task.category == taskcategory) || (taskcategory.isEmpty())) {
-                //if (task.status == status) {
-                filteredtasklistactive.add(task)
-                //}
+        mHandler.post {
+            val filteredtasklistactive = ArrayList<Task>()
+            for (task in list) {
+                if ((task.category == taskcategory) || (taskcategory.isEmpty())) {
+                    //if (task.status == status) {
+                    filteredtasklistactive.add(task)
+                    //}
+                }
             }
+            fragment.onEPDFTasks(filteredtasklistactive)
         }
-        fragment.onEPDFTasks(filteredtasklistactive)
     }
 
     override fun onTaskListError(errcode: String) {
-        fragment.onEPDFTasksError(TaskPresenter.ERRCODETASKS)
+        mHandler.post {
+            fragment.onEPDFTasksError(TaskPresenter.ERRCODETASKS)
+        }
     }
 
     interface EPDFTasks {

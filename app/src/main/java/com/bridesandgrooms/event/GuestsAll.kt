@@ -16,6 +16,7 @@ import com.bridesandgrooms.event.Functions.clone
 import com.bridesandgrooms.event.MVP.GuestsAllPresenter
 import com.bridesandgrooms.event.Model.Guest
 import Application.MyFirebaseApp
+import android.util.Log
 import com.bridesandgrooms.event.databinding.GuestsAllBinding
 import com.bridesandgrooms.event.UI.SwipeControllerTasks
 import com.bridesandgrooms.event.UI.ViewAnimation
@@ -429,8 +430,9 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
         super.onResume()
         try {
             presenterguest = GuestsAllPresenter(requireContext(), this)
+            presenterguest.getGuestList()
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
 //        recyclerViewActive.adapter = null
 //        recyclerViewActive.adapter = rvAdapter
@@ -442,5 +444,6 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests {
     companion object {
         const val RIGHTACTION = "delete"
         var guestcreated_flag = 0
+        const val TAG = "GuestsAll"
     }
 }

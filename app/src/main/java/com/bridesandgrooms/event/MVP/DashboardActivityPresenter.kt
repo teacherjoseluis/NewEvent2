@@ -1,6 +1,8 @@
 package com.bridesandgrooms.event.MVP
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.bridesandgrooms.event.DashboardActivity
 import com.bridesandgrooms.event.Functions.converttoDate
 import com.bridesandgrooms.event.MVP.TaskPresenter.Companion.ERRCODETASKS
@@ -14,44 +16,51 @@ class DashboardActivityPresenter(
     TaskPresenter.TaskList {
 
     private var presentertask: TaskPresenter = TaskPresenter(context, this)
+    private val mHandler = Handler(Looper.getMainLooper())
 
-    init {
-        presentertask.getTasksList()
+    fun getTaskList() {
+        Thread {
+            presentertask.getTasksList()
+        }.start()
     }
 
     override fun onTaskList(list: ArrayList<Task>) {
-        //Converting a Task list into a TaskJournal list
-        // Unique Dates Array
-        val taskdatelist: ArrayList<String> = ArrayList()
-        for (task in list) {
-            if (!taskdatelist.contains(task.date)) {
-                taskdatelist.add(task.date)
-            }
-        }
-        // Araylist of Tasks when the Date is the Key
-        val taskjournal: ArrayList<TaskJournal> = ArrayList()
-        val taskjournallist: ArrayList<Task> = ArrayList()
-        for (taskdates in taskdatelist) {
-            taskjournallist.clear()
+        mHandler.post {
+            //Converting a Task list into a TaskJournal list
+            // Unique Dates Array
+            val taskdatelist: ArrayList<String> = ArrayList()
             for (task in list) {
-                if (task.date == taskdates) {
-                    taskjournallist.add(task)
+                if (!taskdatelist.contains(task.date)) {
+                    taskdatelist.add(task.date)
                 }
             }
-            val newtasklist: ArrayList<Task> = ArrayList(taskjournallist.size)
-            for (tasklist in taskjournallist) newtasklist.add(tasklist)
-            taskjournal.add(TaskJournal(converttoDate(taskdates), newtasklist))
+            // Araylist of Tasks when the Date is the Key
+            val taskjournal: ArrayList<TaskJournal> = ArrayList()
+            val taskjournallist: ArrayList<Task> = ArrayList()
+            for (taskdates in taskdatelist) {
+                taskjournallist.clear()
+                for (task in list) {
+                    if (task.date == taskdates) {
+                        taskjournallist.add(task)
+                    }
+                }
+                val newtasklist: ArrayList<Task> = ArrayList(taskjournallist.size)
+                for (tasklist in taskjournallist) newtasklist.add(tasklist)
+                taskjournal.add(TaskJournal(converttoDate(taskdates), newtasklist))
+            }
+            // This is supposed to sort TaskJournal based on the date
+            taskjournal.sortWith(Comparator { o1, o2 ->
+                if (o1.date == null || o2.date == null) 0 else o1.date
+                    .compareTo(o2.date)
+            })
+            fragment.onTaskJournal(taskjournal)
         }
-        // This is supposed to sort TaskJournal based on the date
-        taskjournal.sortWith(Comparator { o1, o2 ->
-            if (o1.date == null || o2.date == null) 0 else o1.date
-                .compareTo(o2.date)
-        })
-        fragment.onTaskJournal(taskjournal)
     }
 
     override fun onTaskListError(errcode: String) {
-        fragment.onTaskJournalError(ERRCODETASKS)
+        mHandler.post {
+            fragment.onTaskJournalError(ERRCODETASKS)
+        }
     }
 
     interface TaskJournalInterface {

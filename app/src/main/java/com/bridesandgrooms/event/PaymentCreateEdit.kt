@@ -173,6 +173,8 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
 
         try {
             presentervendor = VendorPaymentPresenter(this, this)
+            presentervendor.getVendorList()
+
         } catch (e: Exception) {
             displayToastMsg(getString(R.string.error_getting_vendors) + e.toString())
             AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"VendorPaymentPresenter",e.stackTraceToString())

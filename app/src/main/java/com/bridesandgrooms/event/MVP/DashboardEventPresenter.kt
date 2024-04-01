@@ -1,6 +1,8 @@
 package com.bridesandgrooms.event.MVP
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.MVP.PaymentPresenter.Companion.ERRCODEPAYMENTS
@@ -19,8 +21,8 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
     private var presenterguest: GuestPresenter = GuestPresenter(context, this)
     private var presenterevent: EventPresenter = EventPresenter(context, this)
 
-
     private var paymentsumbudget = 0.0F
+    private val mHandler = Handler(Looper.getMainLooper())
 
 //    fun getEventchildrenflag(): Boolean {
 //        //This function needs to return a boolean
@@ -29,49 +31,59 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 //        return presenterevent.getEventChildrenflag(event.key)
 //    }
 
-    fun getTaskList(){
-        presentertask.getTasksList()
+    fun getTaskList() {
+        Thread {
+            presentertask.getTasksList()
+        }.start()
     }
 
-    fun getPaymentList(){
-        presenterpayment.getPaymentsList()
+    fun getPaymentList() {
+        Thread {
+            presenterpayment.getPaymentsList()
+        }.start()
     }
 
-    fun getEvent(){
-        presenterevent.getEventDetail()
+    fun getEvent() {
+        Thread {
+            presenterevent.getEventDetail()
+        }.start()
     }
 
 //    fun getEventChildrenflag(){
 //        presenterevent.getEventDetail()
 //    }
 
-    fun getGuestList(){
-        presenterguest.getGuestList()
+    fun getGuestList() {
+        Thread {
+            presenterguest.getGuestList()
+        }.start()
     }
 
     override fun onTaskList(list: ArrayList<Task>) {
-        var countactive = 0 // Active/Open Tasks
-        var countcompleted = 0 // Tasks Completed
-        var sumbudget = 0.0f // Budget Amount for all Tasks
+        mHandler.post {
+            var countactive = 0 // Active/Open Tasks
+            var countcompleted = 0 // Tasks Completed
+            var sumbudget = 0.0f // Budget Amount for all Tasks
 
-        val re = Regex("[^A-Za-z0-9 ]")
-        for (task in list) {
-            val budgetamount = re.replace(task.budget, "").dropLast(2)
-            sumbudget += budgetamount.toFloat()
-            if (task.status == "A") {
-                countactive += 1
-            } else if (task.status == "C") {
-                countcompleted += 1
+            val re = Regex("[^A-Za-z0-9 ]")
+            for (task in list) {
+                val budgetamount = re.replace(task.budget, "").dropLast(2)
+                sumbudget += budgetamount.toFloat()
+                if (task.status == "A") {
+                    countactive += 1
+                } else if (task.status == "C") {
+                    countcompleted += 1
+                }
             }
-        }
-        paymentsumbudget = sumbudget
+            paymentsumbudget = sumbudget
 
-        list.sortWith(Comparator { o1, o2 ->
-            if (o1.date == null || o2.date == null) 0 else o1.date
-                .compareTo(o2.date)
-        })
-        val nextactivetask = nextactive(list)
-        fragment.onTasksStats(countactive, countcompleted, sumbudget, nextactivetask)
+            list.sortWith(Comparator { o1, o2 ->
+                if (o1.date == null || o2.date == null) 0 else o1.date
+                    .compareTo(o2.date)
+            })
+            val nextactivetask = nextactive(list)
+            fragment.onTasksStats(countactive, countcompleted, sumbudget, nextactivetask)
+        }
     }
 
     private fun nextactive(list: ArrayList<Task>): Task {
@@ -86,54 +98,68 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
     }
 
     override fun onTaskListError(errcode: String) {
-        fragment.onTaskStatsError(ERRCODETASKS)
+        mHandler.post {
+            fragment.onTaskStatsError(ERRCODETASKS)
+        }
     }
 
     override fun onPaymentList(list: ArrayList<Payment>) {
-        var countpayment = 0 // Number of Payments made
-        var sumpayment = 0.0f // Amount of Payments
+        mHandler.post {
+            var countpayment = 0 // Number of Payments made
+            var sumpayment = 0.0f // Amount of Payments
 
-        val re = Regex("[^A-Za-z0-9 ]")
-        for (payment in list) {
+            val re = Regex("[^A-Za-z0-9 ]")
+            for (payment in list) {
 
-            val paidamount = re.replace(payment.amount, "").dropLast(2)
-            sumpayment += paidamount.toFloat()
-            countpayment += 1
+                val paidamount = re.replace(payment.amount, "").dropLast(2)
+                sumpayment += paidamount.toFloat()
+                countpayment += 1
+            }
+            fragment.onPaymentsStats(countpayment, sumpayment, paymentsumbudget)
         }
-        fragment.onPaymentsStats(countpayment, sumpayment, paymentsumbudget)
     }
 
     override fun onPaymentListError(errcode: String) {
-        fragment.onPaymentsStatsError(ERRCODEPAYMENTS)
+        mHandler.post {
+            fragment.onPaymentsStatsError(ERRCODEPAYMENTS)
+        }
     }
 
     override fun onGuestList(list: ArrayList<Guest>) {
-        var confirmed = 0
-        var rejected = 0
-        var pending = 0
+        mHandler.post {
+            var confirmed = 0
+            var rejected = 0
+            var pending = 0
 
-        for (guestitem in list) {
-            when (guestitem.rsvp) {
-                "y" -> confirmed += 1
-                "n" -> rejected += 1
-                "pending" -> pending += 1
+            for (guestitem in list) {
+                when (guestitem.rsvp) {
+                    "y" -> confirmed += 1
+                    "n" -> rejected += 1
+                    "pending" -> pending += 1
+                }
             }
+            fragment.onGuestConfirmation(confirmed, rejected, pending)
+            presenterevent.getEventDetail()
         }
-        fragment.onGuestConfirmation(confirmed, rejected, pending)
-        presenterevent.getEventDetail()
     }
 
     override fun onGuestListError(errcode: String) {
-        fragment.onGuestConfirmationError(GuestPresenter.ERRCODEGUESTS)
-        presenterevent.getEventDetail()
+        mHandler.post {
+            fragment.onGuestConfirmationError(GuestPresenter.ERRCODEGUESTS)
+            presenterevent.getEventDetail()
+        }
     }
 
     override fun onEvent(event: Event) {
-        fragment.onEvent(context, event)
+        mHandler.post {
+            fragment.onEvent(context, event)
+        }
     }
 
     override fun onEventError(errcode: String) {
-        fragment.onEventError(view, EventPresenter.ERRCODEEVENTS)
+        mHandler.post {
+            fragment.onEventError(view, EventPresenter.ERRCODEEVENTS)
+        }
     }
 
     interface TaskStats {

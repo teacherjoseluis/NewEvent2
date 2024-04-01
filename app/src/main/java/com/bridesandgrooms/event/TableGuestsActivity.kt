@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.MVP.TableGuestsActivityPresenter
 import Application.MyFirebaseApp
+import android.util.Log
 import com.bridesandgrooms.event.Model.TableGuests
 import com.bridesandgrooms.event.databinding.TableguestsactivityBinding
 import com.bridesandgrooms.event.UI.ViewAnimation
@@ -62,8 +63,9 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
 
         try {
             presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+            presenterguest.getGuestList()
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
 
 
@@ -194,8 +196,9 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
         super.onResume()
         try {
             presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+            presenterguest.getGuestList()
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
     }
 
@@ -205,10 +208,14 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
             //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
             try {
                 presenterguest = TableGuestsActivityPresenter(requireContext(), this)
+                presenterguest.getGuestList()
             } catch (e: Exception) {
-                println(e.message)
+                Log.e(TAG, e.message.toString())
             }
         }
+    }
+    companion object {
+        const val TAG = "TableGuestActivity"
     }
 }
 

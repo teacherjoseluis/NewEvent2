@@ -187,14 +187,13 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
             try {
                 dashboardEP = DashboardEventPresenter(requireContext(), this, inf.root)
+                dashboardEP.getTaskList()
+                dashboardEP.getPaymentList()
+                dashboardEP.getEvent()
+                dashboardEP.getGuestList()
             } catch (e: Exception) {
-                AnalyticsManager.getInstance().trackError(SCREEN_NAME, e.message.toString(), "DashboardEventPresenter", e.stackTraceToString())
                 Log.e(TAG, e.message.toString())
             }
-            dashboardEP.getTaskList()
-            dashboardEP.getPaymentList()
-            dashboardEP.getEvent()
-            dashboardEP.getGuestList()
         } else {
             Log.i(TAG, "No data was obtained from the Event")
 
@@ -450,7 +449,12 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             daysleft = daystoDate(converttoDate(event.date))
         } catch (e: Exception) {
             user.softlogout(requireActivity())
-            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"daystoDate()", e.stackTraceToString())
+            AnalyticsManager.getInstance().trackError(
+                SCREEN_NAME,
+                e.message.toString(),
+                "daystoDate()",
+                e.stackTraceToString()
+            )
             Log.e(TAG, e.message.toString())
         }
 
@@ -461,7 +465,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 )
             )
         } catch (e: Exception) {
-            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(), "daysleft", e.stackTraceToString())
+            AnalyticsManager.getInstance()
+                .trackError(SCREEN_NAME, e.message.toString(), "daysleft", e.stackTraceToString())
             Log.e(TAG, e.message.toString())
             ""
         }

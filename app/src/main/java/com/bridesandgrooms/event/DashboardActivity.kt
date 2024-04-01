@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -28,7 +29,7 @@ import com.bridesandgrooms.event.databinding.DashboardactivityBinding
 class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInterface {
 
     private lateinit var recyclerViewActivity: RecyclerView
-    private lateinit var presentertask: DashboardActivityPresenter
+    private lateinit var dashboardAP: DashboardActivityPresenter
     private lateinit var inf: DashboardactivityBinding
     private lateinit var activitymenu: Menu
 
@@ -63,9 +64,10 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
             startActivityForResult(newtask, REQUEST_CODE_TASK)
         }
         try {
-            presentertask = DashboardActivityPresenter(requireContext(), this)
+            dashboardAP = DashboardActivityPresenter(requireContext(), this)
+            dashboardAP.getTaskList()
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
         return inf.root
     }
@@ -108,7 +110,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
         super.onActivityResult(requestCode, resultCode, data)
         if ((requestCode == REQUEST_CODE_TASK) && resultCode == Activity.RESULT_OK) {
             try {
-                presentertask = DashboardActivityPresenter(requireContext(), this)
+                dashboardAP = DashboardActivityPresenter(requireContext(), this)
             } catch (e: Exception) {
                 println(e.message)
             }
@@ -119,10 +121,14 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
     override fun onResume() {
         super.onResume()
         try {
-            presentertask = DashboardActivityPresenter(requireContext(), this)
+            dashboardAP = DashboardActivityPresenter(requireContext(), this)
         } catch (e: Exception) {
             println(e.message)
         }
+    }
+
+    companion object {
+        const val TAG = "DashboardActivity"
     }
 }
 

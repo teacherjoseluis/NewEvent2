@@ -6,9 +6,11 @@ import android.graphics.Canvas
 import android.graphics.pdf.PdfDocument.Page
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
+import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.Functions.convertToFilenameString
 import com.bridesandgrooms.event.Functions.converttoString
 import com.bridesandgrooms.event.Functions.currentDateTime
@@ -206,9 +208,10 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
         context = applicationContext
         try {
             exportPDFP = ExportPDFPresenter(context, this, "")
+            exportPDFP.getTasksList()
             //createPdf(taskPDFReport = TaskPDFReport(15, 10F, 10F, arrayTask))
         } catch (e: FileNotFoundException) {
-            e.printStackTrace()
+            Log.e(TAG, e.message.toString())
         }
     }
 
@@ -395,5 +398,9 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
 
     override fun onEPDFTasksError(errcode: String) {
         TODO("Not yet implemented")
+    }
+
+    companion object {
+        const val TAG = "ExportPDF"
     }
 }

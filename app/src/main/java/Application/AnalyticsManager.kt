@@ -1,6 +1,7 @@
 package Application
 
 import android.os.Bundle
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class AnalyticsManager {
 
@@ -16,12 +17,14 @@ class AnalyticsManager {
         }
     }
 
+
     // Method for handling user interactions
     fun trackUserInteraction(screenName: String, action: String) {
         val bundle = Bundle()
         bundle.putString("screen_name", screenName)
         bundle.putString("action", action)
         MyFirebaseApp.mFirebaseAnalytics.logEvent("USER_INTERACTION", bundle)
+
     }
 
     // Method for handling content interactions

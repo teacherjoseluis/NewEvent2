@@ -46,7 +46,6 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
         activefragment = "EPDF"
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun getTasksList() {
         cachetask = Cache(mContext, this)
         cachetask.loadarraylist(Task::class)
@@ -54,7 +53,6 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
 
     // The below section contains the callbacks from the Cache interfaces
     // Callbacks when ArrayList data is obtained from the cache
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onArrayListT(arrayList: ArrayList<Task>) {
         if (arrayList.size == 0) {
             when (activefragment) {
@@ -81,7 +79,6 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
             user.userid!!,
             user.eventid,
             object : TaskModel.FirebaseSuccessTaskList {
-                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
                 override fun onTaskList(arrayList: ArrayList<Task>) {
                     if (arrayList.isNotEmpty()) {
                         // This may be heavy, getting all of the tasks from Firebase but storing them into the cache

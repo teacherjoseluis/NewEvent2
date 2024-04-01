@@ -1,6 +1,8 @@
 package com.bridesandgrooms.event.MVP
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.Model.VendorPayment
@@ -13,23 +15,30 @@ class VendorsAllPresenter(
     VendorPresenter.VendorList {
 
     private var presentervendor: VendorPresenter = VendorPresenter(context, this)
+    private val mHandler = Handler(Looper.getMainLooper())
 
-    init {
-        presentervendor.getVendorList()
+    fun getVendorList() {
+        Thread {
+            presentervendor.getVendorList()
+        }.start()
     }
 
     override fun onVendorList(list: ArrayList<Vendor>) {
-        val vendorpaymentlist = ArrayList<VendorPayment>()
-        val paymentDB = PaymentDBHelper(context)
-        list.forEach { vendor ->
-            val amountlist = paymentDB.getVendorPayments(vendor.key)!!
-            vendorpaymentlist.add(VendorPayment(vendor, amountlist))
+        mHandler.post {
+            val vendorpaymentlist = ArrayList<VendorPayment>()
+            val paymentDB = PaymentDBHelper(context)
+            list.forEach { vendor ->
+                val amountlist = paymentDB.getVendorPayments(vendor.key)!!
+                vendorpaymentlist.add(VendorPayment(vendor, amountlist))
+            }
+            fragment.onVAVendors(vendorpaymentlist)
         }
-        fragment.onVAVendors(vendorpaymentlist)
     }
 
     override fun onVendorListError(errcode: String) {
-        fragment.onVAVendorsError(VendorPresenter.ERRCODEVENDORS)
+        mHandler.post {
+            fragment.onVAVendorsError(VendorPresenter.ERRCODEVENDORS)
+        }
     }
 
     interface VAVendors {

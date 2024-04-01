@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +52,6 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks, ItemSwip
         status = this.requireArguments().get("status").toString()
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,9 +77,10 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks, ItemSwip
         }
 
         try {
-            presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf.root, category, status)
+            presentertask = TaskPaymentTasksPresenter(requireContext(), this, category, status)
+            presentertask.getTaskList()
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
         return inf.root
     }
@@ -185,9 +186,10 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks, ItemSwip
     override fun onResume() {
         super.onResume()
         try {
-            presentertask = TaskPaymentTasksPresenter(requireContext(), this, inf.root, category, status)
+            presentertask = TaskPaymentTasksPresenter(requireContext(), this, category, status)
+            presentertask.getTaskList()
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
     }
 
@@ -195,6 +197,7 @@ class TaskPaymentTasks : Fragment(), TaskPaymentTasksPresenter.TPTasks, ItemSwip
         const val LEFTACTIONACTIVE = "check"
         const val RIGHTACTIONACTIVE = "delete"
         const val RIGHTACTIONCOMPLETED = "undo"
+        const val TAG = "TaskPaymentTasks"
     }
 
     override fun onItemSwiped(taskList: MutableList<Task>) {
