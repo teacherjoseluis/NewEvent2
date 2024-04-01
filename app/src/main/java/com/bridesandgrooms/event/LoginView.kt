@@ -10,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.getUserSession
 import com.bridesandgrooms.event.Functions.saveUserSession
-import com.bridesandgrooms.event.MVP.LoginPresenter
 import com.bridesandgrooms.event.Model.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -33,7 +32,7 @@ import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.databinding.LoginVideoBinding
 
 
-class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.SignUpActivity {
+class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
 
     private val TIME_DELAY = 2000
     private var back_pressed: Long = 0
@@ -388,5 +387,11 @@ class LoginView : AppCompatActivity(), LoginPresenter.ViewLoginActivity, User.Si
         private const val TAG = "LoginView"
         private const val RC_SIGN_IN = 9001
     }
+}
+
+interface ViewLoginActivity {
+    fun onLoginSuccess(email: String)
+    fun onOnboarding(userid: String, email: String, authtype: String)
+    fun onLoginError()
 }
 

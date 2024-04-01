@@ -182,6 +182,16 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         }
     }
 
+    fun getTaskBudget(context: Context): Float? {
+        try {
+            val taskDBHelper = TaskDBHelper(context)
+            return taskDBHelper.getTasksBudget()!!
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        }
+    }
+
     fun getActiveCategories(): ArrayList<Category>? {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val list = ArrayList<Category>()

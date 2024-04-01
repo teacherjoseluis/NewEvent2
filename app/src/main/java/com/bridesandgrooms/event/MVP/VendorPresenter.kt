@@ -28,13 +28,11 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
         activefragment = "VP"
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getVendorList() {
         cachevendor = Cache(mContext, this)
         cachevendor.loadarraylist(Vendor::class)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onArrayListV(arrayList: ArrayList<Vendor>) {
         if (arrayList.size != 0) {
             when (activefragment) {
@@ -52,7 +50,6 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
             user.userid!!,
             user.eventid,
             object : VendorModel.FirebaseSuccessVendorList {
-                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onVendorList(list: ArrayList<Vendor>) {
                     if (list.isNotEmpty()) {
                         // This may be heavy, getting all of the tasks from Firebase but storing them into the cache

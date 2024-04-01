@@ -49,7 +49,6 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
         activefragment = "TG"
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getGuestList() {
         cacheguest = Cache(mContext, this)
         cacheguest.loadarraylist(Guest::class)
@@ -81,7 +80,6 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
         fragmentCA.onContactList(contactlist)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onArrayListG(arrayList: ArrayList<Guest>) {
         if (arrayList.size != 0) {
             when (activefragment) {
@@ -100,7 +98,6 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
             user.userid!!,
             user.eventid,
             object : GuestModel.FirebaseSuccessGuestList {
-                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onGuestList(list: ArrayList<Guest>) {
                     if (list.isNotEmpty()) {
                         // This may be heavy, getting all of the tasks from Firebase but storing them into the cache

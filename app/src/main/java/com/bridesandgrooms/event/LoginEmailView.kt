@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
-import com.bridesandgrooms.event.MVP.LoginEmailPresenter
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.LoginEmailBinding
 import com.google.firebase.auth.FirebaseAuthEmailException
@@ -16,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 //import kotlinx.android.synthetic.main.login_email.*
 import kotlinx.coroutines.launch
 
-class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginActivity {
+class LoginEmailView : AppCompatActivity(), ViewEmailLoginActivity {
 
     private lateinit var binding: LoginEmailBinding
 
@@ -153,4 +152,10 @@ class LoginEmailView : AppCompatActivity(), LoginEmailPresenter.ViewEmailLoginAc
             Toast.LENGTH_LONG
         ).show()
     }
+}
+
+interface ViewEmailLoginActivity {
+    fun onLoginEmailSuccess()
+    fun onOnboarding(userid: String, email: String, authtype: String)
+    fun onLoginEmailError()
 }

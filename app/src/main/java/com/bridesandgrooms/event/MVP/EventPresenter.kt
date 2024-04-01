@@ -32,13 +32,11 @@ class EventPresenter : Cache.EventItemCacheData {
         activefragment = "DE"
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getEventDetail() {
         cacheevent = Cache(mContext, this)
         cacheevent.loadarraylist(Event::class)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onEvent(item: Event) {
         when (activefragment) {
             //"ES" -> fragmentES.onEvent(item)
@@ -47,7 +45,6 @@ class EventPresenter : Cache.EventItemCacheData {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onEventError() {
         //val userdbhelper = UserDBHelper(mContext)
         val user = User().getUser(mContext)
@@ -56,7 +53,6 @@ class EventPresenter : Cache.EventItemCacheData {
             user.userid!!,
             user.eventid,
             object : EventModel.FirebaseSuccessListenerEventDetail {
-                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onEvent(event: Event) {
                     cacheevent.save(event)
                     when (activefragment) {

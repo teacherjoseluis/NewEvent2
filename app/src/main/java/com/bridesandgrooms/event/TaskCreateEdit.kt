@@ -31,6 +31,7 @@ import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.Task
+import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.TaskEditdetailBinding
 import com.bridesandgrooms.event.UI.TextValidate
@@ -179,7 +180,7 @@ class TaskCreateEdit : AppCompatActivity() {
                 inputvalflag = false
             }
             if (inputvalflag) {
-                val taskEvent = Task()
+                val taskEvent = TaskDBHelper(this)
                 val taskBudget = taskEvent.getTaskBudget(this)!!
                 val newEventBalance =
                     thisEventBudget - (taskBudget + thisTaskBudget)

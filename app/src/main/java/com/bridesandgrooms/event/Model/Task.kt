@@ -52,16 +52,6 @@ open class Task(
         return 0
     }
 
-    fun getTaskBudget(context: Context): Float? {
-        try {
-            val taskDBHelper = TaskDBHelper(context)
-            return taskDBHelper.getTasksBudget()!!
-        } catch (e: Exception) {
-            Log.e(TaskDBHelper.TAG, e.message.toString())
-            return null
-        }
-    }
-
     companion object CREATOR : Parcelable.Creator<Task> {
         override fun createFromParcel(parcel: Parcel): Task {
             return Task(parcel)

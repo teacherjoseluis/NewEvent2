@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.DashboardEvent
@@ -27,6 +29,8 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     private lateinit var fragmentMA: MainActivity
     private lateinit var fragmentDE: DashboardEvent
 
+    private val mHandler = Handler(Looper.getMainLooper())
+
     constructor(context: Context, fragment: MainActivity) {
         fragmentMA = fragment
         //inflatedView = view
@@ -42,63 +46,77 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     }
 
     fun getEventImage() {
-        cacheimage = Cache(mContext, this)
-        cacheimage.loadimage(EVENTIMAGE)
+        Thread {
+            cacheimage = Cache(mContext, this)
+            cacheimage.loadimage(EVENTIMAGE)
+        }.start()
     }
 
     fun getPlaceImage() {
-        cacheimage = Cache(mContext, this)
-        cacheimage.loadimage(PLACEIMAGE)
+        Thread {
+            cacheimage = Cache(mContext, this)
+            cacheimage.loadimage(PLACEIMAGE)
+        }.start()
     }
 
     override fun onEventImage(image: Bitmap) {
-        when (activefragment) {
-            "MA" -> fragmentMA.onEventImage(
-                mContext,
-                null,
-                image
-            )
-            "DE" -> fragmentDE.onEventImage(
-                mContext,
-                inflatedView,
-                image
-            )
+        mHandler.post {
+            when (activefragment) {
+                "MA" -> fragmentMA.onEventImage(
+                    mContext,
+                    null,
+                    image
+                )
+
+                "DE" -> fragmentDE.onEventImage(
+                    mContext,
+                    inflatedView,
+                    image
+                )
+            }
         }
     }
 
     override fun onEmptyEventImage(errorcode: String) {
+        mHandler.post {
 //        val userdbhelper = UserDBHelper(mContext)
-        val user = User().getUser(mContext)
-        val storageRef =
-            getImgfromStorage(EVENTIMAGE, user.userid!!, user.eventid)
-        cacheimage.save(EVENTIMAGE, storageRef)
-        when (activefragment) {
-            "MA" -> fragmentMA.onEventImage(
-                mContext,
-                null,
-                storageRef
-            )
-            "DE" -> fragmentDE.onEventImage(
-                mContext,
-                inflatedView,
-                storageRef
-            )
+            val user = User().getUser(mContext)
+            val storageRef =
+                getImgfromStorage(EVENTIMAGE, user.userid!!, user.eventid)
+            cacheimage.save(EVENTIMAGE, storageRef)
+            when (activefragment) {
+                "MA" -> fragmentMA.onEventImage(
+                    mContext,
+                    null,
+                    storageRef
+                )
+
+                "DE" -> fragmentDE.onEventImage(
+                    mContext,
+                    inflatedView,
+                    storageRef
+                )
+            }
         }
     }
 
     override fun onPlaceImage(image: Bitmap) {
-        when (activefragment) {
-            "DE" -> fragmentDE.onPlaceImage(
-                mContext,
-                image
-            )
+        mHandler.post {
+            when (activefragment) {
+                "DE" -> fragmentDE.onPlaceImage(
+                    mContext,
+                    image
+                )
+            }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onEmptyPlaceImage(errorcode: String) {
-        when (activefragment) {
-            "DE" -> fragmentDE.onEmptyPlaceImageSD()
+        mHandler.post {
+            when (activefragment) {
+                "DE" -> fragmentDE.onEmptyPlaceImageSD()
+            }
         }
     }
 

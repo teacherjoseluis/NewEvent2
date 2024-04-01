@@ -31,8 +31,6 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
         activefragment = "TPP"
     }
 
-
-    @RequiresApi(VERSION_CODES.LOLLIPOP)
     fun getPaymentsList() {
         cachepayment = Cache(mContext, this)
         cachepayment.loadarraylist(Payment::class)
@@ -145,7 +143,6 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
             user.userid!!,
             user.eventid,
             object : PaymentModel.FirebaseSuccessPaymentList {
-                @RequiresApi(VERSION_CODES.LOLLIPOP)
                 override fun onPaymentList(arrayList: ArrayList<Payment>) {
                     if (arrayList.isNotEmpty()) {
                         cachepayment.save(arrayList)

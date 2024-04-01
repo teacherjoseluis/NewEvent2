@@ -340,6 +340,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
 
         try {
             imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
+            imagePresenter.getEventImage()
         } catch (e: Exception) {
             AnalyticsManager.getInstance().trackError(
                 SCREEN_NAME,
@@ -349,7 +350,6 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
             )
             Log.e(TAG, e.message.toString())
         }
-        imagePresenter.getEventImage()
     }
 
     override fun onEventError(errcode: String) {
