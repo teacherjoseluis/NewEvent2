@@ -63,15 +63,15 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
         val taskdb = TaskDBHelper(context)
         // The below function gets the statistics for tasks and budgets associated to each category
         val taskstats = taskdb.getCategoryStats(categorylist[p1].code)
-        p0.taskpendinglabel?.text = taskstats!!.taskpending.toString()
-        p0.taskdonelabel?.text = taskstats.taskcompleted.toString()
-        p0.taskbudgetlabel?.text = taskstats.sumbudget
+//        p0.taskpendinglabel?.text = taskstats!!.taskpending.toString()
+//        p0.taskdonelabel?.text = taskstats.taskcompleted.toString()
+//        p0.taskbudgetlabel?.text = taskstats.sumbudget
 
         val paymentdb = PaymentDBHelper(context)
         // The below function gets the statistics for tasks and budgets associated to each category
         val paymentstats = paymentdb.getCategoryStats(categorylist[p1].code)!!
-        p0.paymentdonelabel?.text = paymentstats.paymentcompleted.toString()
-        p0.paymentbudgetlabel?.text = paymentstats.sumpayments
+//        p0.paymentdonelabel?.text = paymentstats.paymentcompleted.toString()
+//        p0.paymentbudgetlabel?.text = paymentstats.sumpayments
 
         p0.itemView.setOnClickListener {
             // ------- Analytics call ----------------
@@ -93,12 +93,12 @@ class rvCategoryAdapter(private val categorylist: List<Category>) :
         val categoryimage: ImageView? = itemView.findViewById(R.id.categoryimage)
 
 
-        val taskpendinglabel: TextView? = itemView.findViewById(R.id.taskpendinglabel)
-        val taskdonelabel: TextView? = itemView.findViewById(R.id.taskdonelabel)
-        val taskbudgetlabel: TextView? = itemView.findViewById(R.id.taskbudgetlabel)
-
-        val paymentdonelabel: TextView? = itemView.findViewById(R.id.paymentdonelabel)
-        val paymentbudgetlabel: TextView? = itemView.findViewById(R.id.paymentbudgetlabel)
+//        val taskpendinglabel: TextView? = itemView.findViewById(R.id.taskpendinglabel)
+//        val taskdonelabel: TextView? = itemView.findViewById(R.id.taskdonelabel)
+//        val taskbudgetlabel: TextView? = itemView.findViewById(R.id.taskbudgetlabel)
+//
+//        val paymentdonelabel: TextView? = itemView.findViewById(R.id.paymentdonelabel)
+//        val paymentbudgetlabel: TextView? = itemView.findViewById(R.id.paymentbudgetlabel)
     }
 }
 

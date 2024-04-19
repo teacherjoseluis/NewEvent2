@@ -125,4 +125,13 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="WeddingInviteTitle" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:fontFamily">@font/robotoblack</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="WeddingInviteBody" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

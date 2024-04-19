@@ -1,116 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="2dp"
-    android:clickable="true"
-    android:focusable="true">
--->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:layout_width="410dp"
+    android:layout_height="85dp"
     android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingTop="10dp"
-    android:paddingRight="16dp">
+    android:padding="4dp">
 
-    <ImageView
-        android:id="@+id/arrowside"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.cardview.widget.CardView
+        android:layout_width="400dp"
+        android:layout_height="72dp"
+        android:padding="2dp"
+        app:cardElevation="3dp"
+        android:background="@drawable/rv_border"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/rosaChillon"
-        tools:srcCompat="@drawable/ic_arrow_left"
-        android:contentDescription="TODO" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/categoryavatar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="5dp"
-        android:contentDescription="@string/categoryavatar"
-        android:paddingBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/view"
-        app:layout_constraintStart_toEndOf="@+id/arrowside"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/taskname"
-        style="@style/BodyBold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:text="@string/task"
-        android:textColor="@color/rosaChillon"
-        app:layout_constraintStart_toEndOf="@+id/categoryavatar"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/arrowside"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="TODO"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/rosaChillon"
+            tools:srcCompat="@drawable/ic_arrow_left" />
 
-    <TextView
-        android:id="@+id/taskdate"
-        style="@style/BodyItalic2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/date"
-        android:visibility="invisible"
-        android:textColor="@color/azulmasClaro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/categoryavatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/categoryavatar"
+            app:layout_constraintStart_toEndOf="@+id/arrowside"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/taskbudgets"
-        style="@style/BodyItalic2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:text="@string/amount"
-        android:textColor="@color/azulmasClaro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskname" />
+            <TextView
+                android:id="@+id/taskname"
+                style="@style/BodyNotBold"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:paddingTop="2dp"
+                android:text="@string/task"
+                android:textColor="@color/rosaChillon"
+                app:layout_constraintStart_toEndOf="@+id/categoryavatar"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        style="@style/BodySmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:paddingBottom="5dp"
-        android:text="@string/deadline"
-        android:visibility="invisible"
-        android:textColor="@color/azulmasClaro"
-        app:layout_constraintEnd_toStartOf="@+id/taskdate"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/taskbudgets"
+                style="@style/BodyItalic2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/amount"
+                app:layout_constraintStart_toEndOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/taskname" />
 
-    <TextView
-        style="@style/BodySmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:paddingBottom="5dp"
-        android:text="@string/budget"
-        android:textColor="@color/azulmasClaro"
-        app:layout_constraintEnd_toStartOf="@+id/taskbudgets"
-        app:layout_constraintTop_toBottomOf="@+id/taskname" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-<!--
+            <TextView
+                android:id="@+id/textView"
+                style="@style/BodySmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="5dp"
+                android:text="@string/budget"
+                app:layout_constraintStart_toEndOf="@+id/categoryavatar"
+                app:layout_constraintTop_toBottomOf="@+id/taskname" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
--->
+</androidx.constraintlayout.widget.ConstraintLayout>

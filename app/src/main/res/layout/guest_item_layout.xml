@@ -2,26 +2,30 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:layout_width="410dp"
+    android:layout_height="85dp"
     android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingTop="5dp"
-    android:paddingRight="16dp">
+    android:padding="4dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout12"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
+    <androidx.cardview.widget.CardView
+        android:layout_width="400dp"
+        android:layout_height="72dp"
+        android:padding="2dp"
+        app:cardElevation="3dp"
+        android:background="@drawable/rv_border"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
         <com.redmadrobot.acronymavatar.AvatarView
             android:id="@+id/contactavatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:paddingBottom="5dp"
@@ -30,11 +34,12 @@
 
         <TextView
             android:id="@+id/contactname"
-            style="@style/Body1"
+            style="@style/BodyNotBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="@string/name"
+            android:textColor="@color/rosaChillon"
             app:layout_constraintStart_toEndOf="@+id/contactavatar"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,7 +57,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/companions"
-                android:textColor="@color/rosaChillon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -85,57 +89,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-        <!--        android:id="@+id/constraintLayout19"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_marginStart="10dp"-->
-        <!--        android:layout_marginTop="5dp"-->
-        <!--        app:layout_constraintStart_toEndOf="@+id/contactavatar"-->
-        <!--        app:layout_constraintTop_toBottomOf="@+id/constraintLayout18">-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/textView38"-->
-        <!--            style="@style/Body1"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Table"-->
-        <!--            android:textColor="@color/rosaChillon"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/textView41"-->
-        <!--            style="@style/Body1"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="("-->
-        <!--            app:layout_constraintStart_toStartOf="@id/table"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/table"-->
-        <!--            style="@style/Body1"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginStart="5dp"-->
-        <!--            android:paddingLeft="5dp"-->
-        <!--            android:paddingRight="5dp"-->
-        <!--            android:text="Table"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/textView38"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/textView42"-->
-        <!--            style="@style/Body1"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text=")"-->
-        <!--            app:layout_constraintEnd_toEndOf="@id/table"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-        <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
         <TextView
             android:id="@+id/rsvp"
             style="@style/Body1"
@@ -145,19 +98,13 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:text="@string/rsvp"
-            android:textColor="@color/rosaChillon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout12"
-        tools:layout_editor_absoluteX="16dp" />
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

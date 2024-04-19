@@ -97,7 +97,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/layout_border"
-                            android:foregroundTint="@color/rosaChillon"
                             android:hint="@string/taskname"
                             android:maxLength="20" />
 
@@ -294,6 +293,7 @@
                 android:shadowDy="2"
                 android:shadowRadius="4"
                 android:text="@string/save"
+                android:textColor="@color/colorWhite"
                 app:backgroundTint="@color/rosaChillon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

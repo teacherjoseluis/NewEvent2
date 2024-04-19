@@ -10,7 +10,6 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -29,20 +28,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.baoyachi.stepview.HorizontalStepView
 import com.bridesandgrooms.event.Functions.PermissionUtils
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.bridesandgrooms.event.Functions.converttoDate
 import com.bridesandgrooms.event.Functions.daystoDate
 import com.bridesandgrooms.event.Functions.getImgfromPlaces
 import com.bridesandgrooms.event.MVP.DashboardEventPresenter
 import com.bridesandgrooms.event.MVP.ImagePresenter
+import com.bridesandgrooms.event.Model.DashboardImage.DashboardRepository
+import com.bridesandgrooms.event.Model.DashboardImage.FirebaseDataSourceImpl
 import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.User
@@ -60,7 +59,7 @@ import kotlinx.coroutines.launch
 
 class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     DashboardEventPresenter.PaymentStats, DashboardEventPresenter.GuestStats,
-    DashboardEventPresenter.EventInterface, ImagePresenter.EventImage, ImagePresenter.PlaceImage {
+    DashboardEventPresenter.EventInterface, DashboardEventPresenter.DashboardImagesStats, ImagePresenter.EventImage, ImagePresenter.PlaceImage {
 
     private lateinit var BandG_Colors: ArrayList<Int>
     private lateinit var BandG_Colors2: ArrayList<Int>
@@ -129,56 +128,56 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             inf.withdata.visibility = ConstraintLayout.VISIBLE
             //----------------------------------------------------------------------------------
             //Load with the achievements obtained by the user -------------------------------------------
-            val stepsBeanList = user.onboardingprogress(requireContext())
-            val stepview = inf.root.findViewById<HorizontalStepView>(R.id.step_view)
-            stepview
-                .setStepViewTexts(stepsBeanList)
-                .setTextSize(12)
-                .setStepsViewIndicatorCompletedLineColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.azulmasClaro
-                    )
-                )
-                .setStepsViewIndicatorUnCompletedLineColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.rosaChillon
-                    )
-                )
-                .setStepViewComplectedTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.azulmasClaro
-                    )
-                )
-                .setStepViewUnComplectedTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.rosaChillon
-                    )
-                )
-                .setStepsViewIndicatorCompleteIcon(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.icons8_checked_rosachillon
-                    )
-                )
-                .setStepsViewIndicatorDefaultIcon(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.circle_rosachillon
-                    )
-                )
-                .setStepsViewIndicatorAttentionIcon(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.alert_icon_rosachillon
-                    )
-                )
+//            val stepsBeanList = user.onboardingprogress(requireContext())
+//            val stepview = inf.root.findViewById<HorizontalStepView>(R.id.step_view)
+//            stepview
+//                .setStepViewTexts(stepsBeanList)
+//                .setTextSize(12)
+//                .setStepsViewIndicatorCompletedLineColor(
+//                    ContextCompat.getColor(
+//                        requireContext(),
+//                        R.color.azulmasClaro
+//                    )
+//                )
+//                .setStepsViewIndicatorUnCompletedLineColor(
+//                    ContextCompat.getColor(
+//                        requireContext(),
+//                        R.color.rosaChillon
+//                    )
+//                )
+//                .setStepViewComplectedTextColor(
+//                    ContextCompat.getColor(
+//                        requireContext(),
+//                        R.color.azulmasClaro
+//                    )
+//                )
+//                .setStepViewUnComplectedTextColor(
+//                    ContextCompat.getColor(
+//                        requireContext(),
+//                        R.color.rosaChillon
+//                    )
+//                )
+//                .setStepsViewIndicatorCompleteIcon(
+//                    ContextCompat.getDrawable(
+//                        requireContext(),
+//                        R.drawable.icons8_checked_rosachillon
+//                    )
+//                )
+//                .setStepsViewIndicatorDefaultIcon(
+//                    ContextCompat.getDrawable(
+//                        requireContext(),
+//                        R.drawable.circle_rosachillon
+//                    )
+//                )
+//                .setStepsViewIndicatorAttentionIcon(
+//                    ContextCompat.getDrawable(
+//                        requireContext(),
+//                        R.drawable.alert_icon_rosachillon
+//                    )
+//                )
 
-            val weddingphotodetail = inf.weddingphotodetail
-            weddingphotodetail.root.setOnClickListener {
+            //val weddingphotodetail = inf.weddingphotodetail
+            inf.weddingavatar.setOnClickListener {
                 AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "Edit_Event")
 
                 val editevent = Intent(context, MainActivity::class.java)
@@ -191,6 +190,10 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 dashboardEP.getPaymentList()
                 dashboardEP.getEvent()
                 dashboardEP.getGuestList()
+
+                val repository = DashboardRepository(FirebaseDataSourceImpl(requireContext()))
+                dashboardEP.setRepository(repository)
+                dashboardEP.fetchDashboardImages()
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
             }
@@ -216,6 +219,16 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             }
         }
         return inf.root
+    }
+
+    override fun onDashboardImages(images: List<DashboardEventPresenter.CategoryThumbnails>) {
+        val rvAdapter = rvDashboardImageAdapter(images)
+        inf.categoryrv.adapter = rvAdapter
+        Log.d("DashboardEvent", "Entering onDashboardImages")
+    }
+
+    override fun onDashboardImagesError(errcode: String) {
+        Log.d("DashboardImages", "onDashboardImagesError: Not yet implemented")
     }
 
     @SuppressLint("SetTextI18n")
@@ -299,31 +312,31 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             invalidate()
         }
 
-        val duenextcard = inf.duenextcard
-        if (task.key.isEmpty()) {
-            duenextcard.root.visibility = View.GONE
-        } else {
-            val cardname = duenextcard.cardtitle
-            val cardsecondarytext = duenextcard.secondarytext
-            val action1Button = duenextcard.action1
-            val action2Button = duenextcard.action2
-
-            cardname.text = getString(R.string.duenext)
-            val cardmsg = StringBuilder()
-            cardmsg.append(task.name).append(" ").append(getString(R.string.dueby)).append(" ")
-                .append(task.date)
-            cardsecondarytext.text = cardmsg
-            action1Button.text = getString(R.string.view)
-            action2Button.visibility = View.INVISIBLE
-
-            action1Button.setOnClickListener {
-                AnalyticsManager.getInstance()
-                    .trackNavigationEvent(SCREEN_NAME, "View_DueNext_Task")
-                val taskdetail = Intent(context, TaskCreateEdit::class.java)
-                taskdetail.putExtra("task", task)
-                requireContext().startActivity(taskdetail)
-            }
-        }
+//        val duenextcard = inf.duenextcard
+//        if (task.key.isEmpty()) {
+//            duenextcard.root.visibility = View.GONE
+//        } else {
+//            val cardname = duenextcard.cardtitle
+//            val cardsecondarytext = duenextcard.secondarytext
+//            val action1Button = duenextcard.action1
+//            val action2Button = duenextcard.action2
+//
+//            cardname.text = getString(R.string.duenext)
+//            val cardmsg = StringBuilder()
+//            cardmsg.append(task.name).append(" ").append(getString(R.string.dueby)).append(" ")
+//                .append(task.date)
+//            cardsecondarytext.text = cardmsg
+//            action1Button.text = getString(R.string.view)
+//            action2Button.visibility = View.INVISIBLE
+//
+//            action1Button.setOnClickListener {
+//                AnalyticsManager.getInstance()
+//                    .trackNavigationEvent(SCREEN_NAME, "View_DueNext_Task")
+//                val taskdetail = Intent(context, TaskCreateEdit::class.java)
+//                taskdetail.putExtra("task", task)
+//                requireContext().startActivity(taskdetail)
+//            }
+//        }
     }
 
     override fun onTaskStatsError(errcode: String) {
@@ -439,10 +452,10 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     override fun onEvent(context: Context, event: Event) {
         placeid = event.placeid
 
-        inf.weddingphotodetail.eventname.text = event.name
-        inf.weddingphotodetail.eventdate.text = event.date
-        inf.weddinglocation2.eventaddress.text = event.location
-        inf.weddinglocation2.eventfulladdress.text = event.address
+        inf.weddinginvitation.eventname.text = event.name
+        inf.weddinginvitation.eventdate.text = event.date
+        inf.weddinginvitation.eventaddress.text = event.location
+        inf.weddinginvitation.eventfulladdress.text = event.address
 
         var daysleft = 0
         try {
@@ -458,7 +471,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             Log.e(TAG, e.message.toString())
         }
 
-        inf.weddingphotodetail.deadline.text = try {
+        inf.weddinginvitation.deadline.text = try {
             daysleft.toString().plus(" ").plus(
                 getString(
                     R.string.daysleft
@@ -476,21 +489,21 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         imagePresenter.getEventImage()
         imagePresenter.getPlaceImage()
 
-        inf.weddinglocation2.root.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Visit_GoogleMaps")
-
-            val gmmIntentUri =
-                Uri.parse("geo:${event.latitude},${event.longitude}?z=10&q=${event.location}")
-            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-            mapIntent.setPackage("com.google.android.apps.maps")
-            mapIntent.resolveActivity(context.packageManager)?.let {
-                startActivity(mapIntent)
-            }
-            val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
-            val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
-            loadingscreen.visibility = ConstraintLayout.GONE
-            drawerlayout.visibility = ConstraintLayout.VISIBLE
-        }
+//        inf.weddinglocation2.root.setOnClickListener {
+//            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Visit_GoogleMaps")
+//
+//            val gmmIntentUri =
+//                Uri.parse("geo:${event.latitude},${event.longitude}?z=10&q=${event.location}")
+//            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+//            mapIntent.setPackage("com.google.android.apps.maps")
+//            mapIntent.resolveActivity(context.packageManager)?.let {
+//                startActivity(mapIntent)
+//            }
+//            val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
+//            val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
+//            loadingscreen.visibility = ConstraintLayout.GONE
+//            drawerlayout.visibility = ConstraintLayout.VISIBLE
+//        }
     }
 
     override fun onEventError(inf: View, errorcode: String) {
@@ -511,7 +524,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
         Glide.with(context)
             .load(packet)
-            .apply(RequestOptions.circleCropTransform())
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
@@ -537,7 +549,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     }
 
     override fun onPlaceImage(context: Context, image: Bitmap) {
-        inf.weddinglocation2.placesimage.setImageBitmap(image)
+//        inf.weddinglocation2.placesimage.setImageBitmap(image)
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -558,10 +570,10 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 // Handle the loaded bitmap here
                 if (bitmap != null) {
                     // Load bitmap into ImageView
-                    inf.weddinglocation2.placesimage.setImageBitmap(bitmap)
+//                    inf.weddinglocation2.placesimage.setImageBitmap(bitmap)
                 } else {
                     // Handle case when bitmap is null (e.g., show default image)
-                    inf.weddinglocation2.placesimage.setImageResource(R.drawable.avatar2)
+//                    inf.weddinglocation2.placesimage.setImageResource(R.drawable.avatar2)
                 }
             }
         }
@@ -607,10 +619,10 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                         // Handle the loaded bitmap here
                         if (bitmap != null) {
                             // Load bitmap into ImageView
-                            inf.weddinglocation2.placesimage.setImageBitmap(bitmap)
+//                            inf.weddinglocation2.placesimage.setImageBitmap(bitmap)
                         } else {
                             // Handle case when bitmap is null (e.g., show default image)
-                            inf.weddinglocation2.placesimage.setImageResource(R.drawable.avatar2)
+//                            inf.weddinglocation2.placesimage.setImageResource(R.drawable.avatar2)
                         }
                     }
                 }
@@ -624,6 +636,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         const val SCREEN_NAME = "Dashboard_Event"
         const val TAG = "DashboardEvent"
     }
+
+
 }
 
 

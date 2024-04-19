@@ -6,29 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
 
-    <TextView
-        android:id="@+id/country_label"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:text="@string/results_country"
-        style="@style/BodySmallItallic"
+        android:paddingTop="12dp"
+        android:paddingLeft="12dp"
         map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintTop_toTopOf="parent" />
+        map:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/country_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/country_label"
-        android:text="United States"
-        style="@style/BodySmallItallic"
-        map:layout_constraintStart_toEndOf="@+id/country_label"
-        map:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/country_label"
+            style="@style/BodySmallItallic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="@string/results_country"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.fragment.app.FragmentContainerView
+        <TextView
+            android:id="@+id/country_name"
+            style="@style/BodySmallItallic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/country_label"
+            android:text="United States"
+            map:layout_constraintStart_toEndOf="@+id/country_label"
+            map:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.fragment.app.FragmentContainerView
             android:id="@+id/autocomplete_fragment"
             android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
             android:layout_width="match_parent"

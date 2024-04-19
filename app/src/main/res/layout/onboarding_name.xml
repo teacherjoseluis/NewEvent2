@@ -51,6 +51,7 @@
                 android:id="@+id/nameinputedit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/layout_border"
                 android:hint="@string/what_s_your_name" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -128,6 +129,7 @@
                 android:id="@+id/etname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/layout_border"
                 android:hint="@string/what_s_your_event" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -162,6 +164,7 @@
                 android:id="@+id/etnumberguests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/layout_border"
                 android:digits="0123456789"
                 android:hint="@string/how_many_guests" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -178,6 +181,7 @@
                 android:id="@+id/etPlannedDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/layout_border"
                 android:hint="@string/what_day_is_your_event" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -193,6 +197,7 @@
                 android:id="@+id/etPlannedTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/layout_border"
                 android:hint="@string/at_what_time" />
         </com.google.android.material.textfield.TextInputLayout>
 

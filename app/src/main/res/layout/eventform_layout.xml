@@ -3,23 +3,30 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/pewter">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/main_toolbar"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/eventimage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:srcCompat="@drawable/frame_206"
-        android:contentDescription="@string/eventimage" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/eventimage_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <ImageView
+            android:id="@+id/eventimage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/eventimage"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/frame_206" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/editImageActionButton"
@@ -35,6 +42,27 @@
         app:srcCompat="@drawable/camera"
         android:contentDescription="@string/editeventImage" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/eventprogress_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventimage_section">
+
+        <include
+            android:id="@+id/weddingprogress"
+            layout="@layout/summary_weddingprogress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +70,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventimage">
+        app:layout_constraintTop_toBottomOf="@id/eventprogress_section">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/field1"

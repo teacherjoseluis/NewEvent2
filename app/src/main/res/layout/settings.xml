@@ -93,12 +93,16 @@
                 android:id="@+id/textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:layout_constraintHorizontal_bias="0.0"
                 android:hint="@string/name"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textinput"
+                    android:background="@drawable/layout_border"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -208,6 +212,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/numberguestsinput"
+                    android:background="@drawable/layout_border"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -396,6 +401,7 @@
         android:shadowDy="2"
         android:shadowRadius="4"
         android:text="@string/save"
+        android:textColor="@color/colorWhite"
         app:backgroundTint="@color/rosaChillon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -32,6 +32,8 @@ import com.bridesandgrooms.event.Model.EventDBHelper
 import com.bridesandgrooms.event.Model.EventModel
 import Application.MyFirebaseApp
 import android.util.Log
+import androidx.core.content.ContextCompat
+import com.baoyachi.stepview.HorizontalStepView
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.UserDBHelper
 import com.bridesandgrooms.event.databinding.EventformLayoutBinding
@@ -59,6 +61,8 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val user = User().getUser(this)
+
         binding = DataBindingUtil.setContentView(this, R.layout.eventform_layout)
         binding.eventname.setOnClickListener {
             binding.eventname.error = null
@@ -138,6 +142,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
 
         try {
             presenterevent = EventPresenter(applicationContext, this)
+            presenterevent.getEventDetail()
         } catch (e: Exception) {
             AnalyticsManager.getInstance().trackError(
                 SCREEN_NAME,
@@ -147,7 +152,56 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
             )
             Log.e(TAG, e.message.toString())
         }
-        presenterevent.getEventDetail()
+
+        //Load with the achievements obtained by the user -------------------------------------------
+        val stepsBeanList = user.onboardingprogress(this)
+        val stepview = binding.root.findViewById<HorizontalStepView>(R.id.step_view)
+        stepview
+            .setStepViewTexts(stepsBeanList)
+            .setTextSize(12)
+            .setStepsViewIndicatorCompletedLineColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.azulmasClaro
+                )
+            )
+            .setStepsViewIndicatorUnCompletedLineColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.rosaChillon
+                )
+            )
+            .setStepViewComplectedTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.azulmasClaro
+                )
+            )
+            .setStepViewUnComplectedTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.rosaChillon
+                )
+            )
+            .setStepsViewIndicatorCompleteIcon(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.icons8_checked_rosachillon
+                )
+            )
+            .setStepsViewIndicatorDefaultIcon(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.circle_rosachillon
+                )
+            )
+            .setStepsViewIndicatorAttentionIcon(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.alert_icon_rosachillon
+                )
+            )
+
     }
 
     private fun showDatePickerDialog() {
@@ -289,7 +343,6 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
                 uri = resultUri
                 Glide.with(this@MainActivity)
                     .load(uri)
-                    .apply(RequestOptions.circleCropTransform())
                     .into(binding.eventimage)
             }
         }
@@ -303,7 +356,6 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
     override fun onEventImage(context: Context, inflatedView: View?, packet: Any) {
         Glide.with(context)
             .load(packet)
-            .apply(RequestOptions.circleCropTransform())
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,

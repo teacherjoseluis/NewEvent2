@@ -3,6 +3,7 @@
     <color name="background2">#E6E6E6</color>
     <color name="colorPrimaryDark">#C2185B</color>
     <color name="colorAccent">#9E9E9E</color>
+    <color name="colorAccent2">#c4c4c4</color>
     <color name="colorPrimaryLight">#F8BBD0</color>
     <color name="secondaryText">#757575</color>
     <color name="black">#000000</color>
@@ -12,6 +13,7 @@
     <color name="paloderosa">#FFBADE</color>
     <color name="azulOscuro">#1B1752</color>
     <color name="azulmasClaro">#475c89</color>
-    <color name="pewter">#FCFCFC</color>
-
+    <color name="pewter">#fefbfb</color>
+    <color name="pewter2">#f4f2ee</color>
+    <color name="magentaHaze">#9F4C73</color>
 </resources>

@@ -1,0 +1,17 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Border Color -->
+    <stroke
+        android:width="2dp"
+    android:color="@color/rosaChillon" /> <!-- Border color (light pink) -->
+
+    <!-- Background Color (if needed) -->
+    <solid
+        android:color="#FFFFFF" /> <!-- Background color (white) -->
+
+    <!-- Corner Radius (for rounded corners) -->
+    <corners
+        android:radius="16dp" /> <!-- Corner radius (adjust as needed) -->
+
+</shape>

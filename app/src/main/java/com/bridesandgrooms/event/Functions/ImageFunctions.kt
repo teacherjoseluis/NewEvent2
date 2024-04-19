@@ -11,6 +11,7 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.bridesandgrooms.event.Model.DashboardImage.FirebaseDataSourceImpl
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -265,11 +266,7 @@ fun saveBitmaptoSD(context: Context, category: String, bitmap: Bitmap) {
         out.flush()
         out.close()
     } catch (e: Exception) {
-        Toast.makeText(
-            context,
-            "There was an error trying create the event ${e.message}",
-            Toast.LENGTH_LONG
-        ).show()
+        Log.e("ImageFunctions", "Error saving image locally: ${e.message}")
     }
 }
 

@@ -11,55 +11,56 @@ import androidx.core.content.ContextCompat;
 import com.bridesandgrooms.event.R;
 
 public class LetterAvatar extends ColorDrawable {
-    final Paint               paint   = new Paint();
-    final Rect bounds  = new Rect();
+    private final Paint textPaint = new Paint();
+    private final Paint circlePaint = new Paint();
+    private final Rect bounds = new Rect();
+    private final String letters;
+    private final int padding;
+    private final Context context;
 
-    final String              pLetters;
-    private final int         pPadding;
-    int                 pSize   = 0;
-    float               pMesuredTextWidth;
-
-    int                 pBoundsTextHeight;
-    final Context             context;
-
-    //------------------------------------------------------
-
-    public LetterAvatar (Context context, int color, String letter, int paddingInDp) {
+    public LetterAvatar(Context context, int color, int colorCircle, String letters, int paddingInDp) {
         super(color);
-        this.pLetters = letter;
-        Resources pResources = context.getResources();
-        float ONE_DP = 1 * pResources.getDisplayMetrics().density;
-        this.pPadding = Math.round(paddingInDp * ONE_DP);
+        this.letters = letters;
         this.context = context;
+
+        // Set up text paint
+        textPaint.setAntiAlias(true);
+        textPaint.setColor(0xffffffff); // White color for text
+        textPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+        textPaint.setTextSize(70); // Set a fixed text size, you can adjust this as needed
+
+        // Set up circle paint
+        circlePaint.setColor(ContextCompat.getColor(context, colorCircle));
+        circlePaint.setAntiAlias(true);
+
+        // Convert padding from dp to pixels
+        Resources resources = context.getResources();
+        float density = resources.getDisplayMetrics().density;
+        this.padding = Math.round(paddingInDp * density);
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        paint.setAntiAlias(true);
 
-        do {
-            paint.setTextSize(++pSize);
-            paint.getTextBounds(pLetters, 0, pLetters.length(), bounds);
+        // Calculate the center position for the circle
+        int centerX = getBounds().width() / 2;
+        int centerY = getBounds().height() / 2;
 
-        } while ((bounds.height() < (getBounds().height() - pPadding)) && (paint.measureText(pLetters) < (getBounds().width() - pPadding)));
+        // Calculate the circle radius
+        int circleRadius = Math.min(centerX, centerY) - padding;
 
-        paint.setTextSize(pSize);
-        pMesuredTextWidth = paint.measureText(pLetters);
-        pBoundsTextHeight = bounds.height();
+        // Draw the circle
+        canvas.drawCircle(centerX, centerY, circleRadius, circlePaint);
 
-        float xOffset = ((getBounds().width() - pMesuredTextWidth) / 2);
-        float yOffset = pBoundsTextHeight + (getBounds().height() - pBoundsTextHeight) / 2;
-        paint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-        paint.setColor(0xffffffff);
-//------------------------------------------------------
-        //------------------------------------------------------
-        Paint circlePaint = new Paint();
-        circlePaint.setColor(ContextCompat.getColor(context, R.color.rosaChillon));
-        circlePaint.setAntiAlias(true);
+        // Get the bounds for the text
+        textPaint.getTextBounds(letters, 0, letters.length(), bounds);
 
-        canvas.drawCircle(-3, 15 - (xOffset), yOffset + 5, circlePaint);
-//------------------------------------------------------
-        canvas.drawText(pLetters, xOffset, yOffset, paint);
+        // Calculate the position to draw the text
+        float textX = centerX - bounds.exactCenterX();
+        float textY = centerY - bounds.exactCenterY();
+
+        // Draw the text
+        canvas.drawText(letters, textX, textY, textPaint);
     }
 }

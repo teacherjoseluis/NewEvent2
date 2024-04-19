@@ -6,8 +6,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/pewter"
-        tools:context=".TaskPaymentTasks">
+        tools:context=".TaskPaymentTasks"
+        android:padding="5dp"
+        android:background="@color/pewter">
 
         <ScrollView
             android:id="@+id/scrollviewt"

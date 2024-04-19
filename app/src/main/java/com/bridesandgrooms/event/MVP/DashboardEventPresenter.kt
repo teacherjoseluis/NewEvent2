@@ -1,16 +1,27 @@
 package com.bridesandgrooms.event.MVP
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.MVP.PaymentPresenter.Companion.ERRCODEPAYMENTS
 import com.bridesandgrooms.event.MVP.TaskPresenter.Companion.ERRCODETASKS
+import com.bridesandgrooms.event.Model.DashboardImage.DashboardImageData
+import com.bridesandgrooms.event.Model.DashboardImage.DashboardImageResult
+import com.bridesandgrooms.event.Model.DashboardImage.DashboardRepository
 import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Payment
 import com.bridesandgrooms.event.Model.Task
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent, val view: View) :
     TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList,
@@ -24,12 +35,63 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
     private var paymentsumbudget = 0.0F
     private val mHandler = Handler(Looper.getMainLooper())
 
+    private lateinit var repository: DashboardRepository
+
 //    fun getEventchildrenflag(): Boolean {
 //        //This function needs to return a boolean
 //        val eventdbhelper = EventDBHelper(context)
 //        val event = eventdbhelper.getEvent()
 //        return presenterevent.getEventChildrenflag(event.key)
 //    }
+
+    fun setRepository(repository: DashboardRepository) {
+        this.repository = repository
+    }
+
+//    fun fetchDashboardImages() {
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val categories = repository.fetchCategories()
+//            val dashboardImages = mutableListOf<List<Bitmap>>()
+//            categories.forEach {
+//                val image = getAllRecentThumbnails(it)
+//                dashboardImages.add(image!!)
+//            }
+//            fragment.onDashboardImages(dashboardImages)
+//        }
+//    }
+
+    fun fetchDashboardImages() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val categories = repository.fetchCategories()
+            val deferredImages = categories.map { category ->
+                async {
+                    val thumbnails = getAllRecentThumbnails(category.code)
+                    CategoryThumbnails(thumbnails, category)
+                }
+            }
+            val dashboardImages = deferredImages.awaitAll()
+            fragment.onDashboardImages(dashboardImages)
+        }
+    }
+
+    data class CategoryThumbnails(val thumbnails: List<Bitmap>?, val category: DashboardImageData)
+    private suspend fun getAllRecentThumbnails(category: String): List<Bitmap>? {
+        return withContext(Dispatchers.Main) {
+            when (val result = repository.getAllRecentThumbnails(category, onlyFirst = true)) {
+                is DashboardImageResult.Success -> {
+                    result.images
+                }
+
+                else -> {
+                    // Handle the error case
+                    // You can notify the fragment about the error or log it
+                    //fragment.onDashboardImagesError(result.toString())
+                    Log.e("DashboardEventPresenter", "Error: $result")
+                    null
+                }
+            }
+        }
+    }
 
     fun getTaskList() {
         Thread {
@@ -160,6 +222,19 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
         mHandler.post {
             fragment.onEventError(view, EventPresenter.ERRCODEEVENTS)
         }
+    }
+
+    //    interface DashboardCategories {
+//        fun onDashboardCategories(categories: List<String>)
+//        fun onDashboardCategoriesError(errcode: String)
+//    }
+//
+    interface DashboardImagesStats {
+        fun onDashboardImages(
+            images: List<CategoryThumbnails>
+        )
+
+        fun onDashboardImagesError(errcode: String)
     }
 
     interface TaskStats {

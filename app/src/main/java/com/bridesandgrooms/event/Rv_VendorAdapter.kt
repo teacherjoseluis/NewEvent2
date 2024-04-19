@@ -86,6 +86,7 @@ class Rv_VendorAdapter(private val contactlist: ArrayList<VendorPayment>, val co
                             LetterAvatar(
                                 context,
                                 context.getColor(R.color.azulmasClaro),
+                                context.getColor(R.color.magentaHaze),
                                 p0.contactname.text.toString().substring(0, 2),
                                 10
                             )

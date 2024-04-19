@@ -54,7 +54,8 @@ class Rv_ContactAdapter(
                 setImageDrawable(
                     LetterAvatar(
                         context,
-                        context.getColor(R.color.azulmasClaro),
+                        context.getColor(R.color.white),
+                        context.getColor(R.color.magentaHaze),
                         p0.contactname.text.toString().substring(0, 2),
                         10
                     )
@@ -72,6 +73,7 @@ class Rv_ContactAdapter(
                         LetterAvatar(
                             context,
                             context.getColor(R.color.azulmasClaro),
+                            context.getColor(R.color.magentaHaze),
                             p0.contactname.text.toString().substring(0, 2),
                             10
                         )

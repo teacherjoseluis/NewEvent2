@@ -105,6 +105,7 @@
                     android:id="@+id/editEmaillogin"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/layout_border"
                     android:hint="@string/email"
                     android:maxLength="50"
                     android:textStyle="normal" />
@@ -301,6 +302,7 @@
                     android:id="@+id/editEmailsignup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/layout_border"
                     android:hint="@string/email"
                     android:maxLength="50"
                     android:textStyle="normal" />
