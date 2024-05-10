@@ -94,6 +94,7 @@
     <string name="myeventtitle">Mi Boda</string>
     <string name="name">Nombre</string>
     <string name="error_tasknameinput">El nombre es requerido!</string>
+    <string name="error_invalidnameinput">Nombre debe contener más de 4 letras y no caractéres especiales o símbolos</string>
     <string name="new_guest">Nuevo Invitado</string>
     <string name="newguestbutton">Botón de nuevo Invitado</string>
     <string name="new_note">Nueva Nota</string>
@@ -122,6 +123,7 @@
     <string name="phone">Teléfono</string>
     <string name="phoneimage">Ímagen edl Teléfono</string>
     <string name="error_vendorphoneinput">Teléfono es requerido!</string>
+    <string name="error_vendorphoneinputformat">Teléfono no puede contener letras o caracteres especiales</string>
     <string name="placeimage">Ímagen del lugar</string>
     <string name="placemarkericon">Marcador del lugar</string>
     <string name="privacy_policy">Política de Privacidad</string>
@@ -253,7 +255,7 @@
     <string name="eventcreated">Tu evento se creo exitósamente</string>
     <string name="error_emailverification">Primero tienes que verificar tu email. Hemos enviado un correo de verificación a tu cuenta</string>
     <string name="error_usersession">Hubo un problema con tu sesión o estas registrado en otro dispositivo</string>
-    <string name="weakpassword">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="weakpassword">La contraseña debe tener al menos 8 caracteres</string>
     <string name="invalidemailpassword">Correo electrónico o contraseña inválidos</string>
     <string name="errorsendingverification">Error al enviar el mensaje de verificación por correo electrónico</string>
     <string name="resetpwderror_authinvaliduser">No pudimos encontrar una cuenta con esa dirección de correo electrónico</string>
@@ -264,7 +266,8 @@
     <string name="emptystate_nonotesmsg">Actualmente no hay Notas pero las puedes agregar aquí.</string>
     <string name="emptystate_nopaymentsmsg">Actualmente no existen pagos para esta categoría en la app, puedes ir atrás y agregar algunas.</string>
     <string name="emptystate_notasksmsg">Actualmente no existen tareas para esta categoría en la app, puedes ir atrás y agregar algunas.</string>
-    <string name="emptystate_novendorsmsg">Actualmente no hay vendedores para tu evento pero los puedes agregar aquí.</string>
+    <string name="emptystate_novendorsmsg">Actualmente no hay proveedores para tu evento pero los puedes agregar aquí.</string>
+    <string name="emptystate_novendorscta">Agrega Proveedores</string>
     <string name="notattending">No asiste</string>
     <string name="error_networkconnectivity">Hay un problema con tu conexión a Internet, asegurate de estar conectado para continuar</string>
     <string name="error_networkconnection">Existe un problema al intentar conectartse a la red. Para poder llevar a cabo esta acción necesitas asegurarte que exista acceso a Internet.</string>
@@ -319,6 +322,12 @@
     <string name="is_due_today">Estas tareas vencen hoy</string>
     <string name="you_have_tasks">Tienes %1$s tareas</string>
     <string name="you_have_payments">Tienes %1$s pagos</string>
+    <string name="spinner_error">Por favor selecciona una opción</string>
+    <string name="search_vendors">Busca Proveedores</string>
+    <string name="call_vendor">Llama al Proveedor</string>
+    <string name="email_vendor">Envia un Correo</string>
+    <string name="google_vendor">Buscalo en Google</string>
+    <string name="paid">Pagado</string>
 
     <string-array name="role" >
         <item>Novia</item>

@@ -21,7 +21,6 @@ import com.yalantis.ucrop.UCrop
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Functions.validateOldDate
@@ -30,16 +29,13 @@ import com.bridesandgrooms.event.MVP.ImagePresenter
 import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.EventDBHelper
 import com.bridesandgrooms.event.Model.EventModel
-import Application.MyFirebaseApp
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.baoyachi.stepview.HorizontalStepView
 import com.bridesandgrooms.event.Model.User
-import com.bridesandgrooms.event.Model.UserDBHelper
 import com.bridesandgrooms.event.databinding.EventformLayoutBinding
-import com.bridesandgrooms.event.UI.TextValidate
-import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.bridesandgrooms.event.UI.FieldValidators.TextValidate
+import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 //import kotlinx.android.synthetic.main.eventform_layout.*
 //import kotlinx.android.synthetic.main.task_editdetail.*
 import java.io.File
@@ -68,16 +64,16 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
             binding.eventname.error = null
         }
 
-        binding.eventname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
-            if (!p1) {
-                val validationmessage = TextValidate(binding.eventname).namefieldValidate()
-                if (validationmessage != "") {
-                    val errormsg = binding.eventname.toString()
-                    errormsg.plus(validationmessage)
-                    binding.eventname.error = errormsg
-                }
-            }
-        }
+//        binding.eventname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+//            if (!p1) {
+//                val validationmessage = TextValidate(binding.eventname).nameFieldValidate()
+//                if (validationmessage != "") {
+//                    val errormsg = binding.eventname.toString()
+//                    errormsg.plus(validationmessage)
+//                    binding.eventname.error = errormsg
+//                }
+//            }
+//        }
 
         binding.eventdate.setOnClickListener {
             AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Pick_Date")
@@ -110,13 +106,13 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
                 binding.eventname.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             } else {
-                val validationmessage = TextValidate(binding.eventname).namefieldValidate()
-                if (validationmessage != "") {
-                    val errormsg = binding.eventname.toString()
-                    errormsg.plus(validationmessage)
-                    binding.eventname.error = errormsg
-                    inputvalflag = false
-                }
+//                val validationmessage = TextValidate(binding.eventname).nameFieldValidate()
+//                if (validationmessage != "") {
+//                    val errormsg = binding.eventname.toString()
+//                    errormsg.plus(validationmessage)
+//                    binding.eventname.error = errormsg
+//                    inputvalflag = false
+//                }
             }
             if (binding.eventdate.text.toString().isEmpty()) {
                 binding.eventdate.error = getString(R.string.error_taskdateinput)

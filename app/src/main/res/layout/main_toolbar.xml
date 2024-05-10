@@ -6,16 +6,15 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimaryLight">
 -->
-<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.MaterialToolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/rosaChillon"
     android:paddingTop="10dp"
     app:title=" "
+    style="@style/Widget.MaterialComponents.Toolbar.Primary"
     tools:ignore="Overdraw"
-    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     app:layout_scrollFlags="scroll|enterAlways"
 >
 
@@ -27,8 +26,9 @@
             android:id="@+id/appbartitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Heading5"
-            android:textColor="@color/white"
+            style="@style/Title_Large"
+            android:text="@string/title"
+            android:textColor="@color/OnPrimaryContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,4 +43,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.appcompat.widget.Toolbar>
+</com.google.android.material.appbar.MaterialToolbar>

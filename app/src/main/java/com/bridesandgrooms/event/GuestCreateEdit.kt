@@ -33,7 +33,7 @@ import com.bridesandgrooms.event.Functions.editGuest
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.NewGuestBinding
-import com.bridesandgrooms.event.UI.TextValidate
+import com.bridesandgrooms.event.UI.FieldValidators.TextValidate
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 //import kotlinx.android.synthetic.main.new_guest.*
@@ -109,16 +109,16 @@ class GuestCreateEdit : AppCompatActivity() {
             }
         }
 
-        binding.nameinputedit.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
-            if (!p1) {
-                val validationmessage = TextValidate(binding.nameinputedit).namefieldValidate()
-                if (validationmessage != "") {
-                    val errormsg = getString(R.string.error_guestname)
-                    errormsg.plus(validationmessage)
-                    binding.nameinputedit.error = errormsg
-                }
-            }
-        }
+//        binding.nameinputedit.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+//            if (!p1) {
+//                val validationmessage = TextValidate(binding.nameinputedit).nameFieldValidate()
+//                if (validationmessage != "") {
+//                    val errormsg = getString(R.string.error_guestname)
+//                    errormsg.plus(validationmessage)
+//                    binding.nameinputedit.error = errormsg
+//                }
+//            }
+//        }
 
         binding.nameinputedit.setOnClickListener {
             binding.nameinputedit.error = null

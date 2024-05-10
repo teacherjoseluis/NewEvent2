@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event.UI.dialog
+package com.bridesandgrooms.event.UI.Dialogs
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle

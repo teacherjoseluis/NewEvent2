@@ -3,9 +3,6 @@ package com.bridesandgrooms.event
 import Application.AnalyticsManager
 import Application.VendorCreationException
 import Application.VendorDeletionException
-import NetworkUtils
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -13,280 +10,232 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
+import android.text.Editable
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
+import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.databinding.NewVendorBinding
-import com.bridesandgrooms.event.UI.TextValidate
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
-//import kotlinx.android.synthetic.main.new_guest.*
-//import kotlinx.android.synthetic.main.new_vendor.*
-//import kotlinx.android.synthetic.main.new_vendor.binding.button
-//import kotlinx.android.synthetic.main.new_vendor.binding.mailimage
-//import kotlinx.android.synthetic.main.new_vendor.binding.mailinputedit
-//import kotlinx.android.synthetic.main.new_vendor.binding.nameinputedit
-//import kotlinx.android.synthetic.main.new_vendor.binding.phoneimage
-//import kotlinx.android.synthetic.main.new_vendor.binding.phoneinputedit
-//import kotlinx.android.synthetic.main.vendor_binding.googlecard.view.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.google.android.material.textfield.TextInputLayout
 
-class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
+class VendorCreateEdit : Fragment() {
 
-    private val autocompletePlaceCode = 1
-
-    private lateinit var vendoritem: Vendor
-    private lateinit var loadingview: View
-    private lateinit var withdataview: View
-    lateinit var mContext: Context
-    private lateinit var activitymenu: Menu
-
-    private var placelatitude = 0.0
-    private var placelongitude = 0.0
-    private var placelocation = ""
-
+    private lateinit var vendorItem: Vendor
     private lateinit var binding: NewVendorBinding
     private lateinit var user: User
+    private lateinit var context: Context
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    @SuppressLint("SetTextI18n")
+    private val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+        if (hasFocus && view is TextInputEditText) {
+            val parentLayout = view.parent.parent as? TextInputLayout
+            parentLayout?.error = null
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        user = User().getUser(this)
-        binding = DataBindingUtil.setContentView(this, R.layout.new_vendor)
+        setHasOptionsMenu(true)
+        context = requireContext()
+
+        //user = User().getUser(this)
+        //binding = DataBindingUtil.setContentView(this, R.layout.new_vendor)
 
         // Declaring and enabling the toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        //val toolbar = binding.toolbar
+        //toolbar.appbartitle.text = getString(R.string.newvendor_title)
+//        setSupportActionBar(toolbar.root)
+//        supportActionBar!!.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_white_24)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        //Adding the title
-        val apptitle = findViewById<TextView>(R.id.appbartitle)
-        apptitle.text = getString(R.string.newvendor_title)
+//        val language = this.resources.configuration.locales.get(0).language
+//        val categorieslist = Category.getAllCategories(language)
+//        val adapter =
+//            ArrayAdapter(context, android.R.layout.simple_expandable_list_item_1, categorieslist)
+//        binding.categoryAutocomplete.setAdapter(adapter)
+//
+//        val extras = intent.extras
+//        vendorItem = arguments?.getParcelable<Vendor>("vendor") ?: Vendor()
+//
+//        //Fields in the form are loaded in case there is a vendor passed as parameter
+//        if (vendorItem.key.isNotEmpty()) {
+//            binding.nameinputedit.setText(vendorItem.name)
+//            binding.phoneinputedit.setText(vendorItem.phone)
+//            binding.mailinputedit.setText(vendorItem.email)
+//            binding.categoryAutocomplete.setText(vendorItem.category, false)
+//        }
+//        binding.nameinputedit.onFocusChangeListener = focusChangeListener
+//        binding.phoneinputedit.onFocusChangeListener = focusChangeListener
+//        binding.mailinputedit.onFocusChangeListener = focusChangeListener
+//
+//        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+//        binding.phoneinputedit.apply {
+//            addTextChangedListener(PhoneNumberFormattingTextWatcher())
+//
+//            setOnFocusChangeListener { view, hasFocus ->
+//                if (hasFocus) {
+//                    val formattedNumber = PhoneNumberUtils.formatNumber(
+//                        text.toString(),
+//                        tm.simCountryIso
+//                    )
+//                    // Check if formattedNumber is null
+//                    if (formattedNumber != null) {
+//                        text = Editable.Factory.getInstance().newEditable(formattedNumber)
+//                    }
+//
+//                    // Clear the error from the parent TextInputLayout
+//                    val parentLayout = view.parent.parent as? TextInputLayout
+//                    parentLayout?.error = null
+//                }
+//            }
+//        }
+//
+//        binding.categoryAutocomplete.setOnClickListener(object : View.OnClickListener {
+//            override fun onClick(p0: View?) {
+//                binding.categoryAutocomplete.showDropDown()
+//            }
+//        })
+//
+//        binding.button.setOnClickListener {
+//            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Add_Vendor")
+//            val isValid = validateAllInputs()
+//            if (isValid) {
+//                savevendor()
+//            }
+//        }
+    }
 
-        loadingview = findViewById(R.id.loadingscreen)
-        withdataview = findViewById(R.id.withdata)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        user = User().getUser(context)
+        binding = DataBindingUtil.inflate(inflater, R.layout.new_vendor, container, false)
+
+        val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.newvendor_title)
 
         val language = this.resources.configuration.locales.get(0).language
         val categorieslist = Category.getAllCategories(language)
-        categorieslist.add(0, getString(R.string.selectcategory))
-        val adapteractv =
-            ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categorieslist)
-        binding.categoryspinner.adapter = adapteractv
+        val adapter =
+            ArrayAdapter(context, android.R.layout.simple_expandable_list_item_1, categorieslist)
+        binding.categoryAutocomplete.setAdapter(adapter)
 
-        //Sets vendoritem blank if nothing comes from the extras
-        // otherwise it assumes a vendor item has been passed as a parameter
-        val extras = intent.extras
-        vendoritem = if (extras!!.containsKey("vendor")) {
-            intent.getParcelableExtra("vendor")!!
-        } else {
-            Vendor()
-        }
+        //val extras = intent.extras
+        vendorItem = arguments?.getParcelable<Vendor>("vendor") ?: Vendor()
 
         //Fields in the form are loaded in case there is a vendor passed as parameter
-        if (vendoritem.key != "") {
-            binding.nameinputedit.setText(vendoritem.name)
-            binding.phoneinputedit.setText(vendoritem.phone)
-            binding.mailinputedit.setText(vendoritem.email)
+        if (vendorItem.key.isNotEmpty()) {
+            binding.nameinputedit.setText(vendorItem.name)
+            binding.phoneinputedit.setText(vendorItem.phone)
+            binding.mailinputedit.setText(vendorItem.email)
+            binding.categoryAutocomplete.setText(vendorItem.category, false)
+        }
+        binding.nameinputedit.onFocusChangeListener = focusChangeListener
+        binding.phoneinputedit.onFocusChangeListener = focusChangeListener
+        binding.mailinputedit.onFocusChangeListener = focusChangeListener
 
-            if (vendoritem.category != "") {
-                binding.categoryspinner.setSelection(categorieslist.indexOf(vendoritem.category))
-            } else {
-                binding.categoryspinner.setSelection(0)
-            }
+        val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        binding.phoneinputedit.apply {
+            addTextChangedListener(PhoneNumberFormattingTextWatcher())
 
-            val paymentDB = PaymentDBHelper(this)
-            val paymentlist = paymentDB.getVendorPaymentList(vendoritem.key)!!
-
-            if (paymentlist.size != 0) {
-                binding.cardtitle.visibility = ConstraintLayout.VISIBLE
-                binding.cardtitle.text = getString(R.string.payment)
-
-                val recyclerView = binding.PaymentsRecyclerView
-                recyclerView.apply {
-                    layoutManager = LinearLayoutManager(context).apply {
-                        stackFromEnd = true
-                        reverseLayout = true
-                    }
-                }
-                val rvAdapter = Rv_PaymentAdapter2(lifecycleScope, paymentlist)
-                recyclerView.adapter = rvAdapter
-            }
-
-            if (vendoritem.googlevendorname != "") {
-                binding.googlecard.root.visibility = ConstraintLayout.VISIBLE
-                binding.googlecard.googlevendorname.text = vendoritem.googlevendorname
-                binding.googlecard.ratingnumber.text = vendoritem.ratingnumber.toString()
-                binding.googlecard.reviews.text =
-                    "(" + vendoritem.reviews.toString() + ")"
-                binding.googlecard.rating.rating = vendoritem.rating.toFloat()
-                binding.googlecard.location.text = vendoritem.location
-                binding.googlecard.root.setOnClickListener {
-                    val uris =
-                        Uri.parse("https://www.google.com/maps/place/?q=" + vendoritem.googlevendorname)
-                    val intents = Intent(Intent.ACTION_VIEW, uris)
-                    val b = Bundle()
-                    b.putBoolean("new_window", true)
-                    intents.putExtras(b)
-                    startActivity(intents)
-                }
-                lifecycleScope.launch {
-                    val bitmap = getImgfromPlaces(
-                        this@VendorCreateEdit, // context
-                        vendoritem.placeid,
-                        resources.getString(R.string.google_maps_key),
-                        vendoritem.googlevendorname
+            setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    val formattedNumber = PhoneNumberUtils.formatNumber(
+                        text.toString(),
+                        tm.simCountryIso
                     )
-
-                    // Handle the loaded bitmap here
-                    if (bitmap != null) {
-                        // Load bitmap into ImageView
-                        binding.googlecard.placesimagevendor.setImageBitmap(bitmap)
-                    } else {
-                        // Handle case when bitmap is null (e.g., show default image)
-                        binding.googlecard.placesimagevendor.setImageResource(R.drawable.avatar2)
+                    // Check if formattedNumber is null
+                    if (formattedNumber != null) {
+                        text = Editable.Factory.getInstance().newEditable(formattedNumber)
                     }
+
+                    // Clear the error from the parent TextInputLayout
+                    val parentLayout = view.parent.parent as? TextInputLayout
+                    parentLayout?.error = null
                 }
             }
         }
 
-        //This is to validate the vendor's name after the focus shifts somewhere else
-        binding.nameinputedit.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
-            if (!p1) {
-                val validationmessage = TextValidate(binding.nameinputedit).namefieldValidate()
-                if (validationmessage != "") {
-                    binding.nameinputedit.error = "Error in Vendor name: $validationmessage"
-                }
+        binding.categoryAutocomplete.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                binding.categoryAutocomplete.showDropDown()
             }
-        }
-
-        //Removes any error by default whenever the field is clicked into
-        binding.nameinputedit.setOnClickListener {
-            binding.nameinputedit.error = null
-        }
-
-        //Loads the activity that allows to search in Google Places for a Vendor
-        binding.googleicon.setOnClickListener {
-            val locationmap = Intent(this, MapsActivity::class.java)
-            startActivityForResult(locationmap, autocompletePlaceCode)
-        }
-        binding.googleicon.tooltipText = getString(R.string.googlesearch)
-
-        binding.phoneinputedit.setOnClickListener {
-            binding.phoneinputedit.error = null
-        }
-
-        //This validates the input on the phone field so the user enters a valid number
-        val mPhoneNumber = findViewById<TextInputEditText>(R.id.phoneinputedit)
-        mPhoneNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
-        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        mPhoneNumber.setOnFocusChangeListener { _, _ ->
-            PhoneNumberUtils.formatNumber(
-                mPhoneNumber.text.toString(),
-                tm.simCountryIso
-            )
-        }
-
-        //In case there is already a phone entered, this allows the user to dial
-        // it from this view
-        binding.phoneimage.setOnClickListener {
-            if (!binding.phoneinputedit.text.isNullOrBlank()) {
-                val intent = Intent(
-                    Intent.ACTION_DIAL,
-                    Uri.fromParts("tel", binding.phoneinputedit.text.toString(), null)
-                )
-                startActivity(intent)
-            }
-        }
-
-        //In case there is already an email entered, this allows the user to dial
-        // it from this view
-        binding.mailimage.setOnClickListener {
-            if (!binding.mailinputedit.text.isNullOrBlank()) {
-                try {
-                    val intent = Intent(Intent.ACTION_SENDTO)
-                    intent.data = Uri.parse("mailto:") // only email apps should handle this
-                    intent.putExtra(Intent.EXTRA_EMAIL, binding.mailinputedit.text.toString())
-                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.requestinfo))
-                    startActivity(intent)
-                } catch (ex: ActivityNotFoundException) {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.error_noemailclient),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
+        })
 
         binding.button.setOnClickListener {
-            //No blanks validation before saving
-            var inputvalflag = true
-            if (binding.nameinputedit.text.toString().isEmpty()) {
-                binding.nameinputedit.error = getString(R.string.error_tasknameinput)
-                inputvalflag = false
-            }
-            if (binding.phoneinputedit.text.toString().isEmpty()) {
-                binding.phoneinputedit.error = getString(R.string.error_vendorphoneinput)
-                inputvalflag = false
-            }
-            if (binding.categoryspinner.selectedItem.toString() == getString(R.string.selectcategory)) {
-                Toast.makeText(this, getString(R.string.selectcategory), Toast.LENGTH_SHORT)
-                    .show()
-                inputvalflag = false
-            }
-            if (inputvalflag) {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Add_Vendor")
+            val isValid = validateAllInputs()
+            if (isValid) {
                 savevendor()
             }
         }
+
+        return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
         //setting up the menu, if it's not a new vendor being created,
         // the user will be able to remove it
-        if (vendoritem.key != "") {
-            menuInflater.inflate(R.menu.vendors_menu2, menu)
-            activitymenu = menu
-            val guestmenu = activitymenu.findItem(R.id.remove_guest)
-            guestmenu.isEnabled = true
+        if (vendorItem.key.isNotEmpty()) {
+            inflater.inflate(R.menu.vendors_menu2, menu)
+            menu.findItem(R.id.remove_vendor).isEnabled = true
+            if (!binding.phoneinputedit.text.isNullOrBlank()) {
+                menu.findItem(R.id.call_vendor).isEnabled = true
+            }
+            if (!binding.mailinputedit.text.isNullOrBlank()) {
+                menu.findItem(R.id.email_vendor).isEnabled = true
+            }
+            if (vendorItem.placeid.isNotEmpty()) {
+                menu.findItem(R.id.google_vendor).isEnabled = true
+            }
         }
-        return true
     }
 
+    // if the vendor is added through google then this should be disabled
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             // Removing the Vendor
-            R.id.remove_guest -> {
-                AlertDialog.Builder(this)
+            R.id.remove_vendor -> {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Remove_Vendor")
+                AlertDialog.Builder(context)
                     .setTitle(getString(R.string.title_delete))
                     .setMessage(getString(R.string.delete_confirmation))
                     .setPositiveButton(android.R.string.yes) { _, _ ->
                         AnalyticsManager.getInstance()
                             .trackUserInteraction(SCREEN_NAME, "Delete_Vendor")
-                        val paymentdb = PaymentDBHelper(this)
-                        if (paymentdb.hasVendorPayments(vendoritem.key) == 0) {
+                        val paymentdb = PaymentDBHelper(context)
+                        if (paymentdb.hasVendorPayments(vendorItem.key) == 0) {
                             try {
-                                deleteVendor(this@VendorCreateEdit, user, vendoritem)
+                                deleteVendor(context, user, vendorItem)
+                                finish()
                             } catch (e: VendorDeletionException) {
                                 AnalyticsManager.getInstance().trackError(
                                     SCREEN_NAME,
@@ -298,11 +247,11 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                             }
                         } else {
                             //If there are payments associated we will not be able to delete the vendor
-                            Toast.makeText(
-                                this,
-                                getString(R.string.error_vendorwithpayments),
-                                Toast.LENGTH_SHORT
-                            ).show()
+//                            Toast.makeText(
+//                                this,
+//                                getString(R.string.error_vendorwithpayments),
+//                                Toast.LENGTH_SHORT
+//                            ).show()
                         }
                     }
                     .setNegativeButton(android.R.string.no, null)
@@ -311,145 +260,139 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
                 true
             }
 
+            R.id.call_vendor -> {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Call_Vendor")
+                val intent = Intent(
+                    Intent.ACTION_DIAL,
+                    Uri.fromParts("tel", binding.phoneinputedit.text.toString(), null)
+                )
+                startActivity(intent)
+                true
+            }
+
+            R.id.email_vendor -> {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Email_Vendor")
+                try {
+                    val intent = Intent(Intent.ACTION_SENDTO)
+                    intent.data = Uri.parse("mailto:") // only email apps should handle this
+                    intent.putExtra(Intent.EXTRA_EMAIL, binding.mailinputedit.text.toString())
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.requestinfo))
+                    startActivity(intent)
+                } catch (ex: ActivityNotFoundException) {
+//                    Toast.makeText(
+//                        this,
+//                        getString(R.string.error_noemailclient),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+                }
+                true
+            }
+
+            R.id.google_vendor -> {
+                val uri = Uri.parse("https://www.google.com/maps/place/?q=${vendorItem.name}")
+                val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                    val extras = Bundle().apply {
+                        putBoolean("new_window", true)
+                    }
+                    putExtras(extras)
+                }
+                startActivity(intent)
+                true
+            }
+
             else -> {
-                //true
                 super.onOptionsItemSelected(item)
             }
         }
     }
 
-    private suspend fun disableControls() {
-        binding.nameinputedit.isEnabled = false
-        binding.phoneinputedit.isEnabled = false
-        binding.mailinputedit.isEnabled = false
-        binding.button.isEnabled = false
+//    fun onSupportNavigateUp(): Boolean {
+//        finish()
+//        return true
+//    }
 
-        setResult(Activity.RESULT_OK, Intent())
-        //delay(1500) // Replace Thread.sleep with delay from coroutines
-        finish()
+    private fun validateAllInputs(): Boolean {
+        var isValid = true
+        val validator = InputValidator(context)
+
+        val nameValidation =
+            validator.validate(binding.nameinputedit)
+        if (!nameValidation) {
+            binding.nameinput.error = validator.errorCode
+            isValid = false
+        }
+
+        val phoneValidation =
+            validator.validate(binding.phoneinputedit)
+        if (!phoneValidation) {
+            binding.phoneinput.error = validator.errorCode
+            isValid = false
+        }
+
+        val mailValidation =
+            validator.validate(binding.mailinputedit)
+        if (!mailValidation) {
+            binding.mailinput.error = validator.errorCode
+            isValid = false
+        }
+
+        val spinnerValidation = validator.validateSpinner(binding.categoryAutocomplete.toString())
+        if (!spinnerValidation) {
+            binding.categoryAutocomplete.error = validator.errorCode
+            isValid = false
+        }
+        return isValid
     }
 
     private fun savevendor() {
-        //Loading view is loaded while saving the vendor.
-        // I guess this is happening to allow asynchronous processes to complete
-        loadingview.visibility = ConstraintLayout.VISIBLE
-        withdataview.visibility = ConstraintLayout.GONE
-
         binding.nameinputedit.isEnabled = false
         binding.phoneinputedit.isEnabled = false
         binding.mailinputedit.isEnabled = false
         binding.categoryspinner.isEnabled = false
         binding.button.isEnabled = false
 
-        vendoritem.name = binding.nameinputedit.text.toString()
-        vendoritem.phone = binding.phoneinputedit.text.toString()
-        vendoritem.email = binding.mailinputedit.text.toString()
-        vendoritem.category = binding.categoryspinner.selectedItem.toString()
+        vendorItem.apply {
+            name = binding.nameinputedit.text.toString()
+            phone = binding.phoneinputedit.text.toString()
+            email = binding.mailinputedit.text.toString()
+            category = binding.categoryAutocomplete.text.toString()
+        }
 
-        val networkUtils = NetworkUtils(this)
-        if (networkUtils.isNetworkAvailable()) {
-            if (vendoritem.key.isEmpty()) {
-                try {
-                    addVendor(this, user, vendoritem)
-                } catch (e: VendorCreationException) {
-                    AnalyticsManager.getInstance().trackError(
-                        SCREEN_NAME,
-                        e.message.toString(),
-                        "addVendor()",
-                        e.stackTraceToString()
-                    )
-                    Log.e(TAG, e.message.toString())
-                }
-            } else {
-                try {
-                    editVendor(this, user, vendoritem)
-                } catch (e: VendorCreationException) {
-                    AnalyticsManager.getInstance().trackError(
-                        SCREEN_NAME,
-                        e.message.toString(),
-                        "editVendor()",
-                        e.stackTraceToString()
-                    )
-                    Log.e(TAG, e.message.toString())
-                }
+        if (vendorItem.key.isEmpty()) {
+            try {
+                addVendor(context, user, vendorItem)
+            } catch (e: VendorCreationException) {
+                AnalyticsManager.getInstance().trackError(
+                    SCREEN_NAME,
+                    e.message.toString(),
+                    "addVendor()",
+                    e.stackTraceToString()
+                )
+                Log.e(TAG, e.message.toString())
             }
         } else {
-            displayErrorMsg(this, getString(R.string.error_networkconnection))
-            loadingview.visibility = ConstraintLayout.GONE
-            withdataview.visibility = ConstraintLayout.VISIBLE
-            binding.nameinputedit.isEnabled = true
-            binding.phoneinputedit.isEnabled = true
-            binding.mailinputedit.isEnabled = true
-            binding.categoryspinner.isEnabled = true
-            binding.button.isEnabled = true
-        }
-        //Thread.sleep(2000)
-        finish()
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
-
-    override fun finish() {
-        val returnintent = Intent()
-        setResult(RESULT_OK, returnintent)
-        super.finish()
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == autocompletePlaceCode) {
-
-            //Populating name and phone fields with whatever comes from Google as a Vendor is selected
-            binding.nameinputedit.setText(data?.getStringExtra("place_name"))
-            binding.phoneinputedit.setText(data?.getStringExtra("place_phone"))
-
-            // There is a card being displayed with the details of the Vendor.
-            // From what I'm getting, this is only visible when a Vendor is added but not when the user returns
-            binding.googlecard.root.visibility = ConstraintLayout.VISIBLE
-            binding.googlecard.googlevendorname.text = data?.getStringExtra("place_name")
-            binding.googlecard.ratingnumber.text =
-                data?.getDoubleExtra("place_rating", 0.0).toString()
-            binding.googlecard.reviews.text =
-                "(" + data?.getIntExtra("place_userrating", 0).toString() + ")"
-            binding.googlecard.rating.rating = data?.getDoubleExtra("place_rating", 0.0)!!.toFloat()
-            binding.googlecard.location.text = data.getStringExtra("place_address")
-
-            placelatitude = data.getDoubleExtra("place_latitude", 0.0)
-            placelongitude = data.getDoubleExtra("place_longitude", 0.0)
-            placelocation = data.getStringExtra("place_name")!!
-
-            vendoritem.placeid = data.getStringExtra("place_id")!!
-            vendoritem.googlevendorname = data.getStringExtra("place_name")!!
-            vendoritem.rating = data.getDoubleExtra("place_rating", 0.0).toFloat().toString()
-            vendoritem.ratingnumber = data.getDoubleExtra("place_rating", 0.0).toFloat()
-            vendoritem.reviews = data.getIntExtra("place_userrating", 0).toFloat()
-
-            //The card allows to click on it and go to Google Maps
-            binding.googlecard.root.setOnClickListener {
-                val gmmIntentUri =
-                    Uri.parse("geo:${placelatitude},${placelongitude}?z=15&q=${placelocation}")
-                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                mapIntent.setPackage("com.google.android.apps.maps")
-                mapIntent.resolveActivity(this.packageManager)?.let {
-                    startActivity(mapIntent)
-                }
+            try {
+                editVendor(context, user, vendorItem)
+            } catch (e: VendorCreationException) {
+                AnalyticsManager.getInstance().trackError(
+                    SCREEN_NAME,
+                    e.message.toString(),
+                    "editVendor()",
+                    e.stackTraceToString()
+                )
+                Log.e(TAG, e.message.toString())
             }
         }
+        finish()
     }
 
-    //This is a callback when the Vendor has been added or edited. The idea is to shut off
-    // the loading view when the confirmation that the async process is completed comes
-    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
-        loadingview = findViewById(R.id.loadingscreen)
-        withdataview = findViewById(R.id.withdata)
-
-        (mContext as VendorCreateEdit).loadingview.visibility = ConstraintLayout.GONE
-        (mContext as VendorCreateEdit).withdataview.visibility = ConstraintLayout.VISIBLE
-        VendorsAll.vendorcreated_flag = 1
+    fun finish() {
+        val fragment = VendorsAll()
+        Handler(Looper.getMainLooper()).postDelayed({
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }, 500)
     }
 
     companion object {
@@ -459,4 +402,8 @@ class VendorCreateEdit : AppCompatActivity(), CoRAddEditVendor {
         const val TAG = "VendorCreateEdit"
     }
 }
+
+
+
+
 

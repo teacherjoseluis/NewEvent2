@@ -19,8 +19,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bridesandgrooms.event.MVP.VendorPaymentPresenter
 import com.bridesandgrooms.event.Model.*
-import com.bridesandgrooms.event.UI.TextValidate
-import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
+import com.bridesandgrooms.event.UI.FieldValidators.TextValidate
+import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 //import kotlinx.android.synthetic.main.payment_editdetail.*
@@ -90,16 +90,16 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         }
 
         binding.paymentname.setAdapter(itemsAdapter)
-        binding.paymentname.onFocusChangeListener = OnFocusChangeListener { _, p1 ->
-            if (!p1) {
-                binding.paymentname.hint = ""
-                val validationmessage = TextValidate(binding.paymentname).namefieldValidate()
-                if (validationmessage != "") {
-                    binding.paymentname.error =
-                        getString(R.string.error_in_payment_name, validationmessage)
-                }
-            }
-        }
+//        binding.paymentname.onFocusChangeListener = OnFocusChangeListener { _, p1 ->
+//            if (!p1) {
+//                binding.paymentname.hint = ""
+//                val validationmessage = TextValidate(binding.paymentname).nameFieldValidate()
+//                if (validationmessage != "") {
+//                    binding.paymentname.error =
+//                        getString(R.string.error_in_payment_name, validationmessage)
+//                }
+//            }
+//        }
 
         binding.paymentamount.setOnClickListener {
             AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Payment_Amount")
@@ -126,12 +126,12 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
                 binding.paymentname.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             } else {
-                val validationmessage = TextValidate(binding.paymentname).namefieldValidate()
-                if (validationmessage != "") {
-                    binding.paymentname.error =
-                        getString(R.string.error_in_payment_name, validationmessage)
-                    inputvalflag = false
-                }
+//                val validationmessage = TextValidate(binding.paymentname).nameFieldValidate()
+//                if (validationmessage != "") {
+//                    binding.paymentname.error =
+//                        getString(R.string.error_in_payment_name, validationmessage)
+//                    inputvalflag = false
+//                }
             }
             binding.paymentdate.clearFocus()
             if (binding.paymentdate.text.toString().isEmpty()) {

@@ -49,17 +49,17 @@ class Rv_GuestAdapter(
         }
 
         try {
-            p0.contactavatar.apply {
-                setImageDrawable(
-                    LetterAvatar(
-                        context,
-                        context.getColor(R.color.white),
-                        context.getColor(R.color.magentaHaze),
-                        p0.contactname.text.toString().substring(0, 2),
-                        0
-                    )
-                )
-            }
+//            p0.contactavatar.apply {
+//                setImageDrawable(
+//                    LetterAvatar(
+//                        context,
+//                        context.getColor(R.color.white),
+//                        context.getColor(R.color.magentaHaze),
+//                        p0.contactname.text.toString().substring(0, 2),
+//                        0
+//                    )
+//                )
+//            }
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             p0.contactavatar.setImageResource(R.drawable.avatar2)

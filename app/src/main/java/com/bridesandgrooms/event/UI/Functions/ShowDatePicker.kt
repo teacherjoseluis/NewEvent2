@@ -2,7 +2,7 @@ package com.bridesandgrooms.event.UI.Functions
 
 import android.app.DatePickerDialog
 import androidx.fragment.app.FragmentManager
-import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
+import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 
 internal fun showDatePickerDialog(supportFragmentManager : FragmentManager) : String {
     var selectedDate = ""

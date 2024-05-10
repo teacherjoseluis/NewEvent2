@@ -36,6 +36,7 @@
     <string name="logoff_question">Do you want to log off?</string>
     <string name="accept">Accept</string>
     <string name="error_tasknameinput">Name is required!</string>
+    <string name="error_invalidnameinput">Name should contain more than 4 letters and not special characters or symbols</string>
     <string name="error_taskdateinput">Date is required!</string>
     <string name="error_taskbudgetinput">Amount is required!</string>
     <string name="error_taskcategoryinput">Category is required!</string>
@@ -47,6 +48,7 @@
     <string name="requestinfo">Request for Information</string>
     <string name="error_noemailclient">There are no email client installed on your device</string>
     <string name="error_vendorphoneinput">Phone is required!</string>
+    <string name="error_vendorphoneinputformat">Phone cannot contain letters or special characters</string>
     <string name="title_delete">Delete</string>
     <string name="delete_confirmation">Are you sure you want to delete?</string>
     <string name="error_vendorwithpayments">Vendor can\'t be removed as there are still payments associated</string>
@@ -263,7 +265,7 @@
     <string name="eventcreated">Your event was successfully created</string>
     <string name="error_emailverification">You need to verify your email account first. We have sent a verification email to your account </string>
     <string name="error_usersession">There was a problem with your user session or you are already logged in another device</string>
-    <string name="weakpassword">Password must be at least 6 characters long</string>
+    <string name="weakpassword">Password must be at least 8 characters long</string>
     <string name="invalidemailpassword">Invalid email or password</string>
     <string name="errorsendingverification">Error sending email verification message</string>
     <string name="resetpwderror_authinvaliduser">We could not find an account with that email address</string>
@@ -275,6 +277,7 @@
     <string name="emptystate_nopaymentsmsg">There are currently no payments registered in the app for this category, you can go back and start adding them.</string>
     <string name="emptystate_notasksmsg">There are currently no tasks registered in the app for this category, you can go back and start adding them.</string>
     <string name="emptystate_novendorsmsg">There are currently no vendors in your Event but you can add them here!.</string>
+    <string name="emptystate_novendorscta">Add Vendors</string>
     <string name="notattending">Not attending</string>
     <string name="error_networkconnectivity">There was a problem with your network connection, please make sure you are connected to the Internet</string>
     <string name="error_networkconnection">There is a problem connecting to the network. In order to process this request, you need to make sure there is Internet connection.</string>
@@ -329,6 +332,12 @@
     <string name="is_due_today">There are task(s) due today</string>
     <string name="you_have_tasks">You have %1$s tasks</string>
     <string name="you_have_payments">You have %1$s payments</string>
+    <string name="spinner_error">Please select an option</string>
+    <string name="search_vendors">Search Vendors</string>
+    <string name="call_vendor">Call Vendor</string>
+    <string name="email_vendor">Email Vendor</string>
+    <string name="google_vendor">Find in Google</string>
+    <string name="paid">Paid</string>
 
     <string-array name="role" >
         <item>Bride</item>

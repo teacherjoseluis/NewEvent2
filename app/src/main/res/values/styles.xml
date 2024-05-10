@@ -1,14 +1,26 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/PrimaryContainer</item>
+        <item name="colorPrimaryDark">@color/SurfaceDim</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowStyle</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="toolbarStyle">@color/rosaChillon</item>
+        <item name="toolbarStyle">@style/MyToolbarStyle</item>
+        <item name="android:itemBackground">@color/SurfaceContainer</item>
+        <item name="android:itemTextAppearance">@style/Body_Medium</item>
+        <item name="android:colorBackgroundFloating">@color/SurfaceContainer</item>
+        <item name="android:popupBackground">@color/SurfaceContainer</item>
+        <item name="actionMenuTextColor">@color/colorRed</item>
+        <item name="android:colorBackground">@color/Surface</item>
+        <item name="homeAsUpIndicator">@drawable/icons8_menu</item>
+    </style>
+
+    <style name="MyToolbarStyle" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@color/SurfaceContainer</item>
+        <!-- Additional toolbar styling -->
     </style>
 
     <style name="AppTheme.DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -100,6 +112,7 @@
         <item name="android:fontFamily">@font/robotolight</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="CaptionEmpty" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textSize">14sp</item>
@@ -129,9 +142,205 @@
         <item name="android:fontFamily">@font/robotoblack</item>
         <item name="android:textSize">14sp</item>
     </style>
+
     <style name="WeddingInviteBody" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="CardView_Title" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:fontFamily">@font/robotomedium</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <!-- Material Design Fonts -->
+    <!-- Display -->
+    <style name="Display_Large">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">57sp</item>
+        <item name="android:lineHeight">64sp</item>
+        <item name="android:letterSpacing">-0.25</item>
+    </style>
+
+    <style name="Display_Medium">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">45sp</item>
+        <item name="android:lineHeight">52sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="Display_Small">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:lineHeight">44sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <!-- Headline -->
+    <style name="Headline_Large">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:lineHeight">40sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="Headline_Medium">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:lineHeight">36sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="Headline_Small">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:lineHeight">32sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <!-- Title -->
+    <style name="Title_Large">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:lineHeight">28sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="Title_Medium">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">500</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+
+    <style name="Title_Small">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">500</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineHeight">20sp</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+    <!-- Body -->
+    <style name="Body_Large">
+        <item name="android:fontFamily">@font/robotoregular</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:letterSpacing">0.5</item>
+    </style>
+
+    <style name="Body_Medium">
+        <item name="android:fontFamily">@font/robotoregular</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineHeight">20sp</item>
+        <item name="android:letterSpacing">0.25</item>
+    </style>
+
+    <style name="Body_Small">
+        <item name="android:fontFamily">@font/robotoregular</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineHeight">16sp</item>
+        <item name="android:letterSpacing">0.4</item>
+    </style>
+    <!-- Label -->
+    <style name="Label_Large">
+        <item name="android:fontFamily">@font/robotolight</item>
+        <item name="android:fontWeight">500</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineHeight">20sp</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+
+    <style name="Label_Medium">
+        <item name="android:fontFamily">@font/robotolight</item>
+        <item name="android:fontWeight">500</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineHeight">16sp</item>
+        <item name="android:letterSpacing">0.5</item>
+    </style>
+
+    <style name="Label_Small">
+        <item name="android:fontFamily">@font/robotoregular</item>
+        <item name="android:fontWeight">500</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:lineHeight">16sp</item>
+        <item name="android:letterSpacing">0.5</item>
+    </style>
+    <!--					   -->
+    <style name="CardView_Body" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:fontFamily">@font/robotoregular</item>
+        <item name="android:textColor">@color/lead</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="CardView_BodyBold" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:fontFamily">@font/robotomedium</item>
+        <item name="android:textColor">@color/lead</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="BGTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextAppearance">@style/Body_Medium</item>
+        <item name="boxBackgroundColor">@color/SurfaceContainerLow</item>
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxStrokeColor">@color/Outline</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxCornerRadiusTopStart">2dp</item>
+        <item name="boxCornerRadiusBottomEnd">2dp</item>
+        <item name="boxStrokeErrorColor">@color/Error</item>
+        <item name="errorTextColor">@color/Error</item>
+        <item name="errorTextAppearance">@style/Label_Small</item>
+    </style>
+
+    <style name="BGSpinner" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="hintTextAppearance">@style/Body_Medium</item>
+        <item name="boxBackgroundColor">@color/SurfaceContainerLow</item>
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxStrokeColor">@color/Outline</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxCornerRadiusTopStart">2dp</item>
+        <item name="boxCornerRadiusBottomEnd">2dp</item>
+        <item name="boxStrokeErrorColor">@color/Error</item>
+        <item name="errorTextColor">@color/Error</item>
+        <item name="endIconDrawable">@drawable/keyboard_arrow_down_24px</item>
+        <item name="endIconTint">@color/Secondary</item>
+        <item name="errorTextAppearance">@style/Label_Small</item>
+    </style>
+
+    <style name="BG_ActionButton" parent="Widget.Material3.Button">
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">4</item>
+        <item name="android:textColor">@color/OnPrimaryContainer</item>
+        <item name="backgroundColor">@color/PrimaryContainer</item>
+        <item name="android:textAppearance">@style/Body_Medium</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="BG_ActionText">
+        <item name="textAllCaps">true</item>
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">800</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textColor">@color/PrimaryContainer</item>
+    </style>
+    <style name="BG_FAB">
+    <item name="android:clickable">true</item>
+    <item name="backgroundTint">@color/PrimaryContainer</item>
+    <item name="fabSize">normal</item>
+    <item name="maxImageSize">24dp</item>
+    <item name="srcCompat">@drawable/ic_icons8_plus_white</item>
+    <item name="tint">@color/OnPrimaryContainer</item>
+    </style>
 </resources>

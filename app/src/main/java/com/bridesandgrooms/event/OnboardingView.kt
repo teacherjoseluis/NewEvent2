@@ -7,7 +7,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
+import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import TimePickerFragment
 import android.Manifest
 import android.app.Activity
@@ -20,8 +20,6 @@ import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.User
 //import kotlinx.android.synthetic.main.onboarding_name.*
 import kotlinx.coroutines.*
-import android.content.Context
-import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.View
 

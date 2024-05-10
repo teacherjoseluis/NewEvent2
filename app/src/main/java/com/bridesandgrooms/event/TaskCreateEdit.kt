@@ -6,10 +6,7 @@ import Application.TaskDeletionException
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.Notification.Action
-import android.app.PendingIntent
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -34,8 +31,8 @@ import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.TaskEditdetailBinding
-import com.bridesandgrooms.event.UI.TextValidate
-import com.bridesandgrooms.event.UI.dialog.DatePickerFragment
+import com.bridesandgrooms.event.UI.FieldValidators.TextValidate
+import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.play.core.review.ReviewInfo
@@ -98,14 +95,14 @@ class TaskCreateEdit : AppCompatActivity() {
             }
         }
 
-        binding.taskname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
-            if (!p1) {
-                val validationmessage = TextValidate(binding.taskname).namefieldValidate()
-                if (validationmessage != "") {
-                    binding.taskname.error = "Error in Task name: $validationmessage"
-                }
-            }
-        }
+//        binding.taskname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+//            if (!p1) {
+//                val validationmessage = TextValidate(binding.taskname).nameFieldValidate()
+//                if (validationmessage != "") {
+//                    binding.taskname.error = "Error in Task name: $validationmessage"
+//                }
+//            }
+//        }
 
         //As soon as it's touched, the error message disappears
         binding.taskbudget.setOnClickListener {
@@ -146,12 +143,12 @@ class TaskCreateEdit : AppCompatActivity() {
                 binding.taskname.error = getString(R.string.error_tasknameinput)
                 inputvalflag = false
             } else {
-                val validationmessage = TextValidate(binding.taskname).namefieldValidate()
-                if (validationmessage != "") {
-                    binding.taskname.error =
-                        getString(R.string.error_in_task_name, validationmessage)
-                    inputvalflag = false
-                }
+//                val validationmessage = TextValidate(binding.taskname).nameFieldValidate()
+//                if (validationmessage != "") {
+//                    binding.taskname.error =
+//                        getString(R.string.error_in_task_name, validationmessage)
+//                    inputvalflag = false
+//                }
             }
 
             binding.taskdate.clearFocus()

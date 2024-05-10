@@ -16,26 +16,23 @@ public class LetterAvatar extends ColorDrawable {
     private final Rect bounds = new Rect();
     private final String letters;
     private final int padding;
-    private final Context context;
 
-    public LetterAvatar(Context context, int color, int colorCircle, String letters, int paddingInDp) {
-        super(color);
+    public LetterAvatar(int textColor, int colorCircle, String letters, int paddingInDp, float density) {
+        super(colorCircle);
         this.letters = letters;
-        this.context = context;
 
         // Set up text paint
         textPaint.setAntiAlias(true);
-        textPaint.setColor(0xffffffff); // White color for text
+        textPaint.setColor(textColor); // White color for text
         textPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
         textPaint.setTextSize(70); // Set a fixed text size, you can adjust this as needed
 
         // Set up circle paint
-        circlePaint.setColor(ContextCompat.getColor(context, colorCircle));
+        circlePaint.setColor(colorCircle);
         circlePaint.setAntiAlias(true);
 
         // Convert padding from dp to pixels
-        Resources resources = context.getResources();
-        float density = resources.getDisplayMetrics().density;
+
         this.padding = Math.round(paddingInDp * density);
     }
 

@@ -47,47 +47,47 @@ class Rv_ContactAdapter(
         checkDrawable.setTint(Color.parseColor("#C2185B"))
 
         p0.contactname.text = contactlist[p1].name
-        p0.contactavatar.apply {
-            isSelected = (selectedPos == p1)
-            //Get an avatar of the contacts name if it's not selected
-            if (!selected.contains(p1)) {
-                setImageDrawable(
-                    LetterAvatar(
-                        context,
-                        context.getColor(R.color.white),
-                        context.getColor(R.color.magentaHaze),
-                        p0.contactname.text.toString().substring(0, 2),
-                        10
-                    )
-                )
-            } else {
-                //If it's previously selected show a checkmark
-                setImageDrawable(checkDrawable)
-            }
-
-            setOnClickListener {
-                //If a previously checked contact is clicked on again, then show the avatar
-                if (selected.contains(p1)) {
-                    selected.remove(p1)
-                    setImageDrawable(
-                        LetterAvatar(
-                            context,
-                            context.getColor(R.color.azulmasClaro),
-                            context.getColor(R.color.magentaHaze),
-                            p0.contactname.text.toString().substring(0, 2),
-                            10
-                        )
-                    )
-                } else {
-                    selected.add(p1)
-                    setImageDrawable(checkDrawable)
-                }
-                selectedPos = p0.layoutPosition
-                notifyItemChanged(selectedPos)
-
-                mOnItemClickListener?.onItemClick(p1, selected)
-            }
-        }
+//        p0.contactavatar.apply {
+//            isSelected = (selectedPos == p1)
+//            //Get an avatar of the contacts name if it's not selected
+//            if (!selected.contains(p1)) {
+//                setImageDrawable(
+//                    LetterAvatar(
+//                        context,
+//                        context.getColor(R.color.white),
+//                        context.getColor(R.color.magentaHaze),
+//                        p0.contactname.text.toString().substring(0, 2),
+//                        10
+//                    )
+//                )
+//            } else {
+//                //If it's previously selected show a checkmark
+//                setImageDrawable(checkDrawable)
+//            }
+//
+//            setOnClickListener {
+//                //If a previously checked contact is clicked on again, then show the avatar
+//                if (selected.contains(p1)) {
+//                    selected.remove(p1)
+//                    setImageDrawable(
+//                        LetterAvatar(
+//                            context,
+//                            context.getColor(R.color.azulmasClaro),
+//                            context.getColor(R.color.magentaHaze),
+//                            p0.contactname.text.toString().substring(0, 2),
+//                            10
+//                        )
+//                    )
+//                } else {
+//                    selected.add(p1)
+//                    setImageDrawable(checkDrawable)
+//                }
+//                selectedPos = p0.layoutPosition
+//                notifyItemChanged(selectedPos)
+//
+//                mOnItemClickListener?.onItemClick(p1, selected)
+//            }
+//        }
     }
 
 

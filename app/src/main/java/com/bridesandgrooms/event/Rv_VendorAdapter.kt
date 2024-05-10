@@ -81,17 +81,17 @@ class Rv_VendorAdapter(private val contactlist: ArrayList<VendorPayment>, val co
 //                    10
 //                )
 //            )
-                    p0.contactavatar.apply {
-                        setImageDrawable(
-                            LetterAvatar(
-                                context,
-                                context.getColor(R.color.azulmasClaro),
-                                context.getColor(R.color.magentaHaze),
-                                p0.contactname.text.toString().substring(0, 2),
-                                10
-                            )
-                        )
-                    }
+//                    p0.contactavatar.apply {
+//                        setImageDrawable(
+//                            LetterAvatar(
+//                                context,
+//                                context.getColor(R.color.azulmasClaro),
+//                                context.getColor(R.color.magentaHaze),
+//                                p0.contactname.text.toString().substring(0, 2),
+//                                10
+//                            )
+//                        )
+//                    }
 
                 } catch (e: Exception) {
                     p0.contactavatar.setImageResource(R.drawable.avatar2)

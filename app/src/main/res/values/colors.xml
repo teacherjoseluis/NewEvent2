@@ -16,4 +16,37 @@
     <color name="pewter">#fefbfb</color>
     <color name="pewter2">#f4f2ee</color>
     <color name="magentaHaze">#9F4C73</color>
+    <color name="lead">#626C7D</color>
+    <!-- Material Design Color Palette -->
+    <color name="Primary">#9e0058</color>
+    <color name="Secondary">#994064</color>
+    <color name="Tertiary">#952a00</color>
+    <color name="Error">#ba1a1a</color>
+    <color name="OnPrimary">#ffffff</color>
+    <color name="OnSecondary">#ffffff</color>
+    <color name="OnTertiary">#ffffff</color>
+    <color name="OnError">#ffffff</color>
+    <color name="PrimaryContainer">#d42f7e</color>
+    <color name="SecondaryContainer">#ffa0c1</color>
+    <color name="TertiaryContainer">#d44000</color>
+    <color name="ErrorContainer">#ffdad6</color>
+    <color name="OnPrimaryContainer">#ffffff</color>
+    <color name="OnSecondaryContainer">#5c0d33</color>
+    <color name="OnTertiaryContainer">#ffffff</color>
+    <color name="OnErrorContainer">#410002</color>
+    <color name="Surface">#fff8f8</color>
+    <color name="SurfaceDim">#edd4da</color>
+    <color name="SurfaceDimTransparent">#66edd4da</color>
+    <color name="SurfaceContainer">#ffe8ed</color>
+    <color name="SurfaceContainerHigh">#fbe2e8</color>
+    <color name="SurfaceContainerLow">#fff0f3</color>
+    <color name="SurfaceContainerLowest">#ffffff</color>
+    <color name="OnSurface">#25181c</color>
+    <color name="OnSurfaceVar">#584048</color>
+    <color name="Outline">#8b7078</color>
+    <color name="OutlineVar">#dfbec7</color>
+    <color name="InverseSurface">#3c2c31</color>
+    <color name="InverseOnSurface">#ffecf0</color>
+    <color name="InversePrimary">#ffb0ca</color>
+
 </resources>

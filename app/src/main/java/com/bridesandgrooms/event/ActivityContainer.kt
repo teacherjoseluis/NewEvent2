@@ -73,14 +73,24 @@ class ActivityContainer : AppCompatActivity() {
         val lastSignedInAt = try {
             getUserSession(this@ActivityContainer, "last_signed_in_at") as Long
         } catch (e: Exception) {
-            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"getUserSession",e.stackTraceToString())
+            AnalyticsManager.getInstance().trackError(
+                SCREEN_NAME,
+                e.message.toString(),
+                "getUserSession",
+                e.stackTraceToString()
+            )
             0L
         }
         // Email Id???
         val emailid = try {
             getUserSession(this@ActivityContainer, "event_id") as String
         } catch (e: Exception) {
-            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"getUserSession",e.stackTraceToString())
+            AnalyticsManager.getInstance().trackError(
+                SCREEN_NAME,
+                e.message.toString(),
+                "getUserSession",
+                e.stackTraceToString()
+            )
             ""
         }
 
@@ -130,7 +140,12 @@ class ActivityContainer : AppCompatActivity() {
             androidVersion.text = packageInfo.versionName
             androidCode.text = packageInfo.versionCode.toString()
         } catch (e: PackageManager.NameNotFoundException) {
-            AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"getPackageInfo",e.stackTraceToString())
+            AnalyticsManager.getInstance().trackError(
+                SCREEN_NAME,
+                e.message.toString(),
+                "getPackageInfo",
+                e.stackTraceToString()
+            )
             Log.e(TAG, e.message.toString())
             androidVersion.text = "0.0"
             androidCode.text = "0.0"
@@ -148,37 +163,43 @@ class ActivityContainer : AppCompatActivity() {
         sidenavView.setNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.event_fragment -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Home")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Home")
                     clickNavItem = R.id.event_fragment
                     newfragment = DashboardView_clone()
                 }
 
                 R.id.task_fragment -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Task")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Task")
                     clickNavItem = R.id.task_fragment
                     newfragment = DashboardActivity()
                 }
 
                 R.id.notes_fragment -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Notes")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Notes")
                     clickNavItem = R.id.notes_fragment
                     newfragment = MyNotes()
                 }
 
                 R.id.settings_fragment -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Settings")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Settings")
                     clickNavItem = R.id.settings_fragment
                     newfragment = Settings()
                 }
 
                 R.id.contact_fragment -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_Contact")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Contact")
                     clickNavItem = R.id.contact_fragment
                     sendEmail(this)
                 }
 
                 R.id.account_logoff -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"SideNavigationBar_LogOff")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_LogOff")
                     logoffapp()
                 }
             }
@@ -192,7 +213,8 @@ class ActivityContainer : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.home -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_Home")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Home")
                     val newfragment = DashboardView_clone()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -200,7 +222,8 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 R.id.events -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_EventCategories")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_EventCategories")
                     val newfragment = EventCategories()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -208,7 +231,8 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 R.id.tasks -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_Tasks")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Tasks")
                     val newfragment = DashboardActivity()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -216,7 +240,8 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 R.id.guests -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_Guests")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Guests")
                     val newfragment = TableGuestsActivity()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -224,7 +249,8 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 R.id.vendor -> {
-                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"BottomNavigation_Vendors")
+                    AnalyticsManager.getInstance()
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Vendors")
                     val newfragment = VendorsAll()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
@@ -277,6 +303,7 @@ class ActivityContainer : AppCompatActivity() {
                     }
                 }
             }
+
             override fun onDrawerStateChanged(newState: Int) {}
         })
 
@@ -290,32 +317,59 @@ class ActivityContainer : AppCompatActivity() {
     }
 
     // This catches the back option in Android, if the sidebar is displayed, then it gets closed
-    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            val fragment =
+            var fragment =
                 fm.findFragmentById(R.id.fragment_container)
             val currentFragment =
                 fragment?.parentFragmentManager?.fragments?.get(1)
-            val fragmentstring = currentFragment?.javaClass.toString()
-            if (fragmentstring.contains("DashboardView_clone") || fragmentstring == "null") {
-                if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
-                    super.onBackPressed()
-                } else {
-                    Toast.makeText(
-                        baseContext, getString(R.string.pressexit),
-                        Toast.LENGTH_SHORT
-                    ).show()
+            when (currentFragment) {
+                is DashboardView_clone -> {
+                    if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+                        super.onBackPressed()
+                    } else {
+                        Toast.makeText(
+                            baseContext, getString(R.string.pressexit),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    back_pressed = System.currentTimeMillis()
                 }
-                back_pressed = System.currentTimeMillis()
-            } else {
-                val newfragment = DashboardView_clone()
-                fm.beginTransaction()
-                    .replace(R.id.fragment_container, newfragment)
-                    .commit()
+
+                is VendorCreateEdit -> {
+                    fragment = VendorsAll()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
+                }
+
+                else -> {
+                    fragment = DashboardView_clone()
+                    fm.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
+                }
             }
+//            val fragmentstring = currentFragment?.javaClass.toString()
+//
+//            if (fragmentstring.contains("DashboardView_clone") || fragmentstring == "null") {
+//                if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+//                    super.onBackPressed()
+//                } else {
+//                    Toast.makeText(
+//                        baseContext, getString(R.string.pressexit),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//                back_pressed = System.currentTimeMillis()
+//            } else {
+//                val newfragment = DashboardView_clone()
+//                fm.beginTransaction()
+//                    .replace(R.id.fragment_container, newfragment)
+//                    .commit()
+//            }
         }
     }
 

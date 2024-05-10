@@ -6,7 +6,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.provider.ContactsContract
 
-open class Vendor(
+data class Vendor(
     var key: String = "",
     var name: String = "",
     var phone: String = "",

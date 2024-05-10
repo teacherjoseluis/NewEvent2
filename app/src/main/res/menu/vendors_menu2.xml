@@ -13,9 +13,23 @@
 <!--        app:showAsAction="ifRoom|collapseActionView" />-->
 
     <item
-        android:id="@+id/remove_guest"
-        android:iconTint="@color/white"
+        android:id="@+id/remove_vendor"
         android:title="@string/remove_vendor"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/call_vendor"
+        android:title="@string/call_vendor"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/email_vendor"
+        android:title="@string/email_vendor"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/google_vendor"
+        android:title="@string/google_vendor"
         app:showAsAction="never"/>
 
 <!--    <item-->

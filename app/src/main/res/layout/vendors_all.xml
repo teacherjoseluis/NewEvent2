@@ -6,6 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/Surface"
         tools:context=".VendorsAll">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,13 +54,13 @@
             android:layout_marginBottom="55dp"
             android:clickable="true"
             android:contentDescription="@string/floatingactionbuttonvendor"
-            app:backgroundTint="@color/azulmasClaro"
+            app:backgroundTint="@color/PrimaryContainer"
             app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:maxImageSize="24dp"
             app:srcCompat="@drawable/ic_icons8_plus_white"
-            app:tint="@color/white" />
+            app:tint="@color/OnPrimaryContainer" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/NewVendor"
@@ -80,26 +81,26 @@
                 android:elevation="2dp"
                 android:outlineAmbientShadowColor="@color/secondaryText"
                 android:src="@drawable/task_done_outline"
-                app:backgroundTint="@color/rosaChillon"
+                app:backgroundTint="@color/SecondaryContainer"
                 app:elevation="2dp"
                 app:fabSize="mini"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:maxImageSize="24dp"
                 app:rippleColor="@color/white"
-                app:tint="@color/white"
+                app:tint="@color/OnSecondaryContainer"
                 tools:targetApi="p" />
 
             <TextView
-                style="@style/Overline"
+                style="@style/Body_Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:background="@color/white"
+                android:background="@color/SurfaceContainerHigh"
                 android:elevation="2dp"
                 android:padding="5dp"
                 android:text="@string/newvendor_title"
-                android:textColor="@color/rosaChillon"
+                android:textColor="@color/OnSurfaceVar"
                 app:elevation="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/fabNewVendor"
@@ -126,26 +127,26 @@
                 android:elevation="2dp"
                 android:outlineAmbientShadowColor="@color/secondaryText"
                 android:src="@drawable/invoice"
-                app:backgroundTint="@color/rosaChillon"
+                app:backgroundTint="@color/SecondaryContainer"
                 app:elevation="2dp"
                 app:fabSize="mini"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:maxImageSize="24dp"
                 app:rippleColor="@color/white"
-                app:tint="@color/white"
+                app:tint="@color/OnSecondaryContainer"
                 tools:targetApi="p" />
 
             <TextView
-                style="@style/Overline"
+                style="@style/Body_Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:background="@color/white"
+                android:background="@color/SurfaceContainerHigh"
                 android:elevation="2dp"
                 android:padding="5dp"
-                android:text="@string/from_contacts"
-                android:textColor="@color/rosaChillon"
+                android:text="@string/search_vendors"
+                android:textColor="@color/OnSurfaceVar"
                 app:elevation="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/fabContactVendor"
