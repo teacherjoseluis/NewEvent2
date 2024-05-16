@@ -328,6 +328,27 @@
     <string name="email_vendor">Envia un Correo</string>
     <string name="google_vendor">Buscalo en Google</string>
     <string name="paid">Pagado</string>
+    <string name="see_payments">Ve pagos</string>
+    <string name="category1">Lugar</string>
+    <string name="category2">Foto</string>
+    <string name="category3">Entretenimiento</string>
+    <string name="category4">Flores</string>
+    <string name="category5">Transportacion</string>
+    <string name="category6">Ceremonia</string>
+    <string name="category7">Accessorios</string>
+    <string name="category8">Belleza</string>
+    <string name="category9">Comida</string>
+    <string name="searchvendor_title">Busca Proveedor</string>
+    <string name="query_category1">Salones de Eventos para Bodas</string>
+    <string name="query_category2">Foto y Video para Bodas</string>
+    <string name="query_category3">Entretenimiento para Bodas</string>
+    <string name="query_category4">Arreglos Florales para Bodas</string>
+    <string name="query_category5">Limousinas y Transportaciones para Novias</string>
+    <string name="query_category6">Iglesias, Templos para Bodas Religiosas</string>
+    <string name="query_category7">Accesorios para Novias</string>
+    <string name="query_category8">Productos de Salud y Belleza para Novias</string>
+    <string name="query_category9">Banquetes para Bodas</string>
+    <string name="addvendor_confirmation">Quioeres agregar al proveedor a tu lista?</string>
 
     <string-array name="role" >
         <item>Novia</item>

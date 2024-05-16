@@ -1,8 +1,6 @@
 package com.bridesandgrooms.event.UI.Adapters
 
 import android.content.Context
-import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.FragmentActionListener
 import com.bridesandgrooms.event.Functions.sumStrings
+import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.VendorPayment
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.Rv_PaymentAdapter3
 import com.bridesandgrooms.event.UI.LetterAvatar
-import com.bridesandgrooms.event.VendorCreateEdit
-import com.bridesandgrooms.event.VendorsAll
 
 class VendorAdapter(
     private val fragmentActionListener: FragmentActionListener,
@@ -87,7 +84,7 @@ class VendorAdapter(
 
             // Set common fields
             view.findViewById<TextView>(R.id.vendorName).text = vendorPayment.vendor.name
-            view.findViewById<TextView>(R.id.vendorCategory).text = vendorPayment.vendor.category
+            view.findViewById<TextView>(R.id.vendorCategory).text = Category.getCategoryName(vendorPayment.vendor.category)
 
             // Handle specific logic for expanded view
             if (vendorPayment.isExpanded) {
@@ -138,9 +135,6 @@ class VendorAdapter(
             if (position != RecyclerView.NO_POSITION) {
                 val vendorPayment = contactlist[position]
                 fragmentActionListener.onVendorFragmentWithData(vendorPayment.vendor)
-//                    val intent = Intent(context, VendorCreateEdit::class.java)
-//                    intent.putExtra("vendor", vendorPayment.vendor)
-//                    context.startActivity(intent)
             }
         }
 

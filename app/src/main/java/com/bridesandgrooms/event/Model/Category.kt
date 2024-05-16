@@ -144,6 +144,38 @@ enum class Category(
             }
         }
 
+        fun getCategoryCode(CategoryName: String): String {
+            if (getlocale().substring(0, 2) == "es") {
+                return when (CategoryName) {
+                    Venue.es_name -> "venue"
+                    Photo.es_name -> "photo"
+                    Entertainment.es_name -> "entertainment"
+                    Flowers.es_name -> "flowers"
+                    Transportation.es_name -> "transport"
+                    Ceremony.es_name -> "ceremony"
+                    Accesories.es_name -> "accessories"
+                    Beauty.es_name -> "beauty"
+                    Food.es_name -> "food"
+                    Guests.es_name -> "guests"
+                    else -> "venue"
+                }
+            } else {
+                return when (CategoryName) {
+                    Venue.en_name -> "venue"
+                    Photo.en_name -> "photo"
+                    Entertainment.en_name -> "entertainment"
+                    Flowers.en_name -> "flowers"
+                    Transportation.en_name -> "transport"
+                    Ceremony.en_name -> "ceremony"
+                    Accesories.en_name -> "accessories"
+                    Beauty.en_name -> "beauty"
+                    Food.en_name -> "food"
+                    Guests.en_name -> "guests"
+                    else -> "venue"
+                }
+            }
+        }
+
         fun getAllCategories(language: String): ArrayList<String> {
             val categoryarray: ArrayList<String>
             if (language == "en"){

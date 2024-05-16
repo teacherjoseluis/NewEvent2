@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -29,7 +28,6 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.bridesandgrooms.event.Functions.*
@@ -40,6 +38,7 @@ import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.databinding.NewVendorBinding
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -62,72 +61,6 @@ class VendorCreateEdit : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         context = requireContext()
-
-        //user = User().getUser(this)
-        //binding = DataBindingUtil.setContentView(this, R.layout.new_vendor)
-
-        // Declaring and enabling the toolbar
-        //val toolbar = binding.toolbar
-        //toolbar.appbartitle.text = getString(R.string.newvendor_title)
-//        setSupportActionBar(toolbar.root)
-//        supportActionBar!!.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_white_24)
-//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-//        val language = this.resources.configuration.locales.get(0).language
-//        val categorieslist = Category.getAllCategories(language)
-//        val adapter =
-//            ArrayAdapter(context, android.R.layout.simple_expandable_list_item_1, categorieslist)
-//        binding.categoryAutocomplete.setAdapter(adapter)
-//
-//        val extras = intent.extras
-//        vendorItem = arguments?.getParcelable<Vendor>("vendor") ?: Vendor()
-//
-//        //Fields in the form are loaded in case there is a vendor passed as parameter
-//        if (vendorItem.key.isNotEmpty()) {
-//            binding.nameinputedit.setText(vendorItem.name)
-//            binding.phoneinputedit.setText(vendorItem.phone)
-//            binding.mailinputedit.setText(vendorItem.email)
-//            binding.categoryAutocomplete.setText(vendorItem.category, false)
-//        }
-//        binding.nameinputedit.onFocusChangeListener = focusChangeListener
-//        binding.phoneinputedit.onFocusChangeListener = focusChangeListener
-//        binding.mailinputedit.onFocusChangeListener = focusChangeListener
-//
-//        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-//        binding.phoneinputedit.apply {
-//            addTextChangedListener(PhoneNumberFormattingTextWatcher())
-//
-//            setOnFocusChangeListener { view, hasFocus ->
-//                if (hasFocus) {
-//                    val formattedNumber = PhoneNumberUtils.formatNumber(
-//                        text.toString(),
-//                        tm.simCountryIso
-//                    )
-//                    // Check if formattedNumber is null
-//                    if (formattedNumber != null) {
-//                        text = Editable.Factory.getInstance().newEditable(formattedNumber)
-//                    }
-//
-//                    // Clear the error from the parent TextInputLayout
-//                    val parentLayout = view.parent.parent as? TextInputLayout
-//                    parentLayout?.error = null
-//                }
-//            }
-//        }
-//
-//        binding.categoryAutocomplete.setOnClickListener(object : View.OnClickListener {
-//            override fun onClick(p0: View?) {
-//                binding.categoryAutocomplete.showDropDown()
-//            }
-//        })
-//
-//        binding.button.setOnClickListener {
-//            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Add_Vendor")
-//            val isValid = validateAllInputs()
-//            if (isValid) {
-//                savevendor()
-//            }
-//        }
     }
 
     override fun onCreateView(
@@ -147,7 +80,6 @@ class VendorCreateEdit : Fragment() {
             ArrayAdapter(context, android.R.layout.simple_expandable_list_item_1, categorieslist)
         binding.categoryAutocomplete.setAdapter(adapter)
 
-        //val extras = intent.extras
         vendorItem = arguments?.getParcelable<Vendor>("vendor") ?: Vendor()
 
         //Fields in the form are loaded in case there is a vendor passed as parameter
@@ -155,7 +87,7 @@ class VendorCreateEdit : Fragment() {
             binding.nameinputedit.setText(vendorItem.name)
             binding.phoneinputedit.setText(vendorItem.phone)
             binding.mailinputedit.setText(vendorItem.email)
-            binding.categoryAutocomplete.setText(vendorItem.category, false)
+            binding.categoryAutocomplete.setText(Category.getCategoryName(vendorItem.category), false)
         }
         binding.nameinputedit.onFocusChangeListener = focusChangeListener
         binding.phoneinputedit.onFocusChangeListener = focusChangeListener
@@ -196,7 +128,6 @@ class VendorCreateEdit : Fragment() {
                 savevendor()
             }
         }
-
         return binding.root
     }
 
@@ -246,12 +177,17 @@ class VendorCreateEdit : Fragment() {
                                 Log.e(TAG, e.message.toString())
                             }
                         } else {
-                            //If there are payments associated we will not be able to delete the vendor
-//                            Toast.makeText(
-//                                this,
-//                                getString(R.string.error_vendorwithpayments),
-//                                Toast.LENGTH_SHORT
-//                            ).show()
+                            Snackbar.make(
+                                binding.vendorLayout, getString(R.string.error_vendorwithpayments),
+                                Snackbar.LENGTH_LONG
+                            )
+                                .setAction(R.string.see_payments) {
+                                    val fragment = VendorsAll()
+                                    parentFragmentManager.beginTransaction()
+                                        .replace(R.id.fragment_container, fragment)
+                                        .commit()
+                                }
+                                .show()
                         }
                     }
                     .setNegativeButton(android.R.string.no, null)
@@ -279,11 +215,11 @@ class VendorCreateEdit : Fragment() {
                     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.requestinfo))
                     startActivity(intent)
                 } catch (ex: ActivityNotFoundException) {
-//                    Toast.makeText(
-//                        this,
-//                        getString(R.string.error_noemailclient),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.error_noemailclient),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 true
             }
@@ -305,11 +241,6 @@ class VendorCreateEdit : Fragment() {
             }
         }
     }
-
-//    fun onSupportNavigateUp(): Boolean {
-//        finish()
-//        return true
-//    }
 
     private fun validateAllInputs(): Boolean {
         var isValid = true
@@ -355,7 +286,7 @@ class VendorCreateEdit : Fragment() {
             name = binding.nameinputedit.text.toString()
             phone = binding.phoneinputedit.text.toString()
             email = binding.mailinputedit.text.toString()
-            category = binding.categoryAutocomplete.text.toString()
+            category = Category.getCategoryCode(binding.categoryAutocomplete.text.toString())
         }
 
         if (vendorItem.key.isEmpty()) {
@@ -402,8 +333,3 @@ class VendorCreateEdit : Fragment() {
         const val TAG = "VendorCreateEdit"
     }
 }
-
-
-
-
-

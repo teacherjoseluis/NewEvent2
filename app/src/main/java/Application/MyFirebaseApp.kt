@@ -18,6 +18,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.android.gms.tasks.Task
+import com.google.android.libraries.places.api.Places
 import com.google.firebase.messaging.FirebaseMessaging
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -96,6 +97,7 @@ class MyFirebaseApp : Application() {
         FirebaseApp.initializeApp(this)
         //mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         MobileAds.initialize(this)
+        Places.initializeWithNewPlacesApiEnabled(this, getString(R.string.google_maps_key))
 
         //FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 

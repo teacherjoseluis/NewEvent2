@@ -338,6 +338,28 @@
     <string name="email_vendor">Email Vendor</string>
     <string name="google_vendor">Find in Google</string>
     <string name="paid">Paid</string>
+    <string name="see_payments">See payments</string>
+    <string name="category1">Venue</string>
+    <string name="category2">Photo</string>
+    <string name="category3">Entertainment</string>
+    <string name="category4">Flowers</string>
+    <string name="category5">Transportation</string>
+    <string name="category6">Ceremony</string>
+    <string name="category7">Accessories</string>
+    <string name="category8">Beauty</string>
+    <string name="category9">Food</string>
+    <string name="searchvendor_title">Search Vendor</string>
+    <string name="query_category1">Wedding Venues</string>
+    <string name="query_category2">Wedding Photo and Video</string>
+    <string name="query_category3">Entertainment for Weddings</string>
+    <string name="query_category4">Wedding Flower Arrangements</string>
+    <string name="query_category5">Wedding Transportation and Limos</string>
+    <string name="query_category6">Wedding Ceremony Venues and Churches</string>
+    <string name="query_category7">Brides Accessories</string>
+    <string name="query_category8">Health and Beauty products for Brides</string>
+    <string name="query_category9">Wedding Banquets</string>
+    <string name="addvendor_confirmation">Do you want to add the vendor to your list?</string>
+
 
     <string-array name="role" >
         <item>Bride</item>

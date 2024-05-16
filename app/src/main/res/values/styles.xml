@@ -16,6 +16,7 @@
         <item name="actionMenuTextColor">@color/colorRed</item>
         <item name="android:colorBackground">@color/Surface</item>
         <item name="homeAsUpIndicator">@drawable/icons8_menu</item>
+        <item name="snackbarStyle">@style/BG_Snackbar</item>
     </style>
 
     <style name="MyToolbarStyle" parent="Widget.MaterialComponents.Toolbar">
@@ -335,6 +336,7 @@
         <item name="android:letterSpacing">0.1</item>
         <item name="android:textColor">@color/PrimaryContainer</item>
     </style>
+
     <style name="BG_FAB">
     <item name="android:clickable">true</item>
     <item name="backgroundTint">@color/PrimaryContainer</item>
@@ -342,5 +344,17 @@
     <item name="maxImageSize">24dp</item>
     <item name="srcCompat">@drawable/ic_icons8_plus_white</item>
     <item name="tint">@color/OnPrimaryContainer</item>
+    </style>
+
+    <style name="BG_Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="backgroundTint">@color/InverseSurface</item>
+        <item name="android:textColor">@color/InverseOnSurface</item>
+    </style>
+
+    <style name="BG_TabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:background">@color/Surface</item>
+        <item name="tabIndicatorColor">@color/Primary</item>
+        <item name="tabSelectedTextColor">@color/OnSurface</item>
+        <item name="tabTextColor">@color/OnSurfaceVar</item>
     </style>
 </resources>
