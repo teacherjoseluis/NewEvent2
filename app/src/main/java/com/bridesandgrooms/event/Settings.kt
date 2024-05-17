@@ -56,6 +56,12 @@ class Settings : Fragment(), IOnBackPressed {
         }
         inf.spinner2.setSelection(position2)
 
+        val position3 = when(usersession.distanceunit){
+            "miles" -> 0
+            "kilometers" -> 1
+            else -> 0
+        }
+
         //Load the spinner with the language selected for the user
 //        val language = when (usersession.language) {
 //            "en" -> 0
@@ -108,6 +114,20 @@ class Settings : Fragment(), IOnBackPressed {
                     1 -> "CL"
                     2 -> "PE"
                     else -> "MX"
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        inf.spinner21.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                usersession.distanceunit = when (inf.spinner21.selectedItemPosition) {
+                    0 -> "miles"
+                    1 -> "kilometers"
+                    else -> "miles"
                 }
             }
 

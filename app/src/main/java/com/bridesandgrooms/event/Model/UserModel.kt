@@ -100,6 +100,7 @@ class UserModel(
                         vendors = p0.child("vendors").getValue(Int::class.java)!!
                         eventbudget = p0.child("eventbudget").getValue(String::class.java)!!
                         numberguests = p0.child("numberguests").getValue(Int::class.java)!!
+                        distanceunit = p0.child("distanceunit").getValue(String::class.java)!!
 
                         Log.d(
                             TAG,
@@ -170,6 +171,8 @@ class UserModel(
                 postRef.awaitsSingle()?.child("numberguests")!!.getValue(Int::class.java)!!
             user!!.status =
                 postRef.awaitsSingle()?.child("status")!!.getValue(String::class.java)!!
+            user!!.distanceunit =
+                postRef.awaitsSingle()?.child("distanceunit")!!.getValue(String::class.java)!!
             //--------------------------------------------------------------------------------
             Log.d(TAG, "User Key found in Firebase: ${user!!.userid}")
 
@@ -271,6 +274,13 @@ class UserModel(
         }
     }
 
+    private suspend fun editDistanceUnit(user: User) {
+        coroutineScope.launch {
+            userRef.child("distanceunit").setValue(user.distanceunit).await()
+            Log.d(TAG, "Distance Unit for the User has been set to ${user.distanceunit}")
+        }
+    }
+
     private suspend fun addUser(user: User) {
         coroutineScope {
             val userfb = hashMapOf(
@@ -296,6 +306,7 @@ class UserModel(
                 "vendors" to 0,
                 "eventbudget" to user.eventbudget,
                 "numberguests" to user.numberguests,
+                "distanceunit" to user.distanceunit,
                 // The below fields are of exclusive use of Firebase to police the authentication
                 // and number of active sessions
                 "session" to "",
@@ -387,6 +398,7 @@ class UserModel(
     override suspend fun onAddEditUser(user: User) {
         editUserShortName(user)
         editUserRole(user)
+        editDistanceUnit(user)
         nexthandleru?.onAddEditUser(user)
         Log.i("UserModel", "onAddEditGuest reached")
     }

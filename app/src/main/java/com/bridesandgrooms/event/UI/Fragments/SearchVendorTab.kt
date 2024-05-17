@@ -71,25 +71,24 @@ class SearchVendorPagerAdapter(
 ) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
-        val bundle = Bundle()
-
+        val language = context.resources.configuration.locales.get(0).language
         when (position) {
-            0 -> return createFragmentWithQuery(R.string.query_category1, Category.Venue.code)
-            1 -> return createFragmentWithQuery(R.string.query_category2, Category.Photo.code)
-            2 -> return createFragmentWithQuery(R.string.query_category3, Category.Entertainment.code)
-            3 -> return createFragmentWithQuery(R.string.query_category4, Category.Flowers.code)
-            4 -> return createFragmentWithQuery(R.string.query_category5, Category.Transportation.code)
-            5 -> return createFragmentWithQuery(R.string.query_category6, Category.Ceremony.code)
-            6 -> return createFragmentWithQuery(R.string.query_category7, Category.Accesories.code)
-            7 -> return createFragmentWithQuery(R.string.query_category8, Category.Beauty.code)
-            8 -> return createFragmentWithQuery(R.string.query_category9, Category.Food.code)
-            else -> return createFragmentWithQuery(R.string.query_category9, Category.Food.code)
+            0 -> return createFragmentWithQuery(if(language.equals("es")) Category.Venue.searchQueryEs else Category.Venue.searchQueryEn, Category.Venue.code)
+            1 -> return createFragmentWithQuery(if(language.equals("es")) Category.Photo.searchQueryEs else Category.Photo.searchQueryEn, Category.Photo.code)
+            2 -> return createFragmentWithQuery(if(language.equals("es")) Category.Entertainment.searchQueryEs else Category.Entertainment.searchQueryEn, Category.Entertainment.code)
+            3 -> return createFragmentWithQuery(if(language.equals("es")) Category.Flowers.searchQueryEs else Category.Flowers.searchQueryEn, Category.Flowers.code)
+            4 -> return createFragmentWithQuery(if(language.equals("es")) Category.Transportation.searchQueryEs else Category.Transportation.searchQueryEn, Category.Transportation.code)
+            5 -> return createFragmentWithQuery(if(language.equals("es")) Category.Ceremony.searchQueryEs else Category.Ceremony.searchQueryEn, Category.Ceremony.code)
+            6 -> return createFragmentWithQuery(if(language.equals("es")) Category.Accesories.searchQueryEs else Category.Accesories.searchQueryEn, Category.Accesories.code)
+            7 -> return createFragmentWithQuery(if(language.equals("es")) Category.Beauty.searchQueryEs else Category.Beauty.searchQueryEn, Category.Beauty.code)
+            8 -> return createFragmentWithQuery(if(language.equals("es")) Category.Food.searchQueryEs else Category.Food.searchQueryEn, Category.Food.code)
+            else -> return createFragmentWithQuery(if(language.equals("es")) Category.Food.searchQueryEs else Category.Food.searchQueryEn, Category.Food.code)
         }
     }
 
-    private fun createFragmentWithQuery(queryId: Int, category: String): Fragment {
+    private fun createFragmentWithQuery(query: String, category: String): Fragment {
         val bundle = Bundle()
-        bundle.putString("query", context.getString(queryId))
+        bundle.putString("query", query)
         bundle.putString("category", category)
         val fragInfo = SearchVendorFragment()
         fragInfo.arguments = bundle

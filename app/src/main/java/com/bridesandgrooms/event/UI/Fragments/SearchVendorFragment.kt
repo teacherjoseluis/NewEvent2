@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.Google.PlacesSearchServiceKT
+import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.TaskPaymentPayments
 import com.bridesandgrooms.event.UI.Adapters.SearchVendorAdapter
@@ -35,11 +36,14 @@ class SearchVendorFragment : Fragment() {
     private lateinit var recyclerViewSearchVendor: RecyclerView
     private lateinit var rvAdapter: SearchVendorAdapter
 
+    private lateinit var user: User
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         context = requireContext()
+        user = User().getUser(context)
     }
 
     override fun onCreateView(
@@ -64,10 +68,16 @@ class SearchVendorFragment : Fragment() {
             override fun onPlacesFound(places: List<Place>, location: Location) {
                 Log.d(TAG, "Number of places: ${places.count()}")
 
+                val showKms = when (user.distanceunit){
+                    "miles" -> false
+                    "kilometers" -> true
+                    else -> false
+                }
+
                 val placesWithDistances = places.map { place ->
                     val placeLat = place.latLng?.latitude // Assuming these methods exist
                     val placeLng = place.latLng?.longitude
-                    val distance = calculateDistance(location.latitude, location.longitude, placeLat!!, placeLng!!, false)
+                    val distance = "${calculateDistance(location.latitude, location.longitude, placeLat!!, placeLng!!, showKms)} ${if (!showKms) "mi" else "km"}"
                     Pair(place, distance)
                 }
                 // Sort places by distance

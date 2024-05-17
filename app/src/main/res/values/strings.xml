@@ -359,6 +359,8 @@
     <string name="query_category8">Health and Beauty products for Brides</string>
     <string name="query_category9">Wedding Banquets</string>
     <string name="addvendor_confirmation">Do you want to add the vendor to your list?</string>
+    <string name="general_settings">General Settings</string>
+    <string name="distance_settings">Distance Units</string>
 
 
     <string-array name="role" >
@@ -370,6 +372,11 @@
         <item>Mexico</item>
         <item>Chile</item>
         <item>Peru</item>
+    </string-array>
+
+    <string-array name="distance_units" >
+        <item>miles</item>
+        <item>kilometers</item>
     </string-array>
 
 </resources>

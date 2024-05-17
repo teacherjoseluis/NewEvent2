@@ -50,7 +50,7 @@ import java.lang.Math.sqrt
 import kotlin.math.pow
 
 class SearchVendorAdapter(
-    private val contactlist: List<Pair<Place, Double>>,
+    private val contactlist: List<Pair<Place, String>>,
     private val category: String,
     val context: Context
 ) :
@@ -113,11 +113,11 @@ class SearchVendorAdapter(
                     }
                 }
                 .setNegativeButton(android.R.string.no, null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                //.setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
         }
 
-        fun bind(searchVendor: Place, distance: Double) {
+        fun bind(searchVendor: Place, distance: String) {
             currentVendor = searchVendor
             vendorImageView.apply {
                 val textColor =
@@ -141,7 +141,7 @@ class SearchVendorAdapter(
             view.findViewById<TextView>(R.id.vendorCategory).text = category
             view.findViewById<TextView>(R.id.vendorAddress).text = searchVendor.address
             view.findViewById<TextView>(R.id.vendorPhone).text = searchVendor.phoneNumber
-            view.findViewById<TextView>(R.id.vendorDistance).text = distance.toString()
+            view.findViewById<TextView>(R.id.vendorDistance).text = distance
         }
     }
     //        private fun handleClick() {

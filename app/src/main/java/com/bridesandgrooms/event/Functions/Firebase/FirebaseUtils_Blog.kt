@@ -1,22 +1,11 @@
-package com.bridesandgrooms.event.Functions
+package com.bridesandgrooms.event.Functions.Firebase
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
-import com.google.firebase.firestore.MemoryCacheSettings
-import com.google.firebase.firestore.PersistentCacheSettings
-import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 
 private var database: FirebaseDatabase = FirebaseDatabase.getInstance()

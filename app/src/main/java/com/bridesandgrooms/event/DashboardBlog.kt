@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bridesandgrooms.event.Functions.BlogPost
+import com.bridesandgrooms.event.Functions.Firebase.BlogPost
 import com.bridesandgrooms.event.MVP.BlogPresenter
 import com.bridesandgrooms.event.databinding.DashboardblogBinding
 

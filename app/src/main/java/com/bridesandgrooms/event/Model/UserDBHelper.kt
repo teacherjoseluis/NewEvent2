@@ -62,6 +62,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         values.put("vendors", user.vendors)
         values.put("eventbudget", user.eventbudget)
         values.put("numberguests", user.numberguests)
+        values.put("distanceunit", user.distanceunit)
         try {
             db.insert("USER", null, values)
             Log.d(TAG, "User record inserted")
@@ -168,6 +169,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
                     val vendors = cursor.getInt(cursor.getColumnIndexOrThrow("vendors"))
                     val eventbudget = cursor.getString(cursor.getColumnIndexOrThrow("eventbudget"))
                     val numberguests = cursor.getInt(cursor.getColumnIndexOrThrow("numberguests"))
+                    val distanceunit = cursor.getString(cursor.getColumnIndexOrThrow("distanceunit"))
                     user =
                         User(
                             userid,
@@ -192,7 +194,8 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
                             guests,
                             vendors,
                             eventbudget,
-                            numberguests
+                            numberguests,
+                            distanceunit
                         )
                     Log.d(TAG, "User $userid record obtained from local DB")
                 } while (cursor.moveToNext())
@@ -233,6 +236,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         values.put("vendors", user.vendors)
         values.put("eventbudget", user.eventbudget)
         values.put("numberguests", user.numberguests)
+        values.put("distanceunit", user.distanceunit)
 
 
         try {

@@ -3,9 +3,9 @@ package com.bridesandgrooms.event.MVP
 import android.content.Context
 import android.view.View
 import com.bridesandgrooms.event.DashboardBlog
-import com.bridesandgrooms.event.Functions.BlogPost
-import com.bridesandgrooms.event.Functions.FirebaseGetBlogSuccess
-import com.bridesandgrooms.event.Functions.getBlog
+import com.bridesandgrooms.event.Functions.Firebase.BlogPost
+import com.bridesandgrooms.event.Functions.Firebase.FirebaseGetBlogSuccess
+import com.bridesandgrooms.event.Functions.Firebase.getBlog
 
 class BlogPresenter(
     var context: Context,

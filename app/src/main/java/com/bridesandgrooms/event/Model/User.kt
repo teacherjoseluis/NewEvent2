@@ -46,7 +46,8 @@ class User(
     var guests: Int = 0,
     var vendors: Int = 0,
     var eventbudget: String = "",
-    var numberguests: Int = 0
+    var numberguests: Int = 0,
+    var distanceunit: String = "miles"
 ) : Parcelable {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -77,7 +78,8 @@ class User(
         parcel.readInt(),
         parcel.readInt(),
         parcel.readString().toString(),
-        parcel.readInt()
+        parcel.readInt(),
+        parcel.readString().toString()
     )
 
     suspend fun login(
@@ -328,6 +330,7 @@ class User(
         parcel.writeInt(vendors)
         parcel.writeString(eventbudget)
         parcel.writeInt(numberguests)
+        parcel.writeString(distanceunit)
     }
 
     override fun describeContents(): Int {

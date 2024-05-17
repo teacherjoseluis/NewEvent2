@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
-import com.bridesandgrooms.event.Functions.BlogPost
+import com.bridesandgrooms.event.Functions.Firebase.BlogPost
 import Application.MyFirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.storage.FirebaseStorage

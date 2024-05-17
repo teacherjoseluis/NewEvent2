@@ -19,16 +19,15 @@
 
         <ImageView
             android:id="@+id/vendorImageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="260dp"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
@@ -47,7 +46,7 @@
 
             <TextView
                 android:id="@+id/vendorCategory"
-                style="@style/Label_Medium"
+                style="@style/Body_Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Photo"
@@ -55,21 +54,32 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/vendorName" />
 
+            <View
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/Outline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vendorCategory" />
+
             <TextView
                 android:id="@+id/vendorAddress"
-                style="@style/Body_Small"
+                style="@style/Label_Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="C. Juan F. Brittingham 118 col, Santa Fe (Oriente), 64540"
                 android:textColor="@color/OnSurfaceVar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vendorCategory" />
+                app:layout_constraintTop_toBottomOf="@id/line1" />
 
             <TextView
                 android:id="@+id/vendorPhone"
                 style="@style/Label_Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
                 android:text="81 2476 0862"
                 android:textColor="@color/OnSurfaceVar"
                 android:textStyle="italic"
@@ -78,9 +88,10 @@
 
             <TextView
                 android:id="@+id/vendorDistance"
-                style="@style/Body_Small"
+                style="@style/Label_Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="right"
                 android:text="Distance from you"
                 android:textColor="@color/OnSurfaceVar"
                 app:layout_constraintStart_toStartOf="parent"

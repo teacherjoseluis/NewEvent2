@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
-import com.bridesandgrooms.event.Functions.BlogPost
+import com.bridesandgrooms.event.Functions.Firebase.BlogPost
 import com.bridesandgrooms.event.Functions.convertToBlogStringDate
 import Application.MyFirebaseApp
 import com.bridesandgrooms.event.databinding.BlogContentBinding

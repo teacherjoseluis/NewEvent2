@@ -349,6 +349,8 @@
     <string name="query_category8">Productos de Salud y Belleza para Novias</string>
     <string name="query_category9">Banquetes para Bodas</string>
     <string name="addvendor_confirmation">Quioeres agregar al proveedor a tu lista?</string>
+    <string name="general_settings">Configuracion General</string>
+    <string name="distance_settings">Unidades de Distancia</string>
 
     <string-array name="role" >
         <item>Novia</item>
@@ -359,6 +361,11 @@
         <item>Mexico</item>
         <item>Chile</item>
         <item>Peru</item>
+    </string-array>
+
+    <string-array name="distance_units" >
+        <item>millas</item>
+        <item>kilometros</item>
     </string-array>
 
 </resources>
