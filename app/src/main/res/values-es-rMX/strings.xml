@@ -351,6 +351,7 @@
     <string name="addvendor_confirmation">Quioeres agregar al proveedor a tu lista?</string>
     <string name="general_settings">Configuracion General</string>
     <string name="distance_settings">Unidades de Distancia</string>
+    <string name="emptystate_nosearchvendors">No hay proveedores cercanos</string>
 
     <string-array name="role" >
         <item>Novia</item>

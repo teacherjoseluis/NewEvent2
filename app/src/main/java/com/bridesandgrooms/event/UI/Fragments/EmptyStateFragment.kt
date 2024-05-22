@@ -17,7 +17,6 @@ class EmptyStateFragment : Fragment() {
     private var message: String? = null
     private var cta: String? = null
     private var actionClass: Class<*>? = null
-    //private var actionClass2: Class<*>? = null
 
     companion object {
         fun newInstance(message: String, cta: String, actionClass: Class<*>): EmptyStateFragment {
@@ -26,7 +25,6 @@ class EmptyStateFragment : Fragment() {
             args.putString("message", message)
             args.putString("cta", cta)
             args.putSerializable("actionClass", actionClass)
-            //args.putSerializable("actionClass2", actionClass2)
             fragment.arguments = args
             return fragment
         }
@@ -38,7 +36,6 @@ class EmptyStateFragment : Fragment() {
             message = it.getString("message")
             cta = it.getString("cta")
             actionClass = it.getSerializable("actionClass") as Class<*>
-            //actionClass2 = it.getSerializable("actionClass2") as Class<*>
         }
     }
 
@@ -57,11 +54,5 @@ class EmptyStateFragment : Fragment() {
         binding.fabAction.setOnClickListener {
             startActivity(Intent(context, actionClass))
         }
-//        if(actionClass2 != null) {
-//            binding.fabAction2.visibility = ConstraintLayout.VISIBLE
-//            binding.fabAction2.setOnClickListener {
-//                startActivity(Intent(context, actionClass))
-//            }
-//        }
     }
 }

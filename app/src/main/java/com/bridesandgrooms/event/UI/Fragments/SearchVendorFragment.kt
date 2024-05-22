@@ -10,7 +10,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -22,9 +24,12 @@ import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.TaskPaymentPayments
 import com.bridesandgrooms.event.UI.Adapters.SearchVendorAdapter
 import com.bridesandgrooms.event.UI.SwipeControllerTasks
+import com.bridesandgrooms.event.VendorCreateEdit
 import com.bridesandgrooms.event.VendorsAll
+import com.bridesandgrooms.event.databinding.EmptyStateFragmentBinding
 import com.bridesandgrooms.event.databinding.SearchVendorsFragmentBinding
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.lang.Exception
 import kotlin.math.pow
 
@@ -32,7 +37,6 @@ class SearchVendorFragment : Fragment() {
 
     private lateinit var context: Context
     private lateinit var binding: SearchVendorsFragmentBinding
-
     private lateinit var recyclerViewSearchVendor: RecyclerView
     private lateinit var rvAdapter: SearchVendorAdapter
 
@@ -53,7 +57,7 @@ class SearchVendorFragment : Fragment() {
     ): View? {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.search_vendors_fragment, container, false)
-        return binding.root 
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,48 +71,71 @@ class SearchVendorFragment : Fragment() {
         placesSearchService.fetchPlaces(query, object : PlacesSearchServiceKT.PlacesSearchCallback {
             override fun onPlacesFound(places: List<Place>, location: Location) {
                 Log.d(TAG, "Number of places: ${places.count()}")
+                binding.loadingScreen.visibility = ConstraintLayout.GONE
 
-                val showKms = when (user.distanceunit){
-                    "miles" -> false
-                    "kilometers" -> true
-                    else -> false
-                }
-
-                val placesWithDistances = places.map { place ->
-                    val placeLat = place.latLng?.latitude // Assuming these methods exist
-                    val placeLng = place.latLng?.longitude
-                    val distance = "${calculateDistance(location.latitude, location.longitude, placeLat!!, placeLng!!, showKms)} ${if (!showKms) "mi" else "km"}"
-                    Pair(place, distance)
-                }
-                // Sort places by distance
-                val sortedPlaces = placesWithDistances.sortedByDescending{it.second}
-
-                // Update your RecyclerView adapter here
-                recyclerViewSearchVendor = binding.recyclerViewSearchVendors
-                recyclerViewSearchVendor.apply {
-                    layoutManager = LinearLayoutManager(binding.root.context).apply {
-                        reverseLayout = true
+                if (places.count() == 0) {
+                    showNoVendorsFoundView()
+                } else {
+                    val showKms = when (user.distanceunit) {
+                        "miles" -> false
+                        "kilometers" -> true
+                        else -> false
                     }
+
+                    val placesWithDistances = places.map { place ->
+                        val placeLat = place.latLng?.latitude // Assuming these methods exist
+                        val placeLng = place.latLng?.longitude
+                        val distance = "${
+                            calculateDistance(
+                                location.latitude,
+                                location.longitude,
+                                placeLat!!,
+                                placeLng!!,
+                                showKms
+                            )
+                        } ${if (!showKms) "mi" else "km"}"
+                        Pair(place, distance)
+                    }
+                    // Sort places by distance
+                    val sortedPlaces = placesWithDistances.sortedByDescending { it.second }
+
+                    // Update your RecyclerView adapter here
+                    recyclerViewSearchVendor = binding.recyclerViewSearchVendors
+                    recyclerViewSearchVendor.apply {
+                        layoutManager = LinearLayoutManager(binding.root.context).apply {
+                            reverseLayout = true
+                        }
+                    }
+                    //Making the call to the VendorSearchAdapter. Takes Places
+                    try {
+                        rvAdapter = SearchVendorAdapter(sortedPlaces, category, context)
+                        rvAdapter.notifyDataSetChanged()
+                    } catch (e: Exception) {
+                        println(e.message)
+                    }
+                    recyclerViewSearchVendor.adapter = null
+                    recyclerViewSearchVendor.adapter = rvAdapter
                 }
-                //Making the call to the VendorSearchAdapter. Takes Places
-                try {
-                    rvAdapter = SearchVendorAdapter(sortedPlaces, category, context)
-                    rvAdapter.notifyDataSetChanged()
-                } catch (e: Exception) {
-                    println(e.message)
-                }
-                recyclerViewSearchVendor.adapter = null
-                recyclerViewSearchVendor.adapter = rvAdapter
 
             }
 
             override fun onError(error: String) {
-                //Toast.makeText(applicationContext, "Error: $error", Toast.LENGTH_LONG).show()
-                //TODO "Emprty framgent saying that Google couldn't retrieve any results"
+                showNoVendorsFoundView()
             }
         })
     }
 
+    fun showNoVendorsFoundView() {
+        binding.noVendorsLayout.visibility = ConstraintLayout.VISIBLE
+
+        val emptystate_message = binding.emptystateFragment.emptystateMessage
+        val emptystate_cta = binding.emptystateFragment.emptystateCta
+        val fab_action = binding.emptystateFragment.fabAction
+
+        emptystate_message.text = getString(R.string.emptystate_nosearchvendors)
+        emptystate_cta.visibility = ConstraintLayout.INVISIBLE
+        fab_action.visibility = ConstraintLayout.INVISIBLE
+    }
 
     fun calculateDistance(
         lat1: Double,

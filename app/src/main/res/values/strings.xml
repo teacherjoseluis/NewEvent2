@@ -361,7 +361,7 @@
     <string name="addvendor_confirmation">Do you want to add the vendor to your list?</string>
     <string name="general_settings">General Settings</string>
     <string name="distance_settings">Distance Units</string>
-
+    <string name="emptystate_nosearchvendors">There are no providers nearby</string>
 
     <string-array name="role" >
         <item>Bride</item>
