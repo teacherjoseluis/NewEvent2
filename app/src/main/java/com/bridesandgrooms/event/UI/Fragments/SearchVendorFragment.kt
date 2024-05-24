@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Fragments
 
+import android.content.AsyncQueryHandler
 import android.content.Context
 import android.location.Location
 import android.os.Build
@@ -15,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,7 +32,13 @@ import com.bridesandgrooms.event.databinding.EmptyStateFragmentBinding
 import com.bridesandgrooms.event.databinding.SearchVendorsFragmentBinding
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.lang.Exception
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.Exception
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import kotlin.math.pow
 
 class SearchVendorFragment : Fragment() {
@@ -65,64 +73,87 @@ class SearchVendorFragment : Fragment() {
 
         val query = requireArguments().getString("query")!!
         val category = requireArguments().getString("category")!!
-        //val query = "wedding venues"
-        val placesSearchService = PlacesSearchServiceKT(context)
-        Log.d(TAG, "Query: $query")
-        placesSearchService.fetchPlaces(query, object : PlacesSearchServiceKT.PlacesSearchCallback {
-            override fun onPlacesFound(places: List<Place>, location: Location) {
-                Log.d(TAG, "Number of places: ${places.count()}")
-                binding.loadingScreen.visibility = ConstraintLayout.GONE
 
-                if (places.count() == 0) {
-                    showNoVendorsFoundView()
-                } else {
-                    val showKms = when (user.distanceunit) {
-                        "miles" -> false
-                        "kilometers" -> true
-                        else -> false
-                    }
+        lifecycleScope.launch {
+            try {
+                val places = withContext(Dispatchers.IO) {
+                    fetchPlaces(query)
+                }
+                handlePlaces(places, category)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error fetching places: ${e.message}")
+                showNoVendorsFoundView()
 
-                    val placesWithDistances = places.map { place ->
-                        val placeLat = place.latLng?.latitude // Assuming these methods exist
-                        val placeLng = place.latLng?.longitude
-                        val distance = "${
-                            calculateDistance(
-                                location.latitude,
-                                location.longitude,
-                                placeLat!!,
-                                placeLng!!,
-                                showKms
-                            )
-                        } ${if (!showKms) "mi" else "km"}"
-                        Pair(place, distance)
-                    }
-                    // Sort places by distance
-                    val sortedPlaces = placesWithDistances.sortedByDescending { it.second }
+            }
+        }
+    }
 
-                    // Update your RecyclerView adapter here
-                    recyclerViewSearchVendor = binding.recyclerViewSearchVendors
-                    recyclerViewSearchVendor.apply {
-                        layoutManager = LinearLayoutManager(binding.root.context).apply {
-                            reverseLayout = true
-                        }
-                    }
-                    //Making the call to the VendorSearchAdapter. Takes Places
-                    try {
-                        rvAdapter = SearchVendorAdapter(sortedPlaces, category, context)
-                        rvAdapter.notifyDataSetChanged()
-                    } catch (e: Exception) {
-                        println(e.message)
-                    }
-                    recyclerViewSearchVendor.adapter = null
-                    recyclerViewSearchVendor.adapter = rvAdapter
+    private suspend fun fetchPlaces(query: String): Pair<List<Place>, Location> {
+        return suspendCoroutine { continuation ->
+            val placesSearchService = PlacesSearchServiceKT(requireContext())
+            Log.d(TAG, "Query: $query")
+            placesSearchService.fetchPlaces(query, object : PlacesSearchServiceKT.PlacesSearchCallback {
+                override fun onPlacesFound(places: List<Place>, location: Location) {
+                    continuation.resume(Pair(places, location))
                 }
 
+                override fun onError(error: String) {
+                    continuation.resumeWithException(Exception("Error fetching places: $error"))
+                }
+            })
+        }
+    }
+
+    private fun handlePlaces(placesAndLocation: Pair<List<Place>, Location>, category: String){
+        val places = placesAndLocation.first
+        val location = placesAndLocation.second
+
+        Log.d(TAG, "Number of places: ${places.count()}")
+        binding.loadingScreen.visibility = ConstraintLayout.GONE
+
+        if (places.isEmpty()) {
+            showNoVendorsFoundView()
+        } else {
+            val showKms = when (user.distanceunit) {
+                "miles" -> false
+                "kilometers" -> true
+                else -> false
             }
 
-            override fun onError(error: String) {
-                showNoVendorsFoundView()
+            val placesWithDistances = places.map { place ->
+                val placeLat = place.latLng?.latitude // Assuming these methods exist
+                val placeLng = place.latLng?.longitude
+                val distance = "${
+                    calculateDistance(
+                        location.latitude,
+                        location.longitude,
+                        placeLat!!,
+                        placeLng!!,
+                        showKms
+                    )
+                } ${if (!showKms) "mi" else "km"}"
+                Pair(place, distance)
             }
-        })
+            // Sort places by distance
+            val sortedPlaces = placesWithDistances.sortedByDescending { it.second }
+
+            // Update your RecyclerView adapter here
+            recyclerViewSearchVendor = binding.recyclerViewSearchVendors
+            recyclerViewSearchVendor.apply {
+                layoutManager = LinearLayoutManager(binding.root.context).apply {
+                    reverseLayout = true
+                }
+            }
+            //Making the call to the VendorSearchAdapter. Takes Places
+            try {
+                rvAdapter = SearchVendorAdapter(sortedPlaces, category, context)
+                rvAdapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                println(e.message)
+            }
+            recyclerViewSearchVendor.adapter = null
+            recyclerViewSearchVendor.adapter = rvAdapter
+        }
     }
 
     fun showNoVendorsFoundView() {

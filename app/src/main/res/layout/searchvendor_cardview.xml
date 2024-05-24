@@ -57,7 +57,7 @@
             <View
                 android:id="@+id/line1"
                 android:layout_width="match_parent"
-                android:layout_height=".5dp"
+                android:layout_height=".2dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:background="@color/Outline"
@@ -77,7 +77,7 @@
             <TextView
                 android:id="@+id/vendorPhone"
                 style="@style/Label_Small"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="81 2476 0862"
@@ -89,13 +89,14 @@
             <TextView
                 android:id="@+id/vendorDistance"
                 style="@style/Label_Small"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="Distance from you"
+                android:layout_marginTop="3dp"
                 android:textColor="@color/OnSurfaceVar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/vendorPhone" />
+                app:layout_constraintStart_toEndOf="@+id/vendorPhone"
+                app:layout_constraintTop_toBottomOf="@+id/vendorAddress" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
