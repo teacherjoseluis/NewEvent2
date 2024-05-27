@@ -23,6 +23,10 @@ object PermissionUtils {
                 PackageManager.PERMISSION_GRANTED
                 ) && (checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                 PackageManager.PERMISSION_GRANTED
+                ) && (checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED
+                ) && (checkSelfPermission(context, Manifest.permission.INTERNET) ==
+                PackageManager.PERMISSION_GRANTED
                 ))
     }
 
@@ -40,6 +44,10 @@ object PermissionUtils {
                 checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
                         checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED
             }
+            "location" -> {
+                checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                        checkSelfPermission(context, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED
+            }
             else -> {
                 // Handle other permission types here if needed
                 false
@@ -53,7 +61,9 @@ object PermissionUtils {
                 Manifest.permission.READ_CALENDAR,
                 Manifest.permission.WRITE_CALENDAR,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET
             )
         //show popup to request runtime permission
         ActivityCompat.requestPermissions(activity, permissions, TaskCreateEdit.PERMISSION_CODE)
@@ -73,9 +83,12 @@ object PermissionUtils {
                 Manifest.permission.READ_CONTACTS,
                 Manifest.permission.WRITE_CONTACTS
             )
+            "location" -> arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET
+            )
             else -> arrayOf() // Return an empty array if an unsupported permission type is provided
         }
-
         return permissions
     }
 

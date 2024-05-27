@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.MVP.DashboardActivityPresenter
 import com.bridesandgrooms.event.Model.TaskJournal
-import com.bridesandgrooms.event.UI.ExportPDF
+import com.bridesandgrooms.event.UI.Activities.ExportPDF
 import com.bridesandgrooms.event.databinding.DashboardactivityBinding
 
 //import kotlinx.android.synthetic.main.dashboardactivity.*

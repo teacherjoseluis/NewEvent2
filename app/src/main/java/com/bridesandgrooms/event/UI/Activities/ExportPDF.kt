@@ -1,20 +1,16 @@
-package com.bridesandgrooms.event.UI
+package com.bridesandgrooms.event.UI.Activities
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.pdf.PdfDocument.Page
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
-import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.Functions.convertToFilenameString
 import com.bridesandgrooms.event.Functions.converttoString
 import com.bridesandgrooms.event.Functions.currentDateTime
-import com.bridesandgrooms.event.MVP.DashboardEventPresenter
 import com.bridesandgrooms.event.MVP.ExportPDFPresenter
 import com.bridesandgrooms.event.Model.Category.Companion.getCategoryName
 import com.bridesandgrooms.event.Model.EventDBHelper
@@ -23,7 +19,6 @@ import com.bridesandgrooms.event.Model.Task.CREATOR.getTaskStatusName
 import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.Model.TaskPDFBudgetReport
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.databinding.ContactsAllBinding
 import com.bridesandgrooms.event.databinding.ExportpdfBinding
 import com.itextpdf.text.BaseColor
 import com.itextpdf.text.Chunk
@@ -35,7 +30,6 @@ import com.itextpdf.text.FontFactory.HELVETICA_BOLD
 import com.itextpdf.text.Image
 import com.itextpdf.text.Paragraph
 import com.itextpdf.text.Phrase
-import com.itextpdf.text.Rectangle
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter

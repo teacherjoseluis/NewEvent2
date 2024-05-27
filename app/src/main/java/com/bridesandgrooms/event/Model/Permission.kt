@@ -48,6 +48,18 @@ enum class Permission(
         "icons8_hdd_100",
         "",
         ""
+    ),
+    Location(
+        "location",
+        "location",
+        "ubicacion",
+        "Location",
+        "Ubicacion",
+        "user approximate location",
+        "ubicacion aproximada del usuario",
+        "baseline_location_on_black_36",
+        "",
+        ""
     );
 
     companion object {
@@ -56,10 +68,13 @@ enum class Permission(
                 "contact" -> Contact
                 "calendar" -> Calendar
                 "storage" -> Storage
+                "location" -> Location
                 else -> Contact
             }
-            permission.permission_wording_en = "Providing Brides & Grooms access to your ${permission.permission_type_en} allows it to see information related to your ${permission.name_en} such as ${permission.info_type_en}.\n This is necessary in order to continue.\n\nYou'd need to grant access to your ${permission.name_en}  in Settings"
-            permission.permission_wording_es = "Proveer acceso para Brides & Grooms a tu ${permission.permission_type_es} le permite ver informacion relacionada con tu ${permission.name_es} tal como ${permission.info_type_es}.\n Esto es necesario para poder continuar.\n\nNecesitas proveer acceso a tus ${permission.name_es}  en la Configuracion de tu dispositivo"
+            permission.permission_wording_en =
+                "Providing Brides & Grooms access to your ${permission.permission_type_en} allows it to see information related to your ${permission.name_en} such as ${permission.info_type_en}.\n This is necessary in order to continue.\n\nYou'd need to grant access to your ${permission.name_en}  in Settings"
+            permission.permission_wording_es =
+                "Proveer acceso para Brides & Grooms a tu ${permission.permission_type_es} le permite ver informacion relacionada con tu ${permission.name_es} tal como ${permission.info_type_es}.\n Esto es necesario para poder continuar.\n\nNecesitas proveer acceso a tus ${permission.name_es}  en la Configuracion de tu dispositivo"
             return permission
         }
     }

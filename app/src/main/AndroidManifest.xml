@@ -167,7 +167,7 @@
             android:name=".ContactsAll"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".UI.ExportPDF"
+            android:name=".UI.Activities.ExportPDF"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".BlogContent"

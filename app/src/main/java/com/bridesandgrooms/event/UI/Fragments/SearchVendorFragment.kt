@@ -2,15 +2,21 @@ package com.bridesandgrooms.event.UI.Fragments
 
 import android.content.AsyncQueryHandler
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -21,8 +27,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.Google.PlacesSearchServiceKT
+import com.bridesandgrooms.event.Functions.PermissionUtils
+import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.TaskCreateEdit
 import com.bridesandgrooms.event.TaskPaymentPayments
 import com.bridesandgrooms.event.UI.Adapters.SearchVendorAdapter
 import com.bridesandgrooms.event.UI.SwipeControllerTasks
@@ -74,16 +83,21 @@ class SearchVendorFragment : Fragment() {
         val query = requireArguments().getString("query")!!
         val category = requireArguments().getString("category")!!
 
-        lifecycleScope.launch {
-            try {
-                val places = withContext(Dispatchers.IO) {
-                    fetchPlaces(query)
-                }
-                handlePlaces(places, category)
-            } catch (e: Exception) {
-                Log.e(TAG, "Error fetching places: ${e.message}")
-                showNoVendorsFoundView()
+        if (!PermissionUtils.checkPermissions(context, "location")) {
+            val permissions = PermissionUtils.requestPermissionsList("location")
+            requestPermissions(permissions, PERMISSION_CODE)
+        } else {
+            lifecycleScope.launch {
+                try {
+                    val places = withContext(Dispatchers.IO) {
+                        fetchPlaces(query)
+                    }
+                    handlePlaces(places, category)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error fetching places: ${e.message}")
+                    showNoVendorsFoundView()
 
+                }
             }
         }
     }
@@ -92,19 +106,21 @@ class SearchVendorFragment : Fragment() {
         return suspendCoroutine { continuation ->
             val placesSearchService = PlacesSearchServiceKT(requireContext())
             Log.d(TAG, "Query: $query")
-            placesSearchService.fetchPlaces(query, object : PlacesSearchServiceKT.PlacesSearchCallback {
-                override fun onPlacesFound(places: List<Place>, location: Location) {
-                    continuation.resume(Pair(places, location))
-                }
+            placesSearchService.fetchPlaces(
+                query,
+                object : PlacesSearchServiceKT.PlacesSearchCallback {
+                    override fun onPlacesFound(places: List<Place>, location: Location) {
+                        continuation.resume(Pair(places, location))
+                    }
 
-                override fun onError(error: String) {
-                    continuation.resumeWithException(Exception("Error fetching places: $error"))
-                }
-            })
+                    override fun onError(error: String) {
+                        continuation.resumeWithException(Exception("Error fetching places: $error"))
+                    }
+                })
         }
     }
 
-    private fun handlePlaces(placesAndLocation: Pair<List<Place>, Location>, category: String){
+    private fun handlePlaces(placesAndLocation: Pair<List<Place>, Location>, category: String) {
         val places = placesAndLocation.first
         val location = placesAndLocation.second
 
@@ -153,6 +169,66 @@ class SearchVendorFragment : Fragment() {
             }
             recyclerViewSearchVendor.adapter = null
             recyclerViewSearchVendor.adapter = rvAdapter
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_CODE -> {
+                if (grantResults.isEmpty() || grantResults[0] ==
+                    PackageManager.PERMISSION_DENIED
+                ) {
+                    val packageName = requireContext().packageName
+                    val locationPermissions = Permission.getPermission("location")
+                    val resourceId = this.resources.getIdentifier(
+                        locationPermissions.drawable, "drawable", packageName
+                    )
+                    val language = this.resources.configuration.locales.get(0).language
+                    val permissionWording = when (language) {
+                        "en" -> locationPermissions.permission_wording_en
+                        else -> locationPermissions.permission_wording_es
+                    }
+
+                    binding.loadingScreen.visibility = ConstraintLayout.GONE
+                    binding.noPermissionsLayout.visibility = ConstraintLayout.VISIBLE
+                    binding.noPermissionsLayout.findViewById<ImageView>(R.id.permissionicon)
+                        .setImageResource(resourceId)
+                    binding.noPermissionsLayout.findViewById<TextView>(R.id.permissionwording).text =
+                        permissionWording
+                    binding.noPermissionsLayout.findViewById<Button>(R.id.permissionsbutton)
+                        .setOnClickListener {
+                            // Create an intent to open the app settings for your app
+                            val intent = Intent()
+                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            val uri = Uri.fromParts("package", packageName, null)
+                            intent.data = uri
+
+                            // Start the intent
+                            startActivity(intent)
+                        }
+                }
+                else {
+                    val query = requireArguments().getString("query")!!
+                    val category = requireArguments().getString("category")!!
+                    lifecycleScope.launch {
+                        try {
+                            val places = withContext(Dispatchers.IO) {
+                                fetchPlaces(query)
+                            }
+                            handlePlaces(places, category)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error fetching places: ${e.message}")
+                            showNoVendorsFoundView()
+
+                        }
+                    }
+                }
+            }
         }
     }
 
