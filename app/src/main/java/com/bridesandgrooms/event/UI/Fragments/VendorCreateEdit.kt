@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
 import Application.VendorCreationException
@@ -26,7 +26,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -35,6 +34,7 @@ import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.databinding.NewVendorBinding
 import com.google.android.material.appbar.MaterialToolbar
@@ -84,6 +84,7 @@ class VendorCreateEdit : Fragment() {
 
         //Fields in the form are loaded in case there is a vendor passed as parameter
         if (vendorItem.key.isNotEmpty()) {
+            toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.editvendor_title)
             binding.nameinputedit.setText(vendorItem.name)
             binding.phoneinputedit.setText(vendorItem.phone)
             binding.mailinputedit.setText(vendorItem.email)
@@ -125,7 +126,7 @@ class VendorCreateEdit : Fragment() {
             AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Add_Vendor")
             val isValid = validateAllInputs()
             if (isValid) {
-                savevendor()
+                saveVendor()
             }
         }
         return binding.root
@@ -275,7 +276,7 @@ class VendorCreateEdit : Fragment() {
         return isValid
     }
 
-    private fun savevendor() {
+    private fun saveVendor() {
         binding.nameinputedit.isEnabled = false
         binding.phoneinputedit.isEnabled = false
         binding.mailinputedit.isEnabled = false

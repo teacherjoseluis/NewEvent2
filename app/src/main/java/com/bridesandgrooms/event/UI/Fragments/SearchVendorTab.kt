@@ -6,17 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.TaskPaymentPayments
-import com.bridesandgrooms.event.TaskPaymentTasks
-import com.bridesandgrooms.event.databinding.SearchVendorsTabsBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.tabs.TabLayout
 

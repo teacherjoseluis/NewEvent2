@@ -116,7 +116,7 @@
             android:name=".GuestCreateEdit"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".VendorCreateEdit"
+            android:name=".UI.Fragments.VendorCreateEdit"
             android:theme="@style/AppTheme" />
         <!--        <activity android:name=".Guest_EditDetail" />-->
         <!--        <activity android:name=".NewVendor" />-->

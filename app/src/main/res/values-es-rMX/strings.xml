@@ -352,6 +352,7 @@
     <string name="general_settings">Configuracion General</string>
     <string name="distance_settings">Unidades de Distancia</string>
     <string name="emptystate_nosearchvendors">No hay proveedores cercanos</string>
+    <string name="editvendor_title">Editar Proveedor</string>
 
     <string-array name="role" >
         <item>Novia</item>

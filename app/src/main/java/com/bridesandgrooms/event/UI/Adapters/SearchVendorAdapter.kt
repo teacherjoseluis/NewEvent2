@@ -4,8 +4,6 @@ import Application.AnalyticsManager
 import Application.VendorCreationException
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Bitmap
-import android.location.Location
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,41 +12,19 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bridesandgrooms.event.FragmentActionListener
-import com.bridesandgrooms.event.Functions.Google.PlacesSearchService
 import com.bridesandgrooms.event.Functions.addVendor
-import com.bridesandgrooms.event.Functions.sumStrings
-import com.bridesandgrooms.event.GlideApp
-import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
-import com.bridesandgrooms.event.Model.VendorPayment
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.Rv_PaymentAdapter3
-import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragment
-import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
 import com.bridesandgrooms.event.UI.LetterAvatar
-import com.bridesandgrooms.event.VendorCreateEdit
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.PhotoMetadata
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FetchPhotoRequest
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import java.lang.Math.atan2
-import java.lang.Math.cos
-import java.lang.Math.floor
-import java.lang.Math.sin
-import java.lang.Math.sqrt
-import kotlin.math.pow
 
+/**
+ * This Adapter displays the detail of Vendors found through Place SDK and gives the possibility to save those as providers for the event
+ * @property contactlist Contains a list of Pairs of Place and the Distance to the User's location
+ * @property category This is the category of Vendor to which the list of places relates to
+ */
 class SearchVendorAdapter(
     private val contactlist: List<Pair<Place, String>>,
     private val category: String,
@@ -74,6 +50,9 @@ class SearchVendorAdapter(
         holder.bind(searchVendor, distance)
     }
 
+    /**
+     * This Viewholder class handles the click action on which the user will have the ability to add the vendor of his preference to his list within the app
+     */
     inner class VendorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val customVendorCardView: ConstraintLayout = itemView.findViewById(R.id.cardLayout)
         private val vendorImageView: ImageView = itemView.findViewById(R.id.vendorImageView)
@@ -86,6 +65,7 @@ class SearchVendorAdapter(
         }
 
         private fun handleClick() {
+            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "AddVendor_Search")
             AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.add_as_vendor))
                 .setMessage(context.getString(R.string.addvendor_confirmation))
@@ -144,13 +124,6 @@ class SearchVendorAdapter(
             view.findViewById<TextView>(R.id.vendorDistance).text = distance
         }
     }
-    //        private fun handleClick() {
-//            val position = adapterPosition
-//            if (position != RecyclerView.NO_POSITION) {
-//                val searchVendor = contactlist[position]
-//                fragmentActionListener.onVendorFragmentWithData(searchVendor.name)
-//            }
-//        }
 
     companion object {
         const val TAG = "SearchVendorAdapter"

@@ -7,10 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.UI.Adapters.VendorAdapter
-import com.bridesandgrooms.event.VendorCreateEdit
 
 class CustomVendorCardView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

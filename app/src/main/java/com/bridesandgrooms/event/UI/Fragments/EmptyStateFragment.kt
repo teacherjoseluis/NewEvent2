@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.databinding.EmptyStateFragmentBinding
 
+/**
+ * This is a generic fragment to use whenever there is no data to show. It accepts a Class that will be invoked by an Action Button
+ */
 class EmptyStateFragment : Fragment() {
     private lateinit var binding: EmptyStateFragmentBinding
 

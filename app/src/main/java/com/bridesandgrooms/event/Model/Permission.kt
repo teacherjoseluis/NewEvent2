@@ -57,7 +57,7 @@ enum class Permission(
         "Ubicacion",
         "user approximate location",
         "ubicacion aproximada del usuario",
-        "baseline_location_on_black_36",
+        "baseline_location_on_24",
         "",
         ""
     );

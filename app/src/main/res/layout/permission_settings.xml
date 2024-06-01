@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout7"
@@ -49,29 +50,31 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icons8_contacts_80" />
+                app:srcCompat="@drawable/baseline_location_on_24"
+                app:tint="@color/OnSurfaceVar" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/header"
-            style="@style/Heading5"
+            style="@style/Headline_Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:gravity="center"
             android:text="Allow access to Brides &amp; Grooms"
-            android:textColor="@color/rosaChillon"
+            android:textColor="@color/Secondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/twologos" />
 
         <TextView
             android:id="@+id/permissionwording"
-            style="@style/Heading6"
+            style="@style/Title_Small"
+            android:textColor="@color/OnSurface"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:gravity="center"
+            android:gravity="left"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="Providing Brides &amp; Grooms access to your Contact list allows it to see information related to your contacts such as name, phone number and email.\n This is necessary in order to continue.\n\nYou'd need to grant access to your contact list in Settings"
@@ -82,15 +85,14 @@
 
     <Button
         android:id="@+id/permissionsbutton"
+        style="@style/BG_ActionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:shadowDy="2"
-        android:shadowRadius="4"
         android:text="Go to Settings"
-        app:backgroundTint="@color/rosaChillon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

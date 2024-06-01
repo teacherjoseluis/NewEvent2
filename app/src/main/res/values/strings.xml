@@ -362,6 +362,7 @@
     <string name="general_settings">General Settings</string>
     <string name="distance_settings">Distance Units</string>
     <string name="emptystate_nosearchvendors">There are no providers nearby</string>
+    <string name="editvendor_title">Edit Vendor</string>
 
     <string-array name="role" >
         <item>Bride</item>

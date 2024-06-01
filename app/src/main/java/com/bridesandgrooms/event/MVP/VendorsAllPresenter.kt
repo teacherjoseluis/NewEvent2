@@ -6,7 +6,7 @@ import android.os.Looper
 import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.Model.VendorPayment
-import com.bridesandgrooms.event.VendorsAll
+import com.bridesandgrooms.event.UI.Fragments.VendorsAll
 
 class VendorsAllPresenter(
     val context: Context,

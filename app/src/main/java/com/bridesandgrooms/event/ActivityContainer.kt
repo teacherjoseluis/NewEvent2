@@ -20,6 +20,10 @@ import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.getUserSession
 import com.bridesandgrooms.event.Functions.isEventDate
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragment
+import com.bridesandgrooms.event.UI.Fragments.SearchVendorTab
+import com.bridesandgrooms.event.UI.Fragments.VendorCreateEdit
+import com.bridesandgrooms.event.UI.Fragments.VendorsAll
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -339,6 +343,20 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 is VendorCreateEdit -> {
+                    fragment = VendorsAll()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
+                }
+
+                is SearchVendorTab -> {
+                    fragment = VendorsAll()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
+                }
+
+                is SearchVendorFragment -> {
                     fragment = VendorsAll()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment)

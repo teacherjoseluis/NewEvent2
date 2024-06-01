@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bridesandgrooms.event.FragmentActionListener
+import com.bridesandgrooms.event.UI.Fragments.FragmentActionListener
 import com.bridesandgrooms.event.Functions.sumStrings
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.PaymentDBHelper
@@ -41,6 +41,9 @@ class VendorAdapter(
         holder.bind(vendorPayment)
     }
 
+    /**
+     * This particular ViewHolder can handle a contracted and an expanded state. The expanded state can display more information about the Vendor such as the address or payments made to him
+     */
     inner class VendorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val customVendorCardView: ConstraintLayout = itemView.findViewById(R.id.cardLayout)
         private val transitionDuration = 300L

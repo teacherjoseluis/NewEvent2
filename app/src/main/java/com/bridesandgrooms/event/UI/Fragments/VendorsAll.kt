@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
 import android.annotation.SuppressLint
@@ -6,18 +6,18 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.MVP.VendorsAllPresenter
 import com.bridesandgrooms.event.Model.*
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.VendorAdapter
-import com.bridesandgrooms.event.UI.Fragments.EmptyStateFragment
-import com.bridesandgrooms.event.UI.Fragments.SearchVendorTab
-import com.bridesandgrooms.event.databinding.VendorsAllBinding
 import com.bridesandgrooms.event.UI.ViewAnimation
-import java.lang.Exception
+import com.bridesandgrooms.event.databinding.VendorsAllBinding
+import com.google.android.material.appbar.MaterialToolbar
 
 class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionListener {
 
@@ -49,6 +49,9 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.vendors)
 
         inf = DataBindingUtil.inflate(inflater, R.layout.vendors_all, container, false)
         try {
@@ -90,15 +93,13 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
                 .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
                 .addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
                 .commit()
-
-//            val newvendor = Intent(context, ContactsAll::class.java)
-//            newvendor.putExtra("vendorid", "")
-//            startForResult.launch(newvendor)
         }
         return inf.root
     }
 
-
+    /**
+     * Callback that loads a recyclerview with a list of Vendors when they are successfully retrieved from the Backend
+     */
     @SuppressLint("NotifyDataSetChanged")
     override fun onVAVendors(
         vendorpaymentlist: ArrayList<VendorPayment>
@@ -122,6 +123,9 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         }
     }
 
+    /**
+     * Callback that loads an emptystate fragment whenever the app cannot retrieve Vendors, in this case we are assuming that's because there are none. The fragment allows the user to add new Vendors
+     */
     override fun onVAVendorsError(errcode: String) {
         val message = getString(R.string.emptystate_novendorsmsg)
         val cta = getString(R.string.emptystate_novendorscta)
@@ -138,6 +142,9 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         const val TAG = "VendorsAll"
     }
 
+    /**
+     * Whenever a Vendor selection is made and the User clicks on the ViewHolder in the RecyclerView this function will be called in VendorsAll to open the Vendor edition fragment
+     */
     override fun onVendorFragmentWithData(vendor: Vendor) {
         val fragment = VendorCreateEdit()
         val bundle = Bundle()
@@ -145,7 +152,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         fragment.arguments = bundle
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
-            .addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
+            //.addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
             .commit()
     }
 }
