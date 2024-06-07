@@ -55,9 +55,9 @@ class Rv_TableGuestsAdapter(
             }
         }
 
-        val rvAdapter = p0.recyclerView?.adapter as? Rv_GuestAdapter
+        val rvAdapter = p0.recyclerView?.adapter as? GuestAdapter
         if (rvAdapter == null) {
-            val newrvAdapter = Rv_GuestAdapter(tableguestsList[p1].tableguestlist, context)
+            val newrvAdapter = GuestAdapter(tableguestsList[p1].tableguestlist, context)
             p0.recyclerView!!.adapter = newrvAdapter
         }
     }

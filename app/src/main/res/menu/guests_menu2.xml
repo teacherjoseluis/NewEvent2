@@ -18,6 +18,16 @@
         android:title="@string/remove_guest"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/call_guest"
+        android:title="@string/call_vendor"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/email_guest"
+        android:title="@string/email_vendor"
+        app:showAsAction="never"/>
+
 <!--    <item-->
 <!--        android:id="@+id/add_vendor"-->
 <!--        android:iconTint="@color/white"-->

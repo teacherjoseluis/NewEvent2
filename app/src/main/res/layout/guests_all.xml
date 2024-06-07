@@ -3,31 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".GuestsAll">
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/withdata"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:background="@color/Surface"
+        tools:context=".GuestsAll">
 
-        <ScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/withdata"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="30dp"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-<!--            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-<!--                android:id="@+id/pullToRefresh"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent">-->
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewGuests"
@@ -36,128 +31,96 @@ android:layout_width="match_parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:stackFromEnd="true" />
-<!--            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
-        </ScrollView>
+            </ScrollView>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include
-        android:id="@+id/withnodata"
-        layout="@layout/empty_state"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonGuest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="55dp"
-        android:clickable="true"
-        android:contentDescription="@string/floatingactionbuttonguest"
-        app:backgroundTint="@color/azulmasClaro"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="24dp"
-        app:srcCompat="@drawable/ic_icons8_plus_white"
-        app:tint="@color/white" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/NewGuest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="10dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/ContactGuest"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabNewGuest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:contentDescription="@string/newguestbutton"
-            android:elevation="2dp"
-            android:outlineAmbientShadowColor="@color/secondaryText"
-            android:src="@drawable/task_done_outline"
-            app:backgroundTint="@color/rosaChillon"
-            app:elevation="2dp"
-            app:fabSize="mini"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <include
+            android:id="@+id/withnodata"
+            layout="@layout/empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="24dp"
-            app:rippleColor="@color/white"
-            app:tint="@color/white"
-            tools:targetApi="p" />
-
-        <TextView
-            style="@style/Overline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:background="@color/white"
-            android:elevation="2dp"
-            android:padding="5dp"
-            android:text="@string/new_guest"
-            android:textColor="@color/rosaChillon"
-            app:elevation="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/fabNewGuest"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ContactGuest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="10dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonGuest"
-        app:layout_constraintEnd_toEndOf="parent">
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabContactGuest"
+            android:id="@+id/floatingActionButtonGuest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:contentDescription="@string/fabcontactguest"
-            android:elevation="2dp"
-            android:outlineAmbientShadowColor="@color/secondaryText"
-            android:src="@drawable/invoice"
-            app:backgroundTint="@color/rosaChillon"
-            app:elevation="2dp"
-            app:fabSize="mini"
+            style="@style/BG_FAB"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="55dp"
+            android:contentDescription="@string/floatingactionbuttonguest"
+            app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="24dp"
-            app:rippleColor="@color/white"
-            app:tint="@color/white"
-            tools:targetApi="p" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            style="@style/Overline"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/NewGuest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:background="@color/white"
-            android:elevation="2dp"
-            android:padding="5dp"
-            android:text="@string/from_contacts"
-            android:textColor="@color/rosaChillon"
-            app:elevation="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/fabContactGuest"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/ContactGuest"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabNewGuest"
+                style="@style/BG_MiniFAB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/task_done_outline"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:targetApi="p" />
+
+            <TextView
+                style="@style/BG_MiniFABText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="@string/new_guest"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fabNewGuest"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ContactGuest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonGuest"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabContactGuest"
+                style="@style/BG_MiniFAB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/fabcontactguest"
+                android:src="@drawable/invoice"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:targetApi="p" />
+
+            <TextView
+                style="@style/BG_MiniFABText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="@string/from_contacts"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fabContactGuest"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

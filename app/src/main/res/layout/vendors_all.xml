@@ -48,19 +48,14 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButtonVendor"
+            style="@style/BG_FAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="55dp"
-            android:clickable="true"
             android:contentDescription="@string/floatingactionbuttonvendor"
-            app:backgroundTint="@color/PrimaryContainer"
-            app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="24dp"
-            app:srcCompat="@drawable/ic_icons8_plus_white"
-            app:tint="@color/OnPrimaryContainer" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/NewVendor"
@@ -76,32 +71,19 @@
                 android:id="@+id/fabNewVendor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                style="@style/BG_MiniFAB"
                 android:contentDescription="@string/newvendorbutton"
-                android:elevation="2dp"
-                android:outlineAmbientShadowColor="@color/secondaryText"
                 android:src="@drawable/task_done_outline"
-                app:backgroundTint="@color/SecondaryContainer"
-                app:elevation="2dp"
-                app:fabSize="mini"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:maxImageSize="24dp"
-                app:rippleColor="@color/white"
-                app:tint="@color/OnSecondaryContainer"
                 tools:targetApi="p" />
 
             <TextView
-                style="@style/Body_Medium"
+                style="@style/BG_MiniFABText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:background="@color/SurfaceContainerHigh"
-                android:elevation="2dp"
-                android:padding="5dp"
                 android:text="@string/newvendor_title"
-                android:textColor="@color/OnSurfaceVar"
-                app:elevation="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/fabNewVendor"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -122,82 +104,23 @@
                 android:id="@+id/fabContactVendor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                style="@style/BG_MiniFAB"
                 android:contentDescription="@string/fabcontactvendor"
-                android:elevation="2dp"
-                android:outlineAmbientShadowColor="@color/secondaryText"
                 android:src="@drawable/invoice"
-                app:backgroundTint="@color/SecondaryContainer"
-                app:elevation="2dp"
-                app:fabSize="mini"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:maxImageSize="24dp"
-                app:rippleColor="@color/white"
-                app:tint="@color/OnSecondaryContainer"
                 tools:targetApi="p" />
 
             <TextView
-                style="@style/Body_Medium"
+                style="@style/BG_MiniFABText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:background="@color/SurfaceContainerHigh"
-                android:elevation="2dp"
-                android:padding="5dp"
                 android:text="@string/search_vendors"
-                android:textColor="@color/OnSurfaceVar"
-                app:elevation="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/fabContactVendor"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-        <!--        android:id="@+id/GoogleVendor"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_marginEnd="20dp"-->
-        <!--        android:layout_marginRight="20dp"-->
-        <!--        android:layout_marginBottom="10dp"-->
-        <!--        android:visibility="visible"-->
-        <!--        app:layout_constraintBottom_toTopOf="@+id/NewVendor"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent">-->
-
-        <!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-        <!--            android:id="@+id/fabGoogleVendor"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_centerInParent="true"-->
-        <!--            android:elevation="2dp"-->
-        <!--            android:outlineAmbientShadowColor="@color/secondaryText"-->
-        <!--            android:src="@drawable/invoice"-->
-        <!--            app:backgroundTint="@color/rosaChillon"-->
-        <!--            app:elevation="2dp"-->
-        <!--            app:fabSize="mini"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:maxImageSize="24dp"-->
-        <!--            app:rippleColor="@color/white"-->
-        <!--            app:tint="@color/white" />-->
-
-        <!--        <TextView-->
-        <!--            style="@style/Overline"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginEnd="4dp"-->
-        <!--            android:layout_marginRight="2dp"-->
-        <!--            android:background="@color/white"-->
-        <!--            android:elevation="2dp"-->
-        <!--            android:padding="5dp"-->
-        <!--            android:text="From Contacts"-->
-        <!--            android:textColor="@color/rosaChillon"-->
-        <!--            app:elevation="2dp"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintEnd_toStartOf="@id/fabGoogleVendor"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-        <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

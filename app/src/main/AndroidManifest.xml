@@ -112,9 +112,9 @@
         <activity android:name=".Payment_EditDetail" />
         <!--        <activity android:name=".Event_EditDetail" />-->
         <!--        <activity android:name=".MyContacts" />-->
-        <activity
-            android:name=".GuestCreateEdit"
-            android:theme="@style/AppTheme" />
+<!--        <activity-->
+<!--            android:name=".GuestCreateEdit"-->
+<!--            android:theme="@style/AppTheme" />-->
         <activity
             android:name=".UI.Fragments.VendorCreateEdit"
             android:theme="@style/AppTheme" />

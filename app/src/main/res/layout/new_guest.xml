@@ -1,425 +1,361 @@
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    style="@style/Body1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".GuestCreateEdit">
-
-    <include
-        android:id="@+id/loadingscreen"
-        layout="@layout/splashscreen"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/withdata"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:theme="@style/AppTheme">
 
         <include
-            android:id="@+id/toolbar"
-            layout="@layout/main_toolbar" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/bannerCardView"
+            android:id="@+id/loadingscreen"
+            layout="@layout/splashscreen"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/material_margin"
-            app:cardCornerRadius="@dimen/material_card_corner_radius"
+            android:layout_height="match_parent"
             android:visibility="invisible"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/pewter"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/withdata"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/bannerCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/material_padding">
+                android:layout_margin="@dimen/material_margin"
+                android:visibility="invisible"
+                app:cardBackgroundColor="@color/pewter"
+                app:cardCornerRadius="@dimen/material_card_corner_radius"
+                app:cardElevation="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/bannerText"
-                    android:text="Hola"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    android:orientation="horizontal"
+                    android:padding="@dimen/material_padding">
 
-                <Button
-                    android:id="@+id/dismissButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dismiss"
-                    android:visibility="gone" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/bannerText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Hola"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-        </androidx.cardview.widget.CardView>
+                    <Button
+                        android:id="@+id/dismissButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dismiss"
+                        android:visibility="gone" />
+                </LinearLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            </androidx.cardview.widget.CardView>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ScrollView
+                android:id="@+id/scrollView2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-                <!--        android:id="@+id/floatingActionButton"-->
-                <!--        android:layout_width="wrap_content"-->
-                <!--        android:layout_height="wrap_content"-->
-                <!--        android:clickable="true"-->
-                <!--        app:backgroundTint="@color/colorPrimaryDark"-->
-                <!--        app:fabSize="normal"-->
-                <!--        app:layout_constraintBottom_toBottomOf="@+id/contactavatar"-->
-                <!--        app:layout_constraintEnd_toEndOf="@+id/contactavatar"-->
-                <!--        app:srcCompat="@drawable/camera" />-->
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout10"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_height="wrap_content">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/nameinput"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp"
-                        app:layout_constraintEnd_toEndOf="parent"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/nameinputedit"
-                            style="@style/Body1"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/nameinput"
+                            style="@style/BGTextInputLayout"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/layout_border"
-                            android:hint="@string/name"
-                            android:maxLength="50" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                            android:layout_height="wrap_content"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout10">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/nameinputedit"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/name"
+                                android:maxLength="50"
+                                android:tag="NAME"
+                                android:textAppearance="@style/Body_Small" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/phoneinput"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/phoneinput"
+                            style="@style/BGTextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            app:layout_constraintTop_toBottomOf="@+id/nameinput">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/phoneinputedit"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:digits="0123456789+()-"
+                                android:hint="@string/phone"
+                                android:inputType="phone"
+                                android:maxLength="20"
+                                android:tag="PHONE"
+                                android:textAppearance="@style/Body_Small" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/mailinput"
+                            style="@style/BGTextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            app:layout_constraintTop_toBottomOf="@+id/phoneinput">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/mailinputedit"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/email"
+                                android:maxLength="50"
+                                android:tag="EMAIL"
+                                android:textAppearance="@style/Body_Small" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="vertical"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout10">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/phoneinputedit"
-                            style="@style/Body1"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/rsvp"
+                            android:textAppearance="@style/Body_Medium" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/rsvpgroup"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/layout_border"
-                            android:digits="0123456789+()-"
-                            android:hint="@string/phone"
-                            android:inputType="phone"
-                            android:maxLength="50" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            app:checkedChip="@id/chip3"
+                            app:singleSelection="true">
 
-                    <ImageView
-                        android:id="@+id/phoneimage"
-                        android:layout_width="wrap_content"
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip1"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/yes" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip2"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/no" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip3"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/pending" />
+                        </com.google.android.material.chip.ChipGroup>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".60dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/Outline"
+                        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout2"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:contentDescription="@string/phoneimage"
-                        android:paddingTop="10dp"
-                        android:paddingEnd="10dp"
-                        android:src="@drawable/icons8_phone_24"
-                        app:layout_constraintBottom_toBottomOf="@+id/phoneinput"
-                        app:layout_constraintEnd_toEndOf="@id/phoneinput"
-                        app:layout_constraintTop_toTopOf="@id/phoneinput"
-                        tools:ignore="RtlSymmetry" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout8">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/mailinput"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="vertical"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/mailinputedit"
-                            style="@style/Body1"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/companions"
+                            android:textAppearance="@style/Body_Medium" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/companionsgroup"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/layout_border"
-                            android:hint="@string/email"
-                            android:maxLength="50" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            app:checkedChip="@id/chipnone"
+                            app:singleSelection="true">
 
-                    <ImageView
-                        android:id="@+id/mailimage"
-                        android:layout_width="wrap_content"
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipadult"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/adult" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipchild"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/child" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipbaby"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/baby" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipnone"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/none" />
+                        </com.google.android.material.chip.ChipGroup>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".60dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/Outline"
+                        app:layout_constraintTop_toBottomOf="@id/linearLayout2" />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout3"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:contentDescription="@string/mailimage"
-                        android:paddingTop="10dp"
-                        android:paddingEnd="10dp"
-                        android:src="@drawable/icons8_important_mail_24"
-                        app:layout_constraintBottom_toBottomOf="@+id/mailinput"
-                        app:layout_constraintEnd_toEndOf="@id/mailinput"
-                        app:layout_constraintTop_toTopOf="@id/mailinput"
-                        tools:ignore="RtlSymmetry" />
+                        android:layout_marginStart="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/category"
+                            android:textAppearance="@style/Body_Medium" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/guestgroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:checkedChip="@id/others"
+                            app:singleSelection="true">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipfamily"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/family" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipextended"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/extendedfamily" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipfamfriends"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/familyfriends" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipoldfriends"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/oldfriends" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/coworkers"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/coworkers" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/others"
+                                style="@style/BG_Chip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/others" />
+                        </com.google.android.material.chip.ChipGroup>
+                    </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginRight="20dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="@string/rsvp"
-                        android:textAppearance="@style/Heading6" />
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/rsvpgroup"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:checkedChip="@id/chip3"
-                        app:singleSelection="true">
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chip1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/yes"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chip2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/no"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chip3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/pending"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-                    </com.google.android.material.chip.ChipGroup>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginRight="20dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="@string/companions"
-                        android:textAppearance="@style/Heading6" />
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/companionsgroup"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:checkedChip="@id/chipnone"
-                        app:singleSelection="true">
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipadult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/adult"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipchild"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/child"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipbaby"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/baby"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipnone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/none"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-                    </com.google.android.material.chip.ChipGroup>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginRight="20dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="@string/category"
-                        android:textAppearance="@style/Heading6" />
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/guestgroup"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:checkedChip="@id/others"
-                        app:singleSelection="true">
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipfamily"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/family"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipextended"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/extendedfamily"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipfamfriends"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/familyfriends"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipoldfriends"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/oldfriends"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/coworkers"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/coworkers"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/others"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:text="@string/others"
-                            android:theme="@style/Theme.MaterialComponents.Light" />
-                    </com.google.android.material.chip.ChipGroup>
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button"
+            style="@style/BG_ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <Button
-        android:id="@+id/button"
-        app:backgroundTint="@color/rosaChillon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:shadowDy="2"
-        android:shadowRadius="4"
-        android:text="@string/save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

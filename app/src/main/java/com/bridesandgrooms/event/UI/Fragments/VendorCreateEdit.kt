@@ -80,7 +80,7 @@ class VendorCreateEdit : Fragment() {
             ArrayAdapter(context, android.R.layout.simple_expandable_list_item_1, categorieslist)
         binding.categoryAutocomplete.setAdapter(adapter)
 
-        vendorItem = arguments?.getParcelable<Vendor>("vendor") ?: Vendor()
+        vendorItem = arguments?.getParcelable("vendor") ?: Vendor()
 
         //Fields in the form are loaded in case there is a vendor passed as parameter
         if (vendorItem.key.isNotEmpty()) {

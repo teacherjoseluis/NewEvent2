@@ -338,12 +338,32 @@
     </style>
 
     <style name="BG_FAB">
-    <item name="android:clickable">true</item>
-    <item name="backgroundTint">@color/PrimaryContainer</item>
-    <item name="fabSize">normal</item>
-    <item name="maxImageSize">24dp</item>
-    <item name="srcCompat">@drawable/ic_icons8_plus_white</item>
-    <item name="tint">@color/OnPrimaryContainer</item>
+        <item name="android:clickable">true</item>
+        <item name="backgroundTint">@color/PrimaryContainer</item>
+        <item name="fabSize">normal</item>
+        <item name="maxImageSize">24dp</item>
+        <item name="srcCompat">@drawable/ic_icons8_plus_white</item>
+        <item name="tint">@color/OnPrimaryContainer</item>
+    </style>
+
+    <style name="BG_MiniFAB">
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:outlineAmbientShadowColor">@color/secondaryText</item>
+        <item name="backgroundTint">@color/SecondaryContainer</item>
+        <item name="elevation">2dp</item>
+        <item name="fabSize">mini</item>
+        <item name="maxImageSize">24dp</item>
+        <item name="rippleColor">@color/white</item>
+        <item name="tint">@color/OnSecondaryContainer</item>
+    </style>
+
+    <style name="BG_MiniFABText">
+        <item name="android:background">@color/SurfaceContainerHigh</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:textColor">@color/OnSurfaceVar</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textAppearance">@style/Body_Medium</item>
     </style>
 
     <style name="BG_Snackbar" parent="Widget.MaterialComponents.Snackbar">
@@ -356,5 +376,16 @@
         <item name="tabIndicatorColor">@color/Primary</item>
         <item name="tabSelectedTextColor">@color/OnSurface</item>
         <item name="tabTextColor">@color/OnSurfaceVar</item>
+    </style>
+
+    <style name="BG_Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="colorContainer">@color/SecondaryContainer</item>
+        <item name="android:textColor">@color/OnSecondaryContainer</item>
+        <item name="chipCornerRadius">8dp</item>
+        <item name="rippleColor">@color/OnPrimary</item>
+        <item name="chipStrokeColor">@color/Outline</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="elevation">0dp</item>
+        <item name="android:textAppearance">@style/Body_Small</item>
     </style>
 </resources>
