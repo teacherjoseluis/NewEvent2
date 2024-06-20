@@ -126,11 +126,12 @@ class ContactAdapter(
                 .setPositiveButton(android.R.string.yes) { _, _ ->
                     currentGuest?.let { contact ->
                         val user = User().getUser(context)
-                        val newGuest = Guest().apply {
-                            name = contact.name ?: ""
-                            phone = contact.phone ?: ""
-                            email = contact.email ?: ""
-                        }
+//                        val newGuest = Guest().apply {
+//                            name = contact.name ?: ""
+//                            phone = contact.phone ?: ""
+//                            email = contact.email ?: ""
+//                        }
+                        val newGuest = Guest().contacttoGuest(context, contact.key)
                         try {
                             addGuest(context, user, newGuest)
                         } catch (e: GuestCreationException) {
