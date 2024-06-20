@@ -1,10 +1,8 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 
 import Application.AnalyticsManager
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
@@ -16,19 +14,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.clone
 import com.bridesandgrooms.event.MVP.GuestsAllPresenter
 import com.bridesandgrooms.event.Model.Guest
-import Application.MyFirebaseApp
 import android.content.Context
 import android.util.Log
 import android.widget.TextView
+import com.bridesandgrooms.event.UI.Adapters.GuestAdapter
 import com.bridesandgrooms.event.Model.contactGuest
-import com.bridesandgrooms.event.UI.Fragments.EmptyStateFragment
-import com.bridesandgrooms.event.UI.Fragments.SearchVendorTab
-import com.bridesandgrooms.event.UI.Fragments.VendorCreateEdit
-import com.bridesandgrooms.event.UI.Fragments.VendorsAll
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.databinding.GuestsAllBinding
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.firebase.analytics.FirebaseAnalytics
 //import kotlinx.android.synthetic.main.empty_state.view.*
 //import kotlinx.android.synthetic.main.guests_all.*
 //import kotlinx.android.synthetic.main.guests_all.view.*
@@ -67,6 +61,8 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
         inflater.inflate(R.menu.guests_menu, menu)
         val addGuest = menu.findItem(R.id.add_guest)
         addGuest.isVisible = false
+        val addVendor = menu.findItem(R.id.add_vendor)
+        addVendor.isVisible = false
 
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
@@ -85,7 +81,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
             override fun onQueryTextChange(p0: String?): Boolean {
                 val filteredModelList = ArrayList<contactGuest>()
                 filter(guestList, p0).forEach { guest->filteredModelList.add(contactGuest(guest)) }
-                val rvAdapter = GuestAdapter(this, filteredModelList, mContext!!)
+                rvAdapter = GuestAdapter(this@GuestsAll, filteredModelList, mContext!!)
                 recyclerViewAllGuests.adapter = rvAdapter
                 return true
             }

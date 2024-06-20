@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
@@ -26,8 +27,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.Google.PlacesSearchServiceKT
 import com.bridesandgrooms.event.Functions.PermissionUtils
+import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.SearchVendorAdapter
 import com.bridesandgrooms.event.databinding.SearchVendorsFragmentBinding
@@ -41,7 +44,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlin.math.pow
 
-class SearchVendorFragment : Fragment() {
+class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
 
     private lateinit var context: Context
     private lateinit var binding: SearchVendorsFragmentBinding
@@ -212,7 +215,7 @@ class SearchVendorFragment : Fragment() {
             }
             //Making the call to the VendorSearchAdapter. Takes Places
             try {
-                rvAdapter = SearchVendorAdapter(sortedPlaces, category, context)
+                rvAdapter = SearchVendorAdapter(this, sortedPlaces, category, context)
                 rvAdapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 println(e.message)
@@ -283,5 +286,17 @@ class SearchVendorFragment : Fragment() {
         // Round down to two decimal places
         return Math.floor(distance * 100) / 100
     }
+
+    override fun onVendorAdded(vendor: Vendor) {
+        Toast.makeText(
+            context,
+            getString(R.string.searchvendor_addedmsg, vendor.name),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+}
+
+interface SearchVendorFragmentActionListener {
+    fun onVendorAdded(vendor: Vendor)
 }
 

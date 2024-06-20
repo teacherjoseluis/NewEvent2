@@ -1,9 +1,8 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
 import Application.GuestCreationException
 import Application.GuestDeletionException
-import Application.TaskCreationException
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
@@ -29,25 +28,21 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.addGuest
 import com.bridesandgrooms.event.Functions.deleteGuest
 import com.bridesandgrooms.event.Functions.editGuest
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.TaskCreateEdit
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.databinding.NewGuestBinding
-import com.bridesandgrooms.event.UI.Fragments.VendorCreateEdit
-import com.bridesandgrooms.event.UI.Fragments.VendorsAll
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 //import kotlinx.android.synthetic.main.new_guest.*
 //import kotlinx.android.synthetic.main.task_editdetail.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class GuestCreateEdit : Fragment() {
@@ -161,10 +156,10 @@ class GuestCreateEdit : Fragment() {
             inflater.inflate(R.menu.guests_menu2, menu)
             menu.findItem(R.id.remove_guest).isEnabled = true
             if (!binding.phoneinputedit.text.isNullOrBlank()) {
-                menu.findItem(R.id.call_vendor).isEnabled = true
+                menu.findItem(R.id.call_guest).isEnabled = true
             }
             if (!binding.mailinputedit.text.isNullOrBlank()) {
-                menu.findItem(R.id.email_vendor).isEnabled = true
+                menu.findItem(R.id.email_guest).isEnabled = true
             }
         }
     }
@@ -203,7 +198,7 @@ class GuestCreateEdit : Fragment() {
                 true
             }
 
-            R.id.call_vendor -> {
+            R.id.call_guest -> {
                 AnalyticsManager.getInstance()
                     .trackUserInteraction(VendorCreateEdit.SCREEN_NAME, "Call_Vendor")
                 val intent = Intent(
@@ -214,7 +209,7 @@ class GuestCreateEdit : Fragment() {
                 true
             }
 
-            R.id.email_vendor -> {
+            R.id.email_guest -> {
                 AnalyticsManager.getInstance()
                     .trackUserInteraction(VendorCreateEdit.SCREEN_NAME, "Email_Vendor")
                 try {

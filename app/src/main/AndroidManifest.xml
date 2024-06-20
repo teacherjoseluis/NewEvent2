@@ -164,7 +164,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ContactsAll"
+            android:name=".UI.Fragments.ContactsAll"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".UI.Activities.ExportPDF"

@@ -4,23 +4,21 @@
 
     <item
         android:id="@+id/action_search"
-        android:gravity="right"
-        android:icon="@drawable/icons8_conversion_24"
+        android:gravity="top"
+        android:icon="@drawable/search_24px"
         android:iconifiedByDefault="false"
         android:title=""
-        android:iconTint="@color/white"
+        android:iconTint="@color/OnPrimary"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/add_guest"
-        android:iconTint="@color/white"
         android:title="@string/add_as_a_guest"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/add_vendor"
-        android:iconTint="@color/white"
         android:title="@string/add_as_vendor"
         app:showAsAction="never"/>
 

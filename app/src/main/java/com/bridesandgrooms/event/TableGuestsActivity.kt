@@ -19,6 +19,8 @@ import com.bridesandgrooms.event.MVP.TableGuestsActivityPresenter
 import Application.MyFirebaseApp
 import android.util.Log
 import com.bridesandgrooms.event.Model.TableGuests
+import com.bridesandgrooms.event.UI.Fragments.ContactsAll
+import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
 import com.bridesandgrooms.event.databinding.TableguestsactivityBinding
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.android.gms.ads.AdListener
@@ -147,9 +149,9 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
 //                    isNestedScrollingEnabled = false
 //                }
 //            }
-            val rvAdapter = Rv_TableGuestsAdapter(list)
-            recyclerViewActivity.adapter = null
-            recyclerViewActivity.adapter = rvAdapter
+//            val rvAdapter = Rv_TableGuestsAdapter(list)
+//            recyclerViewActivity.adapter = null
+//            recyclerViewActivity.adapter = rvAdapter
 
             inf.withdata.visibility = ConstraintLayout.VISIBLE
             val emptystateLayout = inf.withnodata

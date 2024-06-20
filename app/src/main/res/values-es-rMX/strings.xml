@@ -134,7 +134,9 @@
     <string name="remove_vendor">Remover Proveedor</string>
     <string name="requestinfo">Solicitar Información</string>
     <string name="role">Rol</string>
-    <string name="rsvp">asistirá?</string>
+    <string name="rsvp">Asistirá?</string>
+    <string name="rsvp_text">Asistirá?: %1$s</string>
+    <string name="companions_text">Asistirá con: %1$s</string>
     <string name="save">Guardar</string>
     <string name="seconday_text">Texto Secundario</string>
     <string name="newevent_eventdateinput_en">Selecciona fecha del evento</string>
@@ -326,6 +328,8 @@
     <string name="search_vendors">Busca Proveedores</string>
     <string name="call_vendor">Llama al Proveedor</string>
     <string name="email_vendor">Envia un Correo</string>
+    <string name="call_guest">Llama al Invitado</string>
+    <string name="email_guest">Envia un Correo</string>
     <string name="google_vendor">Buscalo en Google</string>
     <string name="paid">Pagado</string>
     <string name="see_payments">Ve pagos</string>
@@ -348,11 +352,13 @@
     <string name="query_category7">Accesorios para Novias</string>
     <string name="query_category8">Productos de Salud y Belleza para Novias</string>
     <string name="query_category9">Banquetes para Bodas</string>
-    <string name="addvendor_confirmation">Quioeres agregar al proveedor a tu lista?</string>
+    <string name="addvendor_confirmation">Quieres agregar al proveedor a tu lista?</string>
+    <string name="addguest_confirmation">Quieres agregar al invitado a tu lista?</string>
     <string name="general_settings">Configuracion General</string>
     <string name="distance_settings">Unidades de Distancia</string>
     <string name="emptystate_nosearchvendors">No hay proveedores cercanos</string>
     <string name="editvendor_title">Editar Proveedor</string>
+    <string name="searchvendor_addedmsg">Haz agregado a %1$s a tu lista de proveedores</string>
 
     <string-array name="role" >
         <item>Novia</item>

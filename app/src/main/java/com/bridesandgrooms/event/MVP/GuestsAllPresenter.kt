@@ -3,7 +3,7 @@ package com.bridesandgrooms.event.MVP
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.bridesandgrooms.event.GuestsAll
+import com.bridesandgrooms.event.UI.Fragments.GuestsAll
 import com.bridesandgrooms.event.Model.Guest
 
 class GuestsAllPresenter(

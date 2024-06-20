@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.TableGuests
+import com.bridesandgrooms.event.UI.Adapters.GuestAdapter
 
 class Rv_TableGuestsAdapter(
     private val tableguestsList: ArrayList<TableGuests>
@@ -57,8 +58,8 @@ class Rv_TableGuestsAdapter(
 
         val rvAdapter = p0.recyclerView?.adapter as? GuestAdapter
         if (rvAdapter == null) {
-            val newrvAdapter = GuestAdapter(tableguestsList[p1].tableguestlist, context)
-            p0.recyclerView!!.adapter = newrvAdapter
+            //val newrvAdapter = GuestAdapter(tableguestsList[p1].tableguestlist, context)
+            //p0.recyclerView!!.adapter = newrvAdapter
         }
     }
 

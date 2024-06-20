@@ -17,6 +17,8 @@ import com.bridesandgrooms.event.Functions.addVendor
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Fragments.ContactsAllFragmentActionListener
+import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragmentActionListener
 import com.bridesandgrooms.event.UI.LetterAvatar
 import com.google.android.libraries.places.api.model.Place
 
@@ -26,6 +28,7 @@ import com.google.android.libraries.places.api.model.Place
  * @property category This is the category of Vendor to which the list of places relates to
  */
 class SearchVendorAdapter(
+    private val fragmentActionListener: SearchVendorFragmentActionListener,
     private val contactlist: List<Pair<Place, String>>,
     private val category: String,
     val context: Context
@@ -90,6 +93,7 @@ class SearchVendorAdapter(
                             )
                             Log.e(TAG, e.message.toString())
                         }
+                        fragmentActionListener.onVendorAdded(newVendor)
                     }
                 }
                 .setNegativeButton(android.R.string.no, null)

@@ -1,6 +1,7 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Adapters
 
 import android.content.Context
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.contactGuest
+import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Fragments.GuestFragmentActionListener
 import com.bridesandgrooms.event.UI.LetterAvatar
 
 class GuestAdapter(
-    private val fragmentActionListener: Guest_FragmentActionListener,
+    private val fragmentActionListener: GuestFragmentActionListener,
     private val contactList: ArrayList<contactGuest>,
     val context: Context
 ) :
@@ -21,7 +24,7 @@ class GuestAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuestViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.guest_item_layout, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.guest_cardview_contracted, parent, false)
         return GuestViewHolder(view)
     }
 
@@ -85,8 +88,8 @@ class GuestAdapter(
                 }
 
             if (contactGuest.isExpanded) {
-                view.findViewById<TextView>(R.id.rsvp)!!
-                view.findViewById<TextView>(R.id.companions)!!
+                view.findViewById<TextView>(R.id.rsvp).text = context.getString(R.string.rsvp_text, contactGuest.guest.rsvp ?: "")
+                view.findViewById<TextView>(R.id.companions).text = context.getString(R.string.companions_text, contactGuest.guest.companion ?: "")
             }
             customGuestCardView.addView(view)
             animateView(view)

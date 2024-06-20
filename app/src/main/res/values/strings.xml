@@ -90,7 +90,9 @@
     <string name="save">Save</string>
     <string name="name">Name</string>
     <string name="companions">Companions</string>
-    <string name="rsvp">rsvp</string>
+    <string name="rsvp">RSVP</string>
+    <string name="rsvp_text">RSVP: %1$s</string>
+    <string name="companions_text">Accompanied by: %1$s</string>
     <string name="floatingactionbuttonguest">Button Guest</string>
     <string name="newguestbutton">New Guest Button</string>
     <string name="new_guest">New Guest</string>
@@ -336,6 +338,8 @@
     <string name="search_vendors">Search Vendors</string>
     <string name="call_vendor">Call Vendor</string>
     <string name="email_vendor">Email Vendor</string>
+    <string name="call_guest">Call Guest</string>
+    <string name="email_guest">Email Guest</string>
     <string name="google_vendor">Find in Google</string>
     <string name="paid">Paid</string>
     <string name="see_payments">See payments</string>
@@ -359,10 +363,12 @@
     <string name="query_category8">Health and Beauty products for Brides</string>
     <string name="query_category9">Wedding Banquets</string>
     <string name="addvendor_confirmation">Do you want to add the vendor to your list?</string>
+    <string name="addguest_confirmation">Do you want to add the guest to your list?</string>
     <string name="general_settings">General Settings</string>
     <string name="distance_settings">Distance Units</string>
     <string name="emptystate_nosearchvendors">There are no providers nearby</string>
     <string name="editvendor_title">Edit Vendor</string>
+    <string name="searchvendor_addedmsg">You have added %1$s to your list of vendors</string>
 
     <string-array name="role" >
         <item>Bride</item>

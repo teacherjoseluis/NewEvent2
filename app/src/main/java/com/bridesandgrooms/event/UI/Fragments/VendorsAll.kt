@@ -6,18 +6,22 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bridesandgrooms.event.Functions.clone
 import com.bridesandgrooms.event.MVP.VendorsAllPresenter
 import com.bridesandgrooms.event.Model.*
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Adapters.GuestAdapter
 import com.bridesandgrooms.event.UI.Adapters.VendorAdapter
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.bridesandgrooms.event.databinding.VendorsAllBinding
 import com.google.android.material.appbar.MaterialToolbar
+import java.util.Locale
 
 class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionListener {
 
@@ -25,6 +29,9 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
     private lateinit var presentervendor: VendorsAllPresenter
     private lateinit var rvAdapter: VendorAdapter
     private lateinit var inf: VendorsAllBinding
+    private lateinit var toolbar: MaterialToolbar
+
+    private var vendorList = ArrayList<VendorPayment>()
     private var isRotate = false
     private var mContext: Context? = null
 
@@ -43,6 +50,29 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         inflater.inflate(R.menu.vendors_menu, menu)
         val addVendor = menu.findItem(R.id.add_vendor)
         addVendor.isVisible = false
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.isIconified = false
+        searchView.setOnSearchClickListener {}
+        searchView.setOnCloseListener {
+            toolbar.collapseActionView()
+            true
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                val filteredModelList = ArrayList<VendorPayment>()
+                filter(vendorList, p0).forEach { vendor->filteredModelList.add(VendorPayment(vendor.vendor, vendor.amountlist)) }
+                rvAdapter = VendorAdapter(this@VendorsAll, filteredModelList, mContext!!)
+                recyclerViewAllVendor.adapter = rvAdapter
+                return true
+            }
+        })
     }
 
     override fun onCreateView(
@@ -50,7 +80,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         savedInstanceState: Bundle?
     ): View? {
 
-        val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar = requireActivity().findViewById(R.id.toolbar)
         toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.vendors)
 
         inf = DataBindingUtil.inflate(inflater, R.layout.vendors_all, container, false)
@@ -97,6 +127,19 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         return inf.root
     }
 
+
+    private fun filter(models: ArrayList<VendorPayment>, query: String?): List<VendorPayment> {
+        val lowerCaseQuery = query!!.toLowerCase(Locale.ROOT)
+        val filteredModelList: ArrayList<VendorPayment> = ArrayList()
+        for (model in models) {
+            val text: String = model.vendor.name.toLowerCase(Locale.ROOT)
+            if (text.contains(lowerCaseQuery)) {
+                filteredModelList.add(model)
+            }
+        }
+        return filteredModelList
+    }
+
     /**
      * Callback that loads a recyclerview with a list of Vendors when they are successfully retrieved from the Backend
      */
@@ -105,6 +148,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         vendorpaymentlist: ArrayList<VendorPayment>
     ) {
         if (vendorpaymentlist.size != 0) {
+            vendorList = clone(vendorpaymentlist)
             recyclerViewAllVendor = inf.recyclerViewVendors
             recyclerViewAllVendor.apply {
                 layoutManager = LinearLayoutManager(inf.root.context).apply {

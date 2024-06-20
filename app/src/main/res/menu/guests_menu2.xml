@@ -20,12 +20,12 @@
 
     <item
         android:id="@+id/call_guest"
-        android:title="@string/call_vendor"
+        android:title="@string/call_guest"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/email_guest"
-        android:title="@string/email_vendor"
+        android:title="@string/email_guest"
         app:showAsAction="never"/>
 
 <!--    <item-->

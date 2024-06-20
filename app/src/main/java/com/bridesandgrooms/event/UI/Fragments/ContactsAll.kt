@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
 import Application.GuestCreationException
@@ -15,7 +15,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -23,25 +22,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Functions.addGuest
-import com.bridesandgrooms.event.Functions.addVendor
 import com.bridesandgrooms.event.MVP.ContactsAllPresenter
 import com.bridesandgrooms.event.Model.Contact
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
-import com.bridesandgrooms.event.UI.Fragments.EmptyStateFragment
-import com.bridesandgrooms.event.UI.Fragments.VendorCreateEdit
+import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Adapters.ContactAdapter
 import com.bridesandgrooms.event.UI.OnItemClickListener
 import com.bridesandgrooms.event.databinding.ContactsAllBinding
-import com.bridesandgrooms.event.databinding.GuestsAllBinding
 //import kotlinx.android.synthetic.main.contacts_all.*
 //import kotlinx.android.synthetic.main.contacts_all.view.*
 //import kotlinx.android.synthetic.main.vendors_all.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts {
+class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFragmentActionListener {
 
     private var contactList = ArrayList<Contact>()
     private var guestList = ArrayList<Guest>()
@@ -50,7 +47,7 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts {
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var presenterguest: ContactsAllPresenter
     private lateinit var apptitle: TextView
-    private lateinit var rvAdapter: Rv_ContactAdapter
+    private lateinit var rvAdapter: ContactAdapter
 
     private lateinit var userSession: User
 
@@ -91,7 +88,7 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts {
 
             override fun onQueryTextChange(p0: String?): Boolean {
                 val filteredModelList = filter(contactList, p0)
-                val rvAdapter = Rv_ContactAdapter(filteredModelList as ArrayList<Contact>)
+                val rvAdapter = ContactAdapter(this@ContactsAll, filteredModelList as ArrayList<Contact>, context!!)
                 recyclerViewContacts.adapter = rvAdapter
                 return true
             }
@@ -106,7 +103,7 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts {
         toolbar = requireActivity().findViewById(R.id.toolbar)
         toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.title_contacts)
 
-        inf = DataBindingUtil.inflate(inflater, R.layout.guests_all, container, false)
+        inf = DataBindingUtil.inflate(inflater, R.layout.contacts_all, container, false)
 
         recyclerViewContacts = inf.recyclerViewContacts
         recyclerViewContacts.apply {
@@ -152,12 +149,19 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts {
             contactList = clone(list)
 
             try {
-                rvAdapter = Rv_ContactAdapter(list)
+                rvAdapter = ContactAdapter(this, list, mContext!!)
                 rvAdapter.notifyDataSetChanged()
                 //rvAdapter.notifyDataSetChanged()
             } catch (e: java.lang.Exception) {
                 println(e.message)
             }
+
+            recyclerViewContacts.adapter = null
+            recyclerViewContacts.adapter = rvAdapter
+
+            inf.withdata.visibility = ConstraintLayout.VISIBLE
+            val emptystateLayout = inf.noContactsLayout
+            emptystateLayout.visibility = ConstraintLayout.GONE
 
             rvAdapter.mOnItemClickListener = object : OnItemClickListener {
                 @SuppressLint("SetTextI18n")
@@ -207,7 +211,6 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts {
                     }
                 }
             }
-
         }
     }
 
@@ -294,5 +297,21 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts {
         const val SCREEN_NAME = "Contacts_All"
         const val TAG = "ContactsAll"
     }
+
+    override fun onContactAdded(guest: Guest) {
+        val fragment = GuestCreateEdit()
+        val bundle = Bundle()
+        bundle.putParcelable("guest", guest)
+        fragment.arguments = bundle
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
+            //.addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
+            .commit()
+    }
+
+}
+
+interface ContactsAllFragmentActionListener {
+    fun onContactAdded(guest: Guest)
 }
 

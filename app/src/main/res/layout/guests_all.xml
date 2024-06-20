@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/Surface"
-        tools:context=".GuestsAll">
+        tools:context=".UI.Fragments.GuestsAll">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/withdata"
@@ -32,7 +32,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:stackFromEnd="true" />
             </ScrollView>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

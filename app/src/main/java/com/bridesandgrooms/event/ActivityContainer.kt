@@ -20,6 +20,9 @@ import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.getUserSession
 import com.bridesandgrooms.event.Functions.isEventDate
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.UI.Fragments.ContactsAll
+import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
+import com.bridesandgrooms.event.UI.Fragments.GuestsAll
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragment
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorTab
 import com.bridesandgrooms.event.UI.Fragments.VendorCreateEdit
@@ -246,7 +249,7 @@ class ActivityContainer : AppCompatActivity() {
                 R.id.guests -> {
                     AnalyticsManager.getInstance()
                         .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Guests")
-                    val newfragment = TableGuestsActivity()
+                    val newfragment = GuestsAll()
                     fm.beginTransaction()
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
@@ -344,6 +347,20 @@ class ActivityContainer : AppCompatActivity() {
 
                 is VendorCreateEdit -> {
                     fragment = VendorsAll()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
+                }
+
+                is ContactsAll -> {
+                    fragment = GuestsAll()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
+                }
+
+                is GuestCreateEdit -> {
+                    fragment = GuestsAll()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .commit()
