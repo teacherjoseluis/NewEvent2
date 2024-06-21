@@ -16,7 +16,6 @@ import com.bridesandgrooms.event.Functions.clone
 import com.bridesandgrooms.event.MVP.VendorsAllPresenter
 import com.bridesandgrooms.event.Model.*
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.UI.Adapters.GuestAdapter
 import com.bridesandgrooms.event.UI.Adapters.VendorAdapter
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.bridesandgrooms.event.databinding.VendorsAllBinding
@@ -82,8 +81,8 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
 
         toolbar = requireActivity().findViewById(R.id.toolbar)
         toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.vendors)
-
         inf = DataBindingUtil.inflate(inflater, R.layout.vendors_all, container, false)
+
         try {
             presentervendor = VendorsAllPresenter(mContext!!, this)
             presentervendor.getVendorList()
@@ -155,6 +154,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
                     reverseLayout = true
                 }
             }
+            vendorpaymentlist.sortedBy { it.vendor.category }
 
             try {
                 rvAdapter = VendorAdapter(this, vendorpaymentlist, mContext!!)

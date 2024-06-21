@@ -1,8 +1,6 @@
 package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
-import Application.GuestCreationException
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -21,40 +19,28 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.*
-import com.bridesandgrooms.event.Functions.addGuest
 import com.bridesandgrooms.event.MVP.ContactsAllPresenter
 import com.bridesandgrooms.event.Model.Contact
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
-import com.bridesandgrooms.event.Model.User
-import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.ContactAdapter
-import com.bridesandgrooms.event.UI.OnItemClickListener
 import com.bridesandgrooms.event.databinding.ContactsAllBinding
-//import kotlinx.android.synthetic.main.contacts_all.*
-//import kotlinx.android.synthetic.main.contacts_all.view.*
-//import kotlinx.android.synthetic.main.vendors_all.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFragmentActionListener {
 
-    private var contactList = ArrayList<Contact>()
-    private var guestList = ArrayList<Guest>()
 
-    private lateinit var activitymenu: Menu
+
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var presenterguest: ContactsAllPresenter
-    private lateinit var apptitle: TextView
     private lateinit var rvAdapter: ContactAdapter
-
-    private lateinit var userSession: User
-
-
     private lateinit var recyclerViewContacts: RecyclerView
     private lateinit var inf: ContactsAllBinding
+
     private var mContext: Context? = null
+    private var contactList = ArrayList<Contact>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -144,6 +130,9 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
         return filteredModelList
     }
 
+    /**
+     * Callback that loads a recyclerview with a list of Contacts when they are successfully retrieved from the Backend
+     */
     override fun onGAContacts(list: ArrayList<Contact>) {
         if (list.size != 0) {
             contactList = clone(list)
@@ -151,7 +140,6 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
             try {
                 rvAdapter = ContactAdapter(this, list, mContext!!)
                 rvAdapter.notifyDataSetChanged()
-                //rvAdapter.notifyDataSetChanged()
             } catch (e: java.lang.Exception) {
                 println(e.message)
             }
@@ -163,58 +151,60 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
             val emptystateLayout = inf.noContactsLayout
             emptystateLayout.visibility = ConstraintLayout.GONE
 
-            rvAdapter.mOnItemClickListener = object : OnItemClickListener {
-                @SuppressLint("SetTextI18n")
-                override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
-                    AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "Add_Guest")
-                    if (countselected.size != 0) {
-                        apptitle.text = "${countselected.size} selected"
-                        activitymenu.findItem(R.id.add_guest).apply {
-                            isEnabled = true
-                            setOnMenuItemClickListener {
-                                when (it.itemId) {
-                                    R.id.add_guest -> {
-                                        apptitle.text = getString(R.string.title_contacts)
-                                        for (ind in countselected) {
-                                            val guest =
-                                                Guest().contacttoGuest(
-                                                    mContext!!,
-                                                    contactList[ind].key
-                                                )
-                                            guestList.add(guest)
-                                            //lifecycleScope.launch {
-                                            try {
-                                                addGuest(mContext!!, userSession, guest)
-                                            } catch (e: GuestCreationException) {
-                                                AnalyticsManager.getInstance()
-                                                    .trackError(
-                                                        SCREEN_NAME,
-                                                        e.message.toString(),
-                                                        "addGuest()",
-                                                        e.stackTraceToString()
-                                                    )
-                                                Log.e(TAG, e.message.toString())
-                                            }
-                                            //}
-                                        }
-                                        rvAdapter.onClearSelected()
-                                    }
-                                }
-                                true
-                            }
-                        }
-                    } else {
-                        //Disable the menu as nothing is selected
-                        apptitle.text = getString(R.string.title_contacts)
-                        activitymenu.findItem(R.id.add_guest).isEnabled = false
-                    }
-                }
-            }
+//            rvAdapter.mOnItemClickListener = object : OnItemClickListener {
+//                @SuppressLint("SetTextI18n")
+//                override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
+//                    AnalyticsManager.getInstance()
+//                        .trackUserInteraction(SCREEN_NAME, "Add_Guest")
+//                    if (countselected.size != 0) {
+//                        apptitle.text = "${countselected.size} selected"
+//                        activitymenu.findItem(R.id.add_guest).apply {
+//                            isEnabled = true
+//                            setOnMenuItemClickListener {
+//                                when (it.itemId) {
+//                                    R.id.add_guest -> {
+//                                        apptitle.text = getString(R.string.title_contacts)
+//                                        for (ind in countselected) {
+//                                            val guest =
+//                                                Guest().contacttoGuest(
+//                                                    mContext!!,
+//                                                    contactList[ind].key
+//                                                )
+//                                            guestList.add(guest)
+//                                            //lifecycleScope.launch {
+//                                            try {
+//                                                addGuest(mContext!!, userSession, guest)
+//                                            } catch (e: GuestCreationException) {
+//                                                AnalyticsManager.getInstance()
+//                                                    .trackError(
+//                                                        SCREEN_NAME,
+//                                                        e.message.toString(),
+//                                                        "addGuest()",
+//                                                        e.stackTraceToString()
+//                                                    )
+//                                                Log.e(TAG, e.message.toString())
+//                                            }
+//                                            //}
+//                                        }
+//                                        rvAdapter.onClearSelected()
+//                                    }
+//                                }
+//                                true
+//                            }
+//                        }
+//                    } else {
+//                        //Disable the menu as nothing is selected
+//                        apptitle.text = getString(R.string.title_contacts)
+//                        activitymenu.findItem(R.id.add_guest).isEnabled = false
+//                    }
+//                }
+//            }
         }
     }
 
-
+    /**
+     * Callback that loads an emptystate fragment whenever the app cannot retrieve Contacts, in this case we are assuming that's because there are none. The fragment allows the user to add new Contacts
+     */
     override fun onGAContactsError(errcode: String) {
         val message = getString(R.string.emptystate_novendorsmsg)
         val cta = getString(R.string.emptystate_novendorscta)
@@ -225,16 +215,6 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
             ?.replace(R.id.fragment_container, fragment)
             ?.commit()
     }
-
-//    override fun onAddEditGuest(context: Context, user: User, guest: Guest) {
-//        binding.loadingscreen.root.visibility = ConstraintLayout.GONE
-//        binding.withdata.visibility = ConstraintLayout.VISIBLE
-//    }
-//
-//    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
-//        binding.loadingscreen.root.visibility = ConstraintLayout.GONE
-//        binding.withdata.visibility = ConstraintLayout.VISIBLE
-//    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -293,11 +273,13 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
 
     companion object {
         internal const val PERMISSION_CODE = 1001
-        const val CALLER = "contact"
         const val SCREEN_NAME = "Contacts_All"
         const val TAG = "ContactsAll"
     }
 
+    /**
+     * Whenever a Contact selection is made and the User clicks on the ViewHolder in the RecyclerView this function will be called in ContactsAll to open the Contact edition fragment
+     */
     override fun onContactAdded(guest: Guest) {
         val fragment = GuestCreateEdit()
         val bundle = Bundle()
@@ -305,7 +287,6 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
         fragment.arguments = bundle
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
-            //.addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
             .commit()
     }
 

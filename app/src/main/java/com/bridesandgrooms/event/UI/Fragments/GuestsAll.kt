@@ -1,6 +1,5 @@
 package com.bridesandgrooms.event.UI.Fragments
 
-
 import Application.AnalyticsManager
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -23,16 +22,8 @@ import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.databinding.GuestsAllBinding
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.android.material.appbar.MaterialToolbar
-//import kotlinx.android.synthetic.main.empty_state.view.*
-//import kotlinx.android.synthetic.main.guests_all.*
-//import kotlinx.android.synthetic.main.guests_all.view.*
 import java.util.*
 import kotlin.collections.ArrayList
-
-//import kotlinx.android.synthetic.main.onboardingcard.view.*
-//import kotlinx.android.synthetic.main.taskpayment_payments.view.*
-//import kotlinx.android.synthetic.main.vendors_all.*
-
 
 class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionListener {
 
@@ -161,6 +152,9 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
         return filteredModelList
     }
 
+    /**
+     * Callback that loads a recyclerview with a list of Guests when they are successfully retrieved from the Backend
+     */
     @SuppressLint("NotifyDataSetChanged")
     override fun onGAGuests(
         list: ArrayList<Guest>
@@ -171,11 +165,11 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
             list.forEach { guest ->
                 guestList.add(contactGuest(guest))
             }
+            list.sortedBy {it.table}
 
             try {
                 rvAdapter = GuestAdapter(this, guestList, mContext!!)
                 rvAdapter.notifyDataSetChanged()
-                //rvAdapter.notifyDataSetChanged()
             } catch (e: java.lang.Exception) {
                 println(e.message)
             }
@@ -188,81 +182,11 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
             emptystateLayout.root.visibility = ConstraintLayout.GONE
             //----------------------------------------------------------------
         }
-//        else if (list.size == 0) {
-//            inf.withdata.visibility = ConstraintLayout.GONE
-//
-//            val emptystateLayout = inf.withnodata
-//            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
-//            val bottomMarginInPixels =
-//                resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
-//            val params = emptystateLayout.root.layoutParams as ViewGroup.MarginLayoutParams
-//
-//            params.topMargin = topMarginInPixels
-//            params.bottomMargin = bottomMarginInPixels
-//            emptystateLayout.root.layoutParams = params
-//
-//            emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
-//            emptystateLayout.emptyCard.onboardingmessage.text =
-//                getString(R.string.emptystate_noguestsmsg)
-//
-////        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
-////        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
-////
-////        emptystateLayout.newtaskbutton.setOnClickListener {
-////            val newTask = Intent(context, GuestCreateEdit::class.java)
-////            startActivity(newTask)
-//            //}
-//            ViewAnimation.init(inf.NewGuest)
-//            ViewAnimation.init(inf.ContactGuest)
-//
-//            inf.floatingActionButtonGuest.setOnClickListener()
-//            {
-//                isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonGuest, !isRotate)
-//                if (isRotate) {
-//                    ViewAnimation.showIn(inf.NewGuest)
-//                    ViewAnimation.showIn(inf.ContactGuest)
-//                } else {
-//                    ViewAnimation.showOut(inf.NewGuest)
-//                    ViewAnimation.showOut(inf.ContactGuest)
-//                }
-//            }
-//            inf.NewGuest.setOnClickListener {
-//                // ------- Analytics call ----------------
-//                val bundle = Bundle()
-//                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "inf.NewGuest")
-//                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-//                MyFirebaseApp.mFirebaseAnalytics.logEvent(
-//                    FirebaseAnalytics.Event.SELECT_ITEM,
-//                    bundle
-//                )
-//                //----------------------------------------
-//
-//                val NewGuest = Intent(context, GuestCreateEdit::class.java)
-//                NewGuest.putExtra("userid", "")
-//
-//                startActivityForResult(NewGuest, REQUEST_CODE_GUESTS)
-//            }
-//
-//            inf.ContactGuest.setOnClickListener {
-//                // ------- Analytics call ----------------
-//                val bundle = Bundle()
-//                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTFROMCONTACTS")
-//                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-//                MyFirebaseApp.mFirebaseAnalytics.logEvent(
-//                    FirebaseAnalytics.Event.SELECT_ITEM,
-//                    bundle
-//                )
-//                //----------------------------------------
-//
-//                val NewGuest = Intent(context, ContactsAll::class.java)
-//                NewGuest.putExtra("guestid", "")
-//                //startActivity(inf.NewGuest)
-//
-//                startActivityForResult(NewGuest, REQUEST_CODE_CONTACTS)
-//            }
-//        }
     }
 
+    /**
+     * Callback that loads an emptystate fragment whenever the app cannot retrieve Guests, in this case we are assuming that's because there are none. The fragment allows the user to add new Vendors
+     */
     override fun onGAGuestsError(errcode: String) {
         val message = getString(R.string.emptystate_novendorsmsg)
         val cta = getString(R.string.emptystate_novendorscta)
@@ -273,132 +197,15 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
             ?.replace(R.id.fragment_container, fragment)
             ?.commit()
     }
-//    {
-//        inf.withdata.visibility = ConstraintLayout.GONE
-//
-//        val emptystateLayout = inf.withnodata
-//        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
-//        val bottomMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
-//        val params = emptystateLayout.root.layoutParams as ViewGroup.MarginLayoutParams
-//
-//        params.topMargin = topMarginInPixels
-//        params.bottomMargin = bottomMarginInPixels
-//        emptystateLayout.root.layoutParams = params
-//
-//        emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
-//        emptystateLayout.emptyCard.onboardingmessage.text =
-//            getString(R.string.emptystate_noguestsmsg)
-//
-////        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
-////        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
-////
-////        emptystateLayout.newtaskbutton.setOnClickListener {
-////            val newTask = Intent(context, GuestCreateEdit::class.java)
-////            startActivity(newTask)
-//        //}
-//        ViewAnimation.init(inf.NewGuest)
-//        ViewAnimation.init(inf.ContactGuest)
-//
-//        inf.floatingActionButtonGuest.setOnClickListener()
-//        {
-//            isRotate = ViewAnimation.rotateFab(inf.floatingActionButtonGuest, !isRotate)
-//            if (isRotate) {
-//                ViewAnimation.showIn(inf.NewGuest)
-//                ViewAnimation.showIn(inf.ContactGuest)
-//            } else {
-//                ViewAnimation.showOut(inf.NewGuest)
-//                ViewAnimation.showOut(inf.ContactGuest)
-//            }
-//        }
-//        inf.NewGuest.setOnClickListener {
-//            // ------- Analytics call ----------------
-//            val bundle = Bundle()
-//            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "inf.NewGuest")
-//            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-//            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
-//            //----------------------------------------
-//
-//            val NewGuest = Intent(context, GuestCreateEdit::class.java)
-//            NewGuest.putExtra("userid", "")
-//
-//            startActivityForResult(NewGuest, REQUEST_CODE_GUESTS)
-//        }
-//
-//        inf.ContactGuest.setOnClickListener {
-//            // ------- Analytics call ----------------
-//            val bundle = Bundle()
-//            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "GUESTFROMCONTACTS")
-//            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-//            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
-//            //----------------------------------------
-//
-//            val NewGuest = Intent(context, ContactsAll::class.java)
-//            NewGuest.putExtra("guestid", "")
-//            //startActivity(inf.NewGuest)
-//
-//            startActivityForResult(NewGuest, REQUEST_CODE_CONTACTS)
-//        }
-//    }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == GUESTCREATION && resultCode == RESULT_OK) {
-//            val guestdb = GuestDBHelper(context!!)
-//            // Data is exclusively taken from the local DB
-//            val guestlist = guestdb.getAllGuests()
-//            rvAdapter = Rv_GuestAdapter(guestlist, context!!)
-//
-//            recyclerViewAllGuests.adapter = null
-//            recyclerViewAllGuests.adapter = rvAdapter
-//            contactlist = clone(guestlist)!!
-//
-//            val swipeController = SwipeControllerTasks(
-//                context!!,
-//                rvAdapter,
-//                recyclerViewAllGuests,
-//                null,
-//                RIGHTACTION
-//            )
-//            val itemTouchHelper = ItemTouchHelper(swipeController)
-//            itemTouchHelper.attachToRecyclerView(recyclerViewAllGuests)
-//        }
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (((requestCode == REQUEST_CODE_CONTACTS) || (requestCode == REQUEST_CODE_GUESTS)) && resultCode == Activity.RESULT_OK) {
-//            //val guestarray = data?.getSerializableExtra("guests") as ArrayList<Guest>
-//            try {
-//                presenterguest = GuestsAllPresenter(requireContext(), this)
-//            } catch (e: Exception) {
-//                println(e.message)
-//            }
-//        }
-//    }
-
-//    @SuppressLint("NotifyDataSetChanged")
-//    override fun onResume() {
-//        super.onResume()
-//        try {
-//            presenterguest = GuestsAllPresenter(requireContext(), this)
-//            presenterguest.getGuestList()
-//        } catch (e: Exception) {
-//            Log.e(TAG, e.message.toString())
-//        }
-////        recyclerViewActive.adapter = null
-////        recyclerViewActive.adapter = rvAdapter
-//    }
-
-    // deal with the item yourself
-
 
     companion object {
         const val SCREEN_NAME = "Guest All"
-        const val RIGHTACTION = "delete"
-        var guestcreated_flag = 0
         const val TAG = "GuestsAll"
     }
 
+    /**
+     * Whenever a Guest selection is made and the User clicks on the ViewHolder in the RecyclerView this function will be called in GuestsAll to open the Guest edition fragment
+     */
     override fun onGuestFragmentWithData(guest: Guest) {
         val fragment = GuestCreateEdit()
         val bundle = Bundle()
@@ -408,8 +215,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
             .replace(
                 R.id.fragment_container,
                 fragment
-            ) // R.id.fragment_container is the ID of the container where the fragment will be placed
-            //.addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
+            )
             .commit()
     }
 }

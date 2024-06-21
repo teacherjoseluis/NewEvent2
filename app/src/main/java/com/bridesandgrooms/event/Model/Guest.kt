@@ -44,6 +44,9 @@ open class Guest(
         return 0
     }
 
+    /**
+     * This function implements a method in GuestDBHelper that gets the total count of Guests invited to the Event
+     */
     fun getGuestCount(context: Context): Int? {
         try {
             val guestDBHelper = GuestDBHelper(context)
@@ -54,6 +57,9 @@ open class Guest(
         }
     }
 
+    /**
+     * This function converts a Contact into a Guest, getting his phone and email if existent
+     */
     internal fun contacttoGuest(context: Context, contactid: String): Guest {
         val contactguest = Guest()
         val cursor: Cursor?

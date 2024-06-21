@@ -1,7 +1,6 @@
 package com.bridesandgrooms.event.UI.Adapters
 
 import android.content.Context
-import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +18,7 @@ class GuestAdapter(
     private val fragmentActionListener: GuestFragmentActionListener,
     private val contactList: ArrayList<contactGuest>,
     val context: Context
-) :
-    RecyclerView.Adapter<GuestAdapter.GuestViewHolder>() {
+) : RecyclerView.Adapter<GuestAdapter.GuestViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuestViewHolder {
         val view =
@@ -37,7 +35,9 @@ class GuestAdapter(
         holder.bind(contactGuest)
     }
 
-
+    /**
+     * This particular ViewHolder can handle a contracted and an expanded state. The expanded state can display more information about the Guest such as the RSVP and companions
+     */
     inner class GuestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val customGuestCardView: ConstraintLayout = itemView.findViewById(R.id.cardLayout)
         private val transitionDuration = 300L

@@ -124,7 +124,6 @@ class VendorAdapter(
             }
         }
 
-
         private fun animateView(view: View) {
             view.alpha = 0f // Set initial alpha to 0
             view.animate()
