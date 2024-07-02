@@ -3,9 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <item
+            android:id="@+id/action_search"
+            android:gravity="top"
+            android:icon="@drawable/search_24px"
+            android:iconifiedByDefault="false"
+            android:title=""
+            android:iconTint="@color/OnPrimary"
+            app:actionViewClass="android.widget.SearchView"
+            app:showAsAction="ifRoom|collapseActionView" />
+
+        <item
             android:id="@+id/share_note"
-            android:iconTint="@color/white"
             android:title="@string/share_note"
+            app:showAsAction="never"/>
+
+        <item
+            android:id="@+id/delete_note"
+            android:title="@string/delete_note"
             app:showAsAction="never"/>
 
 </menu>

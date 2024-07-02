@@ -171,7 +171,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
                 rvAdapter = GuestAdapter(this, guestList, mContext!!)
                 rvAdapter.notifyDataSetChanged()
             } catch (e: java.lang.Exception) {
-                println(e.message)
+                Log.e(TAG, e.message.toString())
             }
 
             recyclerViewAllGuests.adapter = null
@@ -191,7 +191,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
         val message = getString(R.string.emptystate_novendorsmsg)
         val cta = getString(R.string.emptystate_novendorscta)
         val actionClass =
-            VendorCreateEdit::class.java
+            GuestCreateEdit::class.java
         val fragment = EmptyStateFragment.newInstance(message, cta, actionClass)
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.fragment_container, fragment)

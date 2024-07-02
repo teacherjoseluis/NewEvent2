@@ -2,6 +2,7 @@ package com.bridesandgrooms.event.UI.Fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ class EmptyStateFragment : Fragment() {
     private var actionClass: Class<*>? = null
 
     companion object {
-        fun newInstance(message: String, cta: String, actionClass: Class<*>): EmptyStateFragment {
+        fun newInstance(message: String, cta: String, actionClass: Class<out Fragment>): EmptyStateFragment {
             val fragment = EmptyStateFragment()
             val args = Bundle()
             args.putString("message", message)
@@ -55,7 +56,17 @@ class EmptyStateFragment : Fragment() {
         binding.emptystateMessage.text = message
         binding.emptystateCta.text = cta
         binding.fabAction.setOnClickListener {
-            startActivity(Intent(context, actionClass))
+            try {
+                val fragment = actionClass?.newInstance()
+                parentFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.fragment_container,
+                        fragment as Fragment
+                    )
+                    .commit()
+            } catch (e: Exception){
+                Log.e("EmptyStateFragment.kt", e.message.toString())
+            }
         }
     }
 }

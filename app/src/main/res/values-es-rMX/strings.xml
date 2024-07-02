@@ -98,6 +98,7 @@
     <string name="new_guest">Nuevo Invitado</string>
     <string name="newguestbutton">Botón de nuevo Invitado</string>
     <string name="new_note">Nueva Nota</string>
+    <string name="edit_note">Editar Nota</string>
     <string name="newnotebutton">Botón de nueva nota</string>
     <string name="new_payment">Nuevo Pago</string>
     <string name="newtaskactionbutton">Botón de Nueva Tarea</string>
@@ -144,6 +145,7 @@
     <string name="newevent_eventtimeinput_en">Selecciona hora del evento</string>
     <string name="settings">Configuración</string>
     <string name="share_note">Compartir Nota</string>
+    <string name="delete_note">Borrar Nota</string>
     <string name="sign_up">Regístrate</string>
     <string name="signupbutton">Botón de registro</string>
     <string name="status">Estado</string>

@@ -231,7 +231,7 @@ dependencies {
 //    implementation 'androidx.appcompat:appcompat:1.0.1'
     implementation 'com.google.firebase:firebase-config:21.4.1'
     implementation 'com.google.firebase:firebase-messaging:23.2.1'
-    implementation 'com.github.kcrimi:ToolTipDialog:1.1.4'
+    implementation 'com.github.kcrimi:ToolTipDialog:1.1.5'
     implementation 'com.itextpdf:itextg:5.5.10'
     implementation 'com.google.firebase:firebase-firestore:24.10.3'
     implementation 'androidx.work:work-runtime:2.9.0'

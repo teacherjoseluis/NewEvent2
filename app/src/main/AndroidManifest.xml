@@ -123,10 +123,10 @@
         <!--        <activity android:name=".Vendor_EditDetail" />-->
         <!--        <activity android:name=".MyCalendar" />-->
         <activity
-            android:name=".MyNotes"
+            android:name=".UI.Fragments.MyNotes"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".NoteCreateEdit"
+            android:name=".UI.Fragments.NoteCreateEdit"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Settings"

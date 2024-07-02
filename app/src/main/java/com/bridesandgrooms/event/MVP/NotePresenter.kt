@@ -1,31 +1,33 @@
 package com.bridesandgrooms.event.MVP
 
 import android.content.Context
-import android.view.View
 import com.bridesandgrooms.event.Model.Note
 import com.bridesandgrooms.event.Model.NoteDBHelper
-import com.bridesandgrooms.event.MyNotes
+import com.bridesandgrooms.event.UI.Fragments.MyNotes
 
 class NotePresenter(
     var context: Context,
-    var fragment: MyNotes,
-    val view: View
+    var fragment: MyNotes
 ) {
+
+    private var noteArray: ArrayList<Note>
 
     init {
         val notedb = NoteDBHelper(context)
-        val notearray = notedb.getAllNotes()!!
+        noteArray = notedb.getAllNotes()!!
+    }
 
-        if (notearray.size == 0){
-            fragment.onNoteError(view, ERRCODENOTE)
+    fun getAllNotes() {
+        if (noteArray.size == 0) {
+            fragment.onNoteError(ERRCODENOTE)
         } else {
-            fragment.onNoteSuccess(view, notearray)
+            fragment.onNoteSuccess(noteArray)
         }
     }
 
     interface NoteActivity {
-        fun onNoteSuccess(inflatedView: View, noteList: MutableList<Note>)
-        fun onNoteError(inflatedView: View, errcode: String)
+        fun onNoteSuccess(noteList: ArrayList<Note>)
+        fun onNoteError(errcode: String)
     }
 
     companion object {

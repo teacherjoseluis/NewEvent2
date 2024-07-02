@@ -23,6 +23,8 @@ import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.UI.Fragments.ContactsAll
 import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll
+import com.bridesandgrooms.event.UI.Fragments.MyNotes
+import com.bridesandgrooms.event.UI.Fragments.NoteCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragment
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorTab
 import com.bridesandgrooms.event.UI.Fragments.VendorCreateEdit
@@ -375,6 +377,13 @@ class ActivityContainer : AppCompatActivity() {
 
                 is SearchVendorFragment -> {
                     fragment = VendorsAll()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
+                }
+
+                is NoteCreateEdit -> {
+                    fragment = MyNotes()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .commit()

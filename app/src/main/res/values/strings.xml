@@ -98,6 +98,7 @@
     <string name="new_guest">New Guest</string>
     <string name="new_payment">New Payment</string>
     <string name="new_note">New Note</string>
+    <string name="edit_note">Edit Note</string>
     <string name="fabcontactguest">Contact Guest Button</string>
     <string name="from_contacts">From Contacts</string>
     <string name="add_as_a_guest">Add as a Guest</string>
@@ -144,6 +145,7 @@
     <string name="datetime">Date / Time</string>
     <string name="summary">Summary</string>
     <string name="share_note">Share Note</string>
+    <string name="delete_note">Delete Note</string>
     <string name="welcome">Welcome</string>
     <string name="what_s_your_name">What\'s your name?</string>
     <string name="are_you_bride_groom">Are you Bride/Groom?</string>

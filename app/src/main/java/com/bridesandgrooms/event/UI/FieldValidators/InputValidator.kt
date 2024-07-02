@@ -1,7 +1,7 @@
 package com.bridesandgrooms.event.UI.FieldValidators
 
 import android.content.Context
-import android.provider.Settings.Global.getString
+import android.widget.EditText
 import com.bridesandgrooms.event.R
 import com.google.android.material.textfield.TextInputEditText
 
@@ -19,6 +19,15 @@ class InputValidator(private val context: Context) {
             FieldType.PHONE -> validatePhoneNumber(input.text.toString())
             FieldType.EMAIL -> validateEmail(input.text.toString())
             else -> validateName(input.text.toString())
+        }
+    }
+
+    fun validate(input: EditText): Boolean {
+        errorCode = null  // Reset the error code before each validation
+
+        return when (getFieldType(input)) {
+            FieldType.TEXTBODY -> validateTextBody(input.text.toString())
+            else -> validateTextBody(input.text.toString())
         }
     }
 
@@ -91,12 +100,25 @@ class InputValidator(private val context: Context) {
         return true
     }
 
+    private fun validateTextBody(body: String): Boolean {
+        if (body.isBlank()) {
+            errorCode = context.getString(R.string.error_tasknameinput)
+            return false
+        }
+        return true
+    }
+
     fun getFieldType(editText: TextInputEditText): FieldType {
         val tag = editText.tag?.toString() ?: return FieldType.NONE
         return FieldType.values().find { it.name.equals(tag, ignoreCase = true) } ?: FieldType.NONE
     }
 
+    fun getFieldType(editText: EditText): FieldType {
+        val tag = editText.tag?.toString() ?: return FieldType.NONE
+        return FieldType.values().find { it.name.equals(tag, ignoreCase = true) } ?: FieldType.NONE
+    }
+
     enum class FieldType {
-        NAME, DATE, PASSWORD, PHONE, EMAIL, NONE
+        NAME, DATE, PASSWORD, PHONE, EMAIL, NONE, TEXTBODY
     }
 }
