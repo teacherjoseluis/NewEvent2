@@ -7,17 +7,22 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.applandeo.materialcalendarview.CalendarDay
 import com.bridesandgrooms.event.Functions.CoRAddEditPayment
 import com.bridesandgrooms.event.Functions.CoRDeletePayment
 import com.bridesandgrooms.event.Functions.convertToDBString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePayment {
 
     lateinit var payment: Payment
-    //var key = ""
     var nexthandler: CoRAddEditPayment? = null
     var nexthandlerpdel: CoRDeletePayment? = null
 
@@ -220,6 +225,45 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
         } finally {
             db.close()
         }
+    }
+
+    fun getPaymentsFromMonthYear(month: Int, year: Int): List<Date>? {
+        val db: SQLiteDatabase = DatabaseHelper(context).readableDatabase
+        val calendarDayList = mutableListOf<Date>()
+
+        try {
+            // Calculate start and end dates for the given month and year
+            val startDate = LocalDate.of(year, month + 1, 1) // month is zero-based, so we add 1
+            val endDate = startDate.plusMonths(1).minusDays(1) // end of the month
+            val dateFormat = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.getDefault())
+
+            val cursor: Cursor = db.rawQuery(
+                "SELECT DISTINCT date FROM PAYMENT " +
+                        "WHERE paymentid IS NOT NULL AND paymentid != '' " +
+                        "AND date BETWEEN '${startDate.format(dateFormat)}' AND '${endDate.format(dateFormat)}' " +// Assuming month has 31 days max
+                        "ORDER BY date ASC",
+                null
+            )
+
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+
+                    // Define your date format matching "d/m/yyyy"
+                    val dateFormat = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
+                    val date = dateFormat.parse(dateString)
+                    calendarDayList.add(date)
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error fetching payments from month and year: ${e.message}")
+            return null
+        } finally {
+            db.close()
+        }
+        return calendarDayList
     }
 
     @SuppressLint("Range")

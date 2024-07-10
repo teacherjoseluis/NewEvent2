@@ -7,20 +7,28 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.content.ContextCompat
+import com.applandeo.materialcalendarview.CalendarDay
 import com.bridesandgrooms.event.Model.Category.Companion.getCategory
 import com.bridesandgrooms.event.Functions.CoRAddEditTask
 import com.bridesandgrooms.event.Functions.CoRDeleteTask
 import com.bridesandgrooms.event.Functions.convertToDBString
 import com.bridesandgrooms.event.Functions.converttoString
+import com.bridesandgrooms.event.R
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.text.DateFormat
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
 
-//    lateinit var task: Task
-//    var key = ""
     var nexthandler: CoRAddEditTask? = null
     var nexthandlerdel: CoRDeleteTask? = null
 
@@ -156,7 +164,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         }
     }
 
-    fun getTaskfromDate(date: Date) : ArrayList<String>? {
+    fun getTaskfromDate(date: Date): ArrayList<String>? {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val dateString = convertToDBString(date)
         val nameList = arrayListOf<String>()
@@ -180,6 +188,49 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } finally {
             db.close()
         }
+    }
+
+    fun getTasksFromMonthYear(month: Int, year: Int): List<Date>? {
+        val db: SQLiteDatabase = DatabaseHelper(context).readableDatabase
+        val calendarDayList = mutableListOf<Date>()
+
+        try {
+            // Calculate start and end dates for the given month and year
+            val startDate = LocalDate.of(year, month + 1, 1) // month is zero-based, so we add 1
+            val endDate = startDate.plusMonths(1).minusDays(1) // end of the month
+            val dateFormat = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.getDefault())
+
+            val cursor: Cursor = db.rawQuery(
+                "SELECT DISTINCT date FROM TASK " +
+                        "WHERE taskid IS NOT NULL AND taskid != '' " +
+                        "AND date BETWEEN '${startDate.format(dateFormat)}' AND '${
+                            endDate.format(
+                                dateFormat
+                            )
+                        }' " +
+                        "AND status = 'A' ORDER BY date ASC",
+                null
+            )
+
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+
+                    // Define your date format matching "d/m/yyyy"
+                    val dateFormat = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
+                    val date = dateFormat.parse(dateString)
+                    calendarDayList.add(date)
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error fetching tasks from month and year: ${e.message}")
+            return null
+        } finally {
+            db.close()
+        }
+        return calendarDayList
     }
 
     fun getTaskBudget(context: Context): Float? {
@@ -231,7 +282,8 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             if (cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
-                    taskstats.taskpending = cursor.getInt(cursor.getColumnIndexOrThrow("taskpending"))
+                    taskstats.taskpending =
+                        cursor.getInt(cursor.getColumnIndexOrThrow("taskpending"))
                 } while (cursor.moveToNext())
             }
             cursor = db.rawQuery(
@@ -241,7 +293,8 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             if (cursor != null && cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
-                    taskstats.taskcompleted = cursor.getInt(cursor.getColumnIndexOrThrow("taskcompleted"))
+                    taskstats.taskcompleted =
+                        cursor.getInt(cursor.getColumnIndexOrThrow("taskcompleted"))
                 } while (cursor.moveToNext())
             }
             cursor =

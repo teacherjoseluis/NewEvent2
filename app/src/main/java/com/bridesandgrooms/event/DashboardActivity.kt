@@ -1,8 +1,6 @@
 package com.bridesandgrooms.event
 
-//import com.example.newevent2.MVP.TaskPresenter
-import android.annotation.SuppressLint
-import android.app.Activity
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,63 +10,98 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.applandeo.materialcalendarview.CalendarDay
+import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
 import com.bridesandgrooms.event.MVP.DashboardActivityPresenter
-import com.bridesandgrooms.event.Model.TaskJournal
 import com.bridesandgrooms.event.UI.Activities.ExportPDF
+import com.bridesandgrooms.event.UI.Components.DrawableUtils
 import com.bridesandgrooms.event.databinding.DashboardactivityBinding
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
-//import kotlinx.android.synthetic.main.dashboardactivity.*
-//import kotlinx.android.synthetic.main.dashboardactivity.view.*
-//import kotlinx.android.synthetic.main.onboardingcard.view.*
+class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInterface,
+    DashboardActivityPresenter.PaymentCalendarInterface {
 
-class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInterface {
-
-    private lateinit var recyclerViewActivity: RecyclerView
     private lateinit var dashboardAP: DashboardActivityPresenter
     private lateinit var inf: DashboardactivityBinding
     private lateinit var activitymenu: Menu
 
-    private val REQUEST_CODE_TASK = 4
+    private lateinit var dateFormat: SimpleDateFormat
+    private var events = mutableListOf<CalendarDay>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        retainInstance = true
+        dateFormat = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        // Inflate the layout for this fragment
-        //val inf = inflater.inflate(R.layout.dashboardactivity, container, false)
         inf = DataBindingUtil.inflate(inflater, R.layout.dashboardactivity, container, false)
-        recyclerViewActivity = inf.journalparentrv
-        recyclerViewActivity.apply {
-            layoutManager = LinearLayoutManager(inf.root.context).apply {
-                stackFromEnd = true
-                reverseLayout = true
-                isNestedScrollingEnabled = false
-            }
-        }
-        inf.NewTaskActionButton.setOnClickListener {
-            val newtask = Intent(activity, TaskCreateEdit::class.java)
-            newtask.putExtra("userid", "")
-//            newtask.putExtra("eventid", userSession.eventid)
-            startActivityForResult(newtask, REQUEST_CODE_TASK)
-        }
-        try {
+        val currentDateTime = Calendar.getInstance()
+        var month =
+            currentDateTime.get(Calendar.MONTH) // Calendar.MONTH returns zero-based month (0 for January)
+        val year = currentDateTime.get(Calendar.YEAR)
+
+        inf.calendarView.setDate(currentDateTime)
+
+//        recyclerViewActivity = inf.journalparentrv
+//        recyclerViewActivity.apply {
+//            layoutManager = LinearLayoutManager(inf.root.context).apply {
+//                stackFromEnd = true
+//                reverseLayout = true
+//                isNestedScrollingEnabled = false
+//            }
+//        }
+//        inf.NewTaskActionButton.setOnClickListener {
+//            val newtask = Intent(activity, TaskCreateEdit::class.java)
+//            newtask.putExtra("userid", "")
+////            newtask.putExtra("eventid", userSession.eventid)
+//            startActivityForResult(newtask, REQUEST_CODE_TASK)
+//        }
+
+//        val events: MutableList<CalendarDay> = ArrayList()
+//
+//        val calendar = Calendar.getInstance()
+//        calendar.add(Calendar.DAY_OF_MONTH, 13)
+//        val calendarDay = CalendarDay(calendar)
+//        calendarDay.imageResource=R.drawable.sample_icon_2
+//        events.add(calendarDay)
+//        inf.calendarView.setCalendarDays(events)
+
+
+//        try {
             dashboardAP = DashboardActivityPresenter(requireContext(), this)
-            dashboardAP.getTaskList()
-        } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
-        }
+            dashboardAP.getTasksFromMonthYear(month, year)
+            dashboardAP.getPaymentsFromMonthYear(month, year)
+        inf.calendarView.setCalendarDays(events)
+//        } catch (e: Exception) {
+//            Log.e(TAG, e.message.toString())
+//        }
+//
+        inf.calendarView.setOnPreviousPageChangeListener(object : OnCalendarPageChangeListener {
+            override fun onChange() {
+                month -= 1
+                dashboardAP.getTasksFromMonthYear(month, year)
+                dashboardAP.getPaymentsFromMonthYear(month, year)
+            }
+        })
+
+        inf.calendarView.setOnForwardPageChangeListener(object : OnCalendarPageChangeListener {
+            override fun onChange() {
+                month += 1
+                dashboardAP.getTasksFromMonthYear(month, year)
+                dashboardAP.getPaymentsFromMonthYear(month, year)
+            }
+        })
+
         return inf.root
     }
 
@@ -85,46 +118,51 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskJournalInte
                 startActivity(exportpdf)
                 true
             }
+
             else -> {
                 super.onOptionsItemSelected(item)
             }
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onTaskJournal(list: ArrayList<TaskJournal>) {
-        //emptyrecyclerview.visibility = View.GONE
-        val rvAdapter = Rv_TaskDatesAdapter(list)
-        rvAdapter.notifyDataSetChanged()
-        recyclerViewActivity.adapter = rvAdapter
-    }
+    override fun onTaskCalendar(list: List<Date>?) {
+        if (list != null) {
+            for (date in list) {
+                val calendar = Calendar.getInstance()
+                calendar.time = date
+                calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
+                calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
+                //calendar.add(Calendar.DAY_OF_MONTH, 7)
 
-    override fun onTaskJournalError(errcode: String) {
-        //Consider adding a try catch in case there is no data coming from Firebase
-        inf.journalparentrv.visibility = View.GONE
-        inf.withnodataj.root.visibility = ConstraintLayout.VISIBLE
-        inf.withnodataj.emptyCard.onboardingmessage.text = getString(R.string.emptystate_notasksmsg)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if ((requestCode == REQUEST_CODE_TASK) && resultCode == Activity.RESULT_OK) {
-            try {
-                dashboardAP = DashboardActivityPresenter(requireContext(), this)
-            } catch (e: Exception) {
-                println(e.message)
+                val calendarDay = CalendarDay(calendar)
+                calendarDay.imageResource = R.drawable.icons8_task_completed_24
+                events.add(calendarDay)
             }
+            //inf.calendarView.setCalendarDays(events)
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onResume() {
-        super.onResume()
-        try {
-            dashboardAP = DashboardActivityPresenter(requireContext(), this)
-        } catch (e: Exception) {
-            println(e.message)
+    override fun onTaskCalendarError(errcode: String) {
+    }
+
+    override fun onPaymentCalendar(list: List<Date>?) {
+        if (list != null) {
+            for (date in list) {
+                val calendar = Calendar.getInstance()
+                calendar.time = date
+                calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
+                calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
+                //calendar.add(Calendar.DAY_OF_MONTH, 7)
+
+                val calendarDay = CalendarDay(calendar)
+                calendarDay.imageResource = R.drawable.icons8_invoice_paid_32
+                events.add(calendarDay)
+            }
+            //inf.calendarView.setCalendarDays(events)
         }
+    }
+
+    override fun onPaymentCalendarError(errcode: String) {
     }
 
     companion object {

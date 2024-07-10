@@ -406,4 +406,15 @@
         <item name="elevation">0dp</item>
         <item name="android:textAppearance">@style/Body_Small</item>
     </style>
+
+    <style name="BG_Calendar">
+        <item name="headerColor">@color/SecondaryContainer</item>
+        <item name="headerLabelColor">@color/OnSecondaryContainer</item>
+        <item name="pagesColor">@color/Surface</item>
+        <item name="highlightedDaysLabelsColor">@color/PrimaryContainer</item>
+        <item name="daysLabelsColor">@color/OnSecondaryContainer</item>
+        <item name="todayLabelColor">@color/PrimaryContainer</item>
+        <item name="abbreviationsBarColor">@color/SurfaceDimTransparent</item>
+        <item name="abbreviationsLabelsColor">@color/OnSurface</item>
+    </style>
 </resources>

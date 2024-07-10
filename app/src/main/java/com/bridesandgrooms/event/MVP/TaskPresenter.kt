@@ -57,14 +57,14 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
         if (arrayList.size == 0) {
             when (activefragment) {
                 "DE" -> fragmentDE.onTaskListError(ERRCODETASKS)
-                "DA" -> fragmentDA.onTaskListError(ERRCODETASKS)
+                //"DA" -> fragmentDA.onTaskListError(ERRCODETASKS)
                 "TPT" -> fragmentTPT.onTaskListError(ERRCODETASKS)
                 "EPDF" -> fragmentEPDF.onTaskListError(ERRCODETASKS)
             }
         } else {
             when (activefragment) {
                 "DE" -> fragmentDE.onTaskList(arrayList)
-                "DA" -> fragmentDA.onTaskList(arrayList)
+                //"DA" -> fragmentDA.onTaskList(arrayList)
                 "TPT" -> fragmentTPT.onTaskList(arrayList)
                 "EPDF" -> fragmentEPDF.onTaskList(arrayList)
             }
@@ -86,7 +86,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
 
                         when (activefragment) {
                             "DE" -> fragmentDE.onTaskList(arrayList)
-                            "DA" -> fragmentDA.onTaskList(arrayList)
+                            //"DA" -> fragmentDA.onTaskList(arrayList)
                             "TPT" -> fragmentTPT.onTaskList(arrayList)
                             "EPDF" -> fragmentEPDF.onTaskList(arrayList)
                         }
@@ -94,7 +94,7 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
                         // This is when there is no data coming from Firebase
                         when (activefragment) {
                             "DE" -> fragmentDE.onTaskListError(ERRCODETASKS)
-                            "DA" -> fragmentDA.onTaskListError(ERRCODETASKS)
+                            //"DA" -> fragmentDA.onTaskListError(ERRCODETASKS)
                             "TPT" -> fragmentTPT.onTaskListError(ERRCODETASKS)
                             "EPDF" -> fragmentEPDF.onTaskListError(ERRCODETASKS)
                         }

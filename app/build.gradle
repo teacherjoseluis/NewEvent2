@@ -182,7 +182,7 @@ dependencies {
     implementation 'com.github.BlacKCaT27:CurrencyEditText:2.0.2'
     //coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     //implementation 'com.github.kizitonwose:CalendarView:1.0.0'
-    implementation 'com.applandeo:material-calendar-view:1.9.0-rc06'
+    implementation 'com.applandeo:material-calendar-view:1.9.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation platform('com.google.firebase:firebase-bom:30.4.1')
     implementation 'com.google.firebase:firebase-auth-ktx'

@@ -3,72 +3,59 @@ package com.bridesandgrooms.event.MVP
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import com.applandeo.materialcalendarview.CalendarDay
 import com.bridesandgrooms.event.DashboardActivity
 import com.bridesandgrooms.event.Functions.converttoDate
 import com.bridesandgrooms.event.MVP.TaskPresenter.Companion.ERRCODETASKS
+import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.Task
+import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.Model.TaskJournal
+import java.util.Calendar
+import java.util.Date
 
 class DashboardActivityPresenter(
     val context: Context,
     val fragment: DashboardActivity
-) :
-    TaskPresenter.TaskList {
+) {
 
-    private var presentertask: TaskPresenter = TaskPresenter(context, this)
-    private val mHandler = Handler(Looper.getMainLooper())
-
-    fun getTaskList() {
-        Thread {
-            presentertask.getTasksList()
-        }.start()
-    }
-
-    override fun onTaskList(list: ArrayList<Task>) {
-        mHandler.post {
-            //Converting a Task list into a TaskJournal list
-            // Unique Dates Array
-            val taskdatelist: ArrayList<String> = ArrayList()
-            for (task in list) {
-                if (!taskdatelist.contains(task.date)) {
-                    taskdatelist.add(task.date)
-                }
-            }
-            // Araylist of Tasks when the Date is the Key
-            val taskjournal: ArrayList<TaskJournal> = ArrayList()
-            val taskjournallist: ArrayList<Task> = ArrayList()
-            for (taskdates in taskdatelist) {
-                taskjournallist.clear()
-                for (task in list) {
-                    if (task.date == taskdates) {
-                        taskjournallist.add(task)
-                    }
-                }
-                val newtasklist: ArrayList<Task> = ArrayList(taskjournallist.size)
-                for (tasklist in taskjournallist) newtasklist.add(tasklist)
-                taskjournal.add(TaskJournal(converttoDate(taskdates), newtasklist))
-            }
-            // This is supposed to sort TaskJournal based on the date
-            taskjournal.sortWith(Comparator { o1, o2 ->
-                if (o1.date == null || o2.date == null) 0 else o1.date
-                    .compareTo(o2.date)
-            })
-            fragment.onTaskJournal(taskjournal)
+    fun getTasksFromMonthYear(month: Int, year: Int) {
+        val taskDBHelper = TaskDBHelper(context)
+        try {
+            val taskCalendarList = taskDBHelper.getTasksFromMonthYear(month, year)
+            fragment.onTaskCalendar(taskCalendarList)
+        } catch (e: Exception) {
+            Log.e("DashboardActivityPresenter", e.message.toString())
+            fragment.onTaskCalendarError(ERRCODETASKS)
         }
     }
 
-    override fun onTaskListError(errcode: String) {
-        mHandler.post {
-            fragment.onTaskJournalError(ERRCODETASKS)
+    fun getPaymentsFromMonthYear(month: Int, year: Int) {
+        val paymentDBHelper = PaymentDBHelper(context)
+        try {
+            val paymentCalendarList = paymentDBHelper.getPaymentsFromMonthYear(month, year)
+            fragment.onPaymentCalendar(paymentCalendarList)
+        } catch (e: Exception) {
+            Log.e("DashboardActivityPresenter", e.message.toString())
+            fragment.onPaymentCalendarError(ERRCODETASKS)
         }
     }
 
-    interface TaskJournalInterface {
-        fun onTaskJournal(
-            list: ArrayList<TaskJournal>
+    interface TaskCalendarInterface {
+        fun onTaskCalendar(
+            list: List<Date>?
         )
 
-        fun onTaskJournalError(errcode: String)
+        fun onTaskCalendarError(errcode: String)
+    }
+
+    interface PaymentCalendarInterface {
+        fun onPaymentCalendar(
+            list: List<Date>?
+        )
+
+        fun onPaymentCalendarError(errcode: String)
     }
 }
 
