@@ -31,6 +31,17 @@ class DashboardActivityPresenter(
         }
     }
 
+    fun getTaskFromDate(date: Date) {
+        val taskDBHelper = TaskDBHelper(context)
+        try {
+            val taskCalendarList = taskDBHelper.getTaskfromDate(date)
+            fragment.onTaskCalendar(taskCalendarList)
+        } catch (e: Exception) {
+            Log.e("DashboardActivityPresenter", e.message.toString())
+            fragment.onTaskCalendarError(ERRCODETASKS)
+        }
+    }
+
     fun getPaymentsFromMonthYear(month: Int, year: Int) {
         val paymentDBHelper = PaymentDBHelper(context)
         try {
@@ -42,9 +53,23 @@ class DashboardActivityPresenter(
         }
     }
 
+    fun getPaymentFromDate(date: Date) {
+        val paymentDBHelper = PaymentDBHelper(context)
+        try {
+            val paymentCalendarList = paymentDBHelper.getPaymentfromDate(date)
+            fragment.onPaymentCalendar(paymentCalendarList)
+        } catch (e: Exception) {
+            Log.e("DashboardActivityPresenter", e.message.toString())
+            fragment.onPaymentCalendarError(ERRCODETASKS)
+        }
+    }
+
     interface TaskCalendarInterface {
         fun onTaskCalendar(
             list: List<Date>?
+        )
+        fun onTaskCalendar(
+            list: ArrayList<String>?
         )
 
         fun onTaskCalendarError(errcode: String)
@@ -53,6 +78,9 @@ class DashboardActivityPresenter(
     interface PaymentCalendarInterface {
         fun onPaymentCalendar(
             list: List<Date>?
+        )
+        fun onPaymentCalendar(
+            list: ArrayList<String>?
         )
 
         fun onPaymentCalendarError(errcode: String)

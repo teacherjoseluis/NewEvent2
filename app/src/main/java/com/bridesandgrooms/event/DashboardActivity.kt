@@ -10,18 +10,20 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.applandeo.materialcalendarview.CalendarDay
+import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
 import com.bridesandgrooms.event.MVP.DashboardActivityPresenter
 import com.bridesandgrooms.event.UI.Activities.ExportPDF
-import com.bridesandgrooms.event.UI.Components.DrawableUtils
 import com.bridesandgrooms.event.databinding.DashboardactivityBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+
 
 class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInterface,
     DashboardActivityPresenter.PaymentCalendarInterface {
@@ -77,15 +79,15 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 //        inf.calendarView.setCalendarDays(events)
 
 
-//        try {
+        try {
             dashboardAP = DashboardActivityPresenter(requireContext(), this)
             dashboardAP.getTasksFromMonthYear(month, year)
             dashboardAP.getPaymentsFromMonthYear(month, year)
-        inf.calendarView.setCalendarDays(events)
-//        } catch (e: Exception) {
-//            Log.e(TAG, e.message.toString())
-//        }
-//
+            inf.calendarView.setCalendarDays(events)
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+        }
+
         inf.calendarView.setOnPreviousPageChangeListener(object : OnCalendarPageChangeListener {
             override fun onChange() {
                 month -= 1
@@ -99,6 +101,16 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
                 month += 1
                 dashboardAP.getTasksFromMonthYear(month, year)
                 dashboardAP.getPaymentsFromMonthYear(month, year)
+            }
+        })
+
+        inf.calendarView.setOnCalendarDayClickListener(object : OnCalendarDayClickListener {
+            override fun onClick(calendarDay: CalendarDay) {
+                inf.taskItemCalendar.root.visibility = View.GONE
+                inf.paymentItemCalendar.root.visibility = View.GONE
+
+                dashboardAP.getTaskFromDate(calendarDay.calendar.time)
+                dashboardAP.getPaymentFromDate(calendarDay.calendar.time)
             }
         })
 
@@ -127,18 +139,37 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 
     override fun onTaskCalendar(list: List<Date>?) {
         if (list != null) {
-            for (date in list) {
-                val calendar = Calendar.getInstance()
-                calendar.time = date
-                calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
-                calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
-                //calendar.add(Calendar.DAY_OF_MONTH, 7)
+            if (list.isNotEmpty()) {
+                for (date in list) {
+                    val calendar = Calendar.getInstance()
+                    calendar.time = date
+                    calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
+                    calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
 
-                val calendarDay = CalendarDay(calendar)
-                calendarDay.imageResource = R.drawable.icons8_task_completed_24
-                events.add(calendarDay)
+                    val calendarDay = CalendarDay(calendar)
+                    calendarDay.imageResource = R.drawable.icons8_task_completed_24
+                    events.add(calendarDay)
+                }
             }
-            //inf.calendarView.setCalendarDays(events)
+        }
+    }
+
+    override fun onTaskCalendar(list: ArrayList<String>?) {
+        if (list != null) {
+            if (list.isNotEmpty()) {
+                inf.taskItemCalendar.root.visibility = View.VISIBLE
+                val numberOfTasks = minOf(list.size, 3)
+                for (i in 1..numberOfTasks) {
+                    val taskName = "taskname$i"
+                    val taskViewField =
+                        inf.taskItemCalendar::class.java.getDeclaredField(taskName).apply {
+                            isAccessible = true
+                        }
+                    val taskView = taskViewField.get(inf.taskItemCalendar) as TextView
+                    taskView.visibility = View.VISIBLE
+                    taskView.text = list[i - 1]
+                }
+            }
         }
     }
 
@@ -147,18 +178,37 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 
     override fun onPaymentCalendar(list: List<Date>?) {
         if (list != null) {
-            for (date in list) {
-                val calendar = Calendar.getInstance()
-                calendar.time = date
-                calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
-                calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
-                //calendar.add(Calendar.DAY_OF_MONTH, 7)
+            if (list.isNotEmpty()) {
+                for (date in list) {
+                    val calendar = Calendar.getInstance()
+                    calendar.time = date
+                    calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
+                    calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
 
-                val calendarDay = CalendarDay(calendar)
-                calendarDay.imageResource = R.drawable.icons8_invoice_paid_32
-                events.add(calendarDay)
+                    val calendarDay = CalendarDay(calendar)
+                    calendarDay.imageResource = R.drawable.icons8_invoice_paid_32
+                    events.add(calendarDay)
+                }
             }
-            //inf.calendarView.setCalendarDays(events)
+        }
+    }
+
+    override fun onPaymentCalendar(list: ArrayList<String>?) {
+        if (list != null) {
+            if (list.isNotEmpty()) {
+                inf.paymentItemCalendar.root.visibility = View.VISIBLE
+                val numberOfPayments = minOf(list.size, 3)
+                for (i in 1..numberOfPayments) {
+                    val paymentName = "taskname$i"
+                    val paymentViewField =
+                        inf.paymentItemCalendar::class.java.getDeclaredField(paymentName).apply {
+                            isAccessible = true
+                        }
+                    val paymentView = paymentViewField.get(inf.paymentItemCalendar) as TextView
+                    paymentView.visibility = View.VISIBLE
+                    paymentView.text = list[i - 1]
+                }
+            }
         }
     }
 

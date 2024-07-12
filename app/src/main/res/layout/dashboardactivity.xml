@@ -35,10 +35,12 @@
 
             <include
                 android:id="@+id/task_item_calendar"
+                android:visibility="gone"
                 layout="@layout/task_calendar_item_layout"/>
 
             <include
                 android:id="@+id/payment_item_calendar"
+                android:visibility="gone"
                 layout="@layout/task_calendar_item_layout"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
