@@ -106,7 +106,7 @@
     <string name="remove_guest">Remove Guest</string>
     <string name="brides_amp_grooms"><![CDATA[Brides & Grooms]]></string>
     <string name="user_name">User Name</string>
-    <string name="date">Date</string>
+    <string name="date">Date </string>
     <string name="signupbutton">Sign Up Button</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
@@ -371,6 +371,9 @@
     <string name="emptystate_nosearchvendors">There are no providers nearby</string>
     <string name="editvendor_title">Edit Vendor</string>
     <string name="searchvendor_addedmsg">You have added %1$s to your list of vendors</string>
+    <string name="date_text">Date: %1$s</string>
+    <string name="budget_text">Budget: %1$s</string>
+    <string name="status_text">Status: %1$s</string>
 
     <string-array name="role" >
         <item>Bride</item>

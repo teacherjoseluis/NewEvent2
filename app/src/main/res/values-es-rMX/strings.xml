@@ -361,6 +361,9 @@
     <string name="emptystate_nosearchvendors">No hay proveedores cercanos</string>
     <string name="editvendor_title">Editar Proveedor</string>
     <string name="searchvendor_addedmsg">Haz agregado a %1$s a tu lista de proveedores</string>
+    <string name="date_text">Fecha: %1$s</string>
+    <string name="budget_text">Presupuesto: %1$s</string>
+    <string name="status_text">Estatus: %1$s</string>
 
     <string-array name="role" >
         <item>Novia</item>

@@ -190,6 +190,52 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         }
     }
 
+    @SuppressLint("Range")
+    fun getDateTaskArray(date: Date): ArrayList<Task>? {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val dateString = convertToDBString(date)
+        val list = ArrayList<Task>()
+        try {
+            val cursor: Cursor = db.rawQuery(
+                "SELECT * FROM TASK WHERE taskid IS NOT NULL AND taskid !='' AND date='$dateString' AND status = 'A' ORDER BY createdatetime DESC",
+                null
+            )
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    val taskid = cursor.getString(cursor.getColumnIndex("taskid"))
+                    val name = cursor.getString(cursor.getColumnIndex("name"))
+                    val date = cursor.getString(cursor.getColumnIndex("date"))
+                    val category = cursor.getString(cursor.getColumnIndex("category"))
+                    val budget = cursor.getString(cursor.getColumnIndex("budget"))
+                    val status = cursor.getString(cursor.getColumnIndex("status"))
+                    val eventid = cursor.getString(cursor.getColumnIndex("eventid"))
+                    val createdatetime =
+                        cursor.getString(cursor.getColumnIndex("createdatetime"))
+                    val task =
+                        Task(
+                            taskid,
+                            name,
+                            date,
+                            category,
+                            budget,
+                            status,
+                            eventid,
+                            createdatetime
+                        )
+                    list.add(task)
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+            return list
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        } finally {
+            db.close()
+        }
+    }
+
     fun getTasksFromMonthYear(month: Int, year: Int): List<Date>? {
         val db: SQLiteDatabase = DatabaseHelper(context).readableDatabase
         val calendarDayList = mutableListOf<Date>()

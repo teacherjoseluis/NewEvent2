@@ -227,6 +227,51 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
         }
     }
 
+    fun getDatePaymentArray(date: Date) : ArrayList<Payment>? {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val dateString = convertToDBString(date)
+        val list = arrayListOf<Payment>()
+        try {
+            val cursor: Cursor = db.rawQuery(
+                "SELECT name FROM PAYMENT WHERE paymentid IS NOT NULL AND paymentid !='' AND date='$dateString' ORDER BY createdatetime DESC",
+                null
+            )
+            if (cursor.count > 0) {
+                cursor.moveToFirst()
+                do {
+                    val paymentid = cursor.getString(cursor.getColumnIndexOrThrow("paymentid"))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                    val date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+                    val category = cursor.getString(cursor.getColumnIndexOrThrow("category"))
+                    val amount = cursor.getString(cursor.getColumnIndexOrThrow("amount"))
+                    val eventid = cursor.getString(cursor.getColumnIndexOrThrow("eventid"))
+                    val createdatetime =
+                        cursor.getString(cursor.getColumnIndexOrThrow("createdatetime"))
+                    val vendorid = cursor.getString(cursor.getColumnIndexOrThrow("vendorid"))
+                    val payment =
+                        Payment(
+                            paymentid,
+                            name,
+                            date,
+                            category,
+                            amount,
+                            eventid,
+                            createdatetime,
+                            vendorid
+                        )
+                    list.add(payment)
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+            return list
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        } finally {
+            db.close()
+        }
+    }
+
     fun getPaymentsFromMonthYear(month: Int, year: Int): List<Date>? {
         val db: SQLiteDatabase = DatabaseHelper(context).readableDatabase
         val calendarDayList = mutableListOf<Date>()

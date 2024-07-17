@@ -21,6 +21,7 @@ import com.bridesandgrooms.event.Functions.getUserSession
 import com.bridesandgrooms.event.Functions.isEventDate
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.UI.Fragments.ContactsAll
+import com.bridesandgrooms.event.UI.Fragments.DashboardActivity
 import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll
 import com.bridesandgrooms.event.UI.Fragments.MyNotes

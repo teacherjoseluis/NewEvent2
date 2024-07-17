@@ -1,5 +1,4 @@
-package com.bridesandgrooms.event
-
+package com.bridesandgrooms.event.UI.Fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,13 +16,13 @@ import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
 import com.bridesandgrooms.event.MVP.DashboardActivityPresenter
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Activities.ExportPDF
 import com.bridesandgrooms.event.databinding.DashboardactivityBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-
 
 class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInterface,
     DashboardActivityPresenter.PaymentCalendarInterface {
@@ -34,6 +33,8 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 
     private lateinit var dateFormat: SimpleDateFormat
     private var events = mutableListOf<CalendarDay>()
+
+    private lateinit var taskDate: Date
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,31 +54,6 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
         val year = currentDateTime.get(Calendar.YEAR)
 
         inf.calendarView.setDate(currentDateTime)
-
-//        recyclerViewActivity = inf.journalparentrv
-//        recyclerViewActivity.apply {
-//            layoutManager = LinearLayoutManager(inf.root.context).apply {
-//                stackFromEnd = true
-//                reverseLayout = true
-//                isNestedScrollingEnabled = false
-//            }
-//        }
-//        inf.NewTaskActionButton.setOnClickListener {
-//            val newtask = Intent(activity, TaskCreateEdit::class.java)
-//            newtask.putExtra("userid", "")
-////            newtask.putExtra("eventid", userSession.eventid)
-//            startActivityForResult(newtask, REQUEST_CODE_TASK)
-//        }
-
-//        val events: MutableList<CalendarDay> = ArrayList()
-//
-//        val calendar = Calendar.getInstance()
-//        calendar.add(Calendar.DAY_OF_MONTH, 13)
-//        val calendarDay = CalendarDay(calendar)
-//        calendarDay.imageResource=R.drawable.sample_icon_2
-//        events.add(calendarDay)
-//        inf.calendarView.setCalendarDays(events)
-
 
         try {
             dashboardAP = DashboardActivityPresenter(requireContext(), this)
@@ -106,6 +82,8 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 
         inf.calendarView.setOnCalendarDayClickListener(object : OnCalendarDayClickListener {
             override fun onClick(calendarDay: CalendarDay) {
+                taskDate = calendarDay.calendar.time
+
                 inf.taskItemCalendar.root.visibility = View.GONE
                 inf.paymentItemCalendar.root.visibility = View.GONE
 
@@ -113,6 +91,16 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
                 dashboardAP.getPaymentFromDate(calendarDay.calendar.time)
             }
         })
+
+        inf.taskItemCalendar.root.setOnClickListener {
+            val fragment = TasksAllCalendar()
+            val bundle = Bundle()
+            bundle.putLong("taskDate", taskDate.time)  // Store Date as milliseconds
+            fragment.arguments = bundle
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }
 
         return inf.root
     }
@@ -130,7 +118,6 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
                 startActivity(exportpdf)
                 true
             }
-
             else -> {
                 super.onOptionsItemSelected(item)
             }
@@ -154,7 +141,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
         }
     }
 
-    override fun onTaskCalendar(list: ArrayList<String>?) {
+    override fun onTaskCalendar(list: ArrayList<String>?, date: Date) {
         if (list != null) {
             if (list.isNotEmpty()) {
                 inf.taskItemCalendar.root.visibility = View.VISIBLE
@@ -193,7 +180,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
         }
     }
 
-    override fun onPaymentCalendar(list: ArrayList<String>?) {
+    override fun onPaymentCalendar(list: ArrayList<String>?, date: Date) {
         if (list != null) {
             if (list.isNotEmpty()) {
                 inf.paymentItemCalendar.root.visibility = View.VISIBLE

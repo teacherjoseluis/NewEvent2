@@ -1,18 +1,11 @@
 package com.bridesandgrooms.event.MVP
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import com.applandeo.materialcalendarview.CalendarDay
-import com.bridesandgrooms.event.DashboardActivity
-import com.bridesandgrooms.event.Functions.converttoDate
+import com.bridesandgrooms.event.UI.Fragments.DashboardActivity
 import com.bridesandgrooms.event.MVP.TaskPresenter.Companion.ERRCODETASKS
 import com.bridesandgrooms.event.Model.PaymentDBHelper
-import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.TaskDBHelper
-import com.bridesandgrooms.event.Model.TaskJournal
-import java.util.Calendar
 import java.util.Date
 
 class DashboardActivityPresenter(
@@ -35,7 +28,7 @@ class DashboardActivityPresenter(
         val taskDBHelper = TaskDBHelper(context)
         try {
             val taskCalendarList = taskDBHelper.getTaskfromDate(date)
-            fragment.onTaskCalendar(taskCalendarList)
+            fragment.onTaskCalendar(taskCalendarList, date)
         } catch (e: Exception) {
             Log.e("DashboardActivityPresenter", e.message.toString())
             fragment.onTaskCalendarError(ERRCODETASKS)
@@ -57,7 +50,7 @@ class DashboardActivityPresenter(
         val paymentDBHelper = PaymentDBHelper(context)
         try {
             val paymentCalendarList = paymentDBHelper.getPaymentfromDate(date)
-            fragment.onPaymentCalendar(paymentCalendarList)
+            fragment.onPaymentCalendar(paymentCalendarList, date)
         } catch (e: Exception) {
             Log.e("DashboardActivityPresenter", e.message.toString())
             fragment.onPaymentCalendarError(ERRCODETASKS)
@@ -69,7 +62,8 @@ class DashboardActivityPresenter(
             list: List<Date>?
         )
         fun onTaskCalendar(
-            list: ArrayList<String>?
+            list: ArrayList<String>?,
+            date: Date
         )
 
         fun onTaskCalendarError(errcode: String)
@@ -80,7 +74,8 @@ class DashboardActivityPresenter(
             list: List<Date>?
         )
         fun onPaymentCalendar(
-            list: ArrayList<String>?
+            list: ArrayList<String>?,
+            date: Date
         )
 
         fun onPaymentCalendarError(errcode: String)
