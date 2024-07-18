@@ -34,7 +34,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
     private lateinit var dateFormat: SimpleDateFormat
     private var events = mutableListOf<CalendarDay>()
 
-    private lateinit var taskDate: Date
+    private lateinit var taskpaymentDate: Date
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +82,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 
         inf.calendarView.setOnCalendarDayClickListener(object : OnCalendarDayClickListener {
             override fun onClick(calendarDay: CalendarDay) {
-                taskDate = calendarDay.calendar.time
+                taskpaymentDate = calendarDay.calendar.time
 
                 inf.taskItemCalendar.root.visibility = View.GONE
                 inf.paymentItemCalendar.root.visibility = View.GONE
@@ -95,7 +95,17 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
         inf.taskItemCalendar.root.setOnClickListener {
             val fragment = TasksAllCalendar()
             val bundle = Bundle()
-            bundle.putLong("taskDate", taskDate.time)  // Store Date as milliseconds
+            bundle.putLong("taskDate", taskpaymentDate.time)  // Store Date as milliseconds
+            fragment.arguments = bundle
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }
+
+        inf.paymentItemCalendar.root.setOnClickListener {
+            val fragment = PaymentsAllCalendar()
+            val bundle = Bundle()
+            bundle.putLong("paymentDate", taskpaymentDate.time)  // Store Date as milliseconds
             fragment.arguments = bundle
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)

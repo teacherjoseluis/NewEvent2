@@ -20,12 +20,12 @@ import com.google.android.material.appbar.MaterialToolbar
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TasksAllCalendar : Fragment(),
-    TasksPaymentAllCalendarPresenter.TaskArrayInterface {
+class PaymentsAllCalendar : Fragment(),
+    TasksPaymentAllCalendarPresenter.PaymentArrayInterface {
 
     private lateinit var recyclerViewAllTasksCalendar: RecyclerView
-    private lateinit var presentertask: TasksPaymentAllCalendarPresenter
-    private lateinit var rvAdapter: TaskCalendarAdapter
+    private lateinit var presenterpayment: TasksPaymentAllCalendarPresenter
+    private lateinit var rvAdapter: PaymentCalendarAdapter
     private lateinit var inf: TasksAllCalendarBinding
     private lateinit var toolbar: MaterialToolbar
 
@@ -55,13 +55,13 @@ class TasksAllCalendar : Fragment(),
         }
 
         val arguments = arguments
-        if (arguments != null && arguments.containsKey("taskDate")) {
-            val taskDateMillis = arguments.getLong("taskDate")
-            val taskDate = Date(taskDateMillis)
+        if (arguments != null && arguments.containsKey("paymentDate")) {
+            val paymentDateMillis = arguments.getLong("paymentDate")
+            val paymentDate = Date(paymentDateMillis)
 
             try {
-                presentertask = TasksPaymentAllCalendarPresenter(mContext!!, this, null)
-                presentertask.getDateTaskArray(taskDate)
+                presenterpayment = TasksPaymentAllCalendarPresenter(mContext!!, null, this)
+                presenterpayment.getDatePaymentArray(paymentDate)
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
             }
@@ -70,15 +70,15 @@ class TasksAllCalendar : Fragment(),
     }
 
     companion object {
-        const val SCREEN_NAME = "Tasks All Calendar"
-        const val TAG = "TasksAllCalendar"
+        const val SCREEN_NAME = "Payments All Calendar"
+        const val TAG = "PaymentsAllCalendar"
     }
 
-    override fun onTaskArray(list: ArrayList<Task>?) {
+    override fun onPaymentArray(list: ArrayList<Payment>?) {
         if (list != null) {
             if (list.size != 0) {
                 try {
-                    rvAdapter = TaskCalendarAdapter(list, mContext!!)
+                    rvAdapter = PaymentCalendarAdapter(list, mContext!!)
                     rvAdapter.notifyDataSetChanged()
                 } catch (e: java.lang.Exception) {
                     Log.e(TAG, e.message.toString())
@@ -90,7 +90,7 @@ class TasksAllCalendar : Fragment(),
         }
     }
 
-    override fun onTaskArrayError(errcode: String) {
+    override fun onPaymentArrayError(errcode: String) {
         TODO("Not yet implemented")
     }
 }

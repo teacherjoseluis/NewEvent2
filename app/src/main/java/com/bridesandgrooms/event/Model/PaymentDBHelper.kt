@@ -227,13 +227,14 @@ class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePaymen
         }
     }
 
+    @SuppressLint("Range")
     fun getDatePaymentArray(date: Date) : ArrayList<Payment>? {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val dateString = convertToDBString(date)
         val list = arrayListOf<Payment>()
         try {
             val cursor: Cursor = db.rawQuery(
-                "SELECT name FROM PAYMENT WHERE paymentid IS NOT NULL AND paymentid !='' AND date='$dateString' ORDER BY createdatetime DESC",
+                "SELECT * FROM PAYMENT WHERE paymentid IS NOT NULL AND paymentid !='' AND date='$dateString' ORDER BY createdatetime DESC",
                 null
             )
             if (cursor.count > 0) {
