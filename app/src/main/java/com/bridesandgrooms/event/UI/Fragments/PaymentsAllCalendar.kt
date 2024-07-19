@@ -11,10 +11,8 @@ import android.util.Log
 import android.widget.TextView
 import com.bridesandgrooms.event.MVP.TasksPaymentAllCalendarPresenter
 import com.bridesandgrooms.event.Model.Payment
-import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.PaymentCalendarAdapter
-import com.bridesandgrooms.event.UI.Adapters.TaskCalendarAdapter
 import com.bridesandgrooms.event.databinding.TasksAllCalendarBinding
 import com.google.android.material.appbar.MaterialToolbar
 import java.util.*
@@ -42,7 +40,7 @@ class PaymentsAllCalendar : Fragment(),
     ): View {
 
         toolbar = requireActivity().findViewById(R.id.toolbar)
-        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.guests)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.payments)
 
         inf = DataBindingUtil.inflate(inflater, R.layout.tasks_all_calendar, container, false)
 

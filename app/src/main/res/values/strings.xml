@@ -85,6 +85,7 @@
     <string name="eventimage">Event Image</string>
     <string name="editeventImage">Edit Event Image</string>
     <string name="calendaricon">Calendar Icon</string>
+    <string name="your_calendar">Your Calendar</string>
     <string name="clockicon">Clock Icon</string>
     <string name="placemarkericon">Place Marker Icon</string>
     <string name="save">Save</string>
@@ -373,6 +374,7 @@
     <string name="searchvendor_addedmsg">You have added %1$s to your list of vendors</string>
     <string name="date_text">Date: %1$s</string>
     <string name="budget_text">Budget: %1$s</string>
+    <string name="payment_text">Paid: %1$s</string>
     <string name="status_text">Status: %1$s</string>
 
     <string-array name="role" >

@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.Category.Companion.getCategory
 import com.bridesandgrooms.event.Model.Payment
-import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.R
 
 class PaymentCalendarAdapter(
@@ -55,7 +53,7 @@ class PaymentCalendarAdapter(
             paymentNameTextView.text = payment.name
             paymentCategoryTextView.text = payment.category
             paymentDateTextView.text = context.getString(R.string.date_text, payment.date ?: "")
-            paymentAmountTextView.text = context.getString(R.string.budget_text, payment.amount ?: "")
+            paymentAmountTextView.text = context.getString(R.string.payment_text, payment.amount ?: "")
         }
     }
 }

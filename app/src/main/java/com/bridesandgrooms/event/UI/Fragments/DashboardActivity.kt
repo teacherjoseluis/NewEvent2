@@ -19,6 +19,7 @@ import com.bridesandgrooms.event.MVP.DashboardActivityPresenter
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Activities.ExportPDF
 import com.bridesandgrooms.event.databinding.DashboardactivityBinding
+import com.google.android.material.appbar.MaterialToolbar
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -30,11 +31,11 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
     private lateinit var dashboardAP: DashboardActivityPresenter
     private lateinit var inf: DashboardactivityBinding
     private lateinit var activitymenu: Menu
-
     private lateinit var dateFormat: SimpleDateFormat
-    private var events = mutableListOf<CalendarDay>()
-
     private lateinit var taskpaymentDate: Date
+    private lateinit var toolbar: MaterialToolbar
+
+    private var events = mutableListOf<CalendarDay>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +47,15 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        inf = DataBindingUtil.inflate(inflater, R.layout.dashboardactivity, container, false)
         val currentDateTime = Calendar.getInstance()
         var month =
             currentDateTime.get(Calendar.MONTH) // Calendar.MONTH returns zero-based month (0 for January)
         val year = currentDateTime.get(Calendar.YEAR)
 
+        toolbar = requireActivity().findViewById(R.id.toolbar)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.your_calendar)
+
+        inf = DataBindingUtil.inflate(inflater, R.layout.dashboardactivity, container, false)
         inf.calendarView.setDate(currentDateTime)
 
         try {
@@ -144,7 +147,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
                     calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
 
                     val calendarDay = CalendarDay(calendar)
-                    calendarDay.imageResource = R.drawable.icons8_task_completed_24
+                    calendarDay.imageResource = R.drawable.task
                     events.add(calendarDay)
                 }
             }
@@ -183,7 +186,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
                     calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
 
                     val calendarDay = CalendarDay(calendar)
-                    calendarDay.imageResource = R.drawable.icons8_invoice_paid_32
+                    calendarDay.imageResource = R.drawable.payments
                     events.add(calendarDay)
                 }
             }

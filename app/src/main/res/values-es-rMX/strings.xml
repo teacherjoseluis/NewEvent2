@@ -27,6 +27,7 @@
     <string name="budget">Presupuesto</string>
     <string name="floatingactionbuttonguest">Botón de Invitado</string>
     <string name="calendaricon">Ícono de calendario</string>
+    <string name="your_calendar">Tu Calendario</string>
     <string name="card_title">Título de la tarjeta</string>
     <string name="category">Categoría</string>
     <string name="categoryavatar">Avatar de categoría</string>
@@ -363,6 +364,7 @@
     <string name="searchvendor_addedmsg">Haz agregado a %1$s a tu lista de proveedores</string>
     <string name="date_text">Fecha: %1$s</string>
     <string name="budget_text">Presupuesto: %1$s</string>
+    <string name="payment_text">Pagado: %1$s</string>
     <string name="status_text">Estatus: %1$s</string>
 
     <string-array name="role" >

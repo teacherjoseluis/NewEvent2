@@ -26,8 +26,10 @@ import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll
 import com.bridesandgrooms.event.UI.Fragments.MyNotes
 import com.bridesandgrooms.event.UI.Fragments.NoteCreateEdit
+import com.bridesandgrooms.event.UI.Fragments.PaymentsAllCalendar
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragment
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorTab
+import com.bridesandgrooms.event.UI.Fragments.TasksAllCalendar
 import com.bridesandgrooms.event.UI.Fragments.VendorCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.VendorsAll
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -385,6 +387,20 @@ class ActivityContainer : AppCompatActivity() {
 
                 is NoteCreateEdit -> {
                     fragment = MyNotes()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
+                }
+
+                is TasksAllCalendar -> {
+                    fragment = DashboardActivity()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
+                }
+
+                is PaymentsAllCalendar -> {
+                    fragment = DashboardActivity()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .commit()
