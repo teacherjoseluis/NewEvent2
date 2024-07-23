@@ -90,6 +90,9 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
                 inf.taskItemCalendar.root.visibility = View.GONE
                 inf.paymentItemCalendar.root.visibility = View.GONE
 
+                inf.taskcardnodata.visibility = View.GONE
+                inf.paymentcardnodata.visibility = View.GONE
+
                 dashboardAP.getTaskFromDate(calendarDay.calendar.time)
                 dashboardAP.getPaymentFromDate(calendarDay.calendar.time)
             }
@@ -170,6 +173,9 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
                     taskView.text = list[i - 1]
                 }
             }
+            else {
+                inf.taskcardnodata.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -208,6 +214,9 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
                     paymentView.visibility = View.VISIBLE
                     paymentView.text = list[i - 1]
                 }
+            }
+            else {
+                inf.paymentcardnodata.visibility = View.VISIBLE
             }
         }
     }

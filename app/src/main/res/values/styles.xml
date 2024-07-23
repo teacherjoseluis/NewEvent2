@@ -341,7 +341,7 @@
         <item name="android:shadowRadius">4</item>
         <item name="android:textColor">@color/OnPrimaryContainer</item>
         <item name="backgroundColor">@color/PrimaryContainer</item>
-        <item name="android:textAppearance">@style/Body_Medium</item>
+        <item name="android:textAppearance">@style/Label_Small</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
@@ -360,6 +360,15 @@
         <item name="backgroundTint">@color/PrimaryContainer</item>
         <item name="fabSize">normal</item>
         <item name="maxImageSize">24dp</item>
+        <item name="srcCompat">@drawable/ic_icons8_plus_white</item>
+        <item name="tint">@color/OnPrimaryContainer</item>
+    </style>
+
+    <style name="BG_FAB_Medium">
+        <item name="android:clickable">true</item>
+        <item name="backgroundTint">@color/PrimaryContainer</item>
+        <item name="fabSize">mini</item>
+        <item name="maxImageSize">18dp</item>
         <item name="srcCompat">@drawable/ic_icons8_plus_white</item>
         <item name="tint">@color/OnPrimaryContainer</item>
     </style>
@@ -416,5 +425,12 @@
         <item name="todayLabelColor">@color/PrimaryContainer</item>
         <item name="abbreviationsBarColor">@color/SurfaceDimTransparent</item>
         <item name="abbreviationsLabelsColor">@color/OnSurface</item>
+    </style>
+    
+    <style name="BG_Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">10dp</item>
+        <item name="cardBackgroundColor">@color/SurfaceDim</item>
+        <item name="strokeColor">@color/OnSurfaceVar</item>
+        <item name="strokeWidth">0.5dp</item>
     </style>
 </resources>
