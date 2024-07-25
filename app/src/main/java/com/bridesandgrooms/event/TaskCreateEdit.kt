@@ -38,6 +38,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import java.text.SimpleDateFormat
 import java.util.*
 
 class TaskCreateEdit : AppCompatActivity() {
@@ -78,6 +79,16 @@ class TaskCreateEdit : AppCompatActivity() {
         } else {
             apptitle.text = getString(R.string.new_task)
             taskItem = Task()
+        }
+
+        if (extras?.containsKey("task_date") == true) {
+            val taskDate = intent.getSerializableExtra("task_date") as Date?
+            if ((taskDate != null)) {
+                val formatter = SimpleDateFormat("dd/MM/yyyy")
+
+                binding.taskdate.setText(formatter.format(taskDate))
+                binding.taskdate.isEnabled = false
+            }
         }
 
         for (category in list) {

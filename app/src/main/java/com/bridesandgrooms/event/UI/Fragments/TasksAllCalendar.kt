@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.content.Context
 import android.util.Log
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import com.bridesandgrooms.event.MVP.TasksPaymentAllCalendarPresenter
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.R
@@ -43,6 +46,14 @@ class TasksAllCalendar : Fragment(),
         toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.tasks)
 
         inf = DataBindingUtil.inflate(inflater, R.layout.tasks_all_calendar, container, false)
+
+        (activity as? AppCompatActivity)?.supportActionBar?.apply{
+            setHomeAsUpIndicator(R.drawable.icons8_left_24)
+            setDisplayHomeAsUpEnabled(true)
+        }
+        toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         recyclerViewAllTasksCalendar = inf.recyclerViewTasksCalendar
         recyclerViewAllTasksCalendar.apply {
@@ -90,5 +101,24 @@ class TasksAllCalendar : Fragment(),
 
     override fun onTaskArrayError(errcode: String) {
         TODO("Not yet implemented")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (activity as? AppCompatActivity)?.supportActionBar?.apply {
+            setHomeAsUpIndicator(null)
+            setDisplayHomeAsUpEnabled(false)
+        }
+
+        val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawerlayout)
+        val toggle = ActionBarDrawerToggle(
+            activity,
+            drawerLayout,
+            toolbar,
+            0,
+            0
+        )
+        drawerLayout?.addDrawerListener(toggle)
+        toggle.syncState()
     }
 }

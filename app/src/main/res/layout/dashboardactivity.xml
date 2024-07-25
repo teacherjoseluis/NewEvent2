@@ -39,12 +39,19 @@
                 android:visibility="gone"
                 layout="@layout/task_calendar_item_layout"/>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/taskcardnodata"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp">
+
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/taskcardnodata"
                     style="@style/BG_Card"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:layout_height="80dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -58,7 +65,7 @@
 
                         <TextView
                             android:id="@+id/tasknodataname1"
-                            style="@style/Label_Medium"
+                            style="@style/Body_Medium"
                             android:layout_width="300dp"
                             android:layout_height="wrap_content"
                             android:text="@string/emptystate_notaskstodaymsg"
@@ -80,18 +87,26 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <include
                 android:id="@+id/payment_item_calendar"
                 android:visibility="gone"
                 layout="@layout/task_calendar_item_layout"/>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/paymentcardnodata"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp">
+
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/paymentcardnodata"
                     style="@style/BG_Card"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:layout_height="80dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -105,7 +120,7 @@
 
                         <TextView
                             android:id="@+id/paymentnodataname1"
-                            style="@style/Label_Medium"
+                            style="@style/Body_Medium"
                             android:layout_width="300dp"
                             android:layout_height="wrap_content"
                             android:text="@string/emptystate_nopaymentstodaymsg"
@@ -127,6 +142,7 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

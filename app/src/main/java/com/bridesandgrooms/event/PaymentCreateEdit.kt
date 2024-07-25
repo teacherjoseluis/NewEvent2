@@ -34,6 +34,7 @@ import com.bridesandgrooms.event.Functions.addPayment
 import com.bridesandgrooms.event.Functions.editPayment
 import com.bridesandgrooms.event.Functions.validateOldDate
 import com.bridesandgrooms.event.databinding.PaymentEditdetailBinding
+import java.text.SimpleDateFormat
 
 class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors {
 
@@ -66,12 +67,22 @@ class PaymentCreateEdit : AppCompatActivity(), VendorPaymentPresenter.VAVendors 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val extras = intent.extras
-        if (extras!!.containsKey("payment")) {
+        if (extras?.containsKey("payment") == true) {
             apptitle.text = getString(R.string.edit_payment)
             paymentItem = intent.getParcelableExtra("payment")!!
         } else {
             apptitle.text = getString(R.string.new_payment)
             paymentItem = Payment()
+        }
+
+        if (extras?.containsKey("payment_date") == true) {
+            val paymentDate = intent.getSerializableExtra("payment_date") as Date?
+            if ((paymentDate != null)) {
+                val formatter = SimpleDateFormat("dd/MM/yyyy")
+
+                binding.paymentdate.setText(formatter.format(paymentDate))
+                binding.paymentdate.isEnabled = false
+            }
         }
 
         for (category in list) {

@@ -429,7 +429,7 @@
     
     <style name="BG_Card" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">10dp</item>
-        <item name="cardBackgroundColor">@color/SurfaceDim</item>
+        <item name="cardBackgroundColor">@color/SurfaceContainer</item>
         <item name="strokeColor">@color/OnSurfaceVar</item>
         <item name="strokeWidth">0.5dp</item>
     </style>

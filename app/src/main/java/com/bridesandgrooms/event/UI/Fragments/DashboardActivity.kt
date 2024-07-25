@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Fragments
 
+import Application.AnalyticsManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,8 +16,11 @@ import androidx.fragment.app.Fragment
 import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
+import com.bridesandgrooms.event.DashboardEvent.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.MVP.DashboardActivityPresenter
+import com.bridesandgrooms.event.PaymentCreateEdit
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.TaskCreateEdit
 import com.bridesandgrooms.event.UI.Activities.ExportPDF
 import com.bridesandgrooms.event.databinding.DashboardactivityBinding
 import com.google.android.material.appbar.MaterialToolbar
@@ -63,6 +67,9 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
             dashboardAP.getTasksFromMonthYear(month, year)
             dashboardAP.getPaymentsFromMonthYear(month, year)
             inf.calendarView.setCalendarDays(events)
+
+            taskpaymentDate = currentDateTime.time
+            getTasksPaymentsfromDate(taskpaymentDate)
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
@@ -86,15 +93,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
         inf.calendarView.setOnCalendarDayClickListener(object : OnCalendarDayClickListener {
             override fun onClick(calendarDay: CalendarDay) {
                 taskpaymentDate = calendarDay.calendar.time
-
-                inf.taskItemCalendar.root.visibility = View.GONE
-                inf.paymentItemCalendar.root.visibility = View.GONE
-
-                inf.taskcardnodata.visibility = View.GONE
-                inf.paymentcardnodata.visibility = View.GONE
-
-                dashboardAP.getTaskFromDate(calendarDay.calendar.time)
-                dashboardAP.getPaymentFromDate(calendarDay.calendar.time)
+                getTasksPaymentsfromDate(taskpaymentDate)
             }
         })
 
@@ -119,6 +118,17 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
         }
 
         return inf.root
+    }
+
+    fun getTasksPaymentsfromDate(date: Date){
+        inf.taskItemCalendar.root.visibility = View.GONE
+        inf.paymentItemCalendar.root.visibility = View.GONE
+
+        inf.taskcardnodata.visibility = View.GONE
+        inf.paymentcardnodata.visibility = View.GONE
+
+        dashboardAP.getTaskFromDate(date)
+        dashboardAP.getPaymentFromDate(date)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -175,6 +185,12 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
             }
             else {
                 inf.taskcardnodata.visibility = View.VISIBLE
+                inf.floatingNewTask.setOnClickListener {
+                    AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "New_Task")
+                    val newtask = Intent(activity, TaskCreateEdit::class.java)
+                    newtask.putExtra("task_date", date)
+                    startActivity(newtask)
+                }
             }
         }
     }
@@ -217,6 +233,12 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
             }
             else {
                 inf.paymentcardnodata.visibility = View.VISIBLE
+                inf.floatingNewPayment.setOnClickListener {
+                    AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "New_Payment")
+                    val newpayment = Intent(activity, PaymentCreateEdit::class.java)
+                    newpayment.putExtra("payment_date", date)
+                    startActivity(newpayment)
+                }
             }
         }
     }
