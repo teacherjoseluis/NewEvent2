@@ -18,6 +18,7 @@ class InputValidator(private val context: Context) {
             FieldType.PASSWORD -> validatePassword(input.text.toString())
             FieldType.PHONE -> validatePhoneNumber(input.text.toString())
             FieldType.EMAIL -> validateEmail(input.text.toString())
+            FieldType.MONEY -> validateMoney(input.text.toString())
             else -> validateName(input.text.toString())
         }
     }
@@ -108,6 +109,24 @@ class InputValidator(private val context: Context) {
         return true
     }
 
+    private fun validateMoney(amount: String): Boolean {
+        if (amount.isBlank()) {
+            errorCode = context.getString(R.string.error_invalid_money_input)
+            return false
+        }
+
+        // Regex to validate money (e.g., 123.45 or 67)
+        val regex = Regex("""^\d+(\.\d{1,2})?$""")
+
+        if (!amount.matches(regex)) {
+            errorCode = context.getString(R.string.error_invalid_money_input)
+            return false
+        }
+
+        return true
+    }
+
+
     fun getFieldType(editText: TextInputEditText): FieldType {
         val tag = editText.tag?.toString() ?: return FieldType.NONE
         return FieldType.values().find { it.name.equals(tag, ignoreCase = true) } ?: FieldType.NONE
@@ -119,6 +138,6 @@ class InputValidator(private val context: Context) {
     }
 
     enum class FieldType {
-        NAME, DATE, PASSWORD, PHONE, EMAIL, NONE, TEXTBODY
+        NAME, DATE, PASSWORD, PHONE, EMAIL, NONE, TEXTBODY, MONEY
     }
 }

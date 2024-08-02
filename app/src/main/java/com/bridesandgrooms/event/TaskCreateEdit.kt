@@ -3,245 +3,210 @@ package com.bridesandgrooms.event
 import Application.AnalyticsManager
 import Application.TaskCreationException
 import Application.TaskDeletionException
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.util.TypedValue
+import android.view.ContextThemeWrapper
+import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Model.Category
+import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.TaskEditdetailBinding
-import com.bridesandgrooms.event.UI.FieldValidators.TextValidate
 import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
+import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
+import com.bridesandgrooms.event.UI.Fragments.DashboardActivity
+import com.bridesandgrooms.event.UI.Fragments.EventCategories
+import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
+import com.bridesandgrooms.event.UI.Fragments.TasksAllCalendar
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TaskCreateEdit : AppCompatActivity() {
+class TaskCreateEdit : Fragment() {
 
-    //private lateinit var taskitem: Task
     private lateinit var optionsmenu: Menu
     private lateinit var adManager: AdManager
     private lateinit var binding: TaskEditdetailBinding
 
     private lateinit var userSession: User
     private lateinit var taskItem: Task
+    private lateinit var context: Context
 
     private var thisTaskBudget: Float = 0F
     private var thisEventBudget: Float = 0F
-    private var language = ""
+    private var taskDate: Date = Date()
 
-    //private val receiver = TaskNotificationReceiver()
+
+    private val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+        if (hasFocus && view is TextInputEditText) {
+            val parentLayout = view.parent.parent as? TextInputLayout
+            parentLayout?.error = null
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.task_editdetail)
+        setHasOptionsMenu(true)
+        context = requireContext()
+    }
 
-        userSession = User().getUser(this)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        userSession = User().getUser(context)
         val eventBudget = userSession.eventbudget
-        val apptitle = findViewById<TextView>(R.id.appbartitle)
-        val chipgroupedit = findViewById<ChipGroup>(R.id.groupedittask)
-        language = this.resources.configuration.locales.get(0).language
+
+        val thisEventBudgetSt = eventBudget.replace("[^\\d.]".toRegex(), "")
+        thisEventBudget = thisEventBudgetSt.toFloatOrNull() ?: 0.0f
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.task_editdetail, container, false)
+
+        val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.new_task)
+
         val list = ArrayList(EnumSet.allOf(Category::class.java))
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        val extras = intent.extras
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        if (extras?.containsKey("task") == true) {
-            apptitle.text = getString(R.string.edit_task)
-            taskItem = intent.getParcelableExtra<Task>("task")!!
-        } else {
-            apptitle.text = getString(R.string.new_task)
-            taskItem = Task()
-        }
-
-        if (extras?.containsKey("task_date") == true) {
-            val taskDate = intent.getSerializableExtra("task_date") as Date?
-            if ((taskDate != null)) {
-                val formatter = SimpleDateFormat("dd/MM/yyyy")
-
-                binding.taskdate.setText(formatter.format(taskDate))
-                binding.taskdate.isEnabled = false
-            }
-        }
+        val language = context.resources.configuration.locales.get(0).language
 
         for (category in list) {
-            val chip = Chip(this)
+            val chip = Chip(context)
             chip.text = when (language) {
                 "en" -> category.en_name
                 else -> category.es_name
             }
-            chip.isClickable = true
-            chip.isCheckable = true
-            chipgroupedit.addView(chip)
-            if (taskItem.category == category.code) {
-                chip.isSelected = true
-                chipgroupedit.check(chip.id)
+            chip.apply {
+                isClickable = true
+                isCheckable = true
+
+                chipBackgroundColor = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.SecondaryContainer
+                    )
+                )
+                setTextColor(ContextCompat.getColor(context, R.color.OnSecondaryContainer))
+                chipCornerRadius = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    8f,
+                    resources.displayMetrics
+                )
+                rippleColor =
+                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.OnPrimary))
+                chipStrokeColor =
+                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.Outline))
+                chipStrokeWidth = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    1f,
+                    resources.displayMetrics
+                ) // Assuming 1dp is defined in dimens.xml
+                setTextAppearance(R.style.Body_Small)
             }
+            binding.groupedittask.addView(chip)
         }
 
-//        binding.taskname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
-//            if (!p1) {
-//                val validationmessage = TextValidate(binding.taskname).nameFieldValidate()
-//                if (validationmessage != "") {
-//                    binding.taskname.error = "Error in Task name: $validationmessage"
-//                }
-//            }
-//        }
-
-        //As soon as it's touched, the error message disappears
-        binding.taskbudget.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Task_Budget")
-            binding.taskbudget.error = null
-        }
-
-        binding.taskdate.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Task_Date")
-            binding.taskdate.error = null
-            showDatePickerDialog()
-        }
-
+        taskItem = arguments?.getParcelable("task") ?: Task()
 
         if (taskItem.key.isNotEmpty()) {
-            binding.taskname.setText(taskItem.name)
-            binding.taskdate.setText(taskItem.date)
-            binding.taskbudget.setText(taskItem.budget)
+            toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.edit_guest)
+            toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.edit_task)
+            binding.tasknameinputedit.setText(taskItem.name)
+            binding.taskdateinputedit.setText(taskItem.date)
+            binding.taskbudgetinputedit.setText(taskItem.budget)
+
+            val selectedChipId = binding.groupedittask.children
+                .filterIsInstance<Chip>()
+                .find { it.text == if (language == "en") list.find { category -> category.code == taskItem.category }?.en_name else list.find { category -> category.code == taskItem.category }?.es_name }
+                ?.id
+
+            selectedChipId?.let {
+                binding.groupedittask.check(it)
+            }
         }
 
+        if (arguments?.containsKey("task_date") == true) {
+            taskDate = arguments?.getSerializable("task_date") as Date
+                val formatter = SimpleDateFormat("dd/MM/yyyy")
+                binding.taskdateinputedit.setText(formatter.format(taskDate))
+                binding.taskdateinputedit.isEnabled = false
+
+        }
+
+        binding.tasknameinputedit.onFocusChangeListener = focusChangeListener
+        binding.taskdateinputedit.onFocusChangeListener = focusChangeListener
+        binding.taskdateinputedit.setOnClickListener {
+            showDatePickerDialog()
+        }
+        binding.taskbudgetinputedit.onFocusChangeListener = focusChangeListener
+
         binding.savebuttontask.setOnClickListener {
-            Log.i(TAG, "Clicked on Save")
-//            val intent = Intent("com.bridesandgrooms.event.NOTIFICATION_RECEIVED")
-//            intent.putExtra("TASK_NAME", "My Dummy Task") // Pass taskName as an extra to the intent
-//
-//
-//            try {
-//                this.sendBroadcast(intent)
-//                Log.i(TAG, "broadcast is called")
-//            } catch (e: Exception) {
-//                Log.e(TAG, e.message.toString())
-//            }
-
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Task")
-            var inputvalflag = true
-            binding.taskname.clearFocus()
-            if (binding.taskname.text.toString().isEmpty()) {
-                binding.taskname.error = getString(R.string.error_tasknameinput)
-                inputvalflag = false
-            } else {
-//                val validationmessage = TextValidate(binding.taskname).nameFieldValidate()
-//                if (validationmessage != "") {
-//                    binding.taskname.error =
-//                        getString(R.string.error_in_task_name, validationmessage)
-//                    inputvalflag = false
-//                }
-            }
-
-            binding.taskdate.clearFocus()
-            if (binding.taskdate.text.toString().isEmpty()) {
-                binding.taskdate.error = getString(R.string.error_taskdateinput)
-                inputvalflag = false
-            }
-            binding.taskbudget.clearFocus()
-            if (binding.taskbudget.text.toString().isEmpty()) {
-                binding.taskbudget.error = getString(R.string.error_taskbudgetinput)
-                inputvalflag = false
-            } else {
-                val thisTaskBudgetSt =
-                    binding.taskbudget.text.toString().replace("[^\\d.]".toRegex(), "")
-                val thisEventBudgetSt = eventBudget.replace("[^\\d.]".toRegex(), "")
-                // Convert the sanitized string to Float
-                thisTaskBudget = thisTaskBudgetSt.toFloatOrNull() ?: 0.0f
-                thisEventBudget = thisEventBudgetSt.toFloatOrNull() ?: 0.0f
-            }
-            if (binding.groupedittask.checkedChipId == -1) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.error_taskcategoryinput),
-                    Toast.LENGTH_SHORT
-                ).show()
-                inputvalflag = false
-            }
-            if (inputvalflag) {
-                val taskEvent = TaskDBHelper(this)
-                val taskBudget = taskEvent.getTaskBudget(this)!!
-                val newEventBalance =
-                    thisEventBudget - (taskBudget + thisTaskBudget)
-                if (newEventBalance > 0) {
-                    showBanner(getString(R.string.banner_congrats), false)
-                    saveTask()
-                } else {
-                    AnalyticsManager.getInstance().trackError(
-                        SCREEN_NAME,
-                        "Exceeding Event Budget",
-                        newEventBalance.toString(),
-                        null
-                    )
-                    showBanner(getString(R.string.banner_beware), true)
-                }
+            AnalyticsManager.getInstance()
+                .trackUserInteraction(GuestCreateEdit.SCREEN_NAME, "Save_Guest")
+            val isValid = validateAllInputs()
+            if (isValid) {
+                saveTask()
             }
         }
         val showads = RemoteConfigSingleton.get_showads()
         if (showads) {
             adManager = AdManagerSingleton.getAdManager()
-            adManager.loadAndShowRewardedAd(this)
+            adManager.loadAndShowRewardedAd(requireActivity())
         }
+        return binding.root
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        val filter = IntentFilter("android.intent.action.NOTIFICATION_RECEIVED")
-//        registerReceiver(receiver, filter)
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        unregisterReceiver(receiver)
-//    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (taskItem.key.isNotEmpty()) {
             optionsmenu = menu
-            menuInflater.inflate(R.menu.tasks_menu, menu)
-
+            inflater.inflate(R.menu.tasks_menu, menu)
             if (taskItem.status == Rv_TaskAdapter.ACTIVETASK) {
                 optionsmenu.findItem(R.id.complete_task).title = getString(R.string.complete_task)
             } else if (taskItem.status == Rv_TaskAdapter.COMPLETETASK) {
                 optionsmenu.findItem(R.id.complete_task).title = getString(R.string.reactivate_task)
             }
         }
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_task -> {
-                AlertDialog.Builder(this)
+                AlertDialog.Builder(context)
                     .setTitle(getString(R.string.delete_message))
                     .setMessage(getString(R.string.delete_entry))
                     .setPositiveButton(
@@ -249,14 +214,13 @@ class TaskCreateEdit : AppCompatActivity() {
                     ) { _, _ ->
                         AnalyticsManager.getInstance()
                             .trackUserInteraction(SCREEN_NAME, "Delete_Task")
-                        if (!PermissionUtils.checkPermissions(this, "calendar")) {
+                        if (!PermissionUtils.checkPermissions(context, "calendar")) {
                             val permissions = PermissionUtils.requestPermissionsList("calendar")
                             requestPermissions(permissions, PERMISSION_CODE)
                         } else {
                             //lifecycleScope.launch {
                             try {
-                                deleteTask(this@TaskCreateEdit, userSession, taskItem)
-                                disableControls()
+                                deleteTask(context, userSession, taskItem)
                             } catch (e: TaskDeletionException) {
                                 //withContext(Dispatchers.Main){
                                 displayToastMsg(getString(R.string.errorTaskDeletion) + e.toString())
@@ -285,14 +249,13 @@ class TaskCreateEdit : AppCompatActivity() {
                 } else if (taskItem.status == Rv_TaskAdapter.COMPLETETASK) {
                     taskItem.status = Rv_TaskAdapter.ACTIVETASK
                 }
-                if (!PermissionUtils.checkPermissions(this, "calendar")) {
+                if (!PermissionUtils.checkPermissions(requireActivity(), "calendar")) {
                     val permissions = PermissionUtils.requestPermissionsList("calendar")
                     requestPermissions(permissions, PERMISSION_CODE)
                 } else {
                     //lifecycleScope.launch {
                     try {
-                        editTask(this@TaskCreateEdit, userSession, taskItem)
-                        disableControls()
+                        editTask(context, userSession, taskItem)
                     } catch (e: TaskCreationException) {
                         displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
                         AnalyticsManager.getInstance().trackError(
@@ -314,60 +277,81 @@ class TaskCreateEdit : AppCompatActivity() {
         }
     }
 
-    private fun disableControls() {
-        binding.taskname.isEnabled = false
-        binding.taskbudget.isEnabled = false
-        binding.taskdate.isEnabled = false
-        binding.groupedittask.isEnabled = false
-        binding.savebuttontask.isEnabled = false
-        optionsmenu.clear()
+    private fun validateAllInputs(): Boolean {
+        var isValid = true
+        val validator = InputValidator(context)
 
-        setResult(Activity.RESULT_OK, Intent())
-//        delay(1500) // Replace Thread.sleep with delay from coroutines
-        finish()
+        val nameValidation =
+            validator.validate(binding.tasknameinputedit)
+        if (!nameValidation) {
+            binding.tasknameinputedit.error = validator.errorCode
+            isValid = false
+        }
+
+        val dateValidation =
+            validator.validate(binding.taskdateinputedit)
+        if (!dateValidation) {
+            binding.taskdateinputedit.error = validator.errorCode
+            isValid = false
+        }
+
+        val budgetValidation =
+            validator.validate(binding.taskbudgetinputedit)
+        if (!budgetValidation) {
+            binding.taskbudgetinputedit.error = validator.errorCode
+            isValid = false
+        } else {
+            val thisTaskBudgetSt =
+                binding.taskbudgetinputedit.text.toString().replace("[^\\d.]".toRegex(), "")
+            thisTaskBudget = thisTaskBudgetSt.toFloatOrNull() ?: 0.0f
+        }
+
+        val taskEvent = TaskDBHelper(context)
+        val taskBudget = taskEvent.getTaskBudget(context)!!
+        val newEventBalance =
+            thisEventBudget - (taskBudget + thisTaskBudget)
+        if (newEventBalance > 0) {
+            showBanner(getString(R.string.banner_congrats), false)
+        } else {
+            AnalyticsManager.getInstance().trackError(
+                SCREEN_NAME,
+                "Exceeding Event Budget",
+                newEventBalance.toString(),
+                null
+            )
+            showBanner(getString(R.string.banner_beware), true)
+            isValid = false
+        }
+        return isValid
     }
-
-//    private fun getCategory(): String {
-//        var mycategorycode = ""
-//        val categoryname =
-//            binding.groupedittask.findViewById<Chip>(binding.groupedittask.checkedChipId).text
-//
-//        val list = ArrayList(EnumSet.allOf(Category::class.java))
-//        for (category in list) {
-//            if (categoryname == category.en_name) {
-//                mycategorycode = category.code
-//            }
-//        }
-//        return mycategorycode
-//    }
 
     private fun showDatePickerDialog() {
         val newFragment =
             DatePickerFragment.newInstance((DatePickerDialog.OnDateSetListener { _, p1, p2, p3 ->
                 if (validateOldDate(p1, p2 + 1, p3)) {
                     val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                    binding.taskdate.setText(selectedDate)
+                    binding.taskdateinputedit.setText(selectedDate)
                 } else {
-                    binding.taskdate.error = getString(R.string.error_invaliddate)
+                    binding.taskdateinputedit.error = getString(R.string.error_invaliddate)
                 }
             }))
-        newFragment.show(supportFragmentManager, "datePicker")
+        newFragment.show(parentFragmentManager, "datePicker")
     }
 
     private fun saveTask() {
-        taskItem.name = binding.taskname.text.toString()
-        taskItem.date = binding.taskdate.text.toString()
-        taskItem.budget = binding.taskbudget.text.toString()
+        taskItem.name = binding.tasknameinputedit.text.toString()
+        taskItem.date = binding.taskdateinputedit.text.toString()
+        taskItem.budget = binding.taskbudgetinputedit.text.toString()
         taskItem.category = getCategory()
 
-        if (!PermissionUtils.checkPermissions(this, "calendar")) {
+        if (!PermissionUtils.checkPermissions(requireActivity(), "calendar")) {
             val permissions = PermissionUtils.requestPermissionsList("calendar")
             requestPermissions(permissions, PERMISSION_CODE)
         } else {
             if (taskItem.key.isEmpty()) {
                 //lifecycleScope.launch {
                 try {
-                    addTask(applicationContext, userSession, taskItem)
+                    addTask(context, userSession, taskItem)
                 } catch (e: TaskCreationException) {
                     AnalyticsManager.getInstance().trackError(
                         SCREEN_NAME,
@@ -384,7 +368,7 @@ class TaskCreateEdit : AppCompatActivity() {
             } else {
                 //lifecycleScope.launch {
                 try {
-                    editTask(applicationContext, userSession, taskItem)
+                    editTask(context, userSession, taskItem)
                 } catch (e: TaskCreationException) {
                     AnalyticsManager.getInstance().trackError(
                         SCREEN_NAME,
@@ -399,14 +383,12 @@ class TaskCreateEdit : AppCompatActivity() {
                 }
                 //}
             }
-            val resultIntent = Intent()
-            setResult(Activity.RESULT_OK, resultIntent)
 
             //------------------------------------------------
             // Request User's feedback
             val reviewbox = RemoteConfigSingleton.get_reviewbox()
             if (reviewbox) {
-                val reviewManager: ReviewManager = ReviewManagerFactory.create(this)
+                val reviewManager: ReviewManager = ReviewManagerFactory.create(requireActivity())
 
                 val requestReviewTask: com.google.android.play.core.tasks.Task<ReviewInfo> =
                     reviewManager.requestReviewFlow()
@@ -415,7 +397,7 @@ class TaskCreateEdit : AppCompatActivity() {
                         // Request succeeded and a ReviewInfo instance was received
                         val reviewInfo: ReviewInfo = request.result
                         val launchReviewTask: com.google.android.play.core.tasks.Task<*> =
-                            reviewManager.launchReviewFlow(this, reviewInfo)
+                            reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
                         launchReviewTask.addOnCompleteListener {
                             // The review has finished, continue your app flow.
                         }
@@ -425,12 +407,11 @@ class TaskCreateEdit : AppCompatActivity() {
             val showads = RemoteConfigSingleton.get_showads()
             if (showads) {
                 if (adManager.mRewardedAd != null) {
-                    adManager.mRewardedAd?.show(this) {}
+                    adManager.mRewardedAd?.show(requireActivity()) {}
                 } else {
                     Log.d(TAG, "The rewarded ad wasn't ready yet.")
                 }
             }
-            //Thread.sleep(2000)
             finish()
         }
     }
@@ -453,7 +434,7 @@ class TaskCreateEdit : AppCompatActivity() {
                     val calendarpermissions = Permission.getPermission("calendar")
                     val resourceId = this.resources.getIdentifier(
                         calendarpermissions.drawable, "drawable",
-                        this.packageName
+                        requireActivity().packageName
                     )
                     binding.permissions.root.findViewById<ImageView>(R.id.permissionicon)
                         .setImageResource(resourceId)
@@ -472,8 +453,7 @@ class TaskCreateEdit : AppCompatActivity() {
                         // Create an intent to open the app settings for your app
                         val intent = Intent()
                         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                        val packageName = packageName
-                        val uri = Uri.fromParts("package", packageName, null)
+                        val uri = Uri.fromParts("package", requireActivity().packageName, null)
                         intent.data = uri
 
                         // Start the intent
@@ -482,17 +462,10 @@ class TaskCreateEdit : AppCompatActivity() {
                 }
             }
         }
-
-
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
     }
 
     private fun showBanner(message: String, dismiss: Boolean) {
-        val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        val fadeInAnimation = AnimationUtils.loadAnimation(requireActivity(), R.anim.fade_in)
         binding.bannerCardView.startAnimation(fadeInAnimation)
 
         binding.bannerCardView.visibility = View.VISIBLE
@@ -508,6 +481,7 @@ class TaskCreateEdit : AppCompatActivity() {
     private fun getCategory(): String {
         val categoryName =
             binding.groupedittask.findViewById<Chip>(binding.groupedittask.checkedChipId).text.toString()
+        val language = context.resources.configuration.locales.get(0).language
         var myCategory = ""
         val list = ArrayList(EnumSet.allOf(Category::class.java))
         for (category in list) {
@@ -530,16 +504,25 @@ class TaskCreateEdit : AppCompatActivity() {
 
     private fun displayToastMsg(message: String) {
         Toast.makeText(
-            this@TaskCreateEdit,
+            context,
             message,
             Toast.LENGTH_LONG
         ).show()
     }
 
-    override fun finish() {
-        val returnintent = Intent()
-        setResult(RESULT_OK, returnintent)
-        super.finish()
+    fun finish() {
+        val callingFragment = arguments?.getString("calling_fragment")
+        val fragment = when (callingFragment) {
+            "EventCategories" -> EventCategories()
+            "TasksAllCalendar" -> DashboardActivity()
+            "DashboardActivity" -> DashboardActivity()
+            else -> EventCategories()
+        }
+        Handler(Looper.getMainLooper()).postDelayed({
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }, 500)
     }
 
     companion object {

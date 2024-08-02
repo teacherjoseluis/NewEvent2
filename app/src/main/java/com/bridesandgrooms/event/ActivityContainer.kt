@@ -22,6 +22,7 @@ import com.bridesandgrooms.event.Functions.isEventDate
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.UI.Fragments.ContactsAll
 import com.bridesandgrooms.event.UI.Fragments.DashboardActivity
+import com.bridesandgrooms.event.UI.Fragments.EventCategories
 import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll
 import com.bridesandgrooms.event.UI.Fragments.MyNotes
@@ -404,6 +405,20 @@ class ActivityContainer : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .commit()
+                }
+                is TaskCreateEdit -> {
+                    val callingFragment = fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString("calling_fragment")
+                    if(!callingFragment.isNullOrEmpty()){
+                        fragment = when(callingFragment){
+                            "EventCategories" -> EventCategories()
+                            "TasksAllCalendar" -> DashboardActivity()
+                            "DashboardActivity" -> DashboardActivity()
+                            else -> EventCategories()
+                        }
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .commit()
+                    }
                 }
 
                 else -> {

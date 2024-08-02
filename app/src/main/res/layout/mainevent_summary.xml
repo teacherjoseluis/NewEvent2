@@ -7,180 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/pewter">
-
-        <!--
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/eventsummarylayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:background="@drawable/layout_border"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/visiblelayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/textView14"
-                    style="@style/Heading6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:text="Tasks:"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tasknumber"
-                    style="@style/Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="TextView"
-                    app:layout_constraintStart_toEndOf="@+id/textView14"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView15"
-                    style="@style/Heading6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="5dp"
-                    android:text="Completed:"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-                <TextView
-                    android:id="@+id/taskpending"
-                    style="@style/Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="TextView"
-                    app:layout_constraintStart_toEndOf="@+id/textView16"
-                    app:layout_constraintTop_toBottomOf="@+id/tasknumber" />
-
-                <TextView
-                    android:id="@+id/textView16"
-                    style="@style/Heading6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
-                    android:text="Pending:"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView14" />
-
-                <TextView
-                    android:id="@+id/taskcompleted"
-                    style="@style/Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="4dp"
-                    android:text="TextView"
-                    app:layout_constraintStart_toEndOf="@+id/textView15"
-                    app:layout_constraintTop_toBottomOf="@+id/taskpending" />
-
-                <TextView
-                    android:id="@+id/textView17"
-                    style="@style/Heading6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="Budget:"
-                    app:layout_constraintEnd_toStartOf="@+id/taskbudget"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/taskbudget"
-                    style="@style/Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginRight="15dp"
-                    android:text="TextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView18"
-                    style="@style/Heading6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="Spent:"
-                    app:layout_constraintEnd_toStartOf="@+id/paymentpaid0"
-                    app:layout_constraintTop_toBottomOf="@+id/textView17" />
-
-                <TextView
-                    android:id="@+id/paymentpaid0"
-                    style="@style/Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginRight="15dp"
-                    android:text="TextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/taskbudget" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/eventsummarylayoutempty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:background="@drawable/layout_border"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="10dp"
-                app:layout_constraintBottom_toBottomOf="@+id/eventsummarylayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/emptysummarytext"
-                    style="@style/Heading7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="There are currently no stats to show"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        -->
+        android:background="@color/Surface">
 
         <include
             android:id="@+id/withnodatacategory"
@@ -244,17 +71,12 @@
                 android:id="@+id/NewTaskPaymentActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/BG_FAB"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="55dp"
-                android:clickable="true"
                 android:contentDescription="@string/newtaskpaymentactionbutton"
-                app:backgroundTint="@color/azulmasClaro"
-                app:fabSize="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:maxImageSize="24dp"
-                app:srcCompat="@drawable/ic_icons8_plus_white"
-                app:tint="@color/white" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/TaskLayout"
@@ -268,34 +90,22 @@
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabTask"
+                    style="@style/BG_MiniFAB"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:contentDescription="@string/newtaskimagebutton"
-                    android:elevation="2dp"
-                    android:outlineAmbientShadowColor="@color/secondaryText"
                     android:src="@drawable/task_done_outline"
-                    app:backgroundTint="@color/rosaChillon"
-                    app:elevation="2dp"
-                    app:fabSize="mini"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:maxImageSize="24dp"
-                    app:rippleColor="@color/white"
-                    app:tint="@color/white"
                     tools:targetApi="p" />
 
                 <TextView
-                    style="@style/Overline"
+                    style="@style/BG_MiniFABText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:background="@color/white"
-                    android:elevation="2dp"
                     android:padding="5dp"
                     android:text="@string/task"
-                    android:textColor="@color/rosaChillon"
-                    app:elevation="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/fabTask"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -314,34 +124,23 @@
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabPayment"
+                    style="@style/BG_MiniFAB"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:contentDescription="@string/fabpayment"
-                    android:elevation="2dp"
-                    android:outlineAmbientShadowColor="@color/secondaryText"
                     android:src="@drawable/invoice"
-                    app:backgroundTint="@color/rosaChillon"
-                    app:elevation="2dp"
-                    app:fabSize="mini"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:maxImageSize="24dp"
-                    app:rippleColor="@color/white"
-                    app:tint="@color/white"
                     tools:targetApi="p" />
 
                 <TextView
-                    style="@style/Overline"
+                    style="@style/BG_MiniFABText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:background="@color/white"
                     android:elevation="2dp"
                     android:padding="5dp"
                     android:text="@string/payment"
-                    android:textColor="@color/rosaChillon"
-                    app:elevation="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/fabPayment"
                     app:layout_constraintTop_toTopOf="parent" />

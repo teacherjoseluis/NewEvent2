@@ -91,7 +91,7 @@ class Rv_TaskAdapter(
                 if (adjustedPosition >= 0 && adjustedPosition < taskList.size) {
                     p0.taskname?.text = taskList[p1].name
                     p0.taskcategory?.text = taskList[p1].category
-                    p0.taskdate?.text = taskList[p1].date
+                    //p0.taskdate?.text = taskList[p1].date
                     p0.taskbudget?.text = taskList[p1].budget
                     val resourceId = context.resources.getIdentifier(
                         getCategory(taskList[p1].category).drawable, "drawable",
@@ -134,7 +134,7 @@ class Rv_TaskAdapter(
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskname: TextView? = itemView.findViewById(R.id.taskname)
         val taskcategory: TextView? = itemView.findViewById(R.id.taskcategory)
-        val taskdate: TextView? = itemView.findViewById(R.id.taskdate)
+        //val taskdate: TextView? = itemView.findViewById(R.id.taskdate)
         val taskbudget: TextView? = itemView.findViewById(R.id.taskbudgets)
         val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
     }

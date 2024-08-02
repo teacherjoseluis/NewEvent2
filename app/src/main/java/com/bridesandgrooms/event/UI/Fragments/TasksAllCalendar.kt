@@ -13,8 +13,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bridesandgrooms.event.MVP.TasksPaymentAllCalendarPresenter
+import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.TaskCreateEdit
 import com.bridesandgrooms.event.UI.Adapters.TaskCalendarAdapter
 import com.bridesandgrooms.event.databinding.TasksAllCalendarBinding
 import com.google.android.material.appbar.MaterialToolbar
@@ -22,7 +24,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class TasksAllCalendar : Fragment(),
-    TasksPaymentAllCalendarPresenter.TaskArrayInterface {
+    TasksPaymentAllCalendarPresenter.TaskArrayInterface, TaskFragmentActionListener {
 
     private lateinit var recyclerViewAllTasksCalendar: RecyclerView
     private lateinit var presentertask: TasksPaymentAllCalendarPresenter
@@ -87,7 +89,7 @@ class TasksAllCalendar : Fragment(),
         if (list != null) {
             if (list.size != 0) {
                 try {
-                    rvAdapter = TaskCalendarAdapter(list, mContext!!)
+                    rvAdapter = TaskCalendarAdapter(this, list, mContext!!)
                     rvAdapter.notifyDataSetChanged()
                 } catch (e: java.lang.Exception) {
                     Log.e(TAG, e.message.toString())
@@ -121,4 +123,22 @@ class TasksAllCalendar : Fragment(),
         drawerLayout?.addDrawerListener(toggle)
         toggle.syncState()
     }
+
+    override fun onTaskFragmentWithData(task: Task) {
+        val fragment = TaskCreateEdit()
+        val bundle = Bundle()
+        bundle.putParcelable("task", task)
+        bundle.putString("calling_fragment", "TasksAllCalendar")
+        fragment.arguments = bundle
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                fragment
+            )
+            .commit()
+    }
+}
+
+interface TaskFragmentActionListener {
+    fun onTaskFragmentWithData(task: Task)
 }

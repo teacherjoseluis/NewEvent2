@@ -186,10 +186,15 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
             else {
                 inf.taskcardnodata.visibility = View.VISIBLE
                 inf.floatingNewTask.setOnClickListener {
-                    AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "New_Task")
-                    val newtask = Intent(activity, TaskCreateEdit::class.java)
-                    newtask.putExtra("task_date", date)
-                    startActivity(newtask)
+                    val fragment = TaskCreateEdit()
+                    val arguments = Bundle()
+                    arguments.putSerializable("task_date", date)
+                    arguments.putString("calling_fragment", "DashboardActivity")
+                    fragment.arguments = arguments
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
+                        .addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
+                        .commit()
                 }
             }
         }

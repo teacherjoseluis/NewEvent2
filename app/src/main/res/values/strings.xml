@@ -70,6 +70,7 @@
     <string name="notes">Notes</string>
     <string name="categoryimage">Category Image</string>
     <string name="category">Category</string>
+    <string name="categories">Categories</string>
     <string name="taskpendingimage">Task Pending Image</string>
     <string name="_0" translatable="false">0</string>
     <string name="taskdoneimage">Task Done Image</string>
@@ -378,6 +379,7 @@
     <string name="budget_text">Budget: %1$s</string>
     <string name="payment_text">Paid: %1$s</string>
     <string name="status_text">Status: %1$s</string>
+    <string name="error_invalid_money_input">Enter a valid amount</string>
 
     <string-array name="role" >
         <item>Bride</item>
@@ -394,5 +396,4 @@
         <item>miles</item>
         <item>kilometers</item>
     </string-array>
-
 </resources>

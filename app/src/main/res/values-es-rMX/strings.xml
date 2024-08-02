@@ -30,6 +30,7 @@
     <string name="your_calendar">Tu Calendario</string>
     <string name="card_title">Título de la tarjeta</string>
     <string name="category">Categoría</string>
+    <string name="categories">Categorías</string>
     <string name="categoryavatar">Avatar de categoría</string>
     <string name="categoryimage">Imagen de la categoría</string>
     <string name="error_taskcategoryinput">La categoría es requerida</string>
@@ -368,6 +369,7 @@
     <string name="budget_text">Presupuesto: %1$s</string>
     <string name="payment_text">Pagado: %1$s</string>
     <string name="status_text">Estatus: %1$s</string>
+    <string name="error_invalid_money_input">Ingresa un monto valido</string>
 
     <string-array name="role" >
         <item>Novia</item>
