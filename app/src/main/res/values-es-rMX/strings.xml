@@ -270,12 +270,17 @@
     <string name="onboarding_message_createtask">Bienvenido ! Empecemos por crear una tarea para tu evento.</string>
     <string name="emptystate_noguestsmsg">Actualmente no hay invitados a tu evento pero los puedes agregar aquí.</string>
     <string name="emptystate_nonotesmsg">Actualmente no hay Notas pero las puedes agregar aquí.</string>
+    <string name="emptystate_nocontactsmsg">Actualmente no hay contactos en tu dispositivo.</string>
     <string name="emptystate_nopaymentsmsg">Actualmente no existen pagos para esta categoría en la app, puedes ir atrás y agregar algunas.</string>
     <string name="emptystate_nopaymentstodaymsg">Actualmente no hay pagos registradas para este día.</string>
     <string name="emptystate_notasksmsg">Actualmente no existen tareas para esta categoría en la app, puedes ir atrás y agregar algunas.</string>
     <string name="emptystate_notaskstodaymsg">Actualmente no hay tareas registradas para este día.</string>
     <string name="emptystate_novendorsmsg">Actualmente no hay proveedores para tu evento pero los puedes agregar aquí.</string>
     <string name="emptystate_novendorscta">Agrega Proveedores</string>
+    <string name="emptystate_notasksscta">Agrega Tareas</string>
+    <string name="emptystate_nopaymentscta">Agrega Pagos</string>
+    <string name="emptystate_noguestscta">Agrega Invitados</string>
+    <string name="emptystate_nonotescta">Agrega Notas</string>
     <string name="notattending">No asiste</string>
     <string name="error_networkconnectivity">Hay un problema con tu conexión a Internet, asegurate de estar conectado para continuar</string>
     <string name="error_networkconnection">Existe un problema al intentar conectartse a la red. Para poder llevar a cabo esta acción necesitas asegurarte que exista acceso a Internet.</string>

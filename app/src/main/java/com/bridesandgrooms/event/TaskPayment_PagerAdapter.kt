@@ -8,8 +8,6 @@ import androidx.fragment.app.FragmentPagerAdapter
 
 class TaskPayment_PagerAdapter(
     fm: FragmentManager,
-    private val userid: String,
-    private val eventid: String,
     private val category: String,
     private val status: String,
     private var totalTabs: Int
@@ -17,8 +15,6 @@ class TaskPayment_PagerAdapter(
 
     override fun getItem(position: Int): Fragment {
         val bundle = Bundle()
-        bundle.putString("userid", userid)
-        bundle.putString("eventid", eventid)
         bundle.putString("category", category)
         bundle.putString("status", status)
 

@@ -19,18 +19,21 @@ import android.widget.TextView
 import com.bridesandgrooms.event.MVP.EventCategoryPresenter
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.TaskCreateEdit
+import com.bridesandgrooms.event.TaskPaymentList
+import com.bridesandgrooms.event.UI.Adapters.CategoryAdapter
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll.Companion.TAG
 import com.bridesandgrooms.event.databinding.MaineventSummaryBinding
 import com.bridesandgrooms.event.UI.ViewAnimation
-import com.bridesandgrooms.event.rvCategoryAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.analytics.FirebaseAnalytics
 
-class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterface {
+class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterface,
+    CategoryFragmentActionListener {
 
     private lateinit var recyclerViewCategory: RecyclerView
     private lateinit var presenterCategory: EventCategoryPresenter
@@ -75,7 +78,7 @@ class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterfac
             if (list.isNotEmpty()) {
                 //Creating the recyclerview to show the Categories, 2 columns
 
-                val rvAdapter = rvCategoryAdapter(list)
+                val rvAdapter = CategoryAdapter(this, list, mContext!!)
                 recyclerViewCategory.adapter = rvAdapter
 
                 val showads = RemoteConfigSingleton.get_showads()
@@ -99,7 +102,10 @@ class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterfac
                             // ------- Analytics call ----------------
                             val bundle = Bundle()
                             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "ADOPENED")
-                            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+                            bundle.putString(
+                                FirebaseAnalytics.Param.SCREEN_NAME,
+                                javaClass.simpleName
+                            )
                             MyFirebaseApp.mFirebaseAnalytics.logEvent(
                                 FirebaseAnalytics.Event.SELECT_ITEM,
                                 bundle
@@ -143,7 +149,10 @@ class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterfac
                     bundle.putString("calling_fragment", "EventCategories")
                     fragment.arguments = bundle
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
+                        .replace(
+                            R.id.fragment_container,
+                            fragment
+                        ) // R.id.fragment_container is the ID of the container where the fragment will be placed
                         .addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
                         .commit()
                 }
@@ -156,13 +165,51 @@ class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterfac
     }
 
     override fun onCategoriesError(errcode: String) {
-        val message = getString(R.string.emptystate_novendorsmsg)
-        val cta = getString(R.string.emptystate_novendorscta)
-        val actionClass =
-            GuestCreateEdit::class.java
-        val fragment = EmptyStateFragment.newInstance(message, cta, actionClass)
+        emptyStateFragment()
+    }
+
+    fun emptyStateFragment() {
+        val container = inf.root as ViewGroup?
+        container?.removeAllViews()
+
+        val newView = layoutInflater.inflate(R.layout.empty_state_fragment, container, false)
+        container?.addView(newView)
+
+        newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_notasksmsg)
+        newView.findViewById<TextView>(R.id.emptystate_cta).setText(R.string.emptystate_notasksscta)
+        newView.findViewById<FloatingActionButton>(R.id.fab_action).setOnClickListener {
+            callTaskCreateFragment()
+        }
+    }
+
+    fun callTaskCreateFragment(){
+        val fragment = TaskCreateEdit()
+        val bundle = Bundle()
+        bundle.putString("calling_fragment", "EmptyState")
+        fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fragment_container, fragment)
+            ?.replace(
+                R.id.fragment_container,
+                fragment
+            )
+            ?.addToBackStack(null)
             ?.commit()
     }
+
+    override fun onCategoryFragmentWithData(category: String) {
+        val fragment = TaskPaymentList()
+        val bundle = Bundle()
+        bundle.putString("category", category)
+        fragment.arguments = bundle
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                fragment
+            )
+            .commit()
+    }
+}
+
+interface CategoryFragmentActionListener {
+    fun onCategoryFragmentWithData(category: String)
 }

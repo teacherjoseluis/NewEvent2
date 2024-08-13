@@ -406,19 +406,78 @@ class ActivityContainer : AppCompatActivity() {
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
+
                 is TaskCreateEdit -> {
-                    val callingFragment = fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString("calling_fragment")
-                    if(!callingFragment.isNullOrEmpty()){
-                        fragment = when(callingFragment){
+                    val callingFragment =
+                        fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString("calling_fragment")
+                    if (!callingFragment.isNullOrEmpty()) {
+                        val bundle = Bundle()
+                        fragment = when (callingFragment) {
                             "EventCategories" -> EventCategories()
+                            "EmptyState" -> EventCategories()
                             "TasksAllCalendar" -> DashboardActivity()
                             "DashboardActivity" -> DashboardActivity()
+                            "TaskPaymentTasks" -> {
+                                val category =
+                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+                                        "category"
+                                    )
+                                val status =
+                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+                                        "status"
+                                    )
+                                bundle.putString("category", category)
+                                bundle.putString("status", status)
+                                TaskPaymentTasks()
+                            }
+
                             else -> EventCategories()
                         }
+                        fragment.arguments = bundle
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.fragment_container, fragment)
                             .commit()
                     }
+                }
+
+                is PaymentCreateEdit -> {
+                    val callingFragment =
+                        fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString("calling_fragment")
+                    if (!callingFragment.isNullOrEmpty()) {
+                        val bundle = Bundle()
+                        fragment = when (callingFragment) {
+                            "EventCategories" -> EventCategories()
+                            "EmptyState" -> EventCategories()
+                            "TasksAllCalendar" -> DashboardActivity()
+                            "DashboardActivity" -> DashboardActivity()
+                            "TaskPaymentPayments" -> {
+                                val category =
+                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+                                        "category"
+                                    )
+                                val status =
+                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+                                        "status"
+                                    )
+                                bundle.putString("category", category)
+                                bundle.putString("status", status)
+                                TaskPaymentPayments()
+                            }
+
+                            else -> EventCategories()
+                        }
+                        fragment.arguments = bundle
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .commit()
+                    }
+                }
+
+                is TaskPaymentTasks -> {
+                    fragment = EventCategories()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .commit()
                 }
 
                 else -> {

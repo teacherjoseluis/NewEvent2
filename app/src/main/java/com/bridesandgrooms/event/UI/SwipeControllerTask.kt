@@ -9,7 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
-import com.bridesandgrooms.event.Rv_TaskAdapter
+import com.bridesandgrooms.event.UI.Adapters.TaskAdapter
 
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -77,7 +77,7 @@ class SwipeControllerTasks(
         isCurrentlyActive: Boolean
     ) {
         when (viewHolder) {
-            !is Rv_TaskAdapter.NativeAdViewHolder -> {
+            !is TaskAdapter.NativeAdViewHolder -> {
 
                 if (actionState == ACTION_STATE_SWIPE) {
                     setTouchListener(

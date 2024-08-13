@@ -280,12 +280,17 @@
     <string name="onboarding_message_createtask">Welcome to our app! Let\'s get started by creating a task for your event.</string>
     <string name="emptystate_noguestsmsg">There are currently no guests in your Event but you can add them here!.</string>
     <string name="emptystate_nonotesmsg">There are currently no Notes but you can add one here.</string>
+    <string name="emptystate_nocontactsmsg">There are currently no contacts in your Phone.</string>
     <string name="emptystate_nopaymentsmsg">There are currently no payments registered in the app for this category, you can go back and start adding them.</string>
     <string name="emptystate_nopaymentstodaymsg">There are no payments registered for this day.</string>
     <string name="emptystate_notasksmsg">There are currently no tasks registered in the app for this category, you can go back and start adding them.</string>
     <string name="emptystate_notaskstodaymsg">There are no tasks registered for this day.</string>
     <string name="emptystate_novendorsmsg">There are currently no vendors in your Event but you can add them here!.</string>
     <string name="emptystate_novendorscta">Add Vendors</string>
+    <string name="emptystate_notasksscta">Add Tasks</string>
+    <string name="emptystate_nopaymentscta">Add Payments</string>
+    <string name="emptystate_noguestscta">Add Guests</string>
+    <string name="emptystate_nonotescta">Add Notes</string>
     <string name="notattending">Not attending</string>
     <string name="error_networkconnectivity">There was a problem with your network connection, please make sure you are connected to the Internet</string>
     <string name="error_networkconnection">There is a problem connecting to the network. In order to process this request, you need to make sure there is Internet connection.</string>

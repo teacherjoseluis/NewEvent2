@@ -1,41 +1,46 @@
 package com.bridesandgrooms.event
 
-import android.annotation.SuppressLint
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.Payment
+import com.bridesandgrooms.event.TaskPaymentTasks.Companion.TAG
+import com.bridesandgrooms.event.UI.Adapters.ItemSwipeListenerPayment
+import com.bridesandgrooms.event.UI.Adapters.PaymentAdapter
 import com.bridesandgrooms.event.databinding.TaskpaymentPaymentsBinding
 import com.bridesandgrooms.event.UI.SwipeControllerTasks
-
-//import kotlinx.android.synthetic.main.empty_state.view.*
-//import kotlinx.android.synthetic.main.my_notes.view.*
-//import kotlinx.android.synthetic.main.onboardingcard.view.*
-//import kotlinx.android.synthetic.main.taskpayment_list.*
-//import kotlinx.android.synthetic.main.taskpayment_payments.view.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments,
-    ItemSwipeListenerPayment {
+    ItemSwipeListenerPayment, TPP_PaymentFragmentActionListener {
 
     private var category: String = ""
 
     private lateinit var inf: TaskpaymentPaymentsBinding
     private lateinit var presenterpayment: TaskPaymentPaymentsPresenter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var rvAdapter: PaymentAdapter
+
+    private var mContext: Context? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        category = if (this.requireArguments().get("category") != null) {
+        category = if (arguments?.get("category") != null) {
             this.requireArguments().get("category").toString()
         } else {
             ""
@@ -46,18 +51,18 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         inf = DataBindingUtil.inflate(inflater, R.layout.taskpayment_payments, container, false)
         try {
-            presenterpayment = TaskPaymentPaymentsPresenter(requireContext(), this, inf.root, category)
+            presenterpayment = TaskPaymentPaymentsPresenter(mContext!!, this, category)
+            presenterpayment.getPaymentList()
         } catch (e: Exception) {
-            println(e.message)
+            Log.e(TAG, e.message.toString())
         }
         return inf.root
     }
 
     override fun onTPPayments(list: ArrayList<Payment>) {
-        if (list.size != 0) {
+        if (list.size > 0) {
             recyclerView = inf.PaymentsRecyclerView
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(inf.root.context).apply {
@@ -65,7 +70,9 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments,
                     reverseLayout = true
                 }
             }
-            val rvAdapter = Rv_PaymentAdapter(lifecycleScope, list, this)
+
+            rvAdapter = PaymentAdapter(this, list, this, mContext!!)
+            recyclerView.adapter = null
             recyclerView.adapter = rvAdapter
 
             val swipeController =
@@ -76,110 +83,75 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments,
                     null,
                     RIGHTACTION
                 )
-            //----------------------------------------------------------------
             val itemTouchHelper = ItemTouchHelper(swipeController)
             itemTouchHelper.attachToRecyclerView(recyclerView)
-            //----------------------------------------------------------------
-            inf.activepaymentslayout.visibility = ConstraintLayout.VISIBLE
-            //val emptystateLayout = inf.findViewById<ConstraintLayout>(R.id.withnodatataskpaymentp)
-            val emptystateLayout = inf.withnodatataskpaymentp
-            emptystateLayout.root.visibility = ConstraintLayout.GONE
-            //----------------------------------------------------------------
-        } else if (list.size == 0) {
-            inf.activepaymentslayout.visibility = ConstraintLayout.GONE
-            val emptystateLayout = inf.withnodatataskpaymentp
-            //----------------------------------------------------------------
-            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
-            val bottomMarginInPixels =
-                resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
-            val params = emptystateLayout.root.layoutParams as ViewGroup.MarginLayoutParams
-            params.topMargin = topMarginInPixels
-            params.bottomMargin = bottomMarginInPixels
-            emptystateLayout.root.layoutParams = params
-            //----------------------------------------------------------------
-            emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
-//            emptystateLayout.empty_card.onboardingmessage.text =
-//                getString(R.string.emptystate_nopaymentsmsg)
-            emptystateLayout.emptyCard.onboardingmessage.text =
-                getString(R.string.emptystate_nopaymentsmsg)
-            val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
-            emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
-            emptystateLayout.newtaskbutton.setOnClickListener {
-                val newPayment = Intent(context, PaymentCreateEdit::class.java)
-                newPayment.putExtra("userid", "")
-                startActivity(newPayment)
-            }
+        } else {
+            emptyStateFragment()
         }
     }
 
     override fun onTPPaymentsError(errcode: String) {
-        inf.activepaymentslayout.visibility = ConstraintLayout.GONE
-        val emptystateLayout = inf.withnodatataskpaymentp
-        //----------------------------------------------------------------
-        val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
-        val bottomMarginInPixels =
-            resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
-        val params = emptystateLayout.root.layoutParams as ViewGroup.MarginLayoutParams
-        params.topMargin = topMarginInPixels
-        params.bottomMargin = bottomMarginInPixels
-        emptystateLayout.root.layoutParams = params
-        //----------------------------------------------------------------
-        emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
-        emptystateLayout.emptyCard.onboardingmessage.text =
-            getString(R.string.emptystate_nopaymentsmsg)
-        val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
-        emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
-        emptystateLayout.newtaskbutton.setOnClickListener {
-            val newPayment = Intent(context, PaymentCreateEdit::class.java)
-            newPayment.putExtra("userid", "")
-            startActivity(newPayment)
-        }
+        emptyStateFragment()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onResume() {
-        super.onResume()
-        try {
-            presenterpayment = TaskPaymentPaymentsPresenter(requireContext(), this, inf.root, category)
-        } catch (e: Exception) {
-            println(e.message)
+    fun emptyStateFragment() {
+        val container = view as ViewGroup?
+        container?.removeAllViews()
+
+        val newView = layoutInflater.inflate(R.layout.empty_state_fragment, container, false)
+        container?.addView(newView)
+
+        newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_nopaymentsmsg)
+        newView.findViewById<TextView>(R.id.emptystate_cta).setText(R.string.emptystate_nopaymentscta)
+        newView.findViewById<FloatingActionButton>(R.id.fab_action).setOnClickListener {
+            callPaymentCreateFragment()
         }
     }
 
     override fun onItemSwiped(paymentList: MutableList<Payment>) {
         if (paymentList.isEmpty()) {
-            inf.activepaymentslayout.visibility = ConstraintLayout.GONE
-            val emptystateLayout =
-                inf.withnodatataskpaymentp
-            //----------------------------------------------------------------
-            val topMarginInPixels = resources.getDimensionPixelSize(R.dimen.emptystate_topmargin)
-            val bottomMarginInPixels =
-                resources.getDimensionPixelSize(R.dimen.emptystate_marginbottom)
-            val params = emptystateLayout.root.layoutParams as ViewGroup.MarginLayoutParams
-            params.topMargin = topMarginInPixels
-            params.bottomMargin = bottomMarginInPixels
-            emptystateLayout.root.layoutParams = params
-            //----------------------------------------------------------------
-            emptystateLayout.root.visibility = ConstraintLayout.VISIBLE
-            emptystateLayout.emptyCard.onboardingmessage.text =
-                getString(R.string.emptystate_nopaymentsmsg)
-            val fadeAnimation = AnimationUtils.loadAnimation(context, R.anim.blinking_animation)
-            emptystateLayout.newtaskbutton.startAnimation(fadeAnimation)
-            emptystateLayout.newtaskbutton.setOnClickListener {
-                val newPayment = Intent(context, PaymentCreateEdit::class.java)
-                newPayment.putExtra("userid", "")
-                startActivity(newPayment)
-            }
+            emptyStateFragment()
         } else {
-            //----------------------------------------------------------------
             inf.activepaymentslayout.visibility = ConstraintLayout.VISIBLE
             val emptystateLayout = inf.withnodatataskpaymentp
             emptystateLayout.root.visibility = ConstraintLayout.GONE
-            //----------------------------------------------------------------
         }
     }
 
     companion object {
         const val RIGHTACTION = "delete"
     }
+
+    override fun onPaymentFragmentWithData(payment: Payment) {
+        val fragment = PaymentCreateEdit()
+        val bundle = Bundle()
+        bundle.putParcelable("payment", payment)
+        bundle.putString("calling_fragment", "TaskPaymentPayments")
+        fragment.arguments = bundle
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(
+                R.id.fragment_container,
+                fragment
+            )
+            ?.addToBackStack(null)
+            ?.commit()
+    }
+
+    fun callPaymentCreateFragment(){
+        val fragment = PaymentCreateEdit()
+        val bundle = Bundle()
+        bundle.putString("calling_fragment", "EmptyState")
+        fragment.arguments = bundle
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(
+                R.id.fragment_container,
+                fragment
+            )
+            ?.addToBackStack(null)
+            ?.commit()
+    }
+}
+
+interface TPP_PaymentFragmentActionListener {
+    fun onPaymentFragmentWithData(payment: Payment)
 }

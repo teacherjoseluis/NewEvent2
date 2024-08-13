@@ -8,6 +8,7 @@
     android:padding="4dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/taskcardview"
         android:layout_width="400dp"
         android:layout_height="72dp"
         android:padding="2dp"

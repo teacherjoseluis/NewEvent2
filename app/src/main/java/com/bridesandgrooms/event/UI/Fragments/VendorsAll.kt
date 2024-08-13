@@ -20,6 +20,7 @@ import com.bridesandgrooms.event.UI.Adapters.VendorAdapter
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.bridesandgrooms.event.databinding.VendorsAllBinding
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.Locale
 
 class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionListener {
@@ -165,19 +166,43 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
             recyclerViewAllVendor.adapter = null
             recyclerViewAllVendor.adapter = rvAdapter
         }
+        else {
+            emptyStateFragment()
+        }
     }
 
     /**
      * Callback that loads an emptystate fragment whenever the app cannot retrieve Vendors, in this case we are assuming that's because there are none. The fragment allows the user to add new Vendors
      */
     override fun onVAVendorsError(errcode: String) {
-        val message = getString(R.string.emptystate_novendorsmsg)
-        val cta = getString(R.string.emptystate_novendorscta)
-        val actionClass =
-            VendorCreateEdit::class.java
-        val fragment = EmptyStateFragment.newInstance(message, cta, actionClass)
+        emptyStateFragment()
+    }
+
+    fun emptyStateFragment() {
+        val container = inf.root as ViewGroup?
+        container?.removeAllViews()
+
+        val newView = layoutInflater.inflate(R.layout.empty_state_fragment, container, false)
+        container?.addView(newView)
+
+        newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_novendorsmsg)
+        newView.findViewById<TextView>(R.id.emptystate_cta).setText(R.string.emptystate_novendorscta)
+        newView.findViewById<FloatingActionButton>(R.id.fab_action).setOnClickListener {
+            callVendorCreateFragment()
+        }
+    }
+
+    fun callVendorCreateFragment(){
+        val fragment = VendorCreateEdit()
+        val bundle = Bundle()
+        bundle.putString("calling_fragment", "EmptyState")
+        fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fragment_container, fragment)
+            ?.replace(
+                R.id.fragment_container,
+                fragment
+            )
+            ?.addToBackStack(null)
             ?.commit()
     }
 

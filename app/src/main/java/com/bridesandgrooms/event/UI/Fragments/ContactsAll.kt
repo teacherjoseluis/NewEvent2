@@ -24,8 +24,10 @@ import com.bridesandgrooms.event.Model.Contact
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.TaskCreateEdit
 import com.bridesandgrooms.event.UI.Adapters.ContactAdapter
 import com.bridesandgrooms.event.databinding.ContactsAllBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -199,6 +201,8 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
 //                    }
 //                }
 //            }
+        } else {
+            emptyStateFragment()
         }
     }
 
@@ -206,14 +210,7 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
      * Callback that loads an emptystate fragment whenever the app cannot retrieve Contacts, in this case we are assuming that's because there are none. The fragment allows the user to add new Contacts
      */
     override fun onGAContactsError(errcode: String) {
-        val message = getString(R.string.emptystate_novendorsmsg)
-        val cta = getString(R.string.emptystate_novendorscta)
-        val actionClass =
-            VendorCreateEdit::class.java
-        val fragment = EmptyStateFragment.newInstance(message, cta, actionClass)
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fragment_container, fragment)
-            ?.commit()
+        emptyStateFragment()
     }
 
     override fun onRequestPermissionsResult(
@@ -290,6 +287,16 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
             .commit()
     }
 
+    fun emptyStateFragment() {
+        val container = inf.root as ViewGroup?
+        container?.removeAllViews()
+        val newView = layoutInflater.inflate(R.layout.empty_state_fragment, container, false)
+        container?.addView(newView)
+
+        newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_nocontactsmsg)
+        newView.findViewById<TextView>(R.id.emptystate_cta).visibility = View.INVISIBLE
+        newView.findViewById<FloatingActionButton>(R.id.fab_action).visibility = View.INVISIBLE
+    }
 }
 
 interface ContactsAllFragmentActionListener {

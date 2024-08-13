@@ -23,6 +23,7 @@ import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.NoteAdapter
 import com.bridesandgrooms.event.databinding.MyNotesBinding
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.Locale
 
 class MyNotes : Fragment(), NotePresenter.NoteActivity, NoteFragmentActionListener {
@@ -131,7 +132,6 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity, NoteFragmentActionListen
     override fun onNoteSuccess(noteList: ArrayList<Note>) {
         if (noteList.size != 0) {
             notesList = clone(noteList)
-
             noteList.sortByDescending { it.lastupdateddatetime }
 
             try {
@@ -140,24 +140,46 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity, NoteFragmentActionListen
             } catch (e: java.lang.Exception) {
                 Log.e(TAG, e.message.toString())
             }
-
             recyclerViewAllNotes.adapter = null
             recyclerViewAllNotes.adapter = rvAdapter
 
             inf.withdata.visibility = ConstraintLayout.VISIBLE
-            val emptystateLayout = inf.withnodata
-            emptystateLayout.root.visibility = ConstraintLayout.GONE
+//            val emptystateLayout = inf.withnodata
+//            emptystateLayout.root.visibility = ConstraintLayout.GONE
+        } else {
+            emptyStateFragment()
         }
     }
 
     override fun onNoteError(errcode: String) {
-        val message = getString(R.string.emptystate_novendorsmsg)
-        val cta = getString(R.string.emptystate_novendorscta)
-        val actionClass =
-            NoteCreateEdit::class.java
-        val fragment = EmptyStateFragment.newInstance(message, cta, actionClass)
+        emptyStateFragment()
+    }
+
+    fun emptyStateFragment() {
+        val container = inf.root as ViewGroup?
+        container?.removeAllViews()
+
+        val newView = layoutInflater.inflate(R.layout.empty_state_fragment, container, false)
+        container?.addView(newView)
+
+        newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_nonotesmsg)
+        newView.findViewById<TextView>(R.id.emptystate_cta).setText(R.string.emptystate_nonotescta)
+        newView.findViewById<FloatingActionButton>(R.id.fab_action).setOnClickListener {
+            callNoteCreateFragment()
+        }
+    }
+
+    fun callNoteCreateFragment(){
+        val fragment = NoteCreateEdit()
+        val bundle = Bundle()
+        bundle.putString("calling_fragment", "EmptyState")
+        fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fragment_container, fragment)
+            ?.replace(
+                R.id.fragment_container,
+                fragment
+            )
+            ?.addToBackStack(null)
             ?.commit()
     }
 

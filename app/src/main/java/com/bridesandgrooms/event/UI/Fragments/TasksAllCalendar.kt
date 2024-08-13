@@ -13,7 +13,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bridesandgrooms.event.MVP.TasksPaymentAllCalendarPresenter
-import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.TaskCreateEdit

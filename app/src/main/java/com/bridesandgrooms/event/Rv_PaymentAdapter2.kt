@@ -91,7 +91,7 @@ class Rv_PaymentAdapter2(
             is PaymentViewHolder -> {
                 if (adjustedPosition >= 0 && adjustedPosition < paymentList.size) {
                     p0.paymentname?.text = paymentList[p1].name
-                    p0.paymentdate?.text = paymentList[p1].date
+                    //p0.paymentdate?.text = paymentList[p1].date
                     p0.paymentamount?.text = paymentList[p1].amount
                     val resourceId = context.resources.getIdentifier(
                         Category.getCategory(paymentList[p1].category).drawable, "drawable",
@@ -145,7 +145,7 @@ class Rv_PaymentAdapter2(
 
     class PaymentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val paymentname: TextView? = itemView.findViewById(R.id.paymentname)
-        val paymentdate: TextView? = itemView.findViewById(R.id.paymentdate)
+        //val paymentdate: TextView? = itemView.findViewById(R.id.paymentdate)
         val paymentamount: TextView? = itemView.findViewById(R.id.paymentamounts)
         val categoryavatar = itemView.findViewById<ImageView>(R.id.categoryavatar)!!
     }

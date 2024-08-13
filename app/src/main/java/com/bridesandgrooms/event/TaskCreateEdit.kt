@@ -16,7 +16,6 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -28,6 +27,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -35,18 +35,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Model.Category
-import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.UI.Adapters.TaskAdapter
 import com.bridesandgrooms.event.databinding.TaskEditdetailBinding
 import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.UI.Fragments.DashboardActivity
 import com.bridesandgrooms.event.UI.Fragments.EventCategories
 import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
-import com.bridesandgrooms.event.UI.Fragments.TasksAllCalendar
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
@@ -66,6 +65,7 @@ class TaskCreateEdit : Fragment() {
     private lateinit var userSession: User
     private lateinit var taskItem: Task
     private lateinit var context: Context
+    private lateinit var backPressCallback: OnBackPressedCallback
 
     private var thisTaskBudget: Float = 0F
     private var thisEventBudget: Float = 0F
@@ -144,7 +144,6 @@ class TaskCreateEdit : Fragment() {
 
         if (taskItem.key.isNotEmpty()) {
             toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.edit_guest)
-            toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.edit_task)
             binding.tasknameinputedit.setText(taskItem.name)
             binding.taskdateinputedit.setText(taskItem.date)
             binding.taskbudgetinputedit.setText(taskItem.budget)
@@ -161,9 +160,9 @@ class TaskCreateEdit : Fragment() {
 
         if (arguments?.containsKey("task_date") == true) {
             taskDate = arguments?.getSerializable("task_date") as Date
-                val formatter = SimpleDateFormat("dd/MM/yyyy")
-                binding.taskdateinputedit.setText(formatter.format(taskDate))
-                binding.taskdateinputedit.isEnabled = false
+            val formatter = SimpleDateFormat("dd/MM/yyyy")
+            binding.taskdateinputedit.setText(formatter.format(taskDate))
+            binding.taskdateinputedit.isEnabled = false
 
         }
 
@@ -176,7 +175,7 @@ class TaskCreateEdit : Fragment() {
 
         binding.savebuttontask.setOnClickListener {
             AnalyticsManager.getInstance()
-                .trackUserInteraction(GuestCreateEdit.SCREEN_NAME, "Save_Guest")
+                .trackUserInteraction(GuestCreateEdit.SCREEN_NAME, "Save_Task")
             val isValid = validateAllInputs()
             if (isValid) {
                 saveTask()
@@ -190,14 +189,13 @@ class TaskCreateEdit : Fragment() {
         return binding.root
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (taskItem.key.isNotEmpty()) {
             optionsmenu = menu
             inflater.inflate(R.menu.tasks_menu, menu)
-            if (taskItem.status == Rv_TaskAdapter.ACTIVETASK) {
+            if (taskItem.status == TaskAdapter.ACTIVETASK) {
                 optionsmenu.findItem(R.id.complete_task).title = getString(R.string.complete_task)
-            } else if (taskItem.status == Rv_TaskAdapter.COMPLETETASK) {
+            } else if (taskItem.status == TaskAdapter.COMPLETETASK) {
                 optionsmenu.findItem(R.id.complete_task).title = getString(R.string.reactivate_task)
             }
         }
@@ -218,13 +216,10 @@ class TaskCreateEdit : Fragment() {
                             val permissions = PermissionUtils.requestPermissionsList("calendar")
                             requestPermissions(permissions, PERMISSION_CODE)
                         } else {
-                            //lifecycleScope.launch {
                             try {
                                 deleteTask(context, userSession, taskItem)
                             } catch (e: TaskDeletionException) {
-                                //withContext(Dispatchers.Main){
                                 displayToastMsg(getString(R.string.errorTaskDeletion) + e.toString())
-                                //}
                                 AnalyticsManager.getInstance().trackError(
                                     SCREEN_NAME,
                                     e.message.toString(),
@@ -233,7 +228,6 @@ class TaskCreateEdit : Fragment() {
                                 )
                                 Log.e(TAG, e.message.toString())
                             }
-                            //}
                         }
                     }
                     .setNegativeButton(android.R.string.no, null)
@@ -244,10 +238,10 @@ class TaskCreateEdit : Fragment() {
 
             R.id.complete_task -> {
                 AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Complete_Task")
-                if (taskItem.status == Rv_TaskAdapter.ACTIVETASK) {
-                    taskItem.status = Rv_TaskAdapter.COMPLETETASK
-                } else if (taskItem.status == Rv_TaskAdapter.COMPLETETASK) {
-                    taskItem.status = Rv_TaskAdapter.ACTIVETASK
+                if (taskItem.status == TaskAdapter.ACTIVETASK) {
+                    taskItem.status = TaskAdapter.COMPLETETASK
+                } else if (taskItem.status == TaskAdapter.COMPLETETASK) {
+                    taskItem.status = TaskAdapter.ACTIVETASK
                 }
                 if (!PermissionUtils.checkPermissions(requireActivity(), "calendar")) {
                     val permissions = PermissionUtils.requestPermissionsList("calendar")
@@ -270,7 +264,6 @@ class TaskCreateEdit : Fragment() {
                 }
                 true
             }
-
             else -> {
                 super.onOptionsItemSelected(item)
             }
@@ -359,14 +352,10 @@ class TaskCreateEdit : Fragment() {
                         "addTask()",
                         e.stackTraceToString()
                     )
-                    //withContext(Dispatchers.Main) {
                     displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
-                    //}
                     Log.e(TAG, e.message.toString())
                 }
-                //}
             } else {
-                //lifecycleScope.launch {
                 try {
                     editTask(context, userSession, taskItem)
                 } catch (e: TaskCreationException) {
@@ -376,12 +365,9 @@ class TaskCreateEdit : Fragment() {
                         "editTask()",
                         e.stackTraceToString()
                     )
-                    //withContext(Dispatchers.Main) {
                     displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
-                    //}
                     Log.e(TAG, e.message.toString())
                 }
-                //}
             }
 
             //------------------------------------------------
@@ -455,7 +441,6 @@ class TaskCreateEdit : Fragment() {
                         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                         val uri = Uri.fromParts("package", requireActivity().packageName, null)
                         intent.data = uri
-
                         // Start the intent
                         startActivity(intent)
                     }
@@ -516,6 +501,8 @@ class TaskCreateEdit : Fragment() {
             "EventCategories" -> EventCategories()
             "TasksAllCalendar" -> DashboardActivity()
             "DashboardActivity" -> DashboardActivity()
+            "TaskPaymentTasks" -> EventCategories()
+            "EmptyState" -> EventCategories()
             else -> EventCategories()
         }
         Handler(Looper.getMainLooper()).postDelayed({

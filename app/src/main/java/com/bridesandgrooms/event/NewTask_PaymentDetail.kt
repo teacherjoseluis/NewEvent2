@@ -32,78 +32,78 @@ class NewTask_PaymentDetail : AppCompatActivity(){
 
         //groupedit.isSingleSelection = true
 
-        binding.paymentname.setOnClickListener {
-            binding.paymentname.error = null
-        }
-
-        binding.paymentdate.setOnClickListener {
-            binding.paymentdate.error = null
-            binding.paymentdate.setText(
-                com.bridesandgrooms.event.UI.Functions.showDatePickerDialog(
-                    supportFragmentManager
-                ).replace(" ","")
-            )
-        }
-
-        binding.paymentamount.setOnClickListener {
-            binding.paymentamount.error = null
-        }
-
-        binding.savebuttonpayment.setOnClickListener {
-            var inputvalflag = true
-            if (binding.paymentname.text.toString().isEmpty()) {
-                binding.paymentname.error = "Payment name is required!"
-                inputvalflag = false
-            }
-            if (binding.paymentdate.text.toString().isEmpty()) {
-                binding.paymentdate.error = "Payment date is required!"
-                inputvalflag = false
-            }
-            if (binding.paymentamount.text.toString().isEmpty()) {
-                binding.paymentamount.error = "Payment amount is required!"
-                inputvalflag = false
-            }
-//            if (groupedit.checkedChipId == -1) {
-//                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
+//        binding.paymentname.setOnClickListener {
+//            binding.paymentname.error = null
+//        }
+//
+//        binding.paymentdate.setOnClickListener {
+//            binding.paymentdate.error = null
+//            binding.paymentdate.setText(
+//                com.bridesandgrooms.event.UI.Functions.showDatePickerDialog(
+//                    supportFragmentManager
+//                ).replace(" ","")
+//            )
+//        }
+//
+//        binding.paymentamount.setOnClickListener {
+//            binding.paymentamount.error = null
+//        }
+//
+//        binding.savebuttonpayment.setOnClickListener {
+//            var inputvalflag = true
+//            if (binding.paymentname.text.toString().isEmpty()) {
+//                binding.paymentname.error = "Payment name is required!"
 //                inputvalflag = false
 //            }
-            if (inputvalflag) {
-                savePayment()
-                //onBackPressed()
-            }
-        }
-    }
-
-    private fun savePayment() {
-        val payment = Payment()
-        payment.name = binding.paymentname.text.toString()
-        payment.date = binding.paymentdate.text.toString()
-        payment.amount = binding.paymentamount.text.toString()
-
-        val usersession =
-            application.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
-        val payments = usersession.getInt("payments", 0)
-        val sessionEditor = usersession!!.edit()
-        sessionEditor.putInt("payments", payments + 1)
-        sessionEditor.apply()
-
-
-//        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
-//        val chiptextvalue = chipselected.text.toString()
-//        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
-//        for (category in list) {
-//            if (chiptextvalue == category.en_name) {
-//                payment.category = category.code
+//            if (binding.paymentdate.text.toString().isEmpty()) {
+//                binding.paymentdate.error = "Payment date is required!"
+//                inputvalflag = false
+//            }
+//            if (binding.paymentamount.text.toString().isEmpty()) {
+//                binding.paymentamount.error = "Payment amount is required!"
+//                inputvalflag = false
+//            }
+////            if (groupedit.checkedChipId == -1) {
+////                Toast.makeText(this, "Category is required!", Toast.LENGTH_SHORT).show()
+////                inputvalflag = false
+////            }
+//            if (inputvalflag) {
+//                savePayment()
+//                //onBackPressed()
 //            }
 //        }
-//        val paymentmodel = PaymentModel()
-//        paymentmodel.addPayment(userid, eventid, payment, payments, object: PaymentModel.FirebaseAddEditPaymentSuccess {
-//            override fun onPaymentAddedEdited(flag: Boolean) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
     }
+
+//    private fun savePayment() {
+//        val payment = Payment()
+//        payment.name = binding.paymentname.text.toString()
+//        payment.date = binding.paymentdate.text.toString()
+//        payment.amount = binding.paymentamount.text.toString()
+//
+//        val usersession =
+//            application.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE)
+//        val payments = usersession.getInt("payments", 0)
+//        val sessionEditor = usersession!!.edit()
+//        sessionEditor.putInt("payments", payments + 1)
+//        sessionEditor.apply()
+//
+//
+////        val chipselected = groupedit.findViewById<Chip>(groupedit.checkedChipId)
+////        val chiptextvalue = chipselected.text.toString()
+////        val list = ArrayList<Category>(EnumSet.allOf(Category::class.java))
+////        for (category in list) {
+////            if (chiptextvalue == category.en_name) {
+////                payment.category = category.code
+////            }
+////        }
+////        val paymentmodel = PaymentModel()
+////        paymentmodel.addPayment(userid, eventid, payment, payments, object: PaymentModel.FirebaseAddEditPaymentSuccess {
+////            override fun onPaymentAddedEdited(flag: Boolean) {
+////                TODO("Not yet implemented")
+////            }
+////
+////        })
+//    }
 
     override fun onSupportNavigateUp(): Boolean {
         finish()

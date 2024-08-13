@@ -18,10 +18,12 @@ import android.util.Log
 import android.widget.TextView
 import com.bridesandgrooms.event.UI.Adapters.GuestAdapter
 import com.bridesandgrooms.event.Model.contactGuest
+import com.bridesandgrooms.event.PaymentCreateEdit
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.databinding.GuestsAllBinding
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -182,19 +184,43 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
             emptystateLayout.root.visibility = ConstraintLayout.GONE
             //----------------------------------------------------------------
         }
+        else {
+            emptyStateFragment()
+        }
     }
 
     /**
      * Callback that loads an emptystate fragment whenever the app cannot retrieve Guests, in this case we are assuming that's because there are none. The fragment allows the user to add new Vendors
      */
     override fun onGAGuestsError(errcode: String) {
-        val message = getString(R.string.emptystate_novendorsmsg)
-        val cta = getString(R.string.emptystate_novendorscta)
-        val actionClass =
-            GuestCreateEdit::class.java
-        val fragment = EmptyStateFragment.newInstance(message, cta, actionClass)
+        emptyStateFragment()
+    }
+
+    fun emptyStateFragment() {
+        val container = inf.root as ViewGroup?
+        container?.removeAllViews()
+
+        val newView = layoutInflater.inflate(R.layout.empty_state_fragment, container, false)
+        container?.addView(newView)
+
+        newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_noguestsmsg)
+        newView.findViewById<TextView>(R.id.emptystate_cta).setText(R.string.emptystate_noguestscta)
+        newView.findViewById<FloatingActionButton>(R.id.fab_action).setOnClickListener {
+            callGuestCreateFragment()
+        }
+    }
+
+    fun callGuestCreateFragment(){
+        val fragment = GuestCreateEdit()
+        val bundle = Bundle()
+        bundle.putString("calling_fragment", "EmptyState")
+        fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fragment_container, fragment)
+            ?.replace(
+                R.id.fragment_container,
+                fragment
+            )
+            ?.addToBackStack(null)
             ?.commit()
     }
 
