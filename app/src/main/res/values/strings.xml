@@ -55,7 +55,7 @@
     <string name="title_contacts">Contacts</string>
     <string name="todo">To Do</string>
     <string name="done">Done</string>
-    <string name="duenext">Due next task</string>
+    <string name="duenext">Due next tasks</string>
     <string name="view">view</string>
     <string name="payments">Payments</string>
     <string name="payment">Payment</string>
@@ -385,6 +385,8 @@
     <string name="payment_text">Paid: %1$s</string>
     <string name="status_text">Status: %1$s</string>
     <string name="error_invalid_money_input">Enter a valid amount</string>
+    <string name="event_greeting">Hi, %1$s</string>
+    <string name="trending">Trending</string>
 
     <string-array name="role" >
         <item>Bride</item>

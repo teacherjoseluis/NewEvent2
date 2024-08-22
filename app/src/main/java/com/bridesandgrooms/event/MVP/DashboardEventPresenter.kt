@@ -9,6 +9,7 @@ import android.view.View
 import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.MVP.PaymentPresenter.Companion.ERRCODEPAYMENTS
 import com.bridesandgrooms.event.MVP.TaskPresenter.Companion.ERRCODETASKS
+import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardImageData
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardImageResult
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardRepository
@@ -16,6 +17,7 @@ import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Payment
 import com.bridesandgrooms.event.Model.Task
+import com.bridesandgrooms.event.Model.TaskDBHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -229,6 +231,25 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 //        fun onDashboardCategoriesError(errcode: String)
 //    }
 //
+    fun getActiveCategories() {
+        val taskDBHelper = TaskDBHelper(context)
+        try {
+            val categoriesList = taskDBHelper.getActiveCategories()!!
+            fragment.onCategories(categoriesList)
+        } catch (e: Exception) {
+            Log.e("EventCategoryPresenter", e.message.toString())
+            fragment.onCategoriesError(ERRCODETASKS)
+        }
+    }
+
+    interface EventCategoryInterface {
+        fun onCategories(
+            list: List<Category>?
+        )
+
+        fun onCategoriesError(errcode: String)
+    }
+
     interface DashboardImagesStats {
         fun onDashboardImages(
             images: List<CategoryThumbnails>

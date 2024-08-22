@@ -1,73 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.cardview.widget.CardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="2dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            style="@style/BG_Card"
+            app:cardUseCompatPadding="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/guestinfo"
-                style="@style/JournalDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/guest_information"
-                android:textColor="@color/rosaChillon"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!--
-                        <TextView
-                            android:id="@+id/totallabel"
-                            style="@style/Body1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Total:"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/guestinfo" />
-
-                        <TextView
-                            android:id="@+id/totalnumber"
-                            style="@style/Body1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="6dp"
-                            android:text="Total"
-                            app:layout_constraintStart_toEndOf="@id/totallabel"
-                            app:layout_constraintTop_toBottomOf="@id/guestinfo" />
-            -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/guestinfo">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:weightSum="100">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="33"
                     android:padding="3dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -76,26 +35,24 @@
                         android:id="@+id/imageView17"
                         android:layout_width="20dp"
                         android:layout_height="30dp"
+                        android:contentDescription="@string/accepticon"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/icons8_checked"
-                        app:tint="@color/rosaChillon"
-                        android:contentDescription="@string/accepticon" />
+                        app:tint="@color/rosaChillon" />
 
                     <TextView
                         android:id="@+id/acceptednumber"
-                        style="@style/Body1"
+                        style="@style/CardView_BodyBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="2dp"
                         android:text="@string/accepted"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView17"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        style="@style/BodySmall"
+                        style="@style/CardView_BodyBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/accepted"
@@ -109,6 +66,7 @@
                     android:id="@+id/layout3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="33"
                     android:padding="3dp"
                     app:layout_constraintStart_toEndOf="@+id/layout2"
                     app:layout_constraintTop_toTopOf="parent">
@@ -118,26 +76,24 @@
                         android:layout_width="20dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="4dp"
+                        android:contentDescription="@string/rejectedicon"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/icons8_cancel"
-                        app:tint="@color/rosaChillon"
-                        android:contentDescription="@string/rejectedicon" />
+                        app:tint="@color/rosaChillon" />
 
                     <TextView
                         android:id="@+id/rejectednumber"
-                        style="@style/Body1"
+                        style="@style/CardView_BodyBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="2dp"
                         android:text="@string/rejected"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView18"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        style="@style/BodySmall"
+                        style="@style/CardView_BodyBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/rejected"
@@ -150,6 +106,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="33"
                     android:padding="3dp"
                     app:layout_constraintStart_toEndOf="@+id/layout3"
                     app:layout_constraintTop_toTopOf="parent">
@@ -159,26 +116,24 @@
                         android:layout_width="20dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="4dp"
+                        android:contentDescription="@string/pendingicon"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/information2"
-                        app:tint="@color/rosaChillon"
-                        android:contentDescription="@string/pendingicon" />
+                        app:tint="@color/rosaChillon" />
 
                     <TextView
                         android:id="@+id/pendingnumber"
-                        style="@style/Body1"
+                        style="@style/CardView_BodyBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="2dp"
                         android:text="@string/pending"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView19"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        style="@style/BodySmall"
+                        style="@style/CardView_BodyBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pending"
@@ -187,10 +142,11 @@
                         app:layout_constraintStart_toEndOf="@+id/imageView19"
                         app:layout_constraintTop_toBottomOf="@+id/pendingnumber" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 
 

@@ -28,6 +28,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.PermissionUtils
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bumptech.glide.Glide
@@ -39,12 +40,16 @@ import com.bridesandgrooms.event.Functions.converttoDate
 import com.bridesandgrooms.event.Functions.daystoDate
 import com.bridesandgrooms.event.Functions.getImgfromPlaces
 import com.bridesandgrooms.event.MVP.DashboardEventPresenter
+import com.bridesandgrooms.event.MVP.EventCategoryPresenter
 import com.bridesandgrooms.event.MVP.ImagePresenter
+import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardRepository
 import com.bridesandgrooms.event.Model.DashboardImage.FirebaseDataSourceImpl
 import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.UI.Adapters.CategoryAdapter
+import com.bridesandgrooms.event.UI.Fragments.CategoryFragmentActionListener
 import com.bridesandgrooms.event.databinding.DashboardchartsBinding
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.*
@@ -59,7 +64,10 @@ import kotlinx.coroutines.launch
 
 class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     DashboardEventPresenter.PaymentStats, DashboardEventPresenter.GuestStats,
-    DashboardEventPresenter.EventInterface, DashboardEventPresenter.DashboardImagesStats, ImagePresenter.EventImage, ImagePresenter.PlaceImage {
+    DashboardEventPresenter.EventInterface, DashboardEventPresenter.DashboardImagesStats,
+    DashboardEventPresenter.EventCategoryInterface,
+    ImagePresenter.EventImage, ImagePresenter.PlaceImage,
+    CategoryFragmentActionListener {
 
     private lateinit var BandG_Colors: ArrayList<Int>
     private lateinit var BandG_Colors2: ArrayList<Int>
@@ -117,15 +125,15 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inf = DataBindingUtil.inflate(inflater, R.layout.dashboardcharts, container, false)
 
         if (showAds) {
-            inf.adView.visibility = ConstraintLayout.VISIBLE
-            adView = inf.adView
+            //inf.adView.visibility = ConstraintLayout.VISIBLE
+            //adView = inf.adView
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)
         }
 
         if (user.hastask == "Y" || user.haspayment == "Y") {
-            inf.withnodata1.root.visibility = ConstraintLayout.GONE
-            inf.withdata.visibility = ConstraintLayout.VISIBLE
+            //inf.withnodata1.root.visibility = ConstraintLayout.GONE
+            //inf.withdata.visibility = ConstraintLayout.VISIBLE
             //----------------------------------------------------------------------------------
             //Load with the achievements obtained by the user -------------------------------------------
 //            val stepsBeanList = user.onboardingprogress(requireContext())
@@ -194,29 +202,31 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 val repository = DashboardRepository(FirebaseDataSourceImpl(requireContext()))
                 dashboardEP.setRepository(repository)
                 dashboardEP.fetchDashboardImages()
+
+                dashboardEP.getActiveCategories()
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
             }
         } else {
             Log.i(TAG, "No data was obtained from the Event")
-
+/*
             inf.withdata.visibility = ConstraintLayout.GONE
             inf.onboarding.root.visibility = ConstraintLayout.VISIBLE
             inf.withnodata1.emptyCard.onboardingmessage.text =
                 getString(R.string.onboarding_message_createtask)
-
+*/
             val bottomView = activity?.findViewById<BottomNavigationView>(R.id.bottomnav)!!
             for (i in 0 until bottomView.menu.size()) {
                 bottomView.menu.getItem(i).isEnabled = false
             }
 
             val mAlphaAnimation = AnimationUtils.loadAnimation(context, R.xml.alpha_animation)
-            inf.onboarding.newtaskbutton.startAnimation(mAlphaAnimation)
-            inf.onboarding.newtaskbutton.setOnClickListener {
-                AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "New_Task")
-                val newtask = Intent(activity, TaskCreateEdit::class.java)
-                startActivity(newtask)
-            }
+//            inf.onboarding.newtaskbutton.startAnimation(mAlphaAnimation)
+//            inf.onboarding.newtaskbutton.setOnClickListener {
+//                AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "New_Task")
+//                val newtask = Intent(activity, TaskCreateEdit::class.java)
+//                startActivity(newtask)
+//            }
         }
         return inf.root
     }
@@ -238,6 +248,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         sumbudget: Float,
         task: Task
     ) {
+        val holeColor = ContextCompat.getColor(requireContext(), R.color.SurfaceContainer)
+
         val cardlayoutinvisible = inf.taskchartnodata
         cardlayoutinvisible.root.visibility = View.GONE
 
@@ -287,14 +299,13 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             setDrawEntryLabels(false)
             setUsePercentValues(false)
             description.isEnabled = false
-            setExtraOffsets(5f, -5f, -20f, 15f) //apparently this is padding
+            setExtraOffsets(0f, 5f, -8f, 15f) //apparently this is padding
             dragDecelerationFrictionCoef = 0.95f
             setCenterTextTypeface(tfRegular)
             setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.rosaChillon))
             setCenterTextSize(30f)
             isDrawHoleEnabled = true
-            setHoleColor(Color.WHITE)
-//            Don't really care too much about having a transparent circle
+            setHoleColor(holeColor)
             setTransparentCircleColor(Color.WHITE)
             setTransparentCircleAlpha(110)
             holeRadius = 50f
@@ -312,31 +323,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             invalidate()
         }
 
-//        val duenextcard = inf.duenextcard
-//        if (task.key.isEmpty()) {
-//            duenextcard.root.visibility = View.GONE
-//        } else {
-//            val cardname = duenextcard.cardtitle
-//            val cardsecondarytext = duenextcard.secondarytext
-//            val action1Button = duenextcard.action1
-//            val action2Button = duenextcard.action2
-//
-//            cardname.text = getString(R.string.duenext)
-//            val cardmsg = StringBuilder()
-//            cardmsg.append(task.name).append(" ").append(getString(R.string.dueby)).append(" ")
-//                .append(task.date)
-//            cardsecondarytext.text = cardmsg
-//            action1Button.text = getString(R.string.view)
-//            action2Button.visibility = View.INVISIBLE
-//
-//            action1Button.setOnClickListener {
-//                AnalyticsManager.getInstance()
-//                    .trackNavigationEvent(SCREEN_NAME, "View_DueNext_Task")
-//                val taskdetail = Intent(context, TaskCreateEdit::class.java)
-//                taskdetail.putExtra("task", task)
-//                requireContext().startActivity(taskdetail)
-//            }
-//        }
     }
 
     override fun onTaskStatsError(errcode: String) {
@@ -432,20 +418,20 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         rejected: Int,
         pending: Int
     ) {
-        val cardlayoutvisible = inf.guestlayout
+        val cardlayoutvisible = inf.dashboardVerticalLayout6
         cardlayoutvisible.visibility = View.VISIBLE
 
-        val cardlayoutinvisible = inf.noguestlayout
-        cardlayoutinvisible.visibility = View.GONE
+//        val cardlayoutinvisible = inf.noguestlayout
+//        cardlayoutinvisible.visibility = View.GONE
 
-        inf.guestlayout.findViewById<TextView>(R.id.acceptednumber).text = confirmed.toString()
-        inf.guestlayout.findViewById<TextView>(R.id.rejectednumber).text = rejected.toString()
-        inf.guestlayout.findViewById<TextView>(R.id.pendingnumber).text = pending.toString()
+        inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.acceptednumber).text = confirmed.toString()
+        inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.rejectednumber).text = rejected.toString()
+        inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.pendingnumber).text = pending.toString()
     }
 
     override fun onGuestConfirmationError(errcode: String) {
-        inf.guestlayout.visibility = ConstraintLayout.GONE
-        inf.noguestlayout.visibility = ConstraintLayout.VISIBLE
+        inf.dashboardVerticalLayout6.visibility = ConstraintLayout.GONE
+        //inf.noguestlayout.visibility = ConstraintLayout.VISIBLE
     }
 
     @SuppressLint("SetTextI18n")
@@ -637,7 +623,34 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         const val TAG = "DashboardEvent"
     }
 
+    override fun onCategories(list: List<Category>?) {
+        if (list != null) {
+            if (list.isNotEmpty()) {
+                //Creating the recyclerview to show the Categories, 2 columns
 
+                val rvAdapter = CategoryAdapter(this, list, requireContext())
+                inf.taskcategoryrv.adapter = rvAdapter
+            }
+        }
+    }
+
+    override fun onCategoriesError(errcode: String) {
+        inf.dashboardVerticalLayout5.visibility = View.GONE
+    }
+
+    override fun onCategoryFragmentWithData(category: String) {
+        val fragment = TaskPaymentList()
+        val bundle = Bundle()
+        bundle.putString("category", category)
+        fragment.arguments = bundle
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(
+                R.id.fragment_container,
+                fragment
+            )
+            ?.commit()
+    }
 }
+
 
 

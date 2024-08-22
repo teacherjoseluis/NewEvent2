@@ -58,7 +58,7 @@
     <string name="don_t_have_an_account_signup">No tienes cuenta? Regístrate</string>
     <string name="done">Hecho</string>
     <string name="logoff_question">Te quieres desconectar?</string>
-    <string name="duenext">Próxima tarea</string>
+    <string name="duenext">Próxima tareas</string>
     <string name="editeventImage">Editar Imagen del evento</string>
     <string name="email">Correo Electrónico</string>
     <string name="emptystate">Estado vacío</string>
@@ -375,6 +375,8 @@
     <string name="payment_text">Pagado: %1$s</string>
     <string name="status_text">Estatus: %1$s</string>
     <string name="error_invalid_money_input">Ingresa un monto valido</string>
+    <string name="event_greeting">Hola, %1$s</string>
+    <string name="trending">Tendencia</string>
 
     <string-array name="role" >
         <item>Novia</item>
