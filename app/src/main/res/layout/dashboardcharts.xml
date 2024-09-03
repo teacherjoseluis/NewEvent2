@@ -42,28 +42,23 @@
                 <LinearLayout
                     android:id="@+id/dashboard_vertical_layout_1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="120dp"
+                    android:orientation="horizontal"
                     android:padding="10dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:weightSum="100">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal"
-                        android:weightSum="100"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:layout_weight="40"
+                        android:orientation="vertical">
 
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:id="@+id/weddingavatar_card"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             style="@style/BG_Card"
-                            android:layout_weight="30"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
                             <ImageView
                                 android:id="@+id/weddingavatar"
@@ -71,35 +66,32 @@
                                 android:layout_height="100dp"
                                 android:contentDescription="@string/weddingavatar"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/avatar2"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                android:src="@drawable/avatar2" />
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end|top"
                                 android:layout_marginTop="10dp"
-                                android:layout_marginRight="10dp"
-                                android:src="@drawable/icons8_edit2"
-                                app:tint="@color/white" />
+                                android:layout_marginEnd="10dp"
+                                android:src="@drawable/icons8_edit2" />
 
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="60">
 
                         <include
                             android:id="@+id/weddinginvitation"
                             layout="@layout/summary_weddinginvitation"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginEnd="5dp"
-                            android:layout_weight="70"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
+                            android:layout_height="match_parent" />
                     </LinearLayout>
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/dashboard_vertical_layout_2"
@@ -122,7 +114,8 @@
 
                     <include
                         android:id="@+id/tasksduenext_layout"
-                        layout="@layout/task_calendar_item_layout" />
+                        layout="@layout/task_calendar_item_layout"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -204,20 +197,15 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/categoryrv"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            app:layout_constraintStart_toStartOf="parent">
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/categoryrv"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:orientation="horizontal"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </ScrollView>
 
                 </LinearLayout>
@@ -271,8 +259,8 @@
                     android:id="@+id/dashboard_vertical_layout_6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
                     android:orientation="vertical"
+                    android:padding="10dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/dashboard_vertical_layout_5">
 

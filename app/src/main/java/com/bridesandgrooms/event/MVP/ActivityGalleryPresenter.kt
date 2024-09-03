@@ -1,10 +1,9 @@
 package com.bridesandgrooms.event.MVP
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import com.bridesandgrooms.event.ActivityGallery
+import com.bridesandgrooms.event.FragmentGallery
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardImageResult
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardRepository
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +15,7 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ActivityGalleryPresenter(val activity: ActivityGallery)  {
+class ActivityGalleryPresenter(val activity: FragmentGallery)  {
 
     private lateinit var repository: DashboardRepository
 
@@ -62,7 +61,7 @@ class ActivityGalleryPresenter(val activity: ActivityGallery)  {
                     for (image in result.images!!) {
                         val bitmap = downloadBitmap(image.regularImageUrl)
                         if (bitmap != null) {
-                            imageList.add(Pair(bitmap, image.regularImageUrl))
+                            imageList.add(Pair(bitmap, image.photographer))
                         }
                     }
                     imageList

@@ -37,7 +37,9 @@
     <color name="Surface">#fff8f8</color>
     <color name="SurfaceDim">#edd4da</color>
     <color name="SurfaceDimTransparent">#66edd4da</color>
-    <color name="SurfaceContainer">#ffe8ed</color>
+    <color name="SurfaceDimTransparent_50">#80edd4da</color>
+    <color name="SurfaceDimTransparent_70">#4Dedd4da</color>
+    <color name="SurfaceContainer">#FFECF0</color>
     <color name="SurfaceContainerHigh">#fbe2e8</color>
     <color name="SurfaceContainerLow">#fff0f3</color>
     <color name="SurfaceContainerLowest">#ffffff</color>

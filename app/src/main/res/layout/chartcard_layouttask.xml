@@ -16,7 +16,7 @@
 
             <TextView
                 android:id="@+id/cardtitle"
-                style="@style/Title_Small"
+                style="@style/Title_Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="20"
@@ -24,7 +24,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 style="@style/BG_Card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -39,7 +39,7 @@
                     android:layout_height="match_parent"
                     android:background="@color/SurfaceContainer"
                     android:padding="10dp" />
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

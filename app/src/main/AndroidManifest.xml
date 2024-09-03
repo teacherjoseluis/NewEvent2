@@ -173,7 +173,7 @@
             android:name=".BlogContent"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ActivityGallery"
+            android:name=".FragmentGallery"
             android:theme="@style/AppTheme" />
 
         <meta-data

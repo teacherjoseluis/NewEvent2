@@ -2,243 +2,56 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="185dp"
-    android:layout_height="185dp"
-    android:padding="2dp"
-    android:background="@color/pewter">
+    android:layout_width="180dp"
+    android:layout_height="220dp"
+    android:background="@color/Surface"
+    android:padding="2dp">
 
-    <androidx.cardview.widget.CardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:background="@drawable/rv_border"
-        android:padding="10dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/CategoryCardView"
+            style="@style/BG_Card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="100">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/categoryimage"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="100"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:contentDescription="@string/categoryimage"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:weightSum="100"
-                    tools:ignore="UselessParent">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/semi_transparent_overlay_50"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="15"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/categorytitle"
-                            style="@style/Heading9"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="left"
-                            android:text="@string/category"
-                            android:padding="5dp"
-                            android:textColor="@color/rosaChillon"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="85"
-                        android:padding="5dp"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/categoryimage"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:contentDescription="@string/categoryimage"
-                            android:scaleType="centerCrop"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:srcCompat="@tools:sample/avatars" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!--            <LinearLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="0dp"-->
-            <!--                android:layout_weight="15">-->
-
-            <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--                    android:id="@+id/tasksection"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_marginTop="4dp">-->
-
-            <!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--                        android:id="@+id/pendingtask"-->
-            <!--                        android:layout_width="wrap_content"-->
-            <!--                        android:layout_height="wrap_content"-->
-            <!--                        app:layout_constraintStart_toStartOf="parent"-->
-            <!--                        app:layout_constraintTop_toTopOf="parent">-->
-
-            <!--                        <ImageView-->
-            <!--                            android:id="@+id/taskpendingimage"-->
-            <!--                            android:layout_width="18dp"-->
-            <!--                            android:layout_height="18dp"-->
-            <!--                            android:contentDescription="@string/taskpendingimage"-->
-            <!--                            app:layout_constraintStart_toStartOf="parent"-->
-            <!--                            app:layout_constraintTop_toTopOf="parent"-->
-            <!--                            app:srcCompat="@drawable/task_pending_outline"-->
-            <!--                            app:tint="@color/black" />-->
-
-            <!--                        <TextView-->
-            <!--                            android:id="@+id/taskpendinglabel"-->
-            <!--                            style="@style/BodyXSmall"-->
-            <!--                            android:layout_width="wrap_content"-->
-            <!--                            android:layout_height="wrap_content"-->
-            <!--                            android:paddingStart="4dp"-->
-            <!--                            android:text="@string/_0"-->
-            <!--                            app:layout_constraintStart_toEndOf="@+id/taskpendingimage"-->
-            <!--                            app:layout_constraintTop_toTopOf="parent"-->
-            <!--                            tools:ignore="RtlSymmetry" />-->
-            <!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-            <!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--                        android:id="@+id/completedtask"-->
-            <!--                        android:layout_width="wrap_content"-->
-            <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:paddingStart="8dp"-->
-            <!--                        app:layout_constraintStart_toEndOf="@+id/pendingtask"-->
-            <!--                        app:layout_constraintTop_toTopOf="parent"-->
-            <!--                        tools:ignore="RtlSymmetry">-->
-
-            <!--                        <ImageView-->
-            <!--                            android:id="@+id/taskdoneimage"-->
-            <!--                            android:layout_width="18dp"-->
-            <!--                            android:layout_height="18dp"-->
-            <!--                            android:contentDescription="@string/taskdoneimage"-->
-            <!--                            app:layout_constraintStart_toStartOf="parent"-->
-            <!--                            app:layout_constraintTop_toTopOf="parent"-->
-            <!--                            app:srcCompat="@drawable/task_done_outline"-->
-            <!--                            app:tint="@color/black" />-->
-
-            <!--                        <TextView-->
-            <!--                            android:id="@+id/taskdonelabel"-->
-            <!--                            style="@style/BodyXSmall"-->
-            <!--                            android:layout_width="wrap_content"-->
-            <!--                            android:layout_height="wrap_content"-->
-            <!--                            android:paddingStart="4dp"-->
-            <!--                            android:text="@string/_0"-->
-            <!--                            app:layout_constraintStart_toEndOf="@+id/taskdoneimage"-->
-            <!--                            app:layout_constraintTop_toTopOf="parent"-->
-            <!--                            tools:ignore="RtlSymmetry" />-->
-            <!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-            <!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--                        android:layout_width="wrap_content"-->
-            <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:paddingStart="8dp"-->
-            <!--                        app:layout_constraintStart_toEndOf="@+id/completedtask"-->
-            <!--                        app:layout_constraintTop_toTopOf="parent"-->
-            <!--                        tools:ignore="RtlSymmetry">-->
-
-            <!--                        <ImageView-->
-            <!--                            android:id="@+id/taskbudgetimage"-->
-            <!--                            android:layout_width="18dp"-->
-            <!--                            android:layout_height="18dp"-->
-            <!--                            android:contentDescription="@string/taskbudgetimage"-->
-            <!--                            app:layout_constraintStart_toStartOf="parent"-->
-            <!--                            app:layout_constraintTop_toTopOf="parent"-->
-            <!--                            app:srcCompat="@drawable/icons8_invoice_paid_32"-->
-            <!--                            app:tint="@color/black" />-->
-
-            <!--                        <TextView-->
-            <!--                            android:id="@+id/taskbudgetlabel"-->
-            <!--                            style="@style/BodyXSmall"-->
-            <!--                            android:layout_width="wrap_content"-->
-            <!--                            android:layout_height="wrap_content"-->
-            <!--                            android:paddingStart="4dp"-->
-            <!--                            android:text="@string/_0"-->
-            <!--                            app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                            app:layout_constraintStart_toEndOf="@+id/taskbudgetimage"-->
-            <!--                            app:layout_constraintTop_toTopOf="parent"-->
-            <!--                            tools:ignore="RtlSymmetry" />-->
-            <!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-            <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
-            <!--            </LinearLayout>-->
-
-            <!--            <LinearLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="0dp"-->
-            <!--                android:layout_weight="15">-->
-
-            <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--                    android:id="@+id/paymentsection"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_marginTop="4dp">-->
-
-            <!--                    <ImageView-->
-            <!--                        android:id="@+id/paymentdoneimage"-->
-            <!--                        android:layout_width="18dp"-->
-            <!--                        android:layout_height="18dp"-->
-            <!--                        android:contentDescription="@string/taskdoneimage"-->
-            <!--                        app:layout_constraintStart_toStartOf="parent"-->
-            <!--                        app:layout_constraintTop_toTopOf="parent"-->
-            <!--                        app:srcCompat="@drawable/task_done_outline"-->
-            <!--                        app:tint="@color/black" />-->
-
-            <!--                    <TextView-->
-            <!--                        android:id="@+id/paymentdonelabel"-->
-            <!--                        style="@style/BodyXSmall"-->
-            <!--                        android:layout_width="wrap_content"-->
-            <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:paddingStart="4dp"-->
-            <!--                        android:text="@string/_0"-->
-            <!--                        app:layout_constraintStart_toEndOf="@+id/paymentdoneimage"-->
-            <!--                        app:layout_constraintTop_toTopOf="parent"-->
-            <!--                        tools:ignore="RtlSymmetry" />-->
-
-            <!--                    <ImageView-->
-            <!--                        android:id="@+id/paymentbudgetimage"-->
-            <!--                        android:layout_width="18dp"-->
-            <!--                        android:layout_height="18dp"-->
-            <!--                        android:contentDescription="@string/taskbudgetimage"-->
-            <!--                        app:layout_constraintStart_toEndOf="@+id/paymentdonelabel"-->
-            <!--                        app:layout_constraintTop_toTopOf="parent"-->
-            <!--                        app:srcCompat="@drawable/icons8_invoice_paid_32"-->
-            <!--                        app:tint="@color/black" />-->
-
-            <!--                    <TextView-->
-            <!--                        android:id="@+id/paymentbudgetlabel"-->
-            <!--                        style="@style/BodyXSmall"-->
-            <!--                        android:layout_width="wrap_content"-->
-            <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:paddingStart="4dp"-->
-            <!--                        android:text="@string/_0"-->
-            <!--                        app:layout_constraintStart_toEndOf="@+id/paymentbudgetimage"-->
-            <!--                        app:layout_constraintTop_toTopOf="parent"-->
-            <!--                        tools:ignore="RtlSymmetry" />-->
-            <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
-            <!--            </LinearLayout>-->
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/categorytitle"
+                style="@style/CardView_Body2"
+                android:textColor="@color/OnSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/category"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

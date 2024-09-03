@@ -28,7 +28,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.PermissionUtils
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bumptech.glide.Glide
@@ -40,7 +39,6 @@ import com.bridesandgrooms.event.Functions.converttoDate
 import com.bridesandgrooms.event.Functions.daystoDate
 import com.bridesandgrooms.event.Functions.getImgfromPlaces
 import com.bridesandgrooms.event.MVP.DashboardEventPresenter
-import com.bridesandgrooms.event.MVP.EventCategoryPresenter
 import com.bridesandgrooms.event.MVP.ImagePresenter
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardRepository
@@ -59,6 +57,7 @@ import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 
@@ -66,14 +65,16 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     DashboardEventPresenter.PaymentStats, DashboardEventPresenter.GuestStats,
     DashboardEventPresenter.EventInterface, DashboardEventPresenter.DashboardImagesStats,
     DashboardEventPresenter.EventCategoryInterface,
+    DashboardEventPresenter.TaskNextInterface,
     ImagePresenter.EventImage, ImagePresenter.PlaceImage,
-    CategoryFragmentActionListener {
+    CategoryFragmentActionListener, GalleryFragmentActionListener {
 
     private lateinit var BandG_Colors: ArrayList<Int>
     private lateinit var BandG_Colors2: ArrayList<Int>
     private lateinit var dashboardEP: DashboardEventPresenter
     private lateinit var imagePresenter: ImagePresenter
     private lateinit var adView: AdView
+    private lateinit var toolbar: MaterialToolbar
 
     private var placeid = ""
     private var showAds = false
@@ -122,6 +123,9 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        toolbar = requireActivity().findViewById(R.id.toolbar)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.myeventtitle)
+
         inf = DataBindingUtil.inflate(inflater, R.layout.dashboardcharts, container, false)
 
         if (showAds) {
@@ -204,17 +208,18 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 dashboardEP.fetchDashboardImages()
 
                 dashboardEP.getActiveCategories()
+                dashboardEP.getUpcomingTasks()
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
             }
         } else {
             Log.i(TAG, "No data was obtained from the Event")
-/*
-            inf.withdata.visibility = ConstraintLayout.GONE
-            inf.onboarding.root.visibility = ConstraintLayout.VISIBLE
-            inf.withnodata1.emptyCard.onboardingmessage.text =
-                getString(R.string.onboarding_message_createtask)
-*/
+            /*
+                        inf.withdata.visibility = ConstraintLayout.GONE
+                        inf.onboarding.root.visibility = ConstraintLayout.VISIBLE
+                        inf.withnodata1.emptyCard.onboardingmessage.text =
+                            getString(R.string.onboarding_message_createtask)
+            */
             val bottomView = activity?.findViewById<BottomNavigationView>(R.id.bottomnav)!!
             for (i in 0 until bottomView.menu.size()) {
                 bottomView.menu.getItem(i).isEnabled = false
@@ -232,7 +237,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     }
 
     override fun onDashboardImages(images: List<DashboardEventPresenter.CategoryThumbnails>) {
-        val rvAdapter = rvDashboardImageAdapter(images)
+        val rvAdapter = rvDashboardImageAdapter(this, images, requireContext())
         inf.categoryrv.adapter = rvAdapter
         Log.d("DashboardEvent", "Entering onDashboardImages")
     }
@@ -424,9 +429,12 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 //        val cardlayoutinvisible = inf.noguestlayout
 //        cardlayoutinvisible.visibility = View.GONE
 
-        inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.acceptednumber).text = confirmed.toString()
-        inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.rejectednumber).text = rejected.toString()
-        inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.pendingnumber).text = pending.toString()
+        inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.acceptednumber).text =
+            confirmed.toString()
+        inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.rejectednumber).text =
+            rejected.toString()
+        inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.pendingnumber).text =
+            pending.toString()
     }
 
     override fun onGuestConfirmationError(errcode: String) {
@@ -438,6 +446,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     override fun onEvent(context: Context, event: Event) {
         placeid = event.placeid
 
+        inf.weddinginvitation.eventgreeting.text = getString(R.string.event_greeting, user.shortname)
         inf.weddinginvitation.eventname.text = event.name
         inf.weddinginvitation.eventdate.text = event.date
         inf.weddinginvitation.eventaddress.text = event.location
@@ -650,6 +659,47 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             )
             ?.commit()
     }
+
+    override fun onTaskNextList(taskList: ArrayList<String>?) {
+        if (taskList != null) {
+            if (taskList.isNotEmpty()) {
+                inf.tasksduenextLayout.root.visibility = View.VISIBLE
+                val numberOfTasks = minOf(taskList.size, 3)
+                for (i in 1..numberOfTasks) {
+                    val taskName = "taskname$i"
+                    val taskViewField =
+                        inf.tasksduenextLayout::class.java.getDeclaredField(taskName).apply {
+                            isAccessible = true
+                        }
+                    val taskView = taskViewField.get(inf.tasksduenextLayout) as TextView
+                    taskView.visibility = View.VISIBLE
+                    taskView.text = taskList[i - 1]
+                }
+            }
+        }
+    }
+
+    override fun onTaskNextListError(errcode: String) {
+    }
+
+    override fun onGalleryFragmentWithData(category: String) {
+        val fragment = FragmentGallery()
+        val bundle = Bundle()
+        bundle.putString("category", category)
+        fragment.arguments = bundle
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(
+                R.id.fragment_container,
+                fragment
+            )
+            ?.commit()
+    }
+
+
+}
+
+interface GalleryFragmentActionListener {
+    fun onGalleryFragmentWithData(category: String)
 }
 
 

@@ -24,34 +24,31 @@
 
             <TextView
                 android:id="@+id/taskname1"
-                style="@style/Body_Medium"
+                style="@style/CardView_Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/task"
                 android:visibility="invisible"
-                android:textColor="@color/OnSurface"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/taskname2"
-                style="@style/Body_Medium"
+                style="@style/CardView_Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/task"
                 android:visibility="invisible"
-                android:textColor="@color/OnSurface"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/taskname1" />
 
             <TextView
                 android:id="@+id/taskname3"
-                style="@style/Body_Medium"
+                style="@style/CardView_Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/task"
                 android:visibility="invisible"
-                android:textColor="@color/OnSurface"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/taskname2" />
 

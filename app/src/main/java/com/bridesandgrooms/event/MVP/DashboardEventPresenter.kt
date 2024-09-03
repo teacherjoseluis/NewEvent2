@@ -24,6 +24,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Date
 
 class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent, val view: View) :
     TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList,
@@ -237,9 +238,31 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
             val categoriesList = taskDBHelper.getActiveCategories()!!
             fragment.onCategories(categoriesList)
         } catch (e: Exception) {
-            Log.e("EventCategoryPresenter", e.message.toString())
+            Log.e("DashboardEventPresenter", e.message.toString())
             fragment.onCategoriesError(ERRCODETASKS)
         }
+    }
+
+    fun getUpcomingTasks() {
+        val taskDBHelper = TaskDBHelper(context)
+        try {
+            val taskList = taskDBHelper.getUpcomingTasks()
+            fragment.onTaskNextList(taskList)
+        } catch (e: Exception) {
+            Log.e("DashboardEventPresenter", e.message.toString())
+            fragment.onTaskNextListError(ERRCODETASKS)
+        }
+    }
+
+    interface TaskNextInterface {
+        fun onTaskNextList (
+            taskList: ArrayList<String>?
+        )
+
+        fun onTaskNextListError (
+            errcode: String
+        )
+
     }
 
     interface EventCategoryInterface {

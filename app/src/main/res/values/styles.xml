@@ -285,13 +285,18 @@
     </style>
     <!--					   -->
     <style name="CardView_Body" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:fontFamily">@font/robotoregular</item>
+        <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textColor">@color/lead</item>
         <item name="android:textSize">12sp</item>
     </style>
+    <style name="CardView_Body2" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:textColor">@color/lead</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
     <style name="CardView_BodyBold" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:fontFamily">@font/robotomedium</item>
+        <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textColor">@color/lead</item>
         <item name="android:textSize">12sp</item>
     </style>
@@ -432,5 +437,9 @@
         <item name="cardBackgroundColor">@color/SurfaceContainer</item>
         <item name="strokeColor">@color/OnSurfaceVar</item>
         <item name="strokeWidth">0.5dp</item>
+        <item name="android:ambientShadowAlpha">1</item>
+        <item name="android:spotShadowAlpha">1</item>
+        <item name="android:outlineSpotShadowColor">@color/black</item>
+        <item name="android:outlineAmbientShadowColor">@color/black</item>
     </style>
 </resources>

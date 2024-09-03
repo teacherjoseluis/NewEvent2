@@ -46,10 +46,12 @@ class GalleryAdapter(private val context: Context, private val dataList: List<Pa
 
     inner class GalleryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.categoryimage)
+        private val categorycredit: TextView? = itemView.findViewById(R.id.photo_credits)
         //private val photographerTextView: TextView = itemView.findViewById(R.id.categorytitle)
 
         fun bind(bitmap: Bitmap, photographer: String) {
             imageView.setImageBitmap(bitmap)
+            categorycredit?.text = photographer
             //photographerTextView.text = photographer
         }
     }

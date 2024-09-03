@@ -65,7 +65,7 @@
 
                         <TextView
                             android:id="@+id/tasknodataname1"
-                            style="@style/Body_Medium"
+                            style="@style/CardView_Body"
                             android:layout_width="300dp"
                             android:layout_height="wrap_content"
                             android:text="@string/emptystate_notaskstodaymsg"
@@ -120,7 +120,7 @@
 
                         <TextView
                             android:id="@+id/paymentnodataname1"
-                            style="@style/Body_Medium"
+                            style="@style/CardView_Body"
                             android:layout_width="300dp"
                             android:layout_height="wrap_content"
                             android:text="@string/emptystate_nopaymentstodaymsg"

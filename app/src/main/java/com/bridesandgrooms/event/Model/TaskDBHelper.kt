@@ -190,6 +190,49 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         }
     }
 
+    fun getUpcomingTasks(): ArrayList<String>? {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val currentDate = SimpleDateFormat("d/M/yyyy", Locale.getDefault()).format(Date())
+        val taskDetailsList = arrayListOf<String>()
+        try {
+            // Fetch all tasks that are active, regardless of date
+            val cursor: Cursor = db.rawQuery(
+                "SELECT name, date FROM TASK WHERE taskid IS NOT NULL AND taskid != '' AND status = 'A'",
+                null
+            )
+            if (cursor.count > 0) {
+                val dbFormat = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
+                cursor.moveToFirst()
+                do {
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                    val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+                    val date = dbFormat.parse(dateString) ?: continue // Skip if parsing fails
+
+                    // Compare dates within the app logic
+                    if (date.after(Date())) {
+                        val newFormat = SimpleDateFormat("MMM, dd", Locale.getDefault())
+                        val formattedDate = newFormat.format(date)
+                        taskDetailsList.add("$name - $formattedDate")
+                    }
+                } while (cursor.moveToNext())
+
+                // Sort by date after fetching
+                taskDetailsList.sortWith(Comparator { o1, o2 ->
+                    val date1 = dbFormat.parse(o1.substringAfter(" - "))
+                    val date2 = dbFormat.parse(o2.substringAfter(" - "))
+                    date1.compareTo(date2)
+                })
+            }
+            cursor.close()
+            return taskDetailsList
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+            return null
+        } finally {
+            db.close()
+        }
+    }
+
     @SuppressLint("Range")
     fun getDateTaskArray(date: Date): ArrayList<Task>? {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
