@@ -167,7 +167,7 @@ class FragmentGallery : Fragment(), ActivityGalleryPresenter.ActiveGalleryImages
         return binding.root
         }
 
-    override fun onActiveGalleryImages(images: List<Pair<Bitmap, String>>) {
+    override fun onActiveGalleryImages(images: List<Triple<Bitmap, String, String>>) {
 //        val container = binding.root as ViewGroup?
 //        container?.removeAllViews()
 //

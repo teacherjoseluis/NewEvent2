@@ -53,15 +53,15 @@ class ActivityGalleryPresenter(val activity: FragmentGallery)  {
         }
     }
 
-    private suspend fun getAllCategoryImages(category: String): List<Pair<Bitmap, String>>? {
+    private suspend fun getAllCategoryImages(category: String): List<Triple<Bitmap, String, String>>? {
         return withContext(Dispatchers.Main) {
             when (val result = repository.getPhotographerAndRegularImage(category)) {
                 is DashboardImageResult.SuccessURL -> {
-                    val imageList = mutableListOf<Pair<Bitmap, String>>()
+                    val imageList = mutableListOf<Triple<Bitmap, String, String>>()
                     for (image in result.images!!) {
                         val bitmap = downloadBitmap(image.regularImageUrl)
                         if (bitmap != null) {
-                            imageList.add(Pair(bitmap, image.photographer))
+                            imageList.add(Triple(bitmap, image.photographer, image.regularImageUrl))
                         }
                     }
                     imageList
@@ -73,6 +73,7 @@ class ActivityGalleryPresenter(val activity: FragmentGallery)  {
             }
         }
     }
+
 
     private suspend fun downloadBitmap(url: String): Bitmap? {
         return withContext(Dispatchers.IO) {
@@ -100,7 +101,7 @@ class ActivityGalleryPresenter(val activity: FragmentGallery)  {
 
     interface ActiveGalleryImages {
         fun onActiveGalleryImages(
-            images: List<Pair<Bitmap, String>>
+            images: List<Triple<Bitmap, String, String>>
         )
 
         fun onActiveGalleryImagesError(errcode: String)

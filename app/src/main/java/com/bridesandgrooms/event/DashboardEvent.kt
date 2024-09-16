@@ -48,6 +48,7 @@ import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.UI.Adapters.CategoryAdapter
 import com.bridesandgrooms.event.UI.Fragments.CategoryFragmentActionListener
+import com.bridesandgrooms.event.UI.Fragments.EventCategories
 import com.bridesandgrooms.event.databinding.DashboardchartsBinding
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.*
@@ -192,8 +193,13 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             inf.weddingavatar.setOnClickListener {
                 AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "Edit_Event")
 
-                val editevent = Intent(context, MainActivity::class.java)
-                startActivityForResult(editevent, SUCCESS_RETURN)
+                val fragment = MainActivity()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+
+//                val editevent = Intent(context, MainActivity::class.java)
+//                startActivityForResult(editevent, SUCCESS_RETURN)
             }
 
             try {
@@ -446,7 +452,8 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     override fun onEvent(context: Context, event: Event) {
         placeid = event.placeid
 
-        inf.weddinginvitation.eventgreeting.text = getString(R.string.event_greeting, user.shortname)
+        inf.weddinginvitation.eventgreeting.text =
+            getString(R.string.event_greeting, user.shortname)
         inf.weddinginvitation.eventname.text = event.name
         inf.weddinginvitation.eventdate.text = event.date
         inf.weddinginvitation.eventaddress.text = event.location

@@ -17,6 +17,7 @@ import com.bridesandgrooms.event.Functions.editUser
 import Application.MyFirebaseApp
 import Application.UserEditionException
 import android.util.Log
+import android.widget.ArrayAdapter
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.SettingsBinding
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -41,25 +42,55 @@ class Settings : Fragment(), IOnBackPressed {
 
         //Load the spinner with whatever comes from the user role
         inf.textinput.setText(usersession.shortname)
-        val position = when (usersession.role) {
-            "Bride" -> 0
-            "Groom" -> 1
-            else -> 0
-        }
-        inf.spinner.setSelection(position)
 
-        val position2 = when (usersession.country) {
-            "MX" -> 0
-            "CL" -> 1
-            "PE" -> 2
-            else -> 0
-        }
-        inf.spinner2.setSelection(position2)
+        val roles = arrayOf("Bride", "Groom") // Example roles
+        val roleAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, roles)
+        inf.roleAutocomplete.setAdapter(roleAdapter)
 
-        val position3 = when(usersession.distanceunit){
-            "miles" -> 0
-            "kilometers" -> 1
-            else -> 0
+        // Now using post to safely set selection
+        inf.roleAutocomplete.post {
+            val position = when (usersession.role) {
+                "Bride" -> 0
+                "Groom" -> 1
+                else -> 0
+            }
+
+            // Ensure the adapter is not null and has enough items
+            if (inf.roleAutocomplete.adapter != null && inf.roleAutocomplete.adapter.count > position) {
+                val item = inf.roleAutocomplete.adapter.getItem(position) as String
+                inf.roleAutocomplete.setText(item, false)  // Set text without filtering
+            }
+        }
+
+        val countries = arrayOf("MX", "CL", "PE") // Example countries
+        val countryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, countries)
+        inf.countryAutocomplete.setAdapter(countryAdapter)
+
+        inf.countryAutocomplete.post {
+            val position2 = when (usersession.country) {
+                "MX" -> 0
+                "CL" -> 1
+                "PE" -> 2
+                else -> 0
+            }
+            if (inf.countryAutocomplete.adapter != null && inf.countryAutocomplete.adapter.count > position2) {
+                inf.countryAutocomplete.setSelection(position2)
+            }
+        }
+
+        val distances = arrayOf("miles", "kilometers") // Example distances
+        val distanceAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, distances)
+        inf.distanceAutocomplete.setAdapter(distanceAdapter)
+
+        inf.distanceAutocomplete.post {
+            val position3 = when(usersession.distanceunit){
+                "miles" -> 0
+                "kilometers" -> 1
+                else -> 0
+            }
+            if (inf.distanceAutocomplete.adapter != null && inf.distanceAutocomplete.adapter.count > position3) {
+                inf.distanceAutocomplete.setSelection(position3)
+            }
         }
 
         //Load the spinner with the language selected for the user
@@ -93,9 +124,9 @@ class Settings : Fragment(), IOnBackPressed {
 
 
         //When the user selects via the spinner Bride or Groom, that will be saved in his/her profile
-        inf.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        inf.roleAutocomplete.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                usersession.role = when (inf.spinner.selectedItemPosition) {
+                usersession.role = when (p2) {
                     0 -> "Bride"
                     1 -> "Groom"
                     else -> "Bride"
@@ -107,9 +138,9 @@ class Settings : Fragment(), IOnBackPressed {
             }
         }
 
-        inf.spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        inf.countryAutocomplete.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                usersession.country = when (inf.spinner2.selectedItemPosition) {
+                usersession.country = when (p2) {
                     0 -> "MX"
                     1 -> "CL"
                     2 -> "PE"
@@ -122,9 +153,9 @@ class Settings : Fragment(), IOnBackPressed {
             }
         }
 
-        inf.spinner21.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        inf.distanceAutocomplete.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                usersession.distanceunit = when (inf.spinner21.selectedItemPosition) {
+                usersession.distanceunit = when (p2) {
                     0 -> "miles"
                     1 -> "kilometers"
                     else -> "miles"

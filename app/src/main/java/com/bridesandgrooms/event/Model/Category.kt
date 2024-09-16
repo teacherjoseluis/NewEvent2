@@ -86,7 +86,7 @@ enum class Category(
         "accessories",
         "Attire & Accessories",
         "Vestidos & Accessorios",
-        "ativo_6",
+        "ativo6_dalle_removebg_preview",
         "#F285C1",
         "#FFFFFF",
         "#f7d1e6",

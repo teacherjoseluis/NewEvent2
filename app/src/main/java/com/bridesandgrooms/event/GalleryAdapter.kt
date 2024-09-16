@@ -3,7 +3,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Bundle
 import android.provider.Browser
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,11 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.R
+import com.google.android.material.card.MaterialCardView
 
-class GalleryAdapter(private val context: Context, private val dataList: List<Pair<Bitmap, String>>) :
+class GalleryAdapter(private val context: Context, private val dataList: List<Triple<Bitmap, String, String>>) :
     RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
@@ -25,18 +25,31 @@ class GalleryAdapter(private val context: Context, private val dataList: List<Pa
     }
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
-        val (bitmap, photographer) = dataList[position]
-        holder.bind(bitmap, photographer)
+        val (bitmap, photographer, url) = dataList[position]
+        holder.bind(bitmap, photographer, url)
+
         holder.itemView.setOnClickListener {
-            val uri = Uri.parse(photographer)
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.packageName)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            try {
+            val uri = Uri.parse(url)
+            val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
+            // Explicitly using Google Chrome to handle the intent
+            val packageManager = context.packageManager
+            intent.setPackage("com.android.chrome") // Use this line to test with Chrome
+
+            // Check if the Chrome is installed and can handle the intent
+            if (intent.resolveActivity(packageManager) != null) {
                 context.startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                // Handle the case where no activity can handle the intent
-                Log.e("GalleryAdapter", "No activity found to handle the intent")
+            } else {
+                // Fallback to the user choosing an application
+                val chooser = Intent.createChooser(intent, "Choose a browser")
+                if (chooser.resolveActivity(packageManager) != null) {
+                    context.startActivity(chooser)
+                } else {
+                    Toast.makeText(context, "No browser found to open the link", Toast.LENGTH_LONG).show()
+                    Log.e("GalleryAdapter", "No application found to handle the URL: $url")
+                }
             }
         }
     }
@@ -49,7 +62,8 @@ class GalleryAdapter(private val context: Context, private val dataList: List<Pa
         private val categorycredit: TextView? = itemView.findViewById(R.id.photo_credits)
         //private val photographerTextView: TextView = itemView.findViewById(R.id.categorytitle)
 
-        fun bind(bitmap: Bitmap, photographer: String) {
+
+        fun bind(bitmap: Bitmap, photographer: String, url: String) {
             imageView.setImageBitmap(bitmap)
             categorycredit?.text = photographer
             //photographerTextView.text = photographer

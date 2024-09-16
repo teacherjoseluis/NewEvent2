@@ -11,10 +11,10 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.yalantis.ucrop.UCrop
@@ -30,19 +30,26 @@ import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.EventDBHelper
 import com.bridesandgrooms.event.Model.EventModel
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.fragment.app.Fragment
 import com.baoyachi.stepview.HorizontalStepView
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.EventformLayoutBinding
-import com.bridesandgrooms.event.UI.FieldValidators.TextValidate
 import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
-//import kotlinx.android.synthetic.main.eventform_layout.*
-//import kotlinx.android.synthetic.main.task_editdetail.*
+import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
+import com.bridesandgrooms.event.UI.Fragments.VendorsAll
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.io.File
 
-class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresenter.EventItem {
-
-    private val autocompletePlaceCode = 1
+class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.EventItem {
 
     private var eventkey = ""
     private var eventplaceid = ""
@@ -50,94 +57,70 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
     private var eventlongitude = 0.0
     private var eventaddress = ""
     private var uri: Uri? = null
+    private lateinit var context: Context
+    private lateinit var userSession: User
 
     private lateinit var presenterevent: EventPresenter
     private lateinit var imagePresenter: ImagePresenter
     private lateinit var binding: EventformLayoutBinding
 
+    private lateinit var imagePickerLauncher: ActivityResultLauncher<Intent>
+    private lateinit var cropImageLauncher: ActivityResultLauncher<Intent>
+    private lateinit var locationResultLauncher: ActivityResultLauncher<Intent>
+
+    private val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+        if (hasFocus && view is TextInputEditText) {
+            val parentLayout = view.parent.parent as? TextInputLayout
+            parentLayout?.error = null
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val user = User().getUser(this)
+        setHasOptionsMenu(true)
+        context = requireContext()
 
-        binding = DataBindingUtil.setContentView(this, R.layout.eventform_layout)
-        binding.eventname.setOnClickListener {
-            binding.eventname.error = null
-        }
-
-//        binding.eventname.onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
-//            if (!p1) {
-//                val validationmessage = TextValidate(binding.eventname).nameFieldValidate()
-//                if (validationmessage != "") {
-//                    val errormsg = binding.eventname.toString()
-//                    errormsg.plus(validationmessage)
-//                    binding.eventname.error = errormsg
-//                }
-//            }
-//        }
-
-        binding.eventdate.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Pick_Date")
-            binding.eventdate.error = null
-            showDatePickerDialog()
-        }
-
-        binding.eventtime.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Pick_Time")
-            binding.eventtime.error = null
-            showTimePickerDialog()
-        }
-
-        binding.eventlocation.setOnClickListener {
-            binding.eventlocation.error = null
-            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"GooglePlaces")
-            val locationmap = Intent(this, MapsActivity::class.java)
-            startActivityForResult(locationmap, autocompletePlaceCode)
-        }
-
-        binding.editImageActionButton.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Event_Image")
-            showImagePickerDialog()
-        }
-
-        binding.savebutton.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"Edit_Event")
-            var inputvalflag = true
-            if (binding.eventname.text.toString().isEmpty()) {
-                binding.eventname.error = getString(R.string.error_tasknameinput)
-                inputvalflag = false
-            } else {
-//                val validationmessage = TextValidate(binding.eventname).nameFieldValidate()
-//                if (validationmessage != "") {
-//                    val errormsg = binding.eventname.toString()
-//                    errormsg.plus(validationmessage)
-//                    binding.eventname.error = errormsg
-//                    inputvalflag = false
-//                }
-            }
-            if (binding.eventdate.text.toString().isEmpty()) {
-                binding.eventdate.error = getString(R.string.error_taskdateinput)
-                inputvalflag = false
-            }
-            if (binding.eventtime.text.toString().isEmpty()) {
-                binding.eventtime.error = getString(R.string.error_timeinput)
-                inputvalflag = false
-            }
-            if (binding.eventlocation.text.toString().isEmpty()) {
-                binding.eventlocation.error = getString(R.string.error_locationinput)
-                inputvalflag = false
-            }
-            if (inputvalflag) {
-                saveEvent()
+        // Launcher for picking an image
+        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let { uri ->
+                    startImageCrop(uri)
+                }
             }
         }
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        // Launcher for UCrop activity
+        cropImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val resultUri = UCrop.getOutput(result.data!!)
+                resultUri?.let {
+                    displayCroppedImage(it)
+                }
+            }
+        }
+
+        locationResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // Handle the result returned from MapsActivity
+                // You may need to use result.data to get the data returned, if any
+                handleLocationResult(result.data)
+            }
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        userSession = User().getUser(context)
+        binding = DataBindingUtil.inflate(inflater, R.layout.eventform_layout, container, false)
+
+        val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.event)
 
         try {
-            presenterevent = EventPresenter(applicationContext, this)
+            presenterevent = EventPresenter(context, this)
             presenterevent.getEventDetail()
         } catch (e: Exception) {
             AnalyticsManager.getInstance().trackError(
@@ -150,54 +133,105 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
         }
 
         //Load with the achievements obtained by the user -------------------------------------------
-        val stepsBeanList = user.onboardingprogress(this)
+        val stepsBeanList = userSession.onboardingprogress(context)
         val stepview = binding.root.findViewById<HorizontalStepView>(R.id.step_view)
         stepview
             .setStepViewTexts(stepsBeanList)
             .setTextSize(12)
             .setStepsViewIndicatorCompletedLineColor(
                 ContextCompat.getColor(
-                    this,
+                    context,
                     R.color.azulmasClaro
                 )
             )
             .setStepsViewIndicatorUnCompletedLineColor(
                 ContextCompat.getColor(
-                    this,
+                    context,
                     R.color.rosaChillon
                 )
             )
             .setStepViewComplectedTextColor(
                 ContextCompat.getColor(
-                    this,
+                    context,
                     R.color.azulmasClaro
                 )
             )
             .setStepViewUnComplectedTextColor(
                 ContextCompat.getColor(
-                    this,
+                    context,
                     R.color.rosaChillon
                 )
             )
             .setStepsViewIndicatorCompleteIcon(
                 ContextCompat.getDrawable(
-                    this,
+                    context,
                     R.drawable.icons8_checked_rosachillon
                 )
             )
             .setStepsViewIndicatorDefaultIcon(
                 ContextCompat.getDrawable(
-                    this,
+                    context,
                     R.drawable.circle_rosachillon
                 )
             )
             .setStepsViewIndicatorAttentionIcon(
                 ContextCompat.getDrawable(
-                    this,
+                    context,
                     R.drawable.alert_icon_rosachillon
                 )
             )
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.eventname.onFocusChangeListener = focusChangeListener
+        binding.eventdate.onFocusChangeListener = focusChangeListener
+        binding.eventdate.setOnClickListener {
+            showDatePickerDialog()
+        }
+
+        binding.eventtime.setOnClickListener {
+            showTimePickerDialog()
+        }
+
+        binding.eventlocation.setOnClickListener {
+            val locationmap = Intent(context, MapsActivity::class.java)
+            locationResultLauncher.launch(locationmap)
+        }
+
+        binding.editImageActionButton.setOnClickListener {
+            showImagePickerDialog()
+        }
+
+        binding.savebutton.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Edit_Event")
+            val isValid = validateAllInputs()
+            if (isValid) {
+                saveEvent()
+            }
+        }
+    }
+
+    private fun validateAllInputs(): Boolean {
+        var isValid = true
+        val validator = InputValidator(context)
+
+        val nameValidation =
+            validator.validate(binding.eventname)
+        if (!nameValidation) {
+            binding.eventname.error = validator.errorCode
+            isValid = false
+        }
+
+        val dateValidation =
+            validator.validate(binding.eventdate)
+        if (!dateValidation) {
+            binding.eventdate.error = validator.errorCode
+            isValid = false
+        }
+        return isValid
     }
 
     private fun showDatePickerDialog() {
@@ -210,12 +244,12 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
                     binding.eventdate.error = getString(R.string.error_invaliddate)
                 }
             }))
-        newFragment.show(supportFragmentManager, "datePicker")
+        newFragment.show(requireActivity().supportFragmentManager, "datePicker")
     }
 
     private fun showTimePickerDialog() {
         val newFragment = TimePickerFragment(binding.eventtime)
-        newFragment.show(supportFragmentManager, "Time Picker")
+        newFragment.show(requireActivity().supportFragmentManager, "Time Picker")
     }
 
     private fun showImagePickerDialog() {
@@ -224,7 +258,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
         intent.type = "image/*"
 
         //Request permissions
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
+        if (checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) ==
             PackageManager.PERMISSION_DENIED
         ) {
             //permission denied
@@ -233,8 +267,50 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
             requestPermissions(permissions, PERMISSION_CODE)
         } else {
             //permission already granted
-            startActivityForResult(intent, IMAGE_PICK_CODE)
+            openImagePicker()
         }
+    }
+
+    private fun openImagePicker() {
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            type = "image/*"
+        }
+        imagePickerLauncher.launch(intent)
+    }
+
+    private fun startImageCrop(sourceUri: Uri) {
+        val destinationUri = Uri.fromFile(File(requireContext().cacheDir, "cropped_image.jpg"))
+        val options = UCrop.Options().apply {
+            withAspectRatio(1f, 1f)
+            withMaxResultSize(800, 800)
+        }
+        UCrop.of(sourceUri, destinationUri)
+            .withOptions(options)
+            .start(requireContext(), this)
+    }
+
+    // Handle the result in the deprecated onActivityResult method
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            val resultUri = UCrop.getOutput(data!!)
+            displayCroppedImage(resultUri!!)
+        }
+    }
+
+    private fun displayCroppedImage(uri: Uri) {
+        Glide.with(this)
+            .load(uri)
+            .into(binding.eventimage)
+    }
+
+    private fun handleLocationResult(data: Intent?) {
+        val placenameString = data?.getStringExtra("place_name")
+        eventplaceid = data!!.getStringExtra("place_id").toString()
+        eventlatitude = data.getDoubleExtra("place_latitude", 0.0)
+        eventlongitude = data.getDoubleExtra("place_longitude", 0.0)
+        eventaddress = data.getStringExtra("place_address").toString()
+        binding.eventlocation.setText(placenameString)
     }
 
     companion object {
@@ -259,7 +335,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
                     showImagePickerDialog()
                 } else {
                     //permission from popup denied
-                    Toast.makeText(this, getString(R.string.permissiondenied), Toast.LENGTH_SHORT)
+                    Toast.makeText(context, getString(R.string.permissiondenied), Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -267,7 +343,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
     }
 
     private fun saveEvent() {
-        val user = User().getUser(this)
+        val user = User().getUser(context)
         val event = Event().apply {
             key = eventkey
             placeid = eventplaceid
@@ -282,13 +358,13 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
         val eventmodel = EventModel()
         eventmodel.editEvent(user.userid!!, event, object : EventModel.FirebaseSaveSuccess {
             override fun onSaveSuccess(eventid: String) {
-                val eventdb = EventDBHelper(this@MainActivity)
+                val eventdb = EventDBHelper(context)
                 eventdb.update(event)
 
                 if (uri != null) {
                     //There was a change in the event image
                     replaceImage(
-                        applicationContext,
+                        context,
                         "eventimage",
                         user.userid!!,
                         user.eventid,
@@ -298,56 +374,49 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
 
                 if (eventplaceid != "") {
                     //There was a change in the event location
-                    delImgfromSD(ImagePresenter.PLACEIMAGE, this@MainActivity)
+                    delImgfromSD(ImagePresenter.PLACEIMAGE, context)
                 }
             }
         })
-        val resultIntent = Intent()
-        setResult(Activity.RESULT_OK, resultIntent)
         finish()
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == autocompletePlaceCode) {
-            val placenameString = data?.getStringExtra("place_name")
-            eventplaceid = data!!.getStringExtra("place_id").toString()
-            eventlatitude = data.getDoubleExtra("place_latitude", 0.0)
-            eventlongitude = data.getDoubleExtra("place_longitude", 0.0)
-            eventaddress = data.getStringExtra("place_address").toString()
-            binding.eventlocation.setText(placenameString)
-        }
-
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            uri = data?.data!!
-            val destinationUri = Uri.fromFile(
-                File(
-                    cacheDir,
-                    "cropped_image.jpg"
-                )
-            ) // Specify the destination file URI for the cropped image
-            UCrop.of(uri!!, destinationUri)
-                .withAspectRatio(1f, 1f) // Set the desired aspect ratio (change as needed)
-                .withMaxResultSize(800, 800) // Set the maximum result size for the cropped image
-                .start(this)
-        }
-
-        if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
-            val resultUri = UCrop.getOutput(data!!)
-            if (resultUri != null) {
-                uri = resultUri
-                Glide.with(this@MainActivity)
-                    .load(uri)
-                    .into(binding.eventimage)
-            }
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
+//
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == Activity.RESULT_OK && requestCode == autocompletePlaceCode) {
+//            val placenameString = data?.getStringExtra("place_name")
+//            eventplaceid = data!!.getStringExtra("place_id").toString()
+//            eventlatitude = data.getDoubleExtra("place_latitude", 0.0)
+//            eventlongitude = data.getDoubleExtra("place_longitude", 0.0)
+//            eventaddress = data.getStringExtra("place_address").toString()
+//            binding.eventlocation.setText(placenameString)
+//        }
+//
+//        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+//            uri = data?.data!!
+//            val destinationUri = Uri.fromFile(
+//                File(
+//                    cacheDir,
+//                    "cropped_image.jpg"
+//                )
+//            ) // Specify the destination file URI for the cropped image
+//            UCrop.of(uri!!, destinationUri)
+//                .withAspectRatio(1f, 1f) // Set the desired aspect ratio (change as needed)
+//                .withMaxResultSize(800, 800) // Set the maximum result size for the cropped image
+//                .start(requireActivity())
+//        }
+//
+//        if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+//            val resultUri = UCrop.getOutput(data!!)
+//            if (resultUri != null) {
+//                uri = resultUri
+//                Glide.with(this@MainActivity)
+//                    .load(uri)
+//                    .into(binding.eventimage)
+//            }
+//        }
+//    }
 
     override fun onEventImage(context: Context, inflatedView: View?, packet: Any) {
         Glide.with(context)
@@ -387,7 +456,7 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
         eventkey = event.key
 
         try {
-            imagePresenter = ImagePresenter(applicationContext, this@MainActivity)
+            imagePresenter = ImagePresenter(context, this@MainActivity)
             imagePresenter.getEventImage()
         } catch (e: Exception) {
             AnalyticsManager.getInstance().trackError(
@@ -402,6 +471,15 @@ class MainActivity : AppCompatActivity(), ImagePresenter.EventImage, EventPresen
 
     override fun onEventError(errcode: String) {
         //This should not be reached as there will always be an Event to be edited
+    }
+
+    fun finish() {
+        val fragment = DashboardEvent()
+        Handler(Looper.getMainLooper()).postDelayed({
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }, 500)
     }
 }
 

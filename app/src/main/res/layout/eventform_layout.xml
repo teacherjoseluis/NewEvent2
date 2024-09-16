@@ -1,242 +1,164 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/pewter">
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/main_toolbar"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/eventimage_section"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <ImageView
-            android:id="@+id/eventimage"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:contentDescription="@string/eventimage"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/frame_206" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/editImageActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:clickable="true"
-        app:tint="@color/white"
-        app:backgroundTint="@color/rosaChillon"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/eventimage"
-        app:layout_constraintEnd_toEndOf="@+id/eventimage"
-        app:srcCompat="@drawable/camera"
-        android:contentDescription="@string/editeventImage" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/eventprogress_section"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventimage_section">
-
-        <include
-            android:id="@+id/weddingprogress"
-            layout="@layout/summary_weddingprogress"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventprogress_section">
+        android:layout_height="match_parent"
+        android:theme="@style/AppTheme">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/field1"
+            android:id="@+id/eventimage_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/eventname"
-                    style="@style/Body1"
-                    android:background="@drawable/layout_border"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/newevent_eventnameinput_en"
-                    android:maxLength="30" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/field2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/field1">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/eventdate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/Body1"
-                    android:background="@drawable/layout_border"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:hint="@string/newevent_eventdateinput_en"
-                    android:inputType="date"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="26dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/eventimage"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:contentDescription="@string/eventimage"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_icons8_calendar"
-                app:tint="#757575"
-                android:contentDescription="@string/calendaricon" />
 
+                app:layout_constraintHorizontal_bias="0.45"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/frame_206" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/editImageActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:clickable="true"
+                android:contentDescription="@string/editeventImage"
+                app:backgroundTint="@color/Primary"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="@+id/eventimage"
+                app:layout_constraintEnd_toEndOf="@+id/eventimage"
+                app:srcCompat="@drawable/camera"
+                app:tint="@color/OnPrimary" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/field3"
+            android:id="@+id/eventprogress_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/field2">
+            app:layout_constraintTop_toBottomOf="@id/eventimage_section">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventtimetextinput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
+            <include
+                android:id="@+id/weddingprogress"
+                layout="@layout/summary_weddingprogress"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/eventtime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/layout_border"
-                    style="@style/Body1"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:hint="@string/newevent_eventtimeinput_en"
-                    android:inputType="time" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="26dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/eventtimetextinput"
-                app:layout_constraintEnd_toEndOf="@+id/eventtimetextinput"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_icons8_clock"
-                app:tint="#757575"
-                android:contentDescription="@string/clockicon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/field4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/field3">
+            app:layout_constraintTop_toBottomOf="@id/eventprogress_section">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventlocationtextinput"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
+                android:orientation="vertical"
+                android:padding="@dimen/material_padding"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/eventlocation"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/BGTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/layout_border"
-                    style="@style/Body1"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:hint="@string/newevent_eventlocationinput_en" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="26dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/eventlocationtextinput"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icons8_place_marker_64"
-                app:tint="#757575"
-                android:contentDescription="@string/placemarkericon" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/newevent_eventnameinput_en"
+                        android:maxLength="30"
+                        android:tag="NAME"
+                        android:textAppearance="@style/Body_Small" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/BGTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/newevent_eventdateinput_en"
+                        android:inputType="date"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:textAppearance="@style/Body_Small" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/BGTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventtime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/newevent_eventtimeinput_en"
+                        android:inputType="time"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:textAppearance="@style/Body_Small" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/BGTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventlocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/newevent_eventlocationinput_en"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:textAppearance="@style/Body_Small" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/savebutton"
+            style="@style/BG_ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <Button
-        android:id="@+id/savebutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:shadowDy="2"
-        android:shadowRadius="4"
-        android:text="@string/save"
-        app:backgroundTint="@color/rosaChillon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -57,6 +57,12 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
 
+/*
+* I don't think the vendor selection is saved to the payment
+* */
+
+
+
 class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
 
     private lateinit var optionsmenu: Menu
