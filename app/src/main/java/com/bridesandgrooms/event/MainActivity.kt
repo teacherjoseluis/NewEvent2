@@ -32,6 +32,7 @@ import com.bridesandgrooms.event.Model.EventModel
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -57,6 +58,8 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
     private var eventlongitude = 0.0
     private var eventaddress = ""
     private var uri: Uri? = null
+    private var isSaveTriggered: Boolean = false
+
     private lateinit var context: Context
     private lateinit var userSession: User
 
@@ -81,31 +84,34 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
         context = requireContext()
 
         // Launcher for picking an image
-        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.data?.let { uri ->
-                    startImageCrop(uri)
+        imagePickerLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    result.data?.data?.let { uri ->
+                        startImageCrop(uri)
+                    }
                 }
             }
-        }
 
         // Launcher for UCrop activity
-        cropImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val resultUri = UCrop.getOutput(result.data!!)
-                resultUri?.let {
-                    displayCroppedImage(it)
+        cropImageLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val resultUri = UCrop.getOutput(result.data!!)
+                    resultUri?.let {
+                        displayCroppedImage(it)
+                    }
                 }
             }
-        }
 
-        locationResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                // Handle the result returned from MapsActivity
-                // You may need to use result.data to get the data returned, if any
-                handleLocationResult(result.data)
+        locationResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    // Handle the result returned from MapsActivity
+                    // You may need to use result.data to get the data returned, if any
+                    handleLocationResult(result.data)
+                }
             }
-        }
     }
 
     override fun onCreateView(
@@ -209,7 +215,11 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
             AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Edit_Event")
             val isValid = validateAllInputs()
             if (isValid) {
-                saveEvent()
+                if (uri != null) {
+                    saveEvent()
+                } else {
+                    isSaveTriggered = true // Indicate that save has been triggered
+                }
             }
         }
     }
@@ -292,16 +302,35 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
     // Handle the result in the deprecated onActivityResult method
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+
             val resultUri = UCrop.getOutput(data!!)
-            displayCroppedImage(resultUri!!)
+            uri = resultUri
+
+            binding.eventimage.setImageURI(uri)
+//            Glide.with(this@MainActivity)
+//                .load(uri)
+//                .placeholder(R.drawable.avatar2)  // Placeholder while loading
+//                .into(binding.eventimage)
+
+            // Check if the user has triggered the save operation
+            if (isSaveTriggered) {
+                saveEvent()
+            }
         }
     }
+
 
     private fun displayCroppedImage(uri: Uri) {
         Glide.with(this)
             .load(uri)
             .into(binding.eventimage)
+
+        // Check if the user has triggered the save operation
+        if (isSaveTriggered) {
+            saveEvent()
+        }
     }
 
     private fun handleLocationResult(data: Intent?) {
@@ -335,7 +364,11 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
                     showImagePickerDialog()
                 } else {
                     //permission from popup denied
-                    Toast.makeText(context, getString(R.string.permissiondenied), Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        context,
+                        getString(R.string.permissiondenied),
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
             }
