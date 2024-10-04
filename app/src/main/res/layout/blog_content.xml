@@ -6,13 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/pewter">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/main_toolbar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:background="@color/Surface_cream">
 
         <ImageView
             android:id="@+id/blogImage"
@@ -21,7 +15,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +29,7 @@
 
             <TextView
                 android:id="@+id/authorPost_label"
-                style="@style/Heading6"
+                style="@style/Title_Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/author_blog"
@@ -44,7 +38,7 @@
 
             <TextView
                 android:id="@+id/authorPost"
-                style="@style/Heading6"
+                style="@style/Title_Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Author"
@@ -53,6 +47,7 @@
 
             <TextView
                 android:id="@+id/datePost_label"
+                style="@style/Title_Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/date_posted"
@@ -61,6 +56,7 @@
 
             <TextView
                 android:id="@+id/datePost"
+                style="@style/Title_Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Date Post"
@@ -80,9 +76,9 @@
 
             <TextView
                 android:id="@+id/blogTitle"
+                style="@style/Title_Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/BodyBold"
                 android:text="Blog Title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -101,9 +97,9 @@
 
             <TextView
                 android:id="@+id/blogSummary"
+                style="@style/Body_Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/BodyNotBold2"
                 android:text="Blog Summary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -114,52 +110,32 @@
             android:id="@+id/footerBlog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/visitPage"
+                style="@style/Label_Large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/BodyItalic2"
-                android:text="@string/readmore_blog"
                 android:paddingBottom="0dp"
+                android:text="@string/readmore_blog"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:padding="2dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="true"
+            <ImageView
+                android:id="@+id/shareLink"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/blogimage"
+                android:src="@drawable/share"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/visitPage">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/shareLink"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:contentDescription="@string/blogimage"
-                        android:src="@drawable/icons8_share_50"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
+                app:layout_constraintTop_toBottomOf="@+id/visitPage" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

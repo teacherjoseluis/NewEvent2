@@ -1,9 +1,11 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Adapters
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.bridesandgrooms.event.DashboardBlog
+import com.bridesandgrooms.event.DashboardEvent
 
 class DashboardPagerAdapter(
     private val userid: String,

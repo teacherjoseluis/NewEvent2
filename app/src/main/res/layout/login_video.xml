@@ -5,10 +5,12 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/Surface_cream">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/frame1"
+        android:id="@+id/welcomeScreen"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/login_gradient">
@@ -29,21 +31,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/weddingrings_logo" />
+            app:srcCompat="@drawable/welcomelogo" />
 
         <Button
             android:id="@+id/signupbuttonstart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            style="@style/BG_ActionButton"
             android:layout_marginStart="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginEnd="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginBottom="20dp"
-            android:shadowDy="2"
-            android:shadowRadius="4"
             android:text="@string/sign_up"
-            app:backgroundTint="@color/rosaChillon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/guideline75" />
@@ -52,15 +52,13 @@
             android:id="@+id/loginbuttonstart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            style="@style/BG_ActionButton"
             android:layout_marginStart="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginEnd="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginBottom="5dp"
-            android:shadowDy="2"
-            android:shadowRadius="4"
             android:text="@string/login"
-            app:backgroundTint="@color/rosaChillon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signupbuttonstart" />
@@ -75,19 +73,20 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/frame2"
+        android:id="@+id/loginScreen"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
             android:contentDescription="@string/weddingringslogo"
             app:layout_constraintBottom_toTopOf="@+id/guideline30"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/weddingrings_smalllogo" />
+            app:srcCompat="@drawable/welcomelogo_small" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -113,11 +112,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editEmaillogin"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/layout_border"
+                    android:layout_height="wrap_content"
                     android:hint="@string/email"
                     android:maxLength="50"
-                    android:textStyle="normal" />
+                    android:tag="EMAIL"
+                    android:textAppearance="@style/Body_Small" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -138,11 +137,12 @@
                 <EditText
                     android:id="@+id/editPasswordlogin"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/password"
+                    android:tag="PASSWORD"
                     android:inputType="textPassword"
-                    android:textStyle="normal"
+                    android:textAppearance="@style/Body_Small"
                     tools:ignore="Autofill" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -156,10 +156,7 @@
                 android:layout_marginEnd="40dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="10dp"
-                android:shadowDy="2"
-                android:shadowRadius="4"
                 android:text="@string/login"
-                app:backgroundTint="@color/rosaChillon"
                 app:layout_constraintBottom_toTopOf="@+id/forgotemaillink"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -167,12 +164,11 @@
 
             <TextView
                 android:id="@+id/forgotemaillink"
-                style="@style/CaptionBold"
+                style="@style/BG_ActionTextSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/forgot_password"
-                android:textColor="@color/rosaChillon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/loginbutton" />
@@ -219,26 +215,14 @@
 
         </com.google.android.gms.common.SignInButton>
 
-
-        <!--        <com.facebook.login.widget.LoginButton-->
-        <!--            android:id="@+id/signfacebook"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center_horizontal"-->
-        <!--            android:layout_marginTop="5dp"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/signgoogle" />-->
-
         <TextView
             android:id="@+id/signuplink"
-            style="@style/CaptionBold"
+            style="@style/BG_ActionTextSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:gravity="center"
             android:text="@string/don_t_have_an_account_signup"
-            android:textColor="@color/rosaChillon"
             app:layout_constraintBottom_toTopOf="@+id/legallogin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -274,19 +258,20 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/frame3"
+        android:id="@+id/signupScreen"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:contentDescription="@string/weddingringslogo"
             app:layout_constraintBottom_toTopOf="@+id/guideline30frame3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/weddingrings_smalllogo" />
+            app:srcCompat="@drawable/welcomelogo_small" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -312,11 +297,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editEmailsignup"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/layout_border"
+                    android:layout_height="wrap_content"
                     android:hint="@string/email"
                     android:maxLength="50"
-                    android:textStyle="normal" />
+                    android:tag="EMAIL"
+                    android:textAppearance="@style/Body_Small" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -334,14 +319,15 @@
                 app:layout_constraintTop_toBottomOf="@id/emailinputsignup"
                 app:passwordToggleEnabled="true">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editPasswordsignup1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/password"
+                    android:tag="PASSWORD"
                     android:inputType="textPassword"
-                    android:textStyle="normal"
+                    android:textAppearance="@style/Body_Small"
                     tools:ignore="Autofill" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -360,14 +346,15 @@
                 app:layout_constraintTop_toBottomOf="@id/passwordinputsignup1"
                 app:passwordToggleEnabled="true">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editPasswordsignup2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:ems="10"
                     android:hint="@string/password"
+                    android:tag="PASSWORD"
                     android:inputType="textPassword"
-                    android:textStyle="normal"
+                    android:textAppearance="@style/Body_Small"
                     tools:ignore="Autofill" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -380,10 +367,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="40dp"
                 android:layout_marginRight="40dp"
-                android:shadowDy="2"
-                android:shadowRadius="4"
                 android:text="@string/sign_up"
-                app:backgroundTint="@color/rosaChillon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/passwordinputsignup2" />
@@ -392,13 +376,12 @@
 
         <TextView
             android:id="@+id/loginlink"
-            style="@style/CaptionBold"
+            style="@style/BG_ActionTextSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:gravity="center"
             android:text="@string/already_have_an_account_login"
-            android:textColor="@color/rosaChillon"
             app:layout_constraintBottom_toTopOf="@+id/legalsignup"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -430,6 +413,43 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".7" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bannerCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/material_margin"
+        android:visibility="invisible"
+        app:cardBackgroundColor="@color/pewter"
+        app:cardCornerRadius="@dimen/material_card_corner_radius"
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/material_padding">
+
+            <TextView
+                android:id="@+id/bannerText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hola"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <Button
+                android:id="@+id/dismissButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dismiss"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

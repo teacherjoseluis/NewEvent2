@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.UI.Adapters.DashboardPagerAdapter
 import com.google.android.material.tabs.TabLayout
 
 class DashboardView_clone : Fragment() {

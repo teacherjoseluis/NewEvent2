@@ -37,7 +37,7 @@
                     android:id="@+id/charttask"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/SurfaceContainer"
+                    android:background="@color/SurfaceContainer_cream"
                     android:padding="10dp" />
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

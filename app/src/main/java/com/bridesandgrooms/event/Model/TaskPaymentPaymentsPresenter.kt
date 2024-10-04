@@ -1,11 +1,10 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.Model
 
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import com.bridesandgrooms.event.MVP.PaymentPresenter
-import com.bridesandgrooms.event.Model.Payment
+import com.bridesandgrooms.event.TaskPaymentPayments
 import kotlin.collections.ArrayList
 
 class TaskPaymentPaymentsPresenter(

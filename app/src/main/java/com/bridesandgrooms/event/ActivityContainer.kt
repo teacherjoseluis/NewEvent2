@@ -27,9 +27,12 @@ import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll
 import com.bridesandgrooms.event.UI.Fragments.MyNotes
 import com.bridesandgrooms.event.UI.Fragments.NoteCreateEdit
+import com.bridesandgrooms.event.UI.Fragments.PaymentCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.PaymentsAllCalendar
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragment
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorTab
+import com.bridesandgrooms.event.UI.Fragments.Settings
+import com.bridesandgrooms.event.UI.Fragments.TaskCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.TasksAllCalendar
 import com.bridesandgrooms.event.UI.Fragments.VendorCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.VendorsAll

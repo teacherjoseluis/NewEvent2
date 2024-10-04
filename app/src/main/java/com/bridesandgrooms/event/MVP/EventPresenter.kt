@@ -2,13 +2,10 @@ package com.bridesandgrooms.event.MVP
 
 import Application.Cache
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.bridesandgrooms.event.MainActivity
+import com.bridesandgrooms.event.UI.Fragments.MainActivity
 import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.EventModel
 import com.bridesandgrooms.event.Model.User
-import com.bridesandgrooms.event.Model.UserDBHelper
 
 class EventPresenter : Cache.EventItemCacheData {
 

@@ -48,7 +48,7 @@ import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.UI.Adapters.CategoryAdapter
 import com.bridesandgrooms.event.UI.Fragments.CategoryFragmentActionListener
-import com.bridesandgrooms.event.UI.Fragments.EventCategories
+import com.bridesandgrooms.event.UI.Fragments.MainActivity
 import com.bridesandgrooms.event.databinding.DashboardchartsBinding
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.*
@@ -130,66 +130,11 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         inf = DataBindingUtil.inflate(inflater, R.layout.dashboardcharts, container, false)
 
         if (showAds) {
-            //inf.adView.visibility = ConstraintLayout.VISIBLE
-            //adView = inf.adView
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)
         }
 
         if (user.hastask == "Y" || user.haspayment == "Y") {
-            //inf.withnodata1.root.visibility = ConstraintLayout.GONE
-            //inf.withdata.visibility = ConstraintLayout.VISIBLE
-            //----------------------------------------------------------------------------------
-            //Load with the achievements obtained by the user -------------------------------------------
-//            val stepsBeanList = user.onboardingprogress(requireContext())
-//            val stepview = inf.root.findViewById<HorizontalStepView>(R.id.step_view)
-//            stepview
-//                .setStepViewTexts(stepsBeanList)
-//                .setTextSize(12)
-//                .setStepsViewIndicatorCompletedLineColor(
-//                    ContextCompat.getColor(
-//                        requireContext(),
-//                        R.color.azulmasClaro
-//                    )
-//                )
-//                .setStepsViewIndicatorUnCompletedLineColor(
-//                    ContextCompat.getColor(
-//                        requireContext(),
-//                        R.color.rosaChillon
-//                    )
-//                )
-//                .setStepViewComplectedTextColor(
-//                    ContextCompat.getColor(
-//                        requireContext(),
-//                        R.color.azulmasClaro
-//                    )
-//                )
-//                .setStepViewUnComplectedTextColor(
-//                    ContextCompat.getColor(
-//                        requireContext(),
-//                        R.color.rosaChillon
-//                    )
-//                )
-//                .setStepsViewIndicatorCompleteIcon(
-//                    ContextCompat.getDrawable(
-//                        requireContext(),
-//                        R.drawable.icons8_checked_rosachillon
-//                    )
-//                )
-//                .setStepsViewIndicatorDefaultIcon(
-//                    ContextCompat.getDrawable(
-//                        requireContext(),
-//                        R.drawable.circle_rosachillon
-//                    )
-//                )
-//                .setStepsViewIndicatorAttentionIcon(
-//                    ContextCompat.getDrawable(
-//                        requireContext(),
-//                        R.drawable.alert_icon_rosachillon
-//                    )
-//                )
-
-            //val weddingphotodetail = inf.weddingphotodetail
             inf.weddingavatar.setOnClickListener {
                 AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "Edit_Event")
 
@@ -197,9 +142,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .commit()
-
-//                val editevent = Intent(context, MainActivity::class.java)
-//                startActivityForResult(editevent, SUCCESS_RETURN)
             }
 
             try {
@@ -220,12 +162,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             }
         } else {
             Log.i(TAG, "No data was obtained from the Event")
-            /*
-                        inf.withdata.visibility = ConstraintLayout.GONE
-                        inf.onboarding.root.visibility = ConstraintLayout.VISIBLE
-                        inf.withnodata1.emptyCard.onboardingmessage.text =
-                            getString(R.string.onboarding_message_createtask)
-            */
+
             val bottomView = activity?.findViewById<BottomNavigationView>(R.id.bottomnav)!!
             for (i in 0 until bottomView.menu.size()) {
                 bottomView.menu.getItem(i).isEnabled = false
@@ -337,7 +274,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     }
 
     override fun onTaskStatsError(errcode: String) {
-
         val cardlayoutvisible = inf.taskchart
         val cardlayoutinvisible = inf.taskchartnodata
 
@@ -431,9 +367,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     ) {
         val cardlayoutvisible = inf.dashboardVerticalLayout6
         cardlayoutvisible.visibility = View.VISIBLE
-
-//        val cardlayoutinvisible = inf.noguestlayout
-//        cardlayoutinvisible.visibility = View.GONE
 
         inf.dashboardVerticalLayout6.findViewById<TextView>(R.id.acceptednumber).text =
             confirmed.toString()

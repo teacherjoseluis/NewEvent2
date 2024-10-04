@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
 import Application.TaskCreationException
@@ -33,19 +33,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.bridesandgrooms.event.AdManager
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.TaskDBHelper
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.TaskAdapter
 import com.bridesandgrooms.event.databinding.TaskEditdetailBinding
 import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
-import com.bridesandgrooms.event.UI.Fragments.DashboardActivity
-import com.bridesandgrooms.event.UI.Fragments.EventCategories
-import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
@@ -410,7 +409,7 @@ class TaskCreateEdit : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when (requestCode) {
-            TaskCreateEdit.PERMISSION_CODE -> {
+            PERMISSION_CODE -> {
                 // Check if all permissions were granted
                 if (grantResults.isNotEmpty() && grantResults[0] ==
                     PackageManager.PERMISSION_GRANTED

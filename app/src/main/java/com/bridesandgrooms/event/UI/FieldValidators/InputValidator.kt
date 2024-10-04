@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.EditText
 import com.bridesandgrooms.event.R
 import com.google.android.material.textfield.TextInputEditText
+import java.util.regex.Pattern
 
 class InputValidator(private val context: Context) {
 
@@ -14,6 +15,7 @@ class InputValidator(private val context: Context) {
 
         return when (getFieldType(input)) {
             FieldType.NAME -> validateName(input.text.toString())
+            FieldType.NUMBER -> validateNumber(input.text.toString())
             FieldType.DATE -> validateDate(input.text.toString())
             FieldType.PASSWORD -> validatePassword(input.text.toString())
             FieldType.PHONE -> validatePhoneNumber(input.text.toString())
@@ -44,6 +46,24 @@ class InputValidator(private val context: Context) {
         return true
     }
 
+    private fun validateNumber(input: String, min: Int? = null, max: Int? = null): Boolean {
+        if (input.isBlank()) {
+            errorCode = context.getString(R.string.error_numberguestsrequired)
+            return false
+        }
+        val value = input.toIntOrNull()  // Converts the string to an integer or returns null if it's not a valid integer
+        if (value == null) {
+            errorCode = context.getString(R.string.error_numberguestsrequired)
+            return false
+        }
+        // Check if the integer is within a specified range, if range parameters are provided
+        if ((min != null && value < min) || (max != null && value > max)) {
+            errorCode = context.getString(R.string.error_numberguestsrequired)
+            return false
+        }
+        return true
+    }
+
     private fun validateDate(date: String): Boolean {
         if (date.isBlank()) {
             errorCode = context.getString(R.string.error_taskdateinput)
@@ -66,7 +86,16 @@ class InputValidator(private val context: Context) {
             errorCode = context.getString(R.string.password_requiredformat)
             return false
         }
-        // Add more password validation logic here
+        // Define the password pattern for validation
+        val passwordPattern = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$"
+        val pattern = Pattern.compile(passwordPattern)
+
+        // Create a matcher to check the password
+        val matcher = pattern.matcher(password)
+        if (!matcher.matches()) {
+            errorCode = context.getString(R.string.password_requiredformat)
+            return false
+        }
         return true
     }
 
@@ -138,6 +167,6 @@ class InputValidator(private val context: Context) {
     }
 
     enum class FieldType {
-        NAME, DATE, PASSWORD, PHONE, EMAIL, NONE, TEXTBODY, MONEY
+        NAME, NUMBER, DATE, PASSWORD, PHONE, EMAIL, NONE, TEXTBODY, MONEY
     }
 }

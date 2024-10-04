@@ -1,9 +1,8 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
 import Application.PaymentCreationException
 import Application.PaymentDeletionException
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
@@ -23,34 +22,26 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.bridesandgrooms.event.MVP.VendorPaymentPresenter
 import com.bridesandgrooms.event.Model.*
-import com.bridesandgrooms.event.UI.FieldValidators.TextValidate
 import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 //import kotlinx.android.synthetic.main.payment_editdetail.*
 import java.util.*
-import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.bridesandgrooms.event.AdManager
 
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Functions.addPayment
 import com.bridesandgrooms.event.Functions.editPayment
 import com.bridesandgrooms.event.Functions.validateOldDate
-import com.bridesandgrooms.event.TaskCreateEdit.Companion
-import com.bridesandgrooms.event.TaskCreateEdit.Companion.SCREEN_NAME
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
-import com.bridesandgrooms.event.UI.Fragments.DashboardActivity
-import com.bridesandgrooms.event.UI.Fragments.EventCategories
-import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
 import com.bridesandgrooms.event.databinding.PaymentEditdetailBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText

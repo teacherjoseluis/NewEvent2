@@ -16,7 +16,6 @@ import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.VendorPayment
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.Rv_PaymentAdapter3
 import com.bridesandgrooms.event.UI.LetterAvatar
 
 class VendorAdapter(

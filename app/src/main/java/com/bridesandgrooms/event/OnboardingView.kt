@@ -32,6 +32,8 @@ import com.bridesandgrooms.event.Functions.addTask
 import com.bridesandgrooms.event.Model.Payment
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.getautocreateTaskPayment
+import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
+import com.bridesandgrooms.event.UI.Fragments.TaskCreateEdit
 import com.bridesandgrooms.event.databinding.OnboardingNameBinding
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
@@ -39,6 +41,8 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
 
@@ -55,6 +59,13 @@ class OnboardingView : AppCompatActivity() {
 
     private lateinit var userSession: User
     private lateinit var binding: OnboardingNameBinding
+    private val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+        if (hasFocus && view is TextInputEditText) {
+            val parentLayout = view.parent.parent as? TextInputLayout
+            parentLayout?.error = null
+        }
+        hideSoftKeyboard()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,22 +77,7 @@ class OnboardingView : AppCompatActivity() {
             userSession.country = this@OnboardingView.resources.configuration.locales.get(0).country
         }
 
-        val position = when (userSession.country) {
-            "MX" -> 0
-            "CL" -> 1
-            "PE" -> 2
-            else -> 0
-        }
-
         binding = DataBindingUtil.setContentView(this, R.layout.onboarding_name)
-        binding.spinner2.setSelection(position)
-
-        userSession.country = when (binding.spinner2.selectedItemPosition) {
-            0 -> "MX"
-            1 -> "CL"
-            2 -> "PE"
-            else -> "MX"
-        }
 
         //---------- Places loading -------------
         if (!Places.isInitialized()) {
@@ -108,82 +104,33 @@ class OnboardingView : AppCompatActivity() {
         )
         //---------------------------------------
         // Hide Layout for Onboarding Event
-        binding.nameonboaarding.visibility = ConstraintLayout.VISIBLE
-        binding.eventonboaarding.visibility = ConstraintLayout.INVISIBLE
-        binding.submitevent.visibility = Button.INVISIBLE
+        showNameOnboarding()
 
-        binding.nameinputedit.setOnClickListener {
-            binding.nameinputedit.error = null
-        }
+        binding.nameinputedit.onFocusChangeListener = focusChangeListener
 
         binding.submituser.setOnClickListener {
-            var inputvalflag = true
-            if (binding.nameinputedit.text.toString().isEmpty()) {
-                binding.nameinputedit.error = getString(R.string.error_shortnameinput)
-                inputvalflag = false
-            }
-
-            if (inputvalflag) {
+            val isValid = validateAllInputsNameOnboard()
+            if (isValid) {
                 userSession.shortname = binding.nameinputedit.text.toString()
 
                 // Hide Layout for Onboarding Name and show Onboarding Event
-                binding.nameonboaarding.visibility = ConstraintLayout.INVISIBLE
-                binding.submituser.visibility = Button.INVISIBLE
+                showEventOnboarding()
 
-                binding.eventonboaarding.visibility = ConstraintLayout.VISIBLE
-                binding.submitevent.visibility = Button.VISIBLE
-
-                binding.etname.setOnClickListener {
-                    binding.etname.error = null
-                }
-
-                binding.etname.onFocusChangeListener = object : OnFocusChangeListener {
-                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-                        hideSoftKeyboard()
-                    }
-                }
-
-                binding.etbudget.setOnClickListener {
-                    binding.etbudget.error = null
-                }
-
-                binding.etbudget.onFocusChangeListener = object : OnFocusChangeListener {
-                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-                        hideSoftKeyboard()
-                    }
-                }
-
-                binding.etnumberguests.setOnClickListener {
-                    binding.etnumberguests.error = null
-                }
-
-                binding.etnumberguests.onFocusChangeListener = object : OnFocusChangeListener {
-                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-                        hideSoftKeyboard()
-                    }
-                }
+                binding.etname.onFocusChangeListener = focusChangeListener
+                binding.etbudget.onFocusChangeListener = focusChangeListener
+                binding.etnumberguests.onFocusChangeListener = focusChangeListener
 
                 binding.etPlannedDate.setOnClickListener {
                     binding.etPlannedDate.error = null
                     showDatePickerDialog()
                 }
-
-                binding.etPlannedDate.onFocusChangeListener = object : OnFocusChangeListener {
-                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-                        hideSoftKeyboard()
-                    }
-                }
+                binding.etPlannedDate.onFocusChangeListener = focusChangeListener
 
                 binding.etPlannedTime.setOnClickListener {
                     binding.etPlannedTime.error = null
                     showTimePickerDialog()
                 }
-
-                binding.etPlannedTime.onFocusChangeListener = object : OnFocusChangeListener {
-                    override fun onFocusChange(v: View?, hasFocus: Boolean) {
-                        hideSoftKeyboard()
-                    }
-                }
+                binding.etPlannedTime.onFocusChangeListener = focusChangeListener
 
                 autocompleteFragment.setOnPlaceSelectedListener(object :
                     PlaceSelectionListener {
@@ -202,29 +149,8 @@ class OnboardingView : AppCompatActivity() {
                 })
 
                 binding.submitevent.setOnClickListener {
-                    var inputvalflag: Boolean
-                    inputvalflag = true
-                    if (binding.etname.text.toString().isEmpty()) {
-                        binding.etname.error = getString(R.string.error_eventnameinput)
-                        inputvalflag = false
-                    }
-                    if (binding.etbudget.text.toString().isEmpty()) {
-                        binding.etbudget.error = getString(R.string.what_s_your_events_budget)
-                        inputvalflag = false
-                    }
-                    if (binding.etnumberguests.text.toString().isEmpty()) {
-                        binding.etnumberguests.error = getString(R.string.how_many_guests)
-                        inputvalflag = false
-                    }
-                    if (binding.etPlannedDate.text.toString().isEmpty()) {
-                        binding.etPlannedDate.error = getString(R.string.error_eventdateinput)
-                        inputvalflag = false
-                    }
-                    if (binding.etPlannedTime.text.toString().isEmpty()) {
-                        binding.etPlannedTime.error = getString(R.string.error_eventtimeinput)
-                        inputvalflag = false
-                    }
-                    if (inputvalflag) {
+                    val isValid = validateAllInputsEventOnboard()
+                    if (isValid) {
                         val event = Event().apply {
                             placeid = eventplaceid.toString()
                             latitude = eventlatitude
@@ -236,14 +162,11 @@ class OnboardingView : AppCompatActivity() {
                             location = eventlocationname.toString()
                         }
 
-                        userSession.role = when (binding.spinner.selectedItemPosition) {
-                            0 -> "Bride"
-                            1 -> "Groom"
-                            else -> "Bride"
+                        userSession.apply {
+                            role = binding.roleAutocomplete.text.toString()
+                            eventbudget = binding.etbudget.text.toString()
+                            numberguests = binding.etnumberguests.text.toString().toInt()
                         }
-
-                        userSession.eventbudget = binding.etbudget.text.toString()
-                        userSession.numberguests = binding.etnumberguests.text.toString().toInt()
 
                         if (!checkPermissions()) {
                             alertBox()
@@ -283,6 +206,76 @@ class OnboardingView : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun showNameOnboarding() {
+        binding.nameonboaarding.visibility = ConstraintLayout.VISIBLE
+        binding.submituser.visibility = Button.VISIBLE
+
+        binding.eventonboaarding.visibility = ConstraintLayout.INVISIBLE
+        binding.submitevent.visibility = Button.INVISIBLE
+    }
+
+    private fun showEventOnboarding() {
+        binding.nameonboaarding.visibility = ConstraintLayout.INVISIBLE
+        binding.submituser.visibility = Button.INVISIBLE
+
+        binding.eventonboaarding.visibility = ConstraintLayout.VISIBLE
+        binding.submitevent.visibility = Button.VISIBLE
+    }
+
+    private fun validateAllInputsNameOnboard(): Boolean {
+        var isValid = true
+        val validator = InputValidator(this)
+
+        val nameValidation =
+            validator.validate(binding.nameinputedit)
+        if (!nameValidation) {
+            binding.nameinputedit.error = validator.errorCode
+            isValid = false
+        }
+
+        val spinnerValidation =
+            validator.validateSpinner(binding.roleAutocomplete.toString())
+        if (!spinnerValidation) {
+            binding.roleAutocomplete.error = validator.errorCode
+            isValid = false
+        }
+
+        val spinnerValidation2 =
+            validator.validateSpinner(binding.countryAutocomplete.toString())
+        if (!spinnerValidation2) {
+            binding.countryAutocomplete.error = validator.errorCode
+            isValid = false
+        }
+        return isValid
+    }
+
+    private fun validateAllInputsEventOnboard(): Boolean {
+        var isValid = true
+        val validator = InputValidator(this)
+
+        val nameValidation =
+            validator.validate(binding.etname)
+        if (!nameValidation) {
+            binding.etname.error = validator.errorCode
+            isValid = false
+        }
+
+        val budgetValidation =
+            validator.validate(binding.etbudget)
+        if (!budgetValidation) {
+            binding.etbudget.error = validator.errorCode
+            isValid = false
+        }
+
+        val guestValidation =
+            validator.validate(binding.etnumberguests)
+        if (!guestValidation) {
+            binding.etnumberguests.error = validator.errorCode
+            isValid = false
+        }
+        return isValid
     }
 
     private fun alertBox() {

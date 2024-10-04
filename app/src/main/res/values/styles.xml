@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/PrimaryContainer</item>
-        <item name="colorPrimaryDark">@color/SurfaceDim</item>
+        <item name="colorPrimary">@color/PrimaryContainer_cream</item>
+        <item name="colorPrimaryDark">@color/SurfaceDim_cream</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowStyle</item>
         <item name="windowActionBar">false</item>
@@ -14,7 +14,7 @@
         <item name="android:colorBackgroundFloating">@color/SurfaceContainer</item>
         <item name="android:popupBackground">@color/SurfaceContainer</item>
         <item name="actionMenuTextColor">@color/colorRed</item>
-        <item name="android:colorBackground">@color/Surface</item>
+        <item name="android:colorBackground">@color/Surface_cream</item>
         <item name="homeAsUpIndicator">@drawable/icons8_menu</item>
         <item name="snackbarStyle">@style/BG_Snackbar</item>
     </style>
@@ -301,16 +301,16 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="BGTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="BGTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="hintTextAppearance">@style/Body_Medium</item>
-        <item name="boxBackgroundColor">@color/SurfaceContainerLow</item>
+        <item name="boxBackgroundColor">@color/SurfaceContainerLow_cream</item>
         <item name="boxBackgroundMode">outline</item>
-        <item name="boxStrokeColor">@color/Outline</item>
+        <item name="boxStrokeColor">@color/Outline_cream</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">2dp</item>
         <item name="boxCornerRadiusTopStart">2dp</item>
         <item name="boxCornerRadiusBottomEnd">2dp</item>
-        <item name="boxStrokeErrorColor">@color/Error</item>
+        <item name="boxStrokeErrorColor">@color/Error_cream</item>
         <item name="errorTextColor">@color/Error</item>
         <item name="errorTextAppearance">@style/Label_Small</item>
     </style>
@@ -322,14 +322,14 @@
         <item name="android:textColor">#333333</item>
         <item name="android:textSize">16sp</item>
         <item name="android:inputType">text</item>
-        <item name="android:textColorHint">@color/Outline</item>
+        <item name="android:textColorHint">@color/Outline_cream</item>
     </style>
 
     <style name="BGSpinner" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="hintTextAppearance">@style/Body_Medium</item>
-        <item name="boxBackgroundColor">@color/SurfaceContainerLow</item>
+        <item name="boxBackgroundColor">@color/SurfaceContainerLow_cream</item>
         <item name="boxBackgroundMode">outline</item>
-        <item name="boxStrokeColor">@color/Outline</item>
+        <item name="boxStrokeColor">@color/Outline_cream</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">2dp</item>
         <item name="boxCornerRadiusTopStart">2dp</item>
@@ -341,11 +341,11 @@
         <item name="errorTextAppearance">@style/Label_Small</item>
     </style>
 
-    <style name="BG_ActionButton" parent="Widget.Material3.Button">
+    <style name="BG_ActionButton" parent="Widget.MaterialComponents.Button">
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">4</item>
-        <item name="android:textColor">@color/OnPrimaryContainer</item>
-        <item name="backgroundColor">@color/PrimaryContainer</item>
+        <item name="android:textColor">@color/OnPrimaryContainer_cream</item>
+        <item name="backgroundColor">@color/PrimaryContainer_cream</item>
         <item name="android:textAppearance">@style/Label_Small</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -357,85 +357,95 @@
         <item name="android:textSize">16sp</item>
         <item name="android:lineHeight">24sp</item>
         <item name="android:letterSpacing">0.1</item>
-        <item name="android:textColor">@color/PrimaryContainer</item>
+        <item name="android:textColor">@color/PrimaryContainer_cream</item>
+    </style>
+
+    <style name="BG_ActionTextSmall">
+        <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontWeight">800</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textColor">@color/PrimaryContainer_cream</item>
     </style>
 
     <style name="BG_FAB">
         <item name="android:clickable">true</item>
-        <item name="backgroundTint">@color/PrimaryContainer</item>
+        <item name="backgroundTint">@color/PrimaryContainer_cream</item>
         <item name="fabSize">normal</item>
         <item name="maxImageSize">24dp</item>
         <item name="srcCompat">@drawable/ic_icons8_plus_white</item>
-        <item name="tint">@color/OnPrimaryContainer</item>
+        <item name="tint">@color/OnPrimaryContainer_cream</item>
     </style>
 
     <style name="BG_FAB_Medium">
         <item name="android:clickable">true</item>
-        <item name="backgroundTint">@color/PrimaryContainer</item>
+        <item name="backgroundTint">@color/PrimaryContainer_cream</item>
         <item name="fabSize">mini</item>
         <item name="maxImageSize">18dp</item>
         <item name="srcCompat">@drawable/ic_icons8_plus_white</item>
-        <item name="tint">@color/OnPrimaryContainer</item>
+        <item name="tint">@color/OnPrimaryContainer_cream</item>
     </style>
 
     <style name="BG_MiniFAB">
         <item name="android:layout_centerInParent">true</item>
         <item name="android:elevation">2dp</item>
         <item name="android:outlineAmbientShadowColor">@color/secondaryText</item>
-        <item name="backgroundTint">@color/SecondaryContainer</item>
+        <item name="backgroundTint">@color/SecondaryContainer_cream</item>
         <item name="elevation">2dp</item>
         <item name="fabSize">mini</item>
         <item name="maxImageSize">24dp</item>
         <item name="rippleColor">@color/white</item>
-        <item name="tint">@color/OnSecondaryContainer</item>
+        <item name="tint">@color/OnSecondaryContainer_cream</item>
     </style>
 
     <style name="BG_MiniFABText">
-        <item name="android:background">@color/SurfaceContainerHigh</item>
+        <item name="android:background">@color/SurfaceContainerHigh_cream</item>
         <item name="android:elevation">2dp</item>
-        <item name="android:textColor">@color/OnSurfaceVar</item>
+        <item name="android:textColor">@color/OnSurfaceVar_cream</item>
         <item name="android:padding">5dp</item>
         <item name="android:textAppearance">@style/Body_Medium</item>
     </style>
 
     <style name="BG_Snackbar" parent="Widget.MaterialComponents.Snackbar">
-        <item name="backgroundTint">@color/InverseSurface</item>
-        <item name="android:textColor">@color/InverseOnSurface</item>
+        <item name="backgroundTint">@color/InverseSurface_cream</item>
+        <item name="android:textColor">@color/InverseOnSurface_cream</item>
     </style>
 
     <style name="BG_TabLayout" parent="Widget.MaterialComponents.TabLayout">
-        <item name="android:background">@color/Surface</item>
-        <item name="tabIndicatorColor">@color/Primary</item>
-        <item name="tabSelectedTextColor">@color/OnSurface</item>
-        <item name="tabTextColor">@color/OnSurfaceVar</item>
+        <item name="android:background">@color/Surface_cream</item>
+        <item name="tabIndicatorColor">@color/Primary_cream</item>
+        <item name="tabSelectedTextColor">@color/OnSurface_cream</item>
+        <item name="tabTextColor">@color/OnSurfaceVar_cream</item>
     </style>
 
     <style name="BG_Chip" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="colorContainer">@color/SecondaryContainer</item>
-        <item name="android:textColor">@color/OnSecondaryContainer</item>
+        <item name="colorContainer">@color/SecondaryContainer_cream</item>
+        <item name="android:textColor">@color/OnSecondaryContainer_cream</item>
         <item name="chipCornerRadius">8dp</item>
-        <item name="rippleColor">@color/OnPrimary</item>
-        <item name="chipStrokeColor">@color/Outline</item>
+        <item name="rippleColor">@color/OnPrimary_cream</item>
+        <item name="chipStrokeColor">@color/Outline_cream</item>
         <item name="chipStrokeWidth">1dp</item>
         <item name="elevation">0dp</item>
         <item name="android:textAppearance">@style/Body_Small</item>
     </style>
 
     <style name="BG_Calendar">
-        <item name="headerColor">@color/SecondaryContainer</item>
-        <item name="headerLabelColor">@color/OnSecondaryContainer</item>
-        <item name="pagesColor">@color/Surface</item>
-        <item name="highlightedDaysLabelsColor">@color/PrimaryContainer</item>
-        <item name="daysLabelsColor">@color/OnSecondaryContainer</item>
-        <item name="todayLabelColor">@color/PrimaryContainer</item>
-        <item name="abbreviationsBarColor">@color/SurfaceDimTransparent</item>
-        <item name="abbreviationsLabelsColor">@color/OnSurface</item>
+        <item name="headerColor">@color/SecondaryContainer_cream</item>
+        <item name="headerLabelColor">@color/OnSecondaryContainer_cream</item>
+        <item name="pagesColor">@color/Surface_cream</item>
+        <item name="highlightedDaysLabelsColor">@color/PrimaryContainer_cream</item>
+        <item name="daysLabelsColor">@color/OnSecondaryContainer_cream</item>
+        <item name="todayLabelColor">@color/PrimaryContainer_cream</item>
+        <item name="abbreviationsBarColor">@color/SurfaceDimTransparent_cream</item>
+        <item name="abbreviationsLabelsColor">@color/OnSurface_cream</item>
     </style>
     
     <style name="BG_Card" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">10dp</item>
-        <item name="cardBackgroundColor">@color/SurfaceContainer</item>
-        <item name="strokeColor">@color/OnSurfaceVar</item>
+        <item name="cardBackgroundColor">@color/SurfaceContainer_cream</item>
+        <item name="strokeColor">@color/OnSurfaceVar_cream</item>
         <item name="strokeWidth">0.5dp</item>
         <item name="android:ambientShadowAlpha">1</item>
         <item name="android:spotShadowAlpha">1</item>

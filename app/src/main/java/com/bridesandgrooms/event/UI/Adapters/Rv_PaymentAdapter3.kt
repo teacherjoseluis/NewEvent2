@@ -1,35 +1,12 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Adapters
 
-import Application.AnalyticsManager
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.bridesandgrooms.event.Functions.PermissionUtils
-import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
-import com.bridesandgrooms.event.Functions.deletePayment
-import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Payment
-import com.bridesandgrooms.event.Model.User
-import com.bridesandgrooms.event.Model.UserModel
-import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeAdView
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
+import com.bridesandgrooms.event.R
 
 class Rv_PaymentAdapter3(
     private val paymentList: MutableList<Payment>

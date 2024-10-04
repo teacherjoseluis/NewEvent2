@@ -50,5 +50,38 @@
     <color name="InverseSurface">#3c2c31</color>
     <color name="InverseOnSurface">#ffecf0</color>
     <color name="InversePrimary">#ffb0ca</color>
-
+    <!-- Material Design Cream Color Palette -->
+    <color name="Welcome">#fffbec</color>
+    <color name="Primary_cream">#566422</color>
+    <color name="Secondary_cream">#5C6146</color>
+    <color name="Tertiary_cream">#3A665D</color>
+    <color name="Error_cream">#ba1a1a</color>
+    <color name="OnPrimary_cream">#ffffff</color>
+    <color name="OnSecondary_cream">#ffffff</color>
+    <color name="OnTertiary_cream">#ffffff</color>
+    <color name="OnError_cream">#ffffff</color>
+    <color name="PrimaryContainer_cream">#D9EB99</color>
+    <color name="SecondaryContainer_cream">#E0E6C3</color>
+    <color name="TertiaryContainer_cream">#BDECE1</color>
+    <color name="ErrorContainer_cream">#ffdad6</color>
+    <color name="OnPrimaryContainer_cream">#171E00</color>
+    <color name="OnSecondaryContainer_cream">#191E08</color>
+    <color name="OnTertiaryContainer_cream">#00201B</color>
+    <color name="OnErrorContaine_cream">#410002</color>
+    <color name="Surface_cream">#FBFAED</color>
+    <color name="SurfaceDim_cream">#DBDBCE</color>
+    <color name="SurfaceDimTransparent_cream">#66DBDBCE</color>
+    <color name="SurfaceDimTransparent_50_cream">#80DBDBCE</color>
+    <color name="SurfaceDimTransparent_70_cream">#4DDBDBCE</color>
+    <color name="SurfaceContainer_cream">#EFEEE2</color>
+    <color name="SurfaceContainerHigh_cream">#E9E9DC</color>
+    <color name="SurfaceContainerLow_cream">#F5F4E8</color>
+    <color name="SurfaceContainerLowest_cream">#FFFFFF</color>
+    <color name="OnSurface_cream">#1B1C15</color>
+    <color name="OnSurfaceVar_cream">#46483C</color>
+    <color name="Outline_cream">#77786A</color>
+    <color name="OutlineVar_cream">#C7C8B8</color>
+    <color name="InverseSurface_cream">#303129</color>
+    <color name="InverseOnSurface_cream">#F2F1E5</color>
+    <color name="InversePrimary_cream">#BDCE80</color>
 </resources>

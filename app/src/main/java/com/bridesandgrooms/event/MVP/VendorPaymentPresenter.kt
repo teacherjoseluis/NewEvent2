@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import com.bridesandgrooms.event.Model.Vendor
-import com.bridesandgrooms.event.PaymentCreateEdit
+import com.bridesandgrooms.event.UI.Fragments.PaymentCreateEdit
 
 class VendorPaymentPresenter(
     val context: Context,

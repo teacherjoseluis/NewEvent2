@@ -81,104 +81,66 @@
             <!--&ndash;&gt;-->
             <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView8">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout"
-                    style="@style/BGTextInputLayout"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
+                    android:orientation="vertical"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/textView8">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textinput"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/nameInputLayout"
+                        style="@style/BGTextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/nameinput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/name"
+                            android:maxLength="20"
+                            android:tag="NAME"
+                            android:textAppearance="@style/Body_Small" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/spinner"
+                        style="@style/BGSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/name"
-                        android:maxLength="20"
-                        android:tag="NAME"
-                        android:textAppearance="@style/Body_Small" />
+                        android:hint="@string/role">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/role_autocomplete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/role"
+                            android:textAppearance="@style/Body_Small"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <!--                <TextView-->
-                <!--                    android:id="@+id/textView26"-->
-                <!--                    style="@style/CardView_Body2"-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginTop="10dp"-->
-                <!--                    android:text="@string/role"-->
-                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent"-->
-                <!--                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout"-->
-                <!--                    app:layout_constraintVertical_bias="0.0" />-->
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/spinner"
-                    style="@style/BGSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/role"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
-
-                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                        android:id="@+id/role_autocomplete"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/spinner2"
+                        style="@style/BGSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:entries="@array/role"
-                        android:textAppearance="@style/Body_Small"
+                        android:hint="@string/whats_your_country"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        app:layout_constraintTop_toBottomOf="@+id/spinner">
 
-
-                <!--                <TextView-->
-                <!--                    android:id="@+id/textView27"-->
-                <!--                    style="@style/CardView_Body2"-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginTop="10dp"-->
-                <!--                    android:text="@string/whats_your_country"-->
-                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent"-->
-                <!--                    app:layout_constraintTop_toBottomOf="@+id/textView26" />-->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/spinner2"
-                    style="@style/BGSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/whats_your_country"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/spinner">
-
-                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                        android:id="@+id/country_autocomplete"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/country"
-                        android:textAppearance="@style/Body_Small"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <!--                <Spinner-->
-                <!--                    android:id="@+id/spinner2"-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginStart="10dp"-->
-                <!--                    android:layout_marginTop="10dp"-->
-                <!--                    android:entries="@array/country"-->
-                <!--                    app:layout_constraintStart_toEndOf="@+id/textView27"-->
-                <!--                    app:layout_constraintTop_toBottomOf="@+id/spinner" />-->
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/country_autocomplete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/country"
+                            android:textAppearance="@style/Body_Small"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -242,6 +204,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/number_guests"
+                        android:inputType="number"
+                        android:tag="NUMBER"
                         android:textAppearance="@style/Body_Small" />
                 </com.google.android.material.textfield.TextInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -363,15 +327,15 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/distance_autocomplete"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/distance_units"
-                    android:textAppearance="@style/Body_Small"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textInputLayout2" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/distance_autocomplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/distance_units"
+                        android:textAppearance="@style/Body_Small"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/textInputLayout2" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!--            <TextView-->
                 <!--                android:id="@+id/textView271"-->
@@ -553,9 +517,9 @@
             <TextView
                 android:id="@+id/termsandconditions"
                 style="@style/CardView_Body"
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/terms_and_conditions"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/privacypolicy" />
@@ -568,11 +532,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:shadowDy="2"
-            android:shadowRadius="4"
             android:text="@string/save"
-            android:textColor="@color/colorWhite"
-            app:backgroundTint="@color/rosaChillon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.Payment
+import com.bridesandgrooms.event.Model.TaskPaymentPaymentsPresenter
 import com.bridesandgrooms.event.TaskPaymentTasks.Companion.TAG
 import com.bridesandgrooms.event.UI.Adapters.ItemSwipeListenerPayment
 import com.bridesandgrooms.event.UI.Adapters.PaymentAdapter
+import com.bridesandgrooms.event.UI.Fragments.PaymentCreateEdit
 import com.bridesandgrooms.event.databinding.TaskpaymentPaymentsBinding
 import com.bridesandgrooms.event.UI.SwipeControllerTasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton

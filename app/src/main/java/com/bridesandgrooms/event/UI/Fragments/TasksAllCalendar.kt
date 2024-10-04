@@ -15,7 +15,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.bridesandgrooms.event.MVP.TasksPaymentAllCalendarPresenter
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.TaskCreateEdit
 import com.bridesandgrooms.event.UI.Adapters.TaskCalendarAdapter
 import com.bridesandgrooms.event.databinding.TasksAllCalendarBinding
 import com.google.android.material.appbar.MaterialToolbar

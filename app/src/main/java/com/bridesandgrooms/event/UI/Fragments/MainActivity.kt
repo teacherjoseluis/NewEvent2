@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
 import TimePickerFragment
@@ -32,7 +32,6 @@ import com.bridesandgrooms.event.Model.EventModel
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,11 +39,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import com.baoyachi.stepview.HorizontalStepView
+import com.bridesandgrooms.event.DashboardEvent
+import com.bridesandgrooms.event.MapsActivity
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.databinding.EventformLayoutBinding
 import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
-import com.bridesandgrooms.event.UI.Fragments.VendorsAll
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -58,7 +59,6 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
     private var eventlongitude = 0.0
     private var eventaddress = ""
     private var uri: Uri? = null
-    private var isSaveTriggered: Boolean = false
 
     private lateinit var context: Context
     private lateinit var userSession: User
@@ -215,11 +215,7 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
             AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Edit_Event")
             val isValid = validateAllInputs()
             if (isValid) {
-                if (uri != null) {
-                    saveEvent()
-                } else {
-                    isSaveTriggered = true // Indicate that save has been triggered
-                }
+                saveEvent()
             }
         }
     }
@@ -315,9 +311,7 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
 //                .into(binding.eventimage)
 
             // Check if the user has triggered the save operation
-            if (isSaveTriggered) {
-                saveEvent()
-            }
+            saveEvent()
         }
     }
 
@@ -328,9 +322,7 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
             .into(binding.eventimage)
 
         // Check if the user has triggered the save operation
-        if (isSaveTriggered) {
-            saveEvent()
-        }
+        saveEvent()
     }
 
     private fun handleLocationResult(data: Intent?) {

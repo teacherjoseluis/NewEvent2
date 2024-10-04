@@ -47,7 +47,7 @@ class User(
     var vendors: Int = 0,
     var eventbudget: String = "",
     var numberguests: Int = 0,
-    var distanceunit: String = "miles"
+    var distanceunit: String = ""
 ) : Parcelable {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()

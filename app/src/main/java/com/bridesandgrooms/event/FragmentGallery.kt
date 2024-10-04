@@ -1,6 +1,6 @@
 package com.bridesandgrooms.event
 
-import GalleryAdapter
+import com.bridesandgrooms.event.UI.Adapters.GalleryAdapter
 import android.content.Context
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil

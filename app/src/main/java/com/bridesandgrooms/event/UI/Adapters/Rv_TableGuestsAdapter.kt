@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,7 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.TableGuests
-import com.bridesandgrooms.event.UI.Adapters.GuestAdapter
+import com.bridesandgrooms.event.R
 
 class Rv_TableGuestsAdapter(
     private val tableguestsList: ArrayList<TableGuests>

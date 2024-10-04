@@ -39,7 +39,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/icons8_checked"
-                        app:tint="@color/rosaChillon" />
+                        app:tint="@color/Primary_cream" />
 
                     <TextView
                         android:id="@+id/acceptednumber"
@@ -56,7 +56,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/accepted"
-                        android:textColor="@color/rosaChillon"
+                        android:textColor="@color/Primary_cream"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView17"
                         app:layout_constraintTop_toBottomOf="@+id/acceptednumber" />
@@ -80,7 +80,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/icons8_cancel"
-                        app:tint="@color/rosaChillon" />
+                        app:tint="@color/Primary_cream" />
 
                     <TextView
                         android:id="@+id/rejectednumber"
@@ -97,7 +97,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/rejected"
-                        android:textColor="@color/rosaChillon"
+                        android:textColor="@color/Primary_cream"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView18"
                         app:layout_constraintTop_toBottomOf="@+id/rejectednumber" />
@@ -120,7 +120,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/information2"
-                        app:tint="@color/rosaChillon" />
+                        app:tint="@color/Primary_cream" />
 
                     <TextView
                         android:id="@+id/pendingnumber"
@@ -137,7 +137,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pending"
-                        android:textColor="@color/rosaChillon"
+                        android:textColor="@color/Primary_cream"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView19"
                         app:layout_constraintTop_toBottomOf="@+id/pendingnumber" />

@@ -24,7 +24,6 @@ import com.bridesandgrooms.event.Model.Contact
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.TaskCreateEdit
 import com.bridesandgrooms.event.UI.Adapters.ContactAdapter
 import com.bridesandgrooms.event.databinding.ContactsAllBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton

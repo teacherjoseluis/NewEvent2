@@ -12,9 +12,6 @@ import com.bridesandgrooms.event.Functions.Firebase.BlogPost
 import com.bridesandgrooms.event.MVP.BlogPresenter
 import com.bridesandgrooms.event.databinding.DashboardblogBinding
 
-//import kotlinx.android.synthetic.main.dashboardblog.*
-//import kotlinx.android.synthetic.main.dashboardblog.view.*
-
 class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity {
 
     private lateinit var recyclerViewBlog: RecyclerView

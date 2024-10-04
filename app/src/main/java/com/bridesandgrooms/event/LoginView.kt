@@ -15,21 +15,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.*
-//import kotlinx.android.synthetic.main.login0.*
-//import kotlinx.android.synthetic.main.login0.editPasswordlogin
-//import kotlinx.android.synthetic.main.login0.forgotemaillink
-//import kotlinx.android.synthetic.main.login_email.*
 import kotlinx.coroutines.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 import android.net.Uri
 import android.view.View
-
 import android.widget.VideoView
 import android.media.MediaPlayer.OnCompletionListener
+import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
+import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.databinding.LoginVideoBinding
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 
 class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
@@ -39,13 +36,18 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
     var user = User()
 
     private lateinit var binding: LoginVideoBinding
+    private val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+        if (hasFocus && view is TextInputEditText) {
+            val parentLayout = view.parent.parent as? TextInputLayout
+            parentLayout?.error = null
+        }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val video_login = RemoteConfigSingleton.get_video_login()
-
         if (video_login) {
             binding =
                 DataBindingUtil.setContentView(this, R.layout.login_video) as LoginVideoBinding
@@ -62,36 +64,22 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
             videoview.start()
         }
 
-        // Initial login layout is displayed while the others are hidden
-        binding.frame2.visibility = ConstraintLayout.INVISIBLE
-        binding.frame3.visibility = ConstraintLayout.INVISIBLE
+        // Show Welcome Screen
+        showWelcomeScreen()
 
         binding.loginbuttonstart.setOnClickListener {
             //Maybe this is a good moment to implement an animation for the transition
             //Login layout becomes visible
-            binding.frame1.visibility = ConstraintLayout.INVISIBLE
-            binding.frame2.visibility = ConstraintLayout.VISIBLE
+            showLoginScreen()
+            binding.editEmaillogin.onFocusChangeListener = focusChangeListener
+            binding.editPasswordlogin.onFocusChangeListener = focusChangeListener
 
             // ********************************* Login section *********************************************
             binding.loginbutton.setOnClickListener {
-                var inputvalflag = true
-                if (binding.editEmaillogin.text.toString().isEmpty()) {
-                    binding.editEmaillogin.error = getString(R.string.error_valid_emailaccount)
-                    inputvalflag = false
-                }
-                if (binding.editPasswordlogin.text.toString()
-                        .isEmpty() || binding.editPasswordlogin.text.toString().length < 8 || !isValidPassword(
-                        binding.editPasswordlogin.text.toString()
-                    )
-                ) {
-                    binding.editPasswordlogin.error =
-                        getString(R.string.password_requiredformat)
-                    inputvalflag = false
-                }
-                if (inputvalflag) {
+                val isValid = validateAllInputsLogin()
+                if (isValid) {
                     val userEmail = binding.editEmaillogin.text.toString()
                     val userPassword = binding.editPasswordlogin.text.toString()
-
                     lifecycleScope.launch {
                         try {
                             val authResult =
@@ -129,10 +117,8 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
             }
 
             binding.signuplink.setOnClickListener {
-                binding.frame2.visibility = ConstraintLayout.INVISIBLE
-                binding.frame3.visibility = ConstraintLayout.VISIBLE
+                showSignUpScreen()
             }
-
             // Google Sign In
             binding.signgoogle.setOnClickListener {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -145,38 +131,19 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                 startActivityForResult(signInIntent, RC_SIGN_IN)
             }
         }
-
         // ********************************* SignUp section *********************************************
         binding.signupbuttonstart.setOnClickListener {
             //Maybe this is a good moment to implement an animation for the transition
             //Signup layout becomes visible
-            binding.frame1.visibility = ConstraintLayout.INVISIBLE
+            showSignUpScreen()
+            binding.editEmailsignup.onFocusChangeListener = focusChangeListener
+            binding.editPasswordsignup1.onFocusChangeListener = focusChangeListener
+            binding.editPasswordsignup2.onFocusChangeListener = focusChangeListener
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            binding.frame3.visibility = ConstraintLayout.VISIBLE
 
             binding.signupbutton.setOnClickListener {
-                var inputvalflag = true
-
-                if (binding.editEmailsignup.text.toString().isEmpty()) {
-                    binding.editEmailsignup.error = getString(R.string.error_valid_emailaccount)
-                    inputvalflag = false
-                }
-                if (binding.editPasswordsignup1.text.toString()
-                        .isEmpty() || binding.editPasswordsignup1.text.toString().length < 8 || !isValidPassword(
-                        binding.editPasswordsignup1.text.toString()
-                    )
-                ) {
-                    binding.editPasswordsignup1.error =
-                        getString(R.string.password_requiredformat)
-                    inputvalflag = false
-                }
-                if (binding.editPasswordsignup2.text.toString()
-                        .isEmpty() && binding.editPasswordsignup2.text != binding.editPasswordsignup1.text
-                ) {
-                    binding.editPasswordsignup2.error = getString(R.string.passwords_dontmatch)
-                    inputvalflag = false
-                }
-                if (inputvalflag) {
+                val isValid = validateAllInputsSignUp()
+                if (isValid) {
                     val userEmail = binding.editEmailsignup.text.toString()
                     val userPassword = binding.editPasswordsignup1.text.toString()
 
@@ -185,16 +152,12 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                             val signUpResult = user.signup(userEmail, userPassword)
                             if (signUpResult) {
                                 withContext(Dispatchers.Main) {
-                                    Toast.makeText(
-                                        this@LoginView,
-                                        getString(R.string.email_signup_success),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    Toast.makeText(
-                                        this@LoginView,
-                                        getString(R.string.success_account_verification),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    showBanner(getString(R.string.email_signup_success), false)
+//                                    Toast.makeText(
+//                                        this@LoginView,
+//                                        getString(R.string.success_account_verification),
+//                                        Toast.LENGTH_SHORT
+//                                    ).show()
                                 }
                             }
                         } catch (e: FirebaseAuthUserCollisionException) {
@@ -214,18 +177,13 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
             }
 
             binding.loginlink.setOnClickListener {
-                binding.frame2.visibility = ConstraintLayout.VISIBLE
-                binding.frame3.visibility = ConstraintLayout.INVISIBLE
+                showLoginScreen()
             }
         }
 
         binding.forgotemaillink.setOnClickListener {
-            var inputvalflag = true
-            if (binding.editEmaillogin.text.toString().isEmpty()) {
-                binding.editEmaillogin.error = getString(R.string.error_valid_emailaccount)
-                inputvalflag = false
-            }
-            if (inputvalflag) {
+            val isValid = validateAllInputsForgotEmail()
+            if (isValid) {
                 val userEmail = binding.editEmaillogin.text.toString()
                 val user = User()
                 lifecycleScope.launch {
@@ -243,7 +201,105 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                 }
             }
         }
+    }
 
+    private fun validateAllInputsLogin(): Boolean {
+        var isValid = true
+        val validator = InputValidator(this)
+
+        val emailValidation =
+            validator.validate(binding.editEmaillogin)
+        if (!emailValidation) {
+            binding.editEmaillogin.error = validator.errorCode
+            isValid = false
+        }
+
+        val passwordValidation =
+            validator.validate(binding.editPasswordlogin)
+        if (!passwordValidation) {
+            binding.editPasswordlogin.error = validator.errorCode
+            isValid = false
+        }
+        return isValid
+    }
+    private fun validateAllInputsForgotEmail(): Boolean {
+        var isValid = true
+        val validator = InputValidator(this)
+
+        val emailValidation =
+            validator.validate(binding.editEmaillogin)
+        if (!emailValidation) {
+            binding.editEmaillogin.error = validator.errorCode
+            isValid = false
+        }
+        return isValid
+    }
+    private fun validateAllInputsSignUp(): Boolean {
+        var isValid = true
+        val validator = InputValidator(this)
+
+        val emailValidation =
+            validator.validate(binding.editEmailsignup)
+        if (!emailValidation) {
+            binding.editEmailsignup.error = validator.errorCode
+            isValid = false
+        }
+
+        val passwordValidation1 =
+            validator.validate(binding.editPasswordsignup1)
+        if (!passwordValidation1) {
+            binding.editPasswordsignup1.error = validator.errorCode
+            isValid = false
+        }
+
+        val passwordValidation2 =
+            validator.validate(binding.editPasswordsignup2)
+        if (!passwordValidation2) {
+            binding.editPasswordsignup2.error = validator.errorCode
+            isValid = false
+        }
+        if (binding.editPasswordsignup2.text != binding.editPasswordsignup1.text) {
+            binding.editPasswordsignup2.error = getString(R.string.passwords_dontmatch)
+            isValid = false
+        }
+        return isValid
+    }
+
+    private fun showWelcomeScreen(){
+        binding.welcomeScreen.visibility = ConstraintLayout.VISIBLE
+        binding.loginScreen.visibility = ConstraintLayout.INVISIBLE
+        binding.signupScreen.visibility = ConstraintLayout.INVISIBLE
+    }
+    private fun showLoginScreen(){
+        binding.welcomeScreen.visibility = ConstraintLayout.INVISIBLE
+        binding.loginScreen.visibility = ConstraintLayout.VISIBLE
+        binding.signupScreen.visibility = ConstraintLayout.INVISIBLE
+    }
+    private fun showSignUpScreen(){
+        binding.welcomeScreen.visibility = ConstraintLayout.INVISIBLE
+        binding.loginScreen.visibility = ConstraintLayout.INVISIBLE
+        binding.signupScreen.visibility = ConstraintLayout.VISIBLE
+    }
+
+    private fun showBanner(message: String, dismiss: Boolean) {
+        val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        binding.bannerCardView.startAnimation(fadeInAnimation)
+
+        binding.bannerCardView.visibility = View.VISIBLE
+        binding.bannerText.text = message
+        if (dismiss) {
+            binding.dismissButton.visibility = View.VISIBLE
+            binding.dismissButton.setOnClickListener {
+                binding.bannerCardView.visibility = View.INVISIBLE
+            }
+        }
+    }
+    private fun displayErrorMsg(message: String) {
+        Toast.makeText(
+            this@LoginView,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -305,24 +361,19 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
     }
 
     override fun onLoginSuccess(email: String) {
-        Toast.makeText(
-            this,
-            getString(R.string.welcome_message),
-            Toast.LENGTH_SHORT
-        ).show()
+        showBanner(getString(R.string.welcome_message), false)
         saveUserSession(applicationContext, email, null, "email")
         finish()
         val mainActivity =
             Intent(this, ActivityContainer::class.java)
         startActivity(mainActivity)
     }
-
+    override fun onLoginError() {
+        showBanner(getString(R.string.login_error_message), false)
+        showWelcomeScreen()
+    }
     override fun onOnboarding(userid: String, email: String, authtype: String) {
-        Toast.makeText(
-            this,
-            getString(R.string.onboarding_message),
-            Toast.LENGTH_SHORT
-        ).show()
+        showBanner(getString(R.string.onboarding_message), false)
 
         val onboarding =
             Intent(this@LoginView, OnboardingView::class.java)
@@ -333,33 +384,11 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
         startActivity(onboarding)
         overridePendingTransition(android.R.anim.slide_out_right, android.R.anim.slide_in_left)
     }
-
-    override fun onLoginError() {
-        Toast.makeText(
-            this,
-            getString(R.string.login_error_message),
-            Toast.LENGTH_SHORT
-        ).show()
-        binding.frame1.visibility = ConstraintLayout.VISIBLE
-        binding.frame2.visibility = ConstraintLayout.INVISIBLE
-    }
-
-    private fun isValidPassword(password: String?): Boolean {
-        val pattern: Pattern
-        val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$"
-        pattern = Pattern.compile(PASSWORD_PATTERN)
-        val matcher: Matcher = pattern.matcher(password)
-        return matcher.matches()
-    }
-
     override fun onSignUpSuccess() {
-        binding.frame3.visibility = ConstraintLayout.INVISIBLE
-        binding.frame2.visibility = ConstraintLayout.VISIBLE
+        showLoginScreen()
     }
-
     override fun onSignUpError() {
-        binding.frame3.visibility = ConstraintLayout.INVISIBLE
-        binding.frame1.visibility = ConstraintLayout.VISIBLE
+        showWelcomeScreen()
     }
 
     override fun onBackPressed() {
@@ -373,14 +402,6 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
             ).show()
         }
         back_pressed = System.currentTimeMillis()
-    }
-
-    private fun displayErrorMsg(message: String) {
-        Toast.makeText(
-            this@LoginView,
-            message,
-            Toast.LENGTH_LONG
-        ).show()
     }
 
     companion object {

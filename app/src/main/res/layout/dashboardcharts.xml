@@ -6,23 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/Surface">
-
-        <!--        <include-->
-        <!--            android:id="@+id/onboarding"-->
-        <!--            layout="@layout/onboarding_state"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:visibility="invisible" />-->
-
-        <!--        <include-->
-        <!--            android:id="@+id/withnodata1"-->
-        <!--            layout="@layout/empty_state"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:visibility="invisible"-->
-        <!--            tools:layout_editor_absoluteX="0dp"-->
-        <!--            tools:layout_editor_absoluteY="55dp" />-->
+        android:background="@color/Surface_cream">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

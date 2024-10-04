@@ -7,12 +7,11 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.bridesandgrooms.event.Model.User
-import com.bridesandgrooms.event.Model.UserDBHelper
+import com.bridesandgrooms.event.UI.Adapters.DashboardPagerAdapter
 import com.google.android.material.tabs.TabLayout
 
 class DashboardView : AppCompatActivity() {

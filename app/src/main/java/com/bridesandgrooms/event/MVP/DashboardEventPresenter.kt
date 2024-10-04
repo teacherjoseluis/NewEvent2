@@ -233,24 +233,39 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 //    }
 //
     fun getActiveCategories() {
-        val taskDBHelper = TaskDBHelper(context)
-        try {
-            val categoriesList = taskDBHelper.getActiveCategories()!!
-            fragment.onCategories(categoriesList)
-        } catch (e: Exception) {
-            Log.e("DashboardEventPresenter", e.message.toString())
-            fragment.onCategoriesError(ERRCODETASKS)
+        CoroutineScope(Dispatchers.IO).launch {
+            val taskDBHelper = TaskDBHelper(context)
+            try {
+                // Perform database operation in the background
+                val categoriesList = taskDBHelper.getActiveCategories()!!
+                withContext(Dispatchers.Main) {
+                    // Update UI on the main thread
+                    fragment.onCategories(categoriesList)
+                }
+            } catch (e: Exception) {
+                Log.e("DashboardEventPresenter", e.message.toString())
+                withContext(Dispatchers.Main) {
+                    // Handle errors back on the main thread
+                    fragment.onCategoriesError(ERRCODETASKS)
+                }
+            }
         }
     }
 
     fun getUpcomingTasks() {
-        val taskDBHelper = TaskDBHelper(context)
-        try {
-            val taskList = taskDBHelper.getUpcomingTasks()
-            fragment.onTaskNextList(taskList)
-        } catch (e: Exception) {
-            Log.e("DashboardEventPresenter", e.message.toString())
-            fragment.onTaskNextListError(ERRCODETASKS)
+        CoroutineScope(Dispatchers.IO).launch {
+            val taskDBHelper = TaskDBHelper(context)
+            try {
+                val taskList = taskDBHelper.getUpcomingTasks()
+                withContext(Dispatchers.Main) {
+                    fragment.onTaskNextList(taskList)
+                }
+            } catch (e: Exception) {
+                Log.e("DashboardEventPresenter", e.message.toString())
+                withContext(Dispatchers.Main) {
+                    fragment.onTaskNextListError(ERRCODETASKS)
+                }
+            }
         }
     }
 

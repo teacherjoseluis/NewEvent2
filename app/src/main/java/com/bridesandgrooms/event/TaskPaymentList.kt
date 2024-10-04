@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.TaskModel
+import com.bridesandgrooms.event.UI.Adapters.TaskPayment_PagerAdapter
 import com.google.android.material.tabs.TabLayout
 import java.util.*
 import kotlin.collections.ArrayList

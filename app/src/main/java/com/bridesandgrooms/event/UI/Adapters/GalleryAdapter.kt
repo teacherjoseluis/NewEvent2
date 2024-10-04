@@ -1,9 +1,9 @@
-import android.content.ActivityNotFoundException
+package com.bridesandgrooms.event.UI.Adapters
+
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.Browser
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +13,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.R
-import com.google.android.material.card.MaterialCardView
 
 class GalleryAdapter(private val context: Context, private val dataList: List<Triple<Bitmap, String, String>>) :
     RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
@@ -48,7 +47,7 @@ class GalleryAdapter(private val context: Context, private val dataList: List<Tr
                     context.startActivity(chooser)
                 } else {
                     Toast.makeText(context, "No browser found to open the link", Toast.LENGTH_LONG).show()
-                    Log.e("GalleryAdapter", "No application found to handle the URL: $url")
+                    Log.e("com.bridesandgrooms.event.UI.Adapters.GalleryAdapter", "No application found to handle the URL: $url")
                 }
             }
         }

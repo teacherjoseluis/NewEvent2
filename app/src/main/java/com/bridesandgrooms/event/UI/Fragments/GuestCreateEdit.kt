@@ -34,7 +34,6 @@ import com.bridesandgrooms.event.Functions.editGuest
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.TaskCreateEdit
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.databinding.NewGuestBinding
 import com.google.android.material.appbar.MaterialToolbar

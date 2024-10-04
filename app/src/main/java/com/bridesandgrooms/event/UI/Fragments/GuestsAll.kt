@@ -18,7 +18,6 @@ import android.util.Log
 import android.widget.TextView
 import com.bridesandgrooms.event.UI.Adapters.GuestAdapter
 import com.bridesandgrooms.event.Model.contactGuest
-import com.bridesandgrooms.event.PaymentCreateEdit
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.databinding.GuestsAllBinding
 import com.bridesandgrooms.event.UI.ViewAnimation

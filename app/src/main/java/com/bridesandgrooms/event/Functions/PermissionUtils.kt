@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.TaskCreateEdit
+import com.bridesandgrooms.event.UI.Fragments.TaskCreateEdit
 
 // PermissionUtils.kt
 

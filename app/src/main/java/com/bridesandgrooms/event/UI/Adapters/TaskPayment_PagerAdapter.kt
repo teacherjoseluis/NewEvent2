@@ -1,10 +1,12 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Adapters
 
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.bridesandgrooms.event.TaskPaymentPayments
+import com.bridesandgrooms.event.TaskPaymentTasks
 
 class TaskPayment_PagerAdapter(
     fm: FragmentManager,

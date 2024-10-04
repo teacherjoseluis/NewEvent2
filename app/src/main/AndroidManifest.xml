@@ -86,7 +86,7 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".MainActivity"
+            android:name=".UI.Fragments.MainActivity"
             android:label="Brides $ Grooms"
             android:theme="@style/AppTheme">
             <!--Default Intent Filter-->
@@ -129,7 +129,7 @@
             android:name=".UI.Fragments.NoteCreateEdit"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Settings"
+            android:name=".UI.Fragments.Settings"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="Instantiatable" />
         <!--        <activity android:name=".MainEventView" />-->
@@ -156,11 +156,11 @@
             android:name=".OnboardingView"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".TaskCreateEdit"
+            android:name=".UI.Fragments.TaskCreateEdit"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".PaymentCreateEdit"
+            android:name=".UI.Fragments.PaymentCreateEdit"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity

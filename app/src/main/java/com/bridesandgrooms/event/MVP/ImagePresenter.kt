@@ -11,9 +11,8 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.Functions.getImgfromStorage
-import com.bridesandgrooms.event.MainActivity
+import com.bridesandgrooms.event.UI.Fragments.MainActivity
 import com.bridesandgrooms.event.Model.User
-import com.bridesandgrooms.event.Model.UserDBHelper
 
 class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
 
