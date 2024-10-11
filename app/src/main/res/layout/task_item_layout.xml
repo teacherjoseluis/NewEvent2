@@ -29,7 +29,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/rosaChillon"
+            app:tint="@color/Primary_cream"
             tools:srcCompat="@drawable/ic_arrow_left" />
 
         <ImageView
@@ -50,7 +50,7 @@
                 android:layout_marginStart="10dp"
                 android:paddingTop="2dp"
                 android:text="@string/task"
-                android:textColor="@color/rosaChillon"
+                android:textColor="@color/Primary_cream"
                 app:layout_constraintStart_toEndOf="@+id/categoryavatar"
                 app:layout_constraintTop_toTopOf="parent" />
 

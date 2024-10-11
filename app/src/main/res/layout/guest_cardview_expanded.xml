@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/SurfaceContainerLow"
+        android:background="@color/SurfaceContainerLow_cream"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Carol Cavazos Photo"
-                android:textColor="@color/OnSurface"
+                android:textColor="@color/OnSurface_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Photo"
-                android:textColor="@color/OnSurfaceVar"
+                android:textColor="@color/OnSurfaceVar_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/guestName" />
 
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="C. Juan F. Brittingham 118 col, Santa Fe (Oriente), 64540"
-                android:textColor="@color/OnSurfaceVar"
+                android:textColor="@color/OnSurfaceVar_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/guestCategory" />
 
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="81 2476 0862"
-                android:textColor="@color/OnSurfaceVar"
+                android:textColor="@color/OnSurfaceVar_cream"
                 android:textStyle="italic"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rsvp" />
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height=".5dp"
                 android:layout_marginTop="3dp"
-                android:background="@color/OnSurface"
+                android:background="@color/OnSurface_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/guestCategory" />
 
@@ -107,6 +107,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/OnSurface" />
+            app:tint="@color/OnSurface_cream" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

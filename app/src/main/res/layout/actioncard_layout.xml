@@ -44,7 +44,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/card_title"
-                        android:textColor="@color/rosaChillon"
+                        android:textColor="@color/Primary_cream"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:layout_conversion_absoluteHeight="11dp"

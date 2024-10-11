@@ -16,33 +16,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="10dp"
-            android:weightSum="100">
+            android:padding="10dp">
 
             <ImageView
                 android:id="@+id/categoryimage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="80"
-                android:gravity="center"
+                android:layout_height="170dp"
                 android:contentDescription="@string/categoryimage"
                 android:scaleType="fitCenter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/categorytitle"
-                style="@style/CardView_Body"
+                style="@style/Label_Medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:gravity="center"
                 android:text="@string/category"
-                android:textColor="@color/OnSurface" />
-        </LinearLayout>
+                android:gravity="center"
+                android:textColor="@color/OnSurface_cream"
+                app:layout_constraintTop_toBottomOf="@+id/categoryimage" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

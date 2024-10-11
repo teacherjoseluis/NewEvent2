@@ -116,19 +116,19 @@ class TaskCreateEdit : Fragment() {
                 chipBackgroundColor = ColorStateList.valueOf(
                     ContextCompat.getColor(
                         context,
-                        R.color.SecondaryContainer
+                        R.color.SecondaryContainer_cream
                     )
                 )
-                setTextColor(ContextCompat.getColor(context, R.color.OnSecondaryContainer))
+                setTextColor(ContextCompat.getColor(context, R.color.OnSecondaryContainer_cream))
                 chipCornerRadius = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
                     8f,
                     resources.displayMetrics
                 )
                 rippleColor =
-                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.OnPrimary))
+                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.OnPrimary_cream))
                 chipStrokeColor =
-                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.Outline))
+                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.Outline_cream))
                 chipStrokeWidth = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
                     1f,

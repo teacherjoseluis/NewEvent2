@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text="@string/location"
-        android:textColor="@color/rosaChillon"
+        android:textColor="@color/Primary_cream"
         app:layout_constraintStart_toEndOf="@+id/contactavatar"
         app:layout_constraintTop_toTopOf="parent" />
 

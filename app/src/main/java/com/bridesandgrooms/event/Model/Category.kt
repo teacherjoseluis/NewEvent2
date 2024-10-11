@@ -20,13 +20,13 @@ enum class Category(
     var searchQueryEs: String
 ) {
     Venue(
-        "venue", "Venue", "Lugar", "ativo_3_dalle_removebg_preview", "#DB5ABA", "#FFFFFF", "#f4ceea", "#b3b3b3", "Wedding Venues", "Salones de Eventos para Bodas"
+        "venue", "Venue", "Lugar", "cream_venue_category", "#DB5ABA", "#FFFFFF", "#f4ceea", "#b3b3b3", "Wedding Venues", "Salones de Eventos para Bodas"
     ),
     Photo(
         "photo",
         "Photo & Video",
         "Foto & Video",
-        "ativo_7_dalle_removebg_preview",
+        "cream_photo_category",
         "#C455A8",
         "#FFFFFF",
         "#edcce5",
@@ -38,7 +38,7 @@ enum class Category(
         "entertainment",
         "Entertainment",
         "Entretenimiento",
-        "ativo_2_dalle_removebg_preview",
+        "cream_entertainment_category",
         "#CF8BA3",
         "#000000",
         "#ecd1da",
@@ -50,7 +50,7 @@ enum class Category(
         "flowers",
         "Flowers & Deco",
         "Flores & Decoracion",
-        "ativo_8_dalle_removebg_preview",
+        "cream_flowers_category",
         "#D7A6B3",
         "#000000",
         "#e7cad1",
@@ -62,7 +62,7 @@ enum class Category(
         "transport",
         "Transportation",
         "Transportacion",
-        "ativo_9_dalle_removebg_preview",
+        "cream_transportation_category",
         "#E5CDC8",
         "#000000",
         "#eddcd9",
@@ -74,7 +74,7 @@ enum class Category(
         "ceremony",
         "Ceremony",
         "Ceremonia",
-        "ativo_5_dalle_removebg_preview",
+        "cream_ceremony_category",
         "#D94A98",
         "#FFFFFF",
         "#ead7d3",
@@ -86,7 +86,7 @@ enum class Category(
         "accessories",
         "Attire & Accessories",
         "Vestidos & Accessorios",
-        "ativo6_dalle_removebg_preview",
+        "cream_accessories_category",
         "#F285C1",
         "#FFFFFF",
         "#f7d1e6",
@@ -98,7 +98,7 @@ enum class Category(
         "beauty",
         "Health & Beauty",
         "Salud & Belleza",
-        "ativo_1_dalle_removebg_preview",
+        "cream_beauty2_category",
         "#F2B3D6",
         "#000000",
         "#f7d1e6",
@@ -110,7 +110,7 @@ enum class Category(
         "food",
         "Food & Drink",
         "Comida & Bebida",
-        "ativo_4_dalle",
+        "cream_banquet_category",
         "#1D3973",
         "#FFFFFF",
         "#e8ebf1",
@@ -118,7 +118,7 @@ enum class Category(
         "Wedding Banquets",
         "Banquetes para Bodas"
     ),
-    Guests("guests", "Guests", "Invitados", "ativo_10_dalle_removebg_preview", "#F2D8D5", "#000000", "#f6e4e2", "#b3b3b3", "", "");
+    Guests("guests", "Guests", "Invitados", "cream_guests_category", "#F2D8D5", "#000000", "#f6e4e2", "#b3b3b3", "", "");
 
     companion object {
         init {

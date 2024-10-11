@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             style="@style/Title_Large"
             android:text="@string/title"
-            android:textColor="@color/OnPrimaryContainer"
+            android:textColor="@color/OnPrimaryContainer_cream"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -70,8 +70,8 @@ class VendorAdapter(
 
             // Common setup for both expanded and contracted views
             view.findViewById<ImageView>(R.id.vendorImageView).apply {
-                val textColor = ContextCompat.getColor(context, R.color.OnSecondaryContainer)
-                val circleColor = ContextCompat.getColor(context, R.color.SecondaryContainer)
+                val textColor = ContextCompat.getColor(context, R.color.OnSecondaryContainer_cream)
+                val circleColor = ContextCompat.getColor(context, R.color.SecondaryContainer_cream)
                 val density = context.resources.displayMetrics.density
                 setImageDrawable(
                     LetterAvatar(

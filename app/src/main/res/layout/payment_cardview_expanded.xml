@@ -11,7 +11,7 @@
         android:id="@+id/paymentcardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/SurfaceContainerLow"
+        android:background="@color/SurfaceContainerLow_cream"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Payment Name"
-                android:textColor="@color/OnSurface"
+                android:textColor="@color/OnSurface_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Photo"
-                android:textColor="@color/OnSurfaceVar"
+                android:textColor="@color/OnSurfaceVar_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/paymentName" />
 
@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Due date: 28/11/2024"
-                android:textColor="@color/OnSurfaceVar"
+                android:textColor="@color/OnSurfaceVar_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/paymentCategory" />
 
@@ -89,6 +89,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/OnSurface" />
+            app:tint="@color/OnSurface_cream" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

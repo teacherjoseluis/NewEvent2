@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
                 android:indeterminateBehavior="cycle"
-                android:indeterminateTint="@color/Primary"
+                android:indeterminateTint="@color/Primary_cream"
                 android:minHeight="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

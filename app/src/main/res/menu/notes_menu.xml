@@ -8,7 +8,7 @@
             android:icon="@drawable/search_24px"
             android:iconifiedByDefault="false"
             android:title=""
-            android:iconTint="@color/OnPrimary"
+            android:iconTint="@color/OnPrimary_cream"
             app:actionViewClass="android.widget.SearchView"
             app:showAsAction="ifRoom|collapseActionView" />
 

@@ -139,6 +139,8 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
         }
 
         //Load with the achievements obtained by the user -------------------------------------------
+        val colorPrimary = R.color.Primary_cream
+        val colorSecondary = R.color.Secondary_cream
         val stepsBeanList = userSession.onboardingprogress(context)
         val stepview = binding.root.findViewById<HorizontalStepView>(R.id.step_view)
         stepview
@@ -147,43 +149,43 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
             .setStepsViewIndicatorCompletedLineColor(
                 ContextCompat.getColor(
                     context,
-                    R.color.azulmasClaro
+                    colorSecondary
                 )
             )
             .setStepsViewIndicatorUnCompletedLineColor(
                 ContextCompat.getColor(
                     context,
-                    R.color.rosaChillon
+                    colorPrimary
                 )
             )
             .setStepViewComplectedTextColor(
                 ContextCompat.getColor(
                     context,
-                    R.color.azulmasClaro
+                    colorSecondary
                 )
             )
             .setStepViewUnComplectedTextColor(
                 ContextCompat.getColor(
                     context,
-                    R.color.rosaChillon
+                    colorPrimary
                 )
             )
             .setStepsViewIndicatorCompleteIcon(
                 ContextCompat.getDrawable(
                     context,
-                    R.drawable.icons8_checked_rosachillon
+                    R.drawable.icons8_checked_primarycolor
                 )
             )
             .setStepsViewIndicatorDefaultIcon(
                 ContextCompat.getDrawable(
                     context,
-                    R.drawable.circle_rosachillon
+                    R.drawable.circle_primarycolor
                 )
             )
             .setStepsViewIndicatorAttentionIcon(
                 ContextCompat.getDrawable(
                     context,
-                    R.drawable.alert_icon_rosachillon
+                    R.drawable.alert_icon_primarycolor
                 )
             )
         return binding.root

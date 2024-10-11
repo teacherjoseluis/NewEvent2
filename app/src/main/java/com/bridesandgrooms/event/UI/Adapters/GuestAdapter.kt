@@ -62,8 +62,8 @@ class GuestAdapter(
                 LayoutInflater.from(itemView.context).inflate(layoutId, customGuestCardView, false)
 
             view.findViewById<ImageView>(R.id.guestImageView).apply {
-                val textColor = ContextCompat.getColor(context, R.color.OnSecondaryContainer)
-                val circleColor = ContextCompat.getColor(context, R.color.SecondaryContainer)
+                val textColor = ContextCompat.getColor(context, R.color.OnSecondaryContainer_cream)
+                val circleColor = ContextCompat.getColor(context, R.color.SecondaryContainer_cream)
                 val density = context.resources.displayMetrics.density
                 setImageDrawable(
                     LetterAvatar(

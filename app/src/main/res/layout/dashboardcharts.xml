@@ -82,13 +82,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/dashboard_vertical_layout_1">
 
                     <TextView
                         android:id="@+id/tasksduenext_label"
                         style="@style/Title_Medium"
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/duenext"
@@ -167,6 +167,7 @@
                         style="@style/Title_Medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
                         android:text="@string/trending"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -206,6 +207,7 @@
                     <TextView
                         android:id="@+id/taskslabel2"
                         style="@style/Title_Medium"
+                        android:paddingStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tasks"
@@ -251,6 +253,7 @@
                     <TextView
                         android:id="@+id/guestinfo"
                         style="@style/Title_Medium"
+                        android:paddingStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/guest_information"

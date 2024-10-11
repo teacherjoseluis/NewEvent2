@@ -28,7 +28,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:text="@string/title"
-                android:textColor="@color/OnSurface"
+                android:textColor="@color/OnSurface_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,7 +40,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:text="@string/summary"
-                android:textColor="@color/OnSurface"
+                android:textColor="@color/OnSurface_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/notetitle" />
 

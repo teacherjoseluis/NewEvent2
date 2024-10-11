@@ -9,10 +9,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="toolbarStyle">@style/MyToolbarStyle</item>
-        <item name="android:itemBackground">@color/SurfaceContainer</item>
+        <item name="android:itemBackground">@color/SurfaceContainer_cream</item>
         <item name="android:itemTextAppearance">@style/Body_Medium</item>
-        <item name="android:colorBackgroundFloating">@color/SurfaceContainer</item>
-        <item name="android:popupBackground">@color/SurfaceContainer</item>
+        <item name="android:colorBackgroundFloating">@color/SurfaceContainer_cream</item>
+        <item name="android:popupBackground">@color/SurfaceContainer_cream</item>
         <item name="actionMenuTextColor">@color/colorRed</item>
         <item name="android:colorBackground">@color/Surface_cream</item>
         <item name="homeAsUpIndicator">@drawable/icons8_menu</item>
@@ -185,7 +185,7 @@
         <item name="android:fontWeight">400</item>
         <item name="android:textSize">32sp</item>
         <item name="android:lineHeight">40sp</item>
-        <item name="android:letterSpacing">0</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
     <style name="Headline_Medium">
@@ -193,7 +193,7 @@
         <item name="android:fontWeight">400</item>
         <item name="android:textSize">28sp</item>
         <item name="android:lineHeight">36sp</item>
-        <item name="android:letterSpacing">0</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
     <style name="Headline_Small">
@@ -201,7 +201,7 @@
         <item name="android:fontWeight">400</item>
         <item name="android:textSize">24sp</item>
         <item name="android:lineHeight">32sp</item>
-        <item name="android:letterSpacing">0</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
     <!-- Title -->
     <style name="Title_Large">
@@ -209,7 +209,7 @@
         <item name="android:fontWeight">400</item>
         <item name="android:textSize">22sp</item>
         <item name="android:lineHeight">28sp</item>
-        <item name="android:letterSpacing">0</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
     <style name="Title_Medium">
@@ -217,7 +217,7 @@
         <item name="android:fontWeight">500</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineHeight">24sp</item>
-        <item name="android:letterSpacing">0.15</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
     <style name="Title_Small">
@@ -225,7 +225,7 @@
         <item name="android:fontWeight">500</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineHeight">20sp</item>
-        <item name="android:letterSpacing">0.1</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
     <!-- Body -->
     <style name="Body_Large">
@@ -257,7 +257,7 @@
         <item name="android:fontWeight">500</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineHeight">20sp</item>
-        <item name="android:letterSpacing">0.1</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
     <style name="Label_Medium">
@@ -265,7 +265,7 @@
         <item name="android:fontWeight">500</item>
         <item name="android:textSize">12sp</item>
         <item name="android:lineHeight">16sp</item>
-        <item name="android:letterSpacing">0.5</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
     <style name="Label_Small">
@@ -273,7 +273,7 @@
         <item name="android:fontWeight">500</item>
         <item name="android:textSize">11sp</item>
         <item name="android:lineHeight">16sp</item>
-        <item name="android:letterSpacing">0.5</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
     <style name="Label_XSmall">
@@ -281,7 +281,7 @@
         <item name="android:fontWeight">500</item>
         <item name="android:textSize">9sp</item>
         <item name="android:lineHeight">10sp</item>
-        <item name="android:letterSpacing">0.15</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
     <!--					   -->
     <style name="CardView_Body" parent="TextAppearance.AppCompat.Caption">
@@ -311,7 +311,7 @@
         <item name="boxCornerRadiusTopStart">2dp</item>
         <item name="boxCornerRadiusBottomEnd">2dp</item>
         <item name="boxStrokeErrorColor">@color/Error_cream</item>
-        <item name="errorTextColor">@color/Error</item>
+        <item name="errorTextColor">@color/Error_cream</item>
         <item name="errorTextAppearance">@style/Label_Small</item>
     </style>
 

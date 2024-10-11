@@ -90,9 +90,9 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        val rosaPalido = ContextCompat.getColor(requireContext(), R.color.rosapalido)
-        val azulmasClaro = ContextCompat.getColor(requireContext(), R.color.azulmasClaro)
-        val palodeRosa = ContextCompat.getColor(requireContext(), R.color.paloderosa)
+        val rosaPalido = ContextCompat.getColor(requireContext(), R.color.Primary_cream)
+        val azulmasClaro = ContextCompat.getColor(requireContext(), R.color.Tertiary_cream)
+        val palodeRosa = ContextCompat.getColor(requireContext(), R.color.PrimaryContainer_cream)
         tfLight = ResourcesCompat.getFont(requireContext(), R.font.raleway_thin)
         tfRegular = ResourcesCompat.getFont(requireContext(), R.font.raleway_medium)
         tfLarge = ResourcesCompat.getFont(requireContext(), R.font.raleway_medium)
@@ -196,7 +196,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         sumbudget: Float,
         task: Task
     ) {
-        val holeColor = ContextCompat.getColor(requireContext(), R.color.SurfaceContainer)
+        val holeColor = ContextCompat.getColor(requireContext(), R.color.SurfaceContainer_cream)
 
         val cardlayoutinvisible = inf.taskchartnodata
         cardlayoutinvisible.root.visibility = View.GONE
@@ -250,7 +250,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             setExtraOffsets(0f, 5f, -8f, 15f) //apparently this is padding
             dragDecelerationFrictionCoef = 0.95f
             setCenterTextTypeface(tfRegular)
-            setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.rosaChillon))
+            setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.OnSecondaryContainer_cream))
             setCenterTextSize(30f)
             isDrawHoleEnabled = true
             setHoleColor(holeColor)
@@ -306,11 +306,11 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         paymententries2.add(BarEntry(1f, sumbudget))
 
         val dataSetpayment1 = BarDataSet(paymententries1, getString(R.string.payments)).apply {
-            color = ContextCompat.getColor(requireContext(), R.color.azulmasClaro)
+            color = ContextCompat.getColor(requireContext(), R.color.Tertiary_cream)
         }
 
         val dataSetpayment2 = BarDataSet(paymententries2, getString(R.string.budget)).apply {
-            color = ContextCompat.getColor(requireContext(), R.color.rosapalido)
+            color = ContextCompat.getColor(requireContext(), R.color.Primary_cream)
         }
 
         val dataSetpayment = ArrayList<BarDataSet>().apply {
