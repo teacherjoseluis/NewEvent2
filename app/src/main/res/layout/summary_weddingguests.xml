@@ -43,7 +43,7 @@
 
                     <TextView
                         android:id="@+id/acceptednumber"
-                        style="@style/CardView_BodyBold"
+                        style="@style/CardView_BodyBold2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/accepted"
@@ -84,7 +84,7 @@
 
                     <TextView
                         android:id="@+id/rejectednumber"
-                        style="@style/CardView_BodyBold"
+                        style="@style/CardView_BodyBold2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/rejected"
@@ -124,7 +124,7 @@
 
                     <TextView
                         android:id="@+id/pendingnumber"
-                        style="@style/CardView_BodyBold"
+                        style="@style/CardView_BodyBold2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pending"

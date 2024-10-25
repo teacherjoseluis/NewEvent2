@@ -3,6 +3,8 @@ package com.bridesandgrooms.event.UI.Fragments
 import Application.AnalyticsManager
 import TimePickerFragment
 import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
@@ -505,6 +507,7 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
         Handler(Looper.getMainLooper()).postDelayed({
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                 .commit()
         }, 500)
     }

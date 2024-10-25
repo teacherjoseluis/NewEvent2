@@ -9,31 +9,42 @@ import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Functions.Firebase.BlogPost
 import com.bridesandgrooms.event.Functions.convertToBlogStringDate
 import Application.MyFirebaseApp
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.bridesandgrooms.event.Model.Note
 import com.bridesandgrooms.event.databinding.BlogContentBinding
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.storage.FirebaseStorage
 
-class BlogContent : AppCompatActivity() {
+class BlogContent : Fragment() {
 
     private lateinit var blogItem: BlogPost
     private lateinit var binding: BlogContentBinding
 
+    private lateinit var context: Context
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+        context = requireContext()
+    }
 
-        binding = DataBindingUtil.setContentView(this, R.layout.blog_content)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.blog_content, container, false)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.icons8_left_24)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.event)
 
-        val extras = intent.extras
-        blogItem = if (extras?.containsKey("blog") == true) {
-            intent.getParcelableExtra("blog")!!
-        } else {
-            BlogPost()
-        }
+        blogItem = arguments?.getParcelable("blog") ?: BlogPost()
 
         val storage = FirebaseStorage.getInstance()
         val storageRef =
@@ -74,16 +85,6 @@ class BlogContent : AppCompatActivity() {
             intent.putExtra(Intent.EXTRA_TEXT, shareBody)
             startActivity(Intent.createChooser(intent, getString(R.string.shareusing)))
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
-
-    override fun finish() {
-        val returnintent = Intent()
-        setResult(RESULT_OK, returnintent)
-        super.finish()
+        return binding.root
     }
 }

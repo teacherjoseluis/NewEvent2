@@ -120,6 +120,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
 
             val fragment = SearchVendorTab()
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
                 .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
                 .addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
                 .commit()
@@ -220,6 +221,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         bundle.putParcelable("vendor", vendor)
         fragment.arguments = bundle
         parentFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
             .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
             //.addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
             .commit()

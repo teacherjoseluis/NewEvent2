@@ -233,6 +233,7 @@ class ActivityContainer : AppCompatActivity() {
                         .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Home")
                     val newfragment = DashboardView_clone()
                     fm.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
                 }
@@ -242,6 +243,7 @@ class ActivityContainer : AppCompatActivity() {
                         .trackUserInteraction(SCREEN_NAME, "BottomNavigation_EventCategories")
                     val newfragment = EventCategories()
                     fm.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
                 }
@@ -251,6 +253,7 @@ class ActivityContainer : AppCompatActivity() {
                         .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Tasks")
                     val newfragment = DashboardActivity()
                     fm.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
                 }
@@ -260,6 +263,7 @@ class ActivityContainer : AppCompatActivity() {
                         .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Guests")
                     val newfragment = GuestsAll()
                     fm.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
                 }
@@ -269,6 +273,7 @@ class ActivityContainer : AppCompatActivity() {
                         .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Vendors")
                     val newfragment = VendorsAll()
                     fm.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                         .replace(R.id.fragment_container, newfragment)
                         .commit()
                 }
@@ -296,24 +301,28 @@ class ActivityContainer : AppCompatActivity() {
                 when (clickNavItem) {
                     R.id.event_fragment -> {
                         fm.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                             .replace(R.id.fragment_container, newfragment!!)
                             .commit()
                     }
 
                     R.id.task_fragment -> {
                         fm.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                             .replace(R.id.fragment_container, newfragment!!)
                             .commit()
                     }
 
                     R.id.notes_fragment -> {
                         fm.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                             .replace(R.id.fragment_container, newfragment!!)
                             .commit()
                     }
 
                     R.id.settings_fragment -> {
                         fm.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                             .replace(R.id.fragment_container, newfragment!!)
                             .commit()
                     }
@@ -357,6 +366,7 @@ class ActivityContainer : AppCompatActivity() {
                 is VendorCreateEdit -> {
                     fragment = VendorsAll()
                     supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
@@ -364,6 +374,7 @@ class ActivityContainer : AppCompatActivity() {
                 is ContactsAll -> {
                     fragment = GuestsAll()
                     supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
@@ -371,6 +382,7 @@ class ActivityContainer : AppCompatActivity() {
                 is GuestCreateEdit -> {
                     fragment = GuestsAll()
                     supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
@@ -378,6 +390,7 @@ class ActivityContainer : AppCompatActivity() {
                 is SearchVendorTab -> {
                     fragment = VendorsAll()
                     supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
@@ -385,6 +398,7 @@ class ActivityContainer : AppCompatActivity() {
                 is SearchVendorFragment -> {
                     fragment = VendorsAll()
                     supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
@@ -392,6 +406,7 @@ class ActivityContainer : AppCompatActivity() {
                 is NoteCreateEdit -> {
                     fragment = MyNotes()
                     supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
@@ -399,6 +414,7 @@ class ActivityContainer : AppCompatActivity() {
                 is TasksAllCalendar -> {
                     fragment = DashboardActivity()
                     supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
@@ -406,6 +422,7 @@ class ActivityContainer : AppCompatActivity() {
                 is PaymentsAllCalendar -> {
                     fragment = DashboardActivity()
                     supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
@@ -438,6 +455,7 @@ class ActivityContainer : AppCompatActivity() {
                         }
                         fragment.arguments = bundle
                         supportFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                             .replace(R.id.fragment_container, fragment)
                             .commit()
                     }
@@ -471,6 +489,7 @@ class ActivityContainer : AppCompatActivity() {
                         }
                         fragment.arguments = bundle
                         supportFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                             .replace(R.id.fragment_container, fragment)
                             .commit()
                     }
@@ -479,6 +498,7 @@ class ActivityContainer : AppCompatActivity() {
                 is TaskPaymentTasks -> {
                     fragment = EventCategories()
                     supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
@@ -486,6 +506,7 @@ class ActivityContainer : AppCompatActivity() {
                 else -> {
                     fragment = DashboardView_clone()
                     fm.beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }

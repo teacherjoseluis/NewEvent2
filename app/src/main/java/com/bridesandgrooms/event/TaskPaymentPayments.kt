@@ -145,6 +145,7 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments,
         bundle.putString("calling_fragment", "EmptyState")
         fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
+            ?.setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
             ?.replace(
                 R.id.fragment_container,
                 fragment

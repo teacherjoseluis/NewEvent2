@@ -90,9 +90,9 @@ class ContactAdapter(
             currentContact = contact
             contactImageView.apply {
                 val textColor =
-                    ContextCompat.getColor(context, R.color.OnSecondaryContainer)
+                    ContextCompat.getColor(context, R.color.OnSecondaryContainer_cream)
                 val circleColor =
-                    ContextCompat.getColor(context, R.color.SecondaryContainer)
+                    ContextCompat.getColor(context, R.color.SecondaryContainer_cream)
                 val density = context.resources.displayMetrics.density
                 setImageDrawable(
                     LetterAvatar(

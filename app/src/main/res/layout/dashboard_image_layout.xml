@@ -19,6 +19,9 @@
             style="@style/BG_Card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -43,8 +46,7 @@
 
             <TextView
                 android:id="@+id/categorytitle"
-                style="@style/CardView_Body2"
-                android:textColor="@color/OnSecondary_cream"
+                style="@style/CardView_BodyBold"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"

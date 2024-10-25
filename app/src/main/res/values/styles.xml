@@ -17,6 +17,8 @@
         <item name="android:colorBackground">@color/Surface_cream</item>
         <item name="homeAsUpIndicator">@drawable/icons8_menu</item>
         <item name="snackbarStyle">@style/BG_Snackbar</item>
+        <item name="colorControlHighlight">@color/Surface_cream</item>
+
     </style>
 
     <style name="MyToolbarStyle" parent="Widget.MaterialComponents.Toolbar">
@@ -28,11 +30,11 @@
         <item name="color">@android:color/black</item>
     </style>
 
-    <style name="AppTheme.Launcher" parent="Theme.AppCompat.Light">
-        <item name="android:windowBackground">@drawable/launch_screen</item>
-        <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
-        <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
-    </style>
+<!--    <style name="AppTheme.Launcher" parent="Theme.AppCompat.Light">-->
+<!--        <item name="android:windowBackground">@drawable/launch_screen</item>-->
+<!--        &lt;!&ndash; Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding&ndash;&gt;-->
+<!--        &lt;!&ndash; <item name="colorPrimaryDark">@android:color/white</item> &ndash;&gt;-->
+<!--    </style>-->
 
     <style name="Heading5">
         <item name="android:fontFamily">@font/raleway_medium</item>
@@ -289,6 +291,7 @@
         <item name="android:textColor">@color/lead</item>
         <item name="android:textSize">12sp</item>
     </style>
+
     <style name="CardView_Body2" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textColor">@color/lead</item>
@@ -297,8 +300,14 @@
 
     <style name="CardView_BodyBold" parent="TextAppearance.AppCompat.Caption">
         <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:textColor">@color/OnPrimary_cream</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CardView_BodyBold2" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:fontFamily">@font/raleway_medium</item>
         <item name="android:textColor">@color/lead</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="BGTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
@@ -441,7 +450,7 @@
         <item name="abbreviationsBarColor">@color/SurfaceDimTransparent_cream</item>
         <item name="abbreviationsLabelsColor">@color/OnSurface_cream</item>
     </style>
-    
+
     <style name="BG_Card" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">10dp</item>
         <item name="cardBackgroundColor">@color/SurfaceContainer_cream</item>

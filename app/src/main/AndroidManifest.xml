@@ -136,10 +136,15 @@
         <activity
             android:name=".DashboardView"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".ActivityContainer"
-            android:exported="true"
-            android:theme="@style/AppTheme.Launcher">
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".UI.Activities.LauncherActivity"
+            android:theme="@style/AppTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

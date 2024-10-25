@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Carol Cavazos Photo"
-                android:textColor="@color/OnSurface"
+                android:textColor="@color/OnSurface_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Photo"
-                android:textColor="@color/OnSurfaceVar"
+                android:textColor="@color/OnSurfaceVar_cream"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/guestName" />
 
@@ -72,7 +72,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height=".5dp"
-        android:background="@color/Outline"
+        android:background="@color/Outline_cream"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/constraintLayout3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

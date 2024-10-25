@@ -135,11 +135,18 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
 
         if (user.hastask == "Y" || user.haspayment == "Y") {
-            inf.weddingavatar.setOnClickListener {
+            inf.weddingavatarCard.setOnClickListener {
                 AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "Edit_Event")
 
                 val fragment = MainActivity()
                 requireActivity().supportFragmentManager.beginTransaction()
+//                    .setCustomAnimations(
+//                        R.anim.enter_from_left,  // Custom animation for the entering fragment
+//                        R.anim.exit_to_right,    // Custom animation for the exiting fragment
+//                        R.anim.enter_from_right, // Optional for popBackStack
+//                        R.anim.exit_to_left      // Optional for popBackStack
+//                    )
+                    .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                     .replace(R.id.fragment_container, fragment)
                     .commit()
             }
@@ -182,6 +189,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     override fun onDashboardImages(images: List<DashboardEventPresenter.CategoryThumbnails>) {
         val rvAdapter = rvDashboardImageAdapter(this, images, requireContext())
         inf.categoryrv.adapter = rvAdapter
+        inf.welcomelabel2.visibility = View.VISIBLE
         Log.d("DashboardEvent", "Entering onDashboardImages")
     }
 
@@ -593,6 +601,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         bundle.putString("category", category)
         fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
+            ?.setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
             ?.replace(
                 R.id.fragment_container,
                 fragment
@@ -628,6 +637,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         bundle.putString("category", category)
         fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
+            ?.setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
             ?.replace(
                 R.id.fragment_container,
                 fragment

@@ -34,15 +34,18 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
                         android:layout_weight="40"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp">
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/weddingavatar_card"
                             style="@style/BG_Card"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
 
                             <ImageView
                                 android:id="@+id/weddingavatar"
@@ -88,10 +91,10 @@
                     <TextView
                         android:id="@+id/tasksduenext_label"
                         style="@style/Title_Medium"
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/duenext"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -165,6 +168,7 @@
                     <TextView
                         android:id="@+id/welcomelabel2"
                         style="@style/Title_Medium"
+                        android:visibility="invisible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="10dp"
@@ -207,9 +211,9 @@
                     <TextView
                         android:id="@+id/taskslabel2"
                         style="@style/Title_Medium"
-                        android:paddingStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
                         android:text="@string/tasks"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -253,9 +257,9 @@
                     <TextView
                         android:id="@+id/guestinfo"
                         style="@style/Title_Medium"
-                        android:paddingStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
                         android:text="@string/guest_information"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
