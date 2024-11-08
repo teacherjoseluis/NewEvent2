@@ -133,9 +133,6 @@
             android:windowSoftInputMode="adjustResize"
             tools:ignore="Instantiatable" />
         <!--        <activity android:name=".MainEventView" />-->
-        <activity
-            android:name=".DashboardView"
-            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".ActivityContainer"
@@ -155,9 +152,11 @@
         <!--        <activity android:name=".Onboarding_Event" />-->
         <!--        <activity android:name=".MyEvents" />-->
 
-        <activity android:name=".LoginView" />
+        <activity android:name=".LoginView"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".LoginEmailView" />
         <activity
+            android:theme="@style/AppTheme"
             android:name=".OnboardingView"
             android:windowSoftInputMode="adjustResize" />
         <activity

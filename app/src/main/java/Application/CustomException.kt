@@ -1,5 +1,7 @@
 package Application
 
+import com.google.firebase.auth.FirebaseUser
+
 // Exceptions related to User Login and Authentication
 class EmailVerificationException (message: String) : Exception(message)
 class UserAuthenticationException (message: String) : Exception(message) {
@@ -18,6 +20,9 @@ class NetworkConnectivityException (message: String) : Exception(message)
 
 // Exception thrown during the Onboarding Process for errors in User Function
 class UserOnboardingException (message: String) : Exception(message)
+
+// Exception thrown during the Onboarding Process for errors in User Function
+class UserCreationException (message: String) : Exception(message)
 
 // Exception thrown during the Onboarding Process for errors in User Function
 class UserEditionException (message: String) : Exception(message)
@@ -45,3 +50,10 @@ class VendorCreationException (message: String) : Exception(message)
 
 // Exception thrown during Vendor Creation processes
 class VendorDeletionException (message: String) : Exception(message)
+
+class EventNotFoundException (message: String, val firebaseUser: FirebaseUser) : Exception(message)
+
+class EventCreationException (message: String) : Exception(message)
+
+class CalendarCreationException (message: String) : Exception(message)
+class CalendarEditionException (message: String) : Exception(message)

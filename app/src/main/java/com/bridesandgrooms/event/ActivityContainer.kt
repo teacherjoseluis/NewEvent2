@@ -73,16 +73,6 @@ class ActivityContainer : AppCompatActivity() {
         }
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        val serviceIntent = Intent(this, BG_BackgroundService::class.java)
-//        try {
-//            startService(serviceIntent)
-//        } catch (e: Exception) {
-//            Log.e(TAG, e.message.toString())
-//        }
-//    }
-
     private fun loginValidation(): Boolean {
         //Evaluate if given the amount passed since the last login, the user should re-login to the app
         //Last Signed In date
@@ -122,14 +112,11 @@ class ActivityContainer : AppCompatActivity() {
     private fun createView() {
         setContentView(R.layout.activitycontainer)
 
-        // UI Elements Declaration/Startup
-        // Declare the toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         val apptitle = findViewById<TextView>(R.id.appbartitle)
         apptitle.text = getString(R.string.myeventtitle)
         drawerLayout = findViewById(R.id.drawerlayout)
-        //val loadingscreen = findViewById<ConstraintLayout>(R.id.loadingscreen)
         val sidenavView = findViewById<NavigationView>(R.id.sidenav)
         val headerView = sidenavView.getHeaderView(0)
         val navView = findViewById<BottomNavigationView>(R.id.bottomnav)
@@ -182,7 +169,7 @@ class ActivityContainer : AppCompatActivity() {
                     AnalyticsManager.getInstance()
                         .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Home")
                     clickNavItem = R.id.event_fragment
-                    newfragment = DashboardView_clone()
+                    newfragment = DashboardView()
                 }
 
                 R.id.task_fragment -> {
@@ -231,7 +218,7 @@ class ActivityContainer : AppCompatActivity() {
                 R.id.home -> {
                     AnalyticsManager.getInstance()
                         .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Home")
-                    val newfragment = DashboardView_clone()
+                    val newfragment = DashboardView()
                     fm.beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                         .replace(R.id.fragment_container, newfragment)
@@ -296,7 +283,6 @@ class ActivityContainer : AppCompatActivity() {
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
             override fun onDrawerOpened(drawerView: View) {}
-
             override fun onDrawerClosed(drawerView: View) {
                 when (clickNavItem) {
                     R.id.event_fragment -> {
@@ -328,13 +314,12 @@ class ActivityContainer : AppCompatActivity() {
                     }
                 }
             }
-
             override fun onDrawerStateChanged(newState: Int) {}
         })
 
         var activefragment = fm.findFragmentById(R.id.fragment_container)
         if (activefragment == null) {
-            activefragment = DashboardView_clone()
+            activefragment = DashboardView()
             fm.beginTransaction()
                 .add(R.id.fragment_container, activefragment, "DashboardView")
                 .commit()
@@ -351,7 +336,7 @@ class ActivityContainer : AppCompatActivity() {
             val currentFragment =
                 fragment?.parentFragmentManager?.fragments?.get(1)
             when (currentFragment) {
-                is DashboardView_clone -> {
+                is DashboardView -> {
                     if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
                         super.onBackPressed()
                     } else {
@@ -504,31 +489,13 @@ class ActivityContainer : AppCompatActivity() {
                 }
 
                 else -> {
-                    fragment = DashboardView_clone()
+                    fragment = DashboardView()
                     fm.beginTransaction()
                         .setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
             }
-//            val fragmentstring = currentFragment?.javaClass.toString()
-//
-//            if (fragmentstring.contains("DashboardView_clone") || fragmentstring == "null") {
-//                if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
-//                    super.onBackPressed()
-//                } else {
-//                    Toast.makeText(
-//                        baseContext, getString(R.string.pressexit),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//                back_pressed = System.currentTimeMillis()
-//            } else {
-//                val newfragment = DashboardView_clone()
-//                fm.beginTransaction()
-//                    .replace(R.id.fragment_container, newfragment)
-//                    .commit()
-//            }
         }
     }
 

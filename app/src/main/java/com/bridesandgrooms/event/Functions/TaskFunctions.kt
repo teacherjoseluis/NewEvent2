@@ -1,8 +1,14 @@
 package com.bridesandgrooms.event.Functions
 
+import Application.CalendarCreationException
+import Application.CalendarEditionException
 import Application.CalendarEvent
+import Application.EventCreationException
 import Application.TaskCreationException
 import Application.TaskDeletionException
+import Application.UserCreationException
+import Application.UserEditionException
+import Application.UserOnboardingException
 import android.content.Context
 import android.util.Log
 import com.bridesandgrooms.event.Model.*
@@ -18,6 +24,12 @@ internal fun addTask(context: Context, userItem: User, taskItem: Task) {
         val chainofcommand =
             orderChainAdd(calendarevent, taskmodel, taskdbhelper, userdbhelper, usermodel)
         chainofcommand.onAddEditTask(context, userItem, taskItem)
+        //-------------------------------------------------------
+    } catch (e: UserEditionException) {
+        throw TaskCreationException("Error while trying to edit the User: $e")
+    } catch (e: CalendarEditionException) {
+        throw TaskCreationException("Error while trying to add the Task to the local Calendar: $e")
+        //-------------------------------------------------------
     } catch (e: Exception) {
         Log.e("TaskFunctions.kt", e.message.toString())
         throw TaskCreationException("Error during task Creation: $e")

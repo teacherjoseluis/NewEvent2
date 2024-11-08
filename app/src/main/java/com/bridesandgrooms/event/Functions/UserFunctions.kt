@@ -1,6 +1,10 @@
 package com.bridesandgrooms.event.Functions
 
+import Application.CalendarCreationException
 import Application.CalendarEvent
+import Application.EventCreationException
+import Application.UserAuthenticationException
+import Application.UserCreationException
 import Application.UserEditionException
 import Application.UserOnboardingException
 import android.content.Context
@@ -18,6 +22,12 @@ internal suspend fun onBoarding(context: Context, userItem: User, eventitem: Eve
         val chainofcommand =
             orderChainOnboard(usermodel, userdbhelper, calendarevent, eventmodel, eventdbhelper)
         chainofcommand.onOnboardUser(userItem, eventitem)
+    } catch (e: UserCreationException) {
+        throw UserOnboardingException("Error while trying to create the User: $e")
+    } catch (e: EventCreationException) {
+        throw UserOnboardingException("Error while trying to create the Event: $e")
+    } catch (e: CalendarCreationException) {
+        throw UserOnboardingException("Error while trying to add the Event to the local Calendar: $e")
     } catch (e: Exception) {
         Log.e("UserFunctions.kt", e.message.toString())
         throw UserOnboardingException("Error during user onboarding: $e")

@@ -6,17 +6,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Surface_cream">
+    android:background="@drawable/login_gradient">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/welcomeScreen"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/login_gradient">
+        android:layout_height="match_parent">
 
         <VideoView
             android:id="@+id/videowedding"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
@@ -74,7 +74,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/loginScreen"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

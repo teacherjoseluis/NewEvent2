@@ -1,5 +1,7 @@
 package com.bridesandgrooms.event.Model
 
+import Application.EventCreationException
+import Application.UserAuthenticationException
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -9,8 +11,11 @@ import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.saveImgtoStorage
 import com.bridesandgrooms.event.MVP.ImagePresenter
 import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
@@ -23,6 +28,7 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
     var nexthandlere: CoRAddEditEvent? = null
     var nexthandleron: CoROnboardUser? = null
 
+    var eventId = ""
     lateinit var event: Event
 
     //Need to convert this one into a suspend function
@@ -32,7 +38,8 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         uri: Uri?
         //savesuccessflag: FirebaseSaveSuccess
     ): String {
-//        coroutineScope {
+
+        val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid
         val postRef = myRef.child("User").child(user.userid!!).child("Event").push()
         val eventmap = hashMapOf(
             "imageurl" to event.imageurl,
@@ -47,34 +54,28 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
             "location" to event.location
         )
 
-        postRef.setValue(
-            eventmap as Map<String, Any>
-        ).await()
-        val eventid = postRef.key.toString()
-        val userEventIdRef =
-            myRef.child("User").child(user.userid!!).child("eventid")
-        userEventIdRef.setValue(eventid).await()
+        try {
+            if (currentUserUID == user.userid) {
+                postRef.setValue(
+                    eventmap as Map<String, Any>
+                ).await()
+                eventId = postRef.key.toString()
+
+                val userEventIdRef =
+                    myRef.child("User").child(user.userid!!)
+                userEventIdRef.child("eventid").setValue(eventId).await()
+            } else {
+                throw UserAuthenticationException("User ID does not match with the Auth User in Firebase")
+            }
+        } catch (e: Exception) {
+            throw EventCreationException(e.toString())
+        }
 
         //Save Event image in Storage
         if (uri != null) {
-            saveImgtoStorage(ImagePresenter.EVENTIMAGE, user.userid!!, eventid, uri)
+            saveImgtoStorage(ImagePresenter.EVENTIMAGE, user.userid!!, eventId, uri)
         }
-//            { error, _ ->
-//                if (error != null) {
-//                    //Se loggea un error al guardar el usuario TODO databaseError.getMessage()
-//                    savesuccessflag.onSaveSuccess("")
-//                } else {
-//                    // Saving in the log the new creation of the event
-//                    val eventid = postRef.key.toString()
-//                    //Save Event image in Storage
-//                    if (uri != null) {
-//                        saveImgtoStorage(ImagePresenter.EVENTIMAGE, userid, eventid, uri)
-//                        savesuccessflag.onSaveSuccess(postRef.key.toString())
-//                    }
-//                }
-//            }
-//        }
-        return eventid
+        return eventId
     }
 
     fun editEvent(

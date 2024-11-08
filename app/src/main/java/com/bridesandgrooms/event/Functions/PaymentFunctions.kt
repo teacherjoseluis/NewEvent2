@@ -1,13 +1,17 @@
 package com.bridesandgrooms.event.Functions
 
+import Application.CalendarCreationException
+import Application.CalendarEditionException
 import Application.CalendarEvent
 import Application.PaymentCreationException
 import Application.PaymentDeletionException
+import Application.TaskCreationException
+import Application.UserEditionException
 import android.content.Context
 import android.util.Log
 import com.bridesandgrooms.event.Model.*
 
-internal fun addPayment(context: Context,  userItem: User, paymentitem: Payment) {
+internal fun addPayment(context: Context, userItem: User, paymentitem: Payment) {
     try {
         val calendarevent = CalendarEvent(context)
         val userdbhelper = UserDBHelper(context)
@@ -15,8 +19,15 @@ internal fun addPayment(context: Context,  userItem: User, paymentitem: Payment)
         val paymentdbhelper = PaymentDBHelper(context)
         val usermodel = UserModel(userItem)
 
-        val chainofcommand = orderChainAdd(calendarevent, paymentmodel, paymentdbhelper, userdbhelper, usermodel)
+        val chainofcommand =
+            orderChainAdd(calendarevent, paymentmodel, paymentdbhelper, userdbhelper, usermodel)
         chainofcommand.onAddEditPayment(context, userItem, paymentitem)
+        //-------------------------------------------------------
+    } catch (e: UserEditionException) {
+        throw PaymentCreationException("Error while trying to edit the User: $e")
+    } catch (e: CalendarEditionException) {
+        throw PaymentCreationException("Error while trying to add the Payment to the local Calendar: $e")
+        //-------------------------------------------------------
     } catch (e: Exception) {
         Log.e("PaymentFunctions.kt", e.message.toString())
         throw PaymentCreationException("Error during payment Creation: $e")

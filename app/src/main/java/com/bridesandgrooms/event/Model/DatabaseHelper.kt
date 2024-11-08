@@ -49,20 +49,20 @@ class DatabaseHelper(val context: Context) : SQLiteOpenHelper(
     }
 
     @ExperimentalCoroutinesApi
-    suspend fun updateLocalDB(user : User) : Boolean {
-        val userDB = UserDBHelper(context)
+    suspend fun updateLocalDB(uid : String) : Boolean {
+        //val userDB = UserDBHelper(context)
         val eventDB = EventDBHelper(context)
         val taskDB = TaskDBHelper(context)
         val paymentDB = PaymentDBHelper(context)
         val guestDB = GuestDBHelper(context)
         val vendorDB = VendorDBHelper(context)
         try {
-            userDB.firebaseImport(user)
-            eventDB.firebaseImport(user)
-            taskDB.firebaseImport(user)
-            paymentDB.firebaseImport(user)
-            guestDB.firebaseImport(user)
-            vendorDB.firebaseImport(user)
+            //userDB.firebaseImport(uid)
+            eventDB.firebaseImport(uid)
+            taskDB.firebaseImport(uid)
+            paymentDB.firebaseImport(uid)
+            guestDB.firebaseImport(uid)
+            vendorDB.firebaseImport(uid)
         } catch (e: FirebaseDataImportException){
             println(e.message)
         }

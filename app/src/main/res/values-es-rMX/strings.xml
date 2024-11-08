@@ -261,6 +261,7 @@
     <string name="eventcreated">Tu evento se creo exitósamente</string>
     <string name="error_emailverification">Primero tienes que verificar tu email. Hemos enviado un correo de verificación a tu cuenta</string>
     <string name="error_usersession">Hubo un problema con tu sesión o estas registrado en otro dispositivo</string>
+    <string name="error_firebaseimport">Hubo un problema al cargar tu información desde la nube</string>
     <string name="weakpassword">La contraseña debe tener al menos 8 caracteres</string>
     <string name="invalidemailpassword">Correo electrónico o contraseña inválidos</string>
     <string name="errorsendingverification">Error al enviar el mensaje de verificación por correo electrónico</string>

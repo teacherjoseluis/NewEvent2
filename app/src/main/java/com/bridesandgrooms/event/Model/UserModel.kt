@@ -1,5 +1,8 @@
 package com.bridesandgrooms.event.Model
 
+import Application.UserAuthenticationException
+import Application.UserCreationException
+import Application.UserEditionException
 import android.content.Context
 import android.os.Build
 import android.util.Log
@@ -18,7 +21,6 @@ import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.converttoString
 import com.bridesandgrooms.event.Functions.currentDateTime
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 import java.text.DateFormat
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -28,6 +30,7 @@ import com.google.firebase.database.DatabaseError
 
 import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.*
+import kotlin.Exception
 import kotlin.coroutines.resume
 
 
@@ -41,16 +44,11 @@ class UserModel(
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
-    private val uid = FirebaseAuth.getInstance().currentUser?.uid
-    private val userRef = FirebaseDatabase.getInstance().getReference("User/$uid")
+    private val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid
+    private val userRef = FirebaseDatabase.getInstance().getReference("User/$currentUserUID")
     private val postRef = myRef.child("User").child(this.key!!)
     private var firebaseUser = User(key)
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
-
-    var tasksactive = 0
-    var paymentsactive = 0
-    var guestsactive = 0
-    var vendorsactive = 0
 
     var nexthandleru: CoRAddEditUser? = null
     private var nexthandlert: CoRAddEditTask? = null
@@ -185,25 +183,14 @@ class UserModel(
         return user!!
     }
 
-//    @ExperimentalCoroutinesApi
-//    suspend fun getSession(): String {
-//        return try {
-//            val session = activeSessionsRef.child(key!!).awaitsSingle()?.getValue(String::class.java)!!
-//            session
-//        } catch (e: Exception) {
-//            Log.d(
-//                TAG,
-//                "Data associated to User cannot ben retrieved from Firebase"
-//            )
-//            ""
-//        }
-//    }
-
-
     private fun editUserAddTask(value: Int) {
         coroutineScope.launch {
             //val user = getUser()
-            userRef.child("tasksactive").setValue(user!!.tasksactive + value).await()
+            try {
+                userRef.child("tasksactive").setValue(user!!.tasksactive + value).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "There are currently $value active tasks associated to the User")
         }
     }
@@ -211,7 +198,11 @@ class UserModel(
     private fun editUserAddPayment(value: Int) {
         coroutineScope.launch {
             //val user = getUser()
-            userRef.child("payments").setValue(user!!.payments + value).await()
+            try {
+                userRef.child("payments").setValue(user!!.payments + value).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "There are currently $value payments associated to the User")
         }
     }
@@ -219,7 +210,11 @@ class UserModel(
     private fun editUserAddGuest(value: Int) {
         coroutineScope.launch {
             //val user = getUser()
-            userRef.child("guests").setValue(user!!.guests + value).await()
+            try {
+                userRef.child("guests").setValue(user!!.guests + value).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "There are currently $value guests associated to the User")
         }
     }
@@ -227,95 +222,137 @@ class UserModel(
     private fun editUserAddVendor(value: Int) {
         coroutineScope.launch {
             //val user = getUser()
-            userRef.child("vendors").setValue(user!!.vendors + value).await()
+            try {
+                userRef.child("vendors").setValue(user!!.vendors + value).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "There are currently $value vendors associated to the User")
         }
     }
 
     private fun editUserTaskflag(flag: String) {
         coroutineScope.launch {
-            userRef.child("hastask").setValue(flag).await()
+            try {
+                userRef.child("hastask").setValue(flag).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "Flag hastask for the User has been set to $flag")
         }
     }
 
     private fun editUserPaymentflag(flag: String) {
         coroutineScope.launch {
-            userRef.child("haspayment").setValue(flag).await()
+            try {
+                userRef.child("haspayment").setValue(flag).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "Flag haspayment for the User has been set to $flag")
         }
     }
 
     private fun editUserGuestflag(flag: String) {
         coroutineScope.launch {
-            userRef.child("hasguest").setValue(flag).await()
+            try {
+                userRef.child("hasguest").setValue(flag).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "Flag hasguest for the User has been set to $flag")
         }
     }
 
     private fun editUserVendorflag(flag: String) {
         coroutineScope.launch {
-            userRef.child("hasvendor").setValue(flag).await()
+            try {
+                userRef.child("hasvendor").setValue(flag).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "Flag hasvendor for the User has been set to $flag")
         }
     }
 
     private suspend fun editUserShortName(user: User) {
         coroutineScope.launch {
-            userRef.child("shortname").setValue(user.shortname).await()
+            try {
+                userRef.child("shortname").setValue(user.shortname).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "Shortname for the User has been set to ${user.shortname}")
         }
     }
 
     private suspend fun editUserRole(user: User) {
         coroutineScope.launch {
-            userRef.child("role").setValue(user.role).await()
+            try {
+                userRef.child("role").setValue(user.role).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "Role for the User has been set to ${user.role}")
         }
     }
 
     private suspend fun editDistanceUnit(user: User) {
         coroutineScope.launch {
-            userRef.child("distanceunit").setValue(user.distanceunit).await()
+            try {
+                userRef.child("distanceunit").setValue(user.distanceunit).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
             Log.d(TAG, "Distance Unit for the User has been set to ${user.distanceunit}")
         }
     }
 
     private suspend fun addUser(user: User) {
-        coroutineScope {
-            val userfb = hashMapOf(
-                "eventid" to user.eventid,
-                "shortname" to user.shortname,
-                "email" to user.email,
-                "country" to user.country,
-                "language" to user.language,
-                "createdatetime" to converttoString(currentDateTime, DateFormat.MEDIUM),
-                "authtype" to user.authtype,
-                "imageurl" to "",
-                "role" to user.role,
-                "hasevent" to "Y",
-                "hastask" to "",
-                "haspayment" to "",
-                "hasguest" to "",
-                "hasvendor" to "",
-                "tasksactive" to 0,
-                "taskscompleted" to 0,
-                "payments" to 0,
-                "guests" to 0,
-                "status" to "A",
-                "vendors" to 0,
-                "eventbudget" to user.eventbudget,
-                "numberguests" to user.numberguests,
-                "distanceunit" to user.distanceunit,
-                // The below fields are of exclusive use of Firebase to police the authentication
-                // and number of active sessions
-                "session" to "",
-                "last_signed_in_at" to ""
-            )
-            postRef.setValue(
-                userfb as Map<String, Any>
-            ).await()
+        val postRef = myRef.child("User").child(this.key!!)
+        val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid
+
+        val userfb = hashMapOf(
+            "eventid" to user.eventid,
+            "shortname" to user.shortname,
+            "email" to user.email,
+            "country" to user.country,
+            "language" to user.language,
+            "createdatetime" to converttoString(currentDateTime, DateFormat.MEDIUM),
+            "authtype" to user.authtype,
+            "imageurl" to "",
+            "role" to user.role,
+            "hasevent" to "Y",
+            "hastask" to "",
+            "haspayment" to "",
+            "hasguest" to "",
+            "hasvendor" to "",
+            "tasksactive" to 0,
+            "taskscompleted" to 0,
+            "payments" to 0,
+            "guests" to 0,
+            "status" to "A",
+            "vendors" to 0,
+            "eventbudget" to user.eventbudget,
+            "numberguests" to user.numberguests,
+            "distanceunit" to user.distanceunit,
+            // The below fields are of exclusive use of Firebase to police the authentication
+            // and number of active sessions
+            "session" to "",
+            "last_signed_in_at" to ""
+        )
+        try {
+            if (currentUserUID == this.key) {
+                postRef.setValue(
+                    userfb as Map<String, Any>
+                ).await()
+            } else {
+                throw UserAuthenticationException("User ID does not match with the Auth User in Firebase")
+            }
+        } catch (e: Exception) {
+            throw UserCreationException(e.toString())
         }
+
     }
     //        { error, _ ->
 //            if (error != null) {

@@ -21,15 +21,15 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
     var nexthandlerdel: CoRDeleteVendor? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(user: User) : Boolean {
+    suspend fun firebaseImport(uid: String) : Boolean {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val vendorList: ArrayList<Vendor>
         val eventModel = EventModel()
         try {
-            val eventKey = eventModel.getEventKey(user.userid!!)
+            val eventKey = eventModel.getEventKey(uid)
             val vendorModel = VendorModel()
 
-            vendorList = vendorModel.getVendors(user.userid!!, eventKey)
+            vendorList = vendorModel.getVendors(uid, eventKey)
             db.execSQL("DELETE FROM VENDOR")
 
             for (vendorItem in vendorList){

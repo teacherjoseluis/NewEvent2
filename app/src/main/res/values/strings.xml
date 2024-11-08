@@ -271,6 +271,7 @@
     <string name="eventcreated">Your event was successfully created</string>
     <string name="error_emailverification">You need to verify your email account first. We have sent a verification email to your account </string>
     <string name="error_usersession">There was a problem with your user session or you are already logged in another device</string>
+    <string name="error_firebaseimport">There was a problem loading your information from the cloud</string>
     <string name="weakpassword">Password must be at least 8 characters long</string>
     <string name="invalidemailpassword">Invalid email or password</string>
     <string name="errorsendingverification">Error sending email verification message</string>

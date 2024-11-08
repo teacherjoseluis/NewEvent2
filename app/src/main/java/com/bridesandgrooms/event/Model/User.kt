@@ -83,7 +83,7 @@ class User(
     )
 
     suspend fun login(
-        activity: Activity,
+        context: Context,
         authtype: String,
         UserEmail: String?,
         UserPassword: String?,
@@ -101,12 +101,18 @@ class User(
                         authResult.user!!.sendEmailVerification().await()
                         throw EmailVerificationException("Email account for user ${authResult.user!!} has not been verified")
                     }
-                } catch (e: Exception) {
-                    if (e is com.google.firebase.FirebaseNetworkException) {
-                        throw NetworkConnectivityException(e.toString())
-                    } else {
-                        throw UserAuthenticationException(e.toString())
+                    val eventId = saveSession(authResult, context)
+                    val firebaseUser = authResult.user!!
+                    if (eventId.isNullOrEmpty()) {
+                        throw EventNotFoundException("Event for user $firebaseUser is NULL or has not been found", firebaseUser)
                     }
+                    importEventFromFirebase(context, firebaseUser.uid)
+                } catch (e: com.google.firebase.FirebaseNetworkException) {
+                    throw NetworkConnectivityException(e.toString())
+                } catch (e: UserAuthenticationException) {
+                    throw UserAuthenticationException(e.toString())
+                } catch (e: FirebaseDataImportException) {
+                    throw FirebaseDataImportException(e.toString())
                 }
             }
 
@@ -115,25 +121,25 @@ class User(
                 //val authResult = loginWithSocialNetwork(mAuth, credential!!)!!
                 try {
                     authResult = mAuth.signInWithCredential(credential!!).await()
-                } catch (e: Exception) {
-                    if (e is com.google.firebase.FirebaseNetworkException) {
-                        throw NetworkConnectivityException(e.toString())
-                    } else {
-                        throw UserAuthenticationException(e.toString())
+                    val eventId = saveSession(authResult, context)
+                    val firebaseUser = authResult.user!!
+                    if (eventId.isNullOrEmpty()) {
+                        throw EventNotFoundException("Event for user $firebaseUser is NULL or has not been found", firebaseUser)
                     }
+                    importEventFromFirebase(context, firebaseUser.uid)
+                } catch (e: com.google.firebase.FirebaseNetworkException) {
+                    throw NetworkConnectivityException(e.toString())
+                } catch (e: UserAuthenticationException) {
+                    throw UserAuthenticationException(e.toString())
+                } catch (e: FirebaseDataImportException) {
+                    throw FirebaseDataImportException(e.toString())
                 }
             }
         }
-        // reviewing if there is an already logged session for the user - Need to add a parent node
-        activeSessionsRef = database.child("Session").child(authResult.user?.uid!!).child("session")
-        lastSignedInAtRef =
-            database.child("Session").child(authResult.user?.uid!!).child("last_signed_in_at")
-        val activeSessionsSnapshot = try {
-            activeSessionsRef.get().await()
-        } catch (e: Exception) {
-            throw SessionAccessException(e.toString())
-        }
+        return@coroutineScope authResult
+    }
 
+    private suspend fun saveSession(authResult: AuthResult, context: Context): String? {
         //-----------------------------------------------------------------------------------------------------------------
         val eventIdRef = database.child("User").child(authResult.user?.uid!!).child("eventid")
         val eventSnapShot = try {
@@ -143,45 +149,63 @@ class User(
         }
         val eventId = eventSnapShot.getValue(String::class.java)
         //-----------------------------------------------------------------------------------------------------------------
-        if (activeSessionsSnapshot.exists()) {
-            // extracting the session value from Firebase
-            val currentTimeMillis = System.currentTimeMillis()
-            lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
-            // Session ID does not exist and user can login using this device
-            activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
-                .await()
 
-            // saving authentication variables in the shared preferences
-            saveUserSession(activity, authResult!!.user!!.email.toString(), null, "email")
-            saveUserSession(activity, authResult.user!!.uid, null, "user_id")
-            saveUserSession(activity, eventId, null, "event_id")
-            saveUserSession(
-                activity,
-                authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
-                "session_id"
-            )
-            saveUserSession(activity, null, currentTimeMillis, "last_signed_in_at")
-            return@coroutineScope authResult
-        } else {
-            // extracting the session value from Firebase
-            val currentTimeMillis = System.currentTimeMillis()
-            lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
-            // Session ID does not exist and user can login using this device
-            activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
-                .await()
+        if (!eventId.isNullOrEmpty()) {
+            // reviewing if there is an already logged session for the user - Need to add a parent node
+            activeSessionsRef =
+                database.child("Session").child(authResult.user?.uid!!).child("session")
+            lastSignedInAtRef =
+                database.child("Session").child(authResult.user?.uid!!).child("last_signed_in_at")
+            val activeSessionsSnapshot = try {
+                activeSessionsRef.get().await()
+            } catch (e: Exception) {
+                throw SessionAccessException(e.toString())
+            }
 
-            // saving authentication variables in the shared preferences
-            saveUserSession(activity, authResult!!.user!!.email.toString(), null, "email")
-            saveUserSession(activity, authResult.user!!.uid, null, "user_id")
-            saveUserSession(activity, eventId, null, "event_id")
-            saveUserSession(
-                activity,
-                authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
-                "session_id"
-            )
-            saveUserSession(activity, null, currentTimeMillis, "last_signed_in_at")
-            return@coroutineScope authResult
+            if (activeSessionsSnapshot.exists()) {
+                // extracting the session value from Firebase
+                val currentTimeMillis = System.currentTimeMillis()
+                lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
+                // Session ID does not exist and user can login using this device
+                activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
+                    .await()
+
+                // saving authentication variables in the shared preferences
+                saveUserSessionValues(authResult, context, eventId)
+
+            } else {
+                // extracting the session value from Firebase
+                val currentTimeMillis = System.currentTimeMillis()
+                lastSignedInAtRef.setValue(currentTimeMillis.toString()).await()
+                // Session ID does not exist and user can login using this device
+                activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
+                    .await()
+
+                // saving authentication variables in the shared preferences
+                saveUserSessionValues(authResult, context, eventId)
+            }
         }
+        return eventId
+    }
+
+    private fun saveUserSessionValues(authResult: AuthResult, context: Context, eventId: String) {
+        val currentTimeMillis = System.currentTimeMillis()
+
+        saveUserSession(context, authResult!!.user!!.email.toString(), null, "email")
+        saveUserSession(context, authResult.user!!.uid, null, "user_id")
+        saveUserSession(context, eventId, null, "event_id")
+        saveUserSession(
+            context,
+            authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
+            "session_id"
+        )
+        saveUserSession(context, null, currentTimeMillis, "last_signed_in_at")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun importEventFromFirebase(context: Context, uid: String) {
+        val dbHelper = DatabaseHelper(context)
+        dbHelper.updateLocalDB(uid)
     }
 
     fun getUser(context: Context): User {

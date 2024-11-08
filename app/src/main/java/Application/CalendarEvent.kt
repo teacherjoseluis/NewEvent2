@@ -43,7 +43,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
 
 
     private fun addEvent(item: Any) {
-        var event: ContentValues = ContentValues()
+        var event = ContentValues()
         when (item) {
             is Event -> {
                 val eventdate = converttoDate(item.date)
@@ -52,6 +52,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                 event.put(Events.TITLE, item.name)
                 event.put(Events.DESCRIPTION, item.address)
             }
+
             is Task -> {
                 val taskdate = converttoDate(item.date)
                 begindate = converttoCalendar(taskdate)
@@ -59,6 +60,7 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                 event.put(Events.TITLE, item.name)
                 event.put(Events.DESCRIPTION, "Task for the ${item.category} category")
             }
+
             is Payment -> {
                 val paymentdate = converttoDate(item.date)
                 begindate = converttoCalendar(paymentdate)
@@ -77,7 +79,11 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
             event.put(Events.ALL_DAY, 1)
             event.put(Events.STATUS, 1)
             event.put(Events.HAS_ALARM, 1)
-            context.contentResolver.insert(Events.CONTENT_URI, event)
+            try {
+                context.contentResolver.insert(Events.CONTENT_URI, event)
+            } catch (e: Exception) {
+                throw CalendarCreationException(e.toString())
+            }
         }
     }
 
@@ -101,7 +107,11 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                     event.put(Events.STATUS, 1)
                     event.put(Events.HAS_ALARM, 1)
 
-                    context.contentResolver.update(eventUri, event, null, null)
+                    try {
+                        context.contentResolver.update(eventUri, event, null, null)
+                    } catch (e: Exception) {
+                        throw CalendarEditionException(e.toString())
+                    }
                 }
             }
 
@@ -123,7 +133,11 @@ class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAd
                     event.put(Events.STATUS, 1)
                     event.put(Events.HAS_ALARM, 1)
 
-                    context.contentResolver.update(eventUri, event, null, null)
+                    try {
+                        context.contentResolver.update(eventUri, event, null, null)
+                    } catch (e: Exception) {
+                        throw CalendarEditionException(e.toString())
+                    }
                 }
             }
         }

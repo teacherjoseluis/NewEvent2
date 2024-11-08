@@ -140,12 +140,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
                 val fragment = MainActivity()
                 requireActivity().supportFragmentManager.beginTransaction()
-//                    .setCustomAnimations(
-//                        R.anim.enter_from_left,  // Custom animation for the entering fragment
-//                        R.anim.exit_to_right,    // Custom animation for the exiting fragment
-//                        R.anim.enter_from_right, // Optional for popBackStack
-//                        R.anim.exit_to_left      // Optional for popBackStack
-//                    )
                     .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                     .replace(R.id.fragment_container, fragment)
                     .commit()
@@ -174,14 +168,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             for (i in 0 until bottomView.menu.size()) {
                 bottomView.menu.getItem(i).isEnabled = false
             }
-
-            val mAlphaAnimation = AnimationUtils.loadAnimation(context, R.xml.alpha_animation)
-//            inf.onboarding.newtaskbutton.startAnimation(mAlphaAnimation)
-//            inf.onboarding.newtaskbutton.setOnClickListener {
-//                AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "New_Task")
-//                val newtask = Intent(activity, TaskCreateEdit::class.java)
-//                startActivity(newtask)
-//            }
         }
         return inf.root
     }

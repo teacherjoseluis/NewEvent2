@@ -10,14 +10,13 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.lang.Exception
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class TaskModel : CoRAddEditTask, CoRDeleteTask{
+class TaskModel : CoRAddEditTask, CoRDeleteTask {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
@@ -111,7 +110,10 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask{
             .addOnSuccessListener {
                 task.key = postRef.key.toString()
                 taskaddedflag.onTaskAddedEdited(true, task)
-                Log.d(TAG, "Task ${task.name} successfully added on ${sdf.format(taskdatetime)}")
+                Log.d(
+                    TAG,
+                    "Task ${task.name} successfully added on ${sdf.format(taskdatetime)}"
+                )
             }
             .addOnFailureListener {
                 taskaddedflag.onTaskAddedEdited(false, task)
@@ -223,7 +225,7 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask{
         }
     }
 
-    override fun onDeleteTask(context: Context, user:User, task: Task) {
+    override fun onDeleteTask(context: Context, user: User, task: Task) {
 //        val userdbhelper = UserDBHelper(context)
 //        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         deleteTask(

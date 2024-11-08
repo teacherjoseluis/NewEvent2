@@ -1,6 +1,8 @@
 package com.bridesandgrooms.event.Model
 
 import Application.FirebaseDataImportException
+import Application.UserCreationException
+import Application.UserEditionException
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
@@ -67,32 +69,32 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
             db.insert("USER", null, values)
             Log.d(TAG, "User record inserted")
         } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
+            throw UserCreationException(e.toString())
         } finally {
             db.close()
         }
     }
 
-    @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(user: User): Boolean {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
-        Log.d(TAG, "Starting UserDB record import ${user.userid}")
-        //val user: User
-        try {
-            val userModel = UserModel(user)
-            Log.d(TAG, "Start getting User record from FireBase")
-            val user = userModel.getUser()
-            Log.d(TAG, "User record obtained from FireBase ${user}")
-            db.execSQL("DELETE FROM USER")
-            insert(user)
-        } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
-            throw FirebaseDataImportException("Error importing User data: $e")
-        } finally {
-            db.close()
-        }
-        return true
-    }
+//    @ExperimentalCoroutinesApi
+//    suspend fun firebaseImport(uid: String): Boolean {
+//        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+//        Log.d(TAG, "Starting UserDB record import ${uid}")
+//        //val user: User
+//        try {
+//            val userModel = UserModel(user)
+//            Log.d(TAG, "Start getting User record from FireBase")
+//            val user = userModel.getUser()
+//            Log.d(TAG, "User record obtained from FireBase ${user}")
+//            db.execSQL("DELETE FROM USER")
+//            insert(user)
+//        } catch (e: Exception) {
+//            Log.e(TAG, e.message.toString())
+//            throw FirebaseDataImportException("Error importing User data: $e")
+//        } finally {
+//            db.close()
+//        }
+//        return true
+//    }
 
     private fun getUserexists(key: String): Boolean {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
@@ -111,30 +113,6 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
             db.close()
         }
     }
-
-
-//    fun getUserKey(): String? {
-//        //val useremail = ""
-//        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
-//        //var key = ""
-//        val cursor: Cursor = db.rawQuery("SELECT userid FROM USER WHERE email = '$useremail'", null)
-//        try {
-//            if (cursor.count > 0) {
-//                cursor.moveToFirst()
-//                do {
-//                    key = cursor.getString(cursor.getColumnIndexOrThrow("userid"))
-//                } while (cursor.moveToNext())
-//            }
-//            return key
-//        } catch (e: Exception) {
-//            Log.e(TAG, e.message.toString())
-//            return null
-//        } finally {
-//            cursor.close()
-//            db.close()
-//        }
-//    }
-
 
     fun getUser(key: String?): User? {
         val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
@@ -247,7 +225,7 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
                 Log.d(TAG, "User ${user.userid} not updated")
             }
         } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
+            throw UserEditionException(e.toString())
         } finally {
             db.close()
         }

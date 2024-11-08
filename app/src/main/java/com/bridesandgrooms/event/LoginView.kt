@@ -47,11 +47,11 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding =
+            DataBindingUtil.setContentView(this, R.layout.login_video) as LoginVideoBinding
         val video_login = RemoteConfigSingleton.get_video_login()
-        if (video_login) {
-            binding =
-                DataBindingUtil.setContentView(this, R.layout.login_video) as LoginVideoBinding
 
+        if (video_login) {
             val videoview = findViewById<View>(R.id.videowedding) as VideoView
             videoview.setOnCompletionListener(OnCompletionListener {
                 videoview.start() //need to make transition seamless.
@@ -62,10 +62,10 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
             videoview.setVideoURI(uri)
             videoview.requestFocus()
             videoview.start()
-        }
 
-        // Show Welcome Screen
-        showWelcomeScreen()
+            // Show Welcome Screen
+            showWelcomeScreen()
+        }
 
         binding.loginbuttonstart.setOnClickListener {
             //Maybe this is a good moment to implement an animation for the transition
@@ -89,18 +89,17 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                             user.userid = firebaseUser.uid
                             user.email = firebaseUser.email.toString()
 
-                            val eventId = getUserSession(this@LoginView, "event_id").toString()
-                            if (eventId.isEmpty()) {
-                                withContext(Dispatchers.Main) {
-                                    onOnboarding(user.userid!!, user.email, "email")
-                                    //delay(1000)
-                                }
-                            } else {
-                                user = UserModel(user).getUser()
-                                val dbHelper = DatabaseHelper(this@LoginView)
-                                dbHelper.updateLocalDB(user)
-                            }
+//                            val eventId = getUserSession(this@LoginView, "event_id").toString()
+//                            if (eventId.isEmpty()) {
+//                                onOnboarding(user.userid!!, user.email, "email")
+//                                //delay(1000)
+//                            } else {
+//                                lifecycleScope.launch {
+//                            user = UserModel(user).getUser()
+//                            val dbHelper = DatabaseHelper(this@LoginView)
+//                            dbHelper.updateLocalDB(user)
                             onLoginSuccess(user.email)
+                            // }
                         } catch (e: EmailVerificationException) {
                             displayErrorMsg(getString(R.string.error_emailverification)/* + e.toString()*/)
                         } catch (e: UserAuthenticationException) {
@@ -111,6 +110,10 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                             displayErrorMsg(getString(R.string.error_usersession)/* + e.toString()*/)
                         } catch (e: NetworkConnectivityException) {
                             displayErrorMsg(getString(R.string.error_networkconnectivity)/* + e.toString()*/)
+                        } catch (e: FirebaseDataImportException) {
+                            displayErrorMsg(getString(R.string.error_firebaseimport)/* + e.toString()*/)
+                        } catch (e: EventNotFoundException) {
+                            onOnboarding(e.firebaseUser.uid, e.firebaseUser.email.toString(), "email")
                         }
                     }
                 }
@@ -129,6 +132,19 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                 val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
                 val signInIntent = mGoogleSignInClient.signInIntent
                 startActivityForResult(signInIntent, RC_SIGN_IN)
+
+//                val eventId = getUserSession(this@LoginView, "event_id").toString()
+//                if (eventId.isEmpty()) {
+//                    onOnboarding(user.userid!!, user.email, "google")
+//                    //delay(1000)
+//                } else {
+//                    lifecycleScope.launch {
+//                        user = UserModel(user).getUser()
+//                        val dbHelper = DatabaseHelper(this@LoginView)
+//                        dbHelper.updateLocalDB(user)
+//                    }
+//                    onLoginSuccess(user.email)
+//                }
             }
         }
         // ********************************* SignUp section *********************************************
@@ -222,6 +238,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
         }
         return isValid
     }
+
     private fun validateAllInputsForgotEmail(): Boolean {
         var isValid = true
         val validator = InputValidator(this)
@@ -234,6 +251,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
         }
         return isValid
     }
+
     private fun validateAllInputsSignUp(): Boolean {
         var isValid = true
         val validator = InputValidator(this)
@@ -265,17 +283,19 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
         return isValid
     }
 
-    private fun showWelcomeScreen(){
+    private fun showWelcomeScreen() {
         binding.welcomeScreen.visibility = ConstraintLayout.VISIBLE
         binding.loginScreen.visibility = ConstraintLayout.INVISIBLE
         binding.signupScreen.visibility = ConstraintLayout.INVISIBLE
     }
-    private fun showLoginScreen(){
+
+    private fun showLoginScreen() {
         binding.welcomeScreen.visibility = ConstraintLayout.INVISIBLE
         binding.loginScreen.visibility = ConstraintLayout.VISIBLE
         binding.signupScreen.visibility = ConstraintLayout.INVISIBLE
     }
-    private fun showSignUpScreen(){
+
+    private fun showSignUpScreen() {
         binding.welcomeScreen.visibility = ConstraintLayout.INVISIBLE
         binding.loginScreen.visibility = ConstraintLayout.INVISIBLE
         binding.signupScreen.visibility = ConstraintLayout.VISIBLE
@@ -294,6 +314,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
             }
         }
     }
+
     private fun displayErrorMsg(message: String) {
         Toast.makeText(
             this@LoginView,
@@ -326,20 +347,30 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                     user.userid = firebaseUser.uid
                     user.email = firebaseUser.email.toString()
 
-                    val eventId = getUserSession(this@LoginView, "event_id").toString()
-                    if (eventId.isEmpty()) {
-                        withContext(Dispatchers.Main) {
-                            onOnboarding(user.userid!!, user.email, "google")
-                            //delay(1000)
-                        }
-                    } else {
-                        user = UserModel(user).getUser()
-                        val dbHelper = DatabaseHelper(this@LoginView)
-                        dbHelper.updateLocalDB(user)
-                    }
+//                    val eventId = getUserSession(this@LoginView, "event_id").toString()
+//                    if (eventId.isEmpty()) {
+//                        onOnboarding(user.userid!!, user.email, "google")
+//                        //delay(1000)
+//                    } else {
+//                        lifecycleScope.launch {
+//                            user = UserModel(user).getUser()
+//                            val dbHelper = DatabaseHelper(this@LoginView)
+//                            dbHelper.updateLocalDB(user)
+//                        }
+//                    }
                     onLoginSuccess(user.email)
                 } catch (e: ApiException) {
                     Log.e(TAG, "Google sign in failed", e)
+                } catch (e: SessionAccessException) {
+                    displayErrorMsg(getString(R.string.error_usersession)/* + e.toString()*/)
+                } catch (e: ExistingSessionException) {
+                    displayErrorMsg(getString(R.string.error_usersession)/* + e.toString()*/)
+                } catch (e: NetworkConnectivityException) {
+                    displayErrorMsg(getString(R.string.error_networkconnectivity)/* + e.toString()*/)
+                } catch (e: FirebaseDataImportException) {
+                    displayErrorMsg(getString(R.string.error_firebaseimport)/* + e.toString()*/)
+                } catch (e: EventNotFoundException) {
+                    onOnboarding(e.firebaseUser.uid, e.firebaseUser.email.toString(), "google")
                 }
             }
         }
@@ -362,16 +393,18 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
 
     override fun onLoginSuccess(email: String) {
         showBanner(getString(R.string.welcome_message), false)
-        saveUserSession(applicationContext, email, null, "email")
+        saveUserSession(this@LoginView, email, null, "email")
         finish()
         val mainActivity =
             Intent(this, ActivityContainer::class.java)
         startActivity(mainActivity)
     }
+
     override fun onLoginError() {
         showBanner(getString(R.string.login_error_message), false)
         showWelcomeScreen()
     }
+
     override fun onOnboarding(userid: String, email: String, authtype: String) {
         showBanner(getString(R.string.onboarding_message), false)
 
@@ -380,13 +413,15 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
         onboarding.putExtra("userid", userid)
         onboarding.putExtra("email", email)
         onboarding.putExtra("authtype", authtype)
-        finish()
+        //finish()
         startActivity(onboarding)
         overridePendingTransition(android.R.anim.slide_out_right, android.R.anim.slide_in_left)
     }
+
     override fun onSignUpSuccess() {
         showLoginScreen()
     }
+
     override fun onSignUpError() {
         showWelcomeScreen()
     }
