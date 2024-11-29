@@ -111,7 +111,7 @@ class VendorAdapter(
         }
 
         private fun setupPaymentsRecyclerView(view: View, vendorPayment: VendorPayment) {
-            val paymentDB = PaymentDBHelper()
+            val paymentDB = PaymentDBHelper(context)
             val paymentlist = paymentDB.getVendorPaymentList(vendorPayment.vendor.key)!!
             if (paymentlist.isNotEmpty()) {
                 val cardRecycler = view.findViewById<RecyclerView>(R.id.PaymentsRecyclerView)

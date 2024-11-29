@@ -20,7 +20,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
+class PaymentDBHelper(val context: Context) : CoRAddEditPayment, CoRDeletePayment {
 
     lateinit var payment: Payment
     var nexthandler: CoRAddEditPayment? = null
@@ -28,14 +28,14 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
 
     @ExperimentalCoroutinesApi
     suspend fun firebaseImport(uid: String): Boolean {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val paymentList: ArrayList<Payment>
         val eventModel = EventModel()
         try {
             val eventKey = eventModel.getEventKey(uid)
             val paymentModel = PaymentModel()
 
-            paymentList = paymentModel.getPayments()
+            paymentList = paymentModel.getPayments(uid, eventKey)
             db.execSQL("DELETE FROM PAYMENT")
 
             for (paymentItem in paymentList) {
@@ -51,7 +51,7 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
     }
 
     fun insert(payment: Payment) {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val values = ContentValues()
         values.put("paymentid", payment.key)
         values.put("name", payment.name)
@@ -72,7 +72,7 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
     }
 
     private fun getPaymentexists(key: String): Boolean {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         var existsflag = false
         try {
             val cursor: Cursor = db.rawQuery("SELECT * FROM PAYMENT WHERE paymentid = '$key'", null)
@@ -90,7 +90,7 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
     }
 
     fun getPayments(): ArrayList<Payment>? {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val list = ArrayList<Payment>()
         try {
             val cursor: Cursor =
@@ -127,13 +127,13 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
     fun getVendorPayments(vendorkey: String): ArrayList<Float>? {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val list = ArrayList<Float>()
         try {
             val cursor: Cursor =
@@ -153,13 +153,13 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
     fun getVendorPaymentList(vendorkey: String): ArrayList<Payment>? {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val list = ArrayList<Payment>()
         try {
             val cursor: Cursor =
@@ -196,13 +196,13 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
     fun getPaymentfromDate(date: Date) : ArrayList<String>? {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val dateString = convertToDBString(date)
         val nameList = arrayListOf<String>()
         try {
@@ -222,14 +222,14 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
     @SuppressLint("Range")
     fun getDatePaymentArray(date: Date) : ArrayList<Payment>? {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val dateString = convertToDBString(date)
         val list = arrayListOf<Payment>()
         try {
@@ -268,13 +268,13 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
     fun getPaymentsFromMonthYear(month: Int, year: Int): List<Date>? {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().readableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).readableDatabase
         val calendarDayList = mutableListOf<Date>()
 
         try {
@@ -306,15 +306,15 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching payments from month and year: ${e.message}")
             return null
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
         return calendarDayList
     }
 
     @SuppressLint("Range")
     fun getCategoryStats(category: String): PaymentStatsToken? {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val paymentstats = PaymentStatsToken()
         var sumpayments = 0.0F
         try {
@@ -349,13 +349,13 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
     fun hasVendorPayments(vendorkey: String): Int? {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         var paymentcount = 0
         try {
             val cursor: Cursor = db.rawQuery(
@@ -373,13 +373,13 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
     fun update(payment: Payment) {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val values = ContentValues()
         values.put("paymentid", payment.key)
         values.put("name", payment.name)
@@ -400,13 +400,13 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
             //db.close()
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
     fun delete(payment: Payment) {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         try {
             val retVal = db.delete("PAYMENT", "paymentid = '${payment.key}'", null)
             if (retVal >= 1) {
@@ -417,23 +417,23 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
             //db.close()
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
-    override fun onAddEditPayment(payment: Payment) {
+    override fun onAddEditPayment(context: Context, user: User, payment: Payment) {
         if (!getPaymentexists(payment.key)) {
             insert(payment)
         } else {
             update(payment)
         }
-        nexthandler?.onAddEditPayment(payment)
+        nexthandler?.onAddEditPayment(context, user, payment)
     }
 
-    override fun onDeletePayment(paymentId: String) {
+    override fun onDeletePayment(context: Context, user: User, payment: Payment) {
         delete(payment)
-        nexthandlerpdel?.onDeletePayment(paymentId)
+        nexthandlerpdel?.onDeletePayment(context, user, payment)
     }
 
     companion object {

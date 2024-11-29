@@ -22,7 +22,7 @@ class DashboardView : Fragment() {
         val tablayout = inf.findViewById<TabLayout>(R.id.dashboard_tabLayout)
         val viewPager = inf.findViewById<View>(R.id.dashboardpager) as ViewPager
 
-        val userSession = User.getUser()
+        val userSession = User().getUser(requireActivity())
 
         //Setting up the pager adapter for this view
         val adapter =

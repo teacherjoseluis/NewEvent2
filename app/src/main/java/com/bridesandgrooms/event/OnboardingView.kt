@@ -59,7 +59,7 @@ class OnboardingView : AppCompatActivity() {
     private val TIME_DELAY = 2000
     private var back_pressed: Long = 0
 
-    private var userSession: User = User()
+    private lateinit var userSession: User
     private lateinit var binding: OnboardingNameBinding
     private val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
         if (hasFocus && view is TextInputEditText) {
@@ -72,12 +72,11 @@ class OnboardingView : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        userSession = User().getUser(this@OnboardingView)
         userSession.apply {
             userid = intent.getStringExtra("userid").toString()
             email = intent.getStringExtra("email").toString()
             authtype = intent.getStringExtra("authtype").toString()
-            status =
-                "0" // Hardcoded value indicating the user is new and needs to go through the Welcome sequence
             language = this@OnboardingView.resources.configuration.locales.get(0).language
             country = this@OnboardingView.resources.configuration.locales.get(0).country
         }
@@ -188,7 +187,7 @@ class OnboardingView : AppCompatActivity() {
                             } else {
                                 lifecycleScope.launch {
                                     try {
-                                        onBoarding(userSession, event)
+                                        onBoarding(this@OnboardingView, userSession, event)
                                         showBanner(getString(R.string.successadduser), false)
                                         showBanner(getString(R.string.eventcreated), false)
 
@@ -197,9 +196,13 @@ class OnboardingView : AppCompatActivity() {
                                             val paymentitem = Payment(dummy = true)
                                             try {
                                                 addTask(
+                                                    this@OnboardingView,
+                                                    userSession,
                                                     taskitem
                                                 )
                                                 addPayment(
+                                                    this@OnboardingView,
+                                                    userSession,
                                                     paymentitem
                                                 )
                                             } catch (e: TaskCreationException) {

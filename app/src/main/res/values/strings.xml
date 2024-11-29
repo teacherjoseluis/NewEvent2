@@ -388,13 +388,6 @@
     <string name="error_invalid_money_input">Enter a valid amount</string>
     <string name="event_greeting">Hi, %1$s</string>
     <string name="trending">Trending</string>
-    <string name="get_started">Let\'s get started</string>
-    <string name="app_welcome">Welcome, %1$s</string>
-    <string name="app_welcome_text_1">The app where you can organize tasks, payments, manage your guest list, and keep track of every detail, so you can focus on the joy of the moment.</string>
-    <string name="app_welcome_text_2">You now have created your event on which you can start your planning.</string>
-    <string name="app_welcome_text_3">Need for inspiration?</string>
-    <string name="app_welcome_text_4">You can see what\'s trending on dresses, bouquets, cakes, etc.</string>
-    <string name="app_welcome_text_5">Also you can read our Blog if you want to see our fresh content and news.</string>
 
     <string-array name="role" >
         <item>Bride</item>

@@ -33,31 +33,31 @@ class Cache<T : Any> {
     constructor(context: Context, presenter: TaskPresenter) {
         contextCache = context
         taskPresenter = presenter
-        taskhelper = TaskDBHelper()
+        taskhelper = TaskDBHelper(context)
     }
 
     constructor(context: Context, presenter: PaymentPresenter) {
         contextCache = context
         paymentPresenter = presenter
-        paymenthelper = PaymentDBHelper()
+        paymenthelper = PaymentDBHelper(context)
     }
 
     constructor(context: Context, presenter: GuestPresenter) {
         contextCache = context
         guestPresenter = presenter
-        guesthelper = GuestDBHelper()
+        guesthelper = GuestDBHelper(context)
     }
 
     constructor(context: Context, presenter: VendorPresenter) {
         contextCache = context
         vendorPresenter = presenter
-        vendorhelper = VendorDBHelper()
+        vendorhelper = VendorDBHelper(context)
     }
 
     constructor(context: Context, presenter: EventPresenter) {
         contextCache = context
         eventPresenter = presenter
-        eventhelper = EventDBHelper()
+        eventhelper = EventDBHelper(context)
     }
 
     constructor(context: Context, presenter: ImagePresenter) {

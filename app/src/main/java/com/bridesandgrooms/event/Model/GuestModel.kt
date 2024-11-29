@@ -1,12 +1,13 @@
 package com.bridesandgrooms.event.Model
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.bridesandgrooms.event.*
 import com.bridesandgrooms.event.Functions.CoRAddEditGuest
 import com.bridesandgrooms.event.Functions.CoRDeleteGuest
-import com.bridesandgrooms.event.Functions.UserSessionHelper
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.*
@@ -27,14 +28,9 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
     var nexthandlerdel: CoRDeleteGuest? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun getGuests(): ArrayList<Guest> {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
+    suspend fun getGuests(userid: String, eventid: String): ArrayList<Guest> {
         val postRef =
-            myRef.child("User").child(userId).child("Event").child(eventId)
+            myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Guest").orderByChild("name")
         val guestList = ArrayList<Guest>()
 
@@ -51,15 +47,12 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
     }
 
     fun getAllGuestList(
+        userid: String,
+        eventid: String,
         dataFetched: FirebaseSuccessGuestList
     ) {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
         val postRef =
-            myRef.child("User").child(userId).child("Event").child(eventId)
+            myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Guest").orderByChild("name")
         val guestlist = ArrayList<Guest>()
 
@@ -86,15 +79,12 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
 
     @SuppressLint("SimpleDateFormat")
     private fun addGuest(
+        userid: String,
+        eventid: String,
         guest: Guest
     ): String {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
         val postRef =
-            myRef.child("User").child(userId).child("Event").child(eventId)
+            myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Guest").push()
 
         //---------------------------------------
@@ -121,16 +111,56 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
         return postRef.key.toString()
     }
 
+//    @SuppressLint("SimpleDateFormat")
+//    private fun addGuest(
+//        userid: String,
+//        eventid: String,
+//        guest: Guest,
+//        guestaddedflag: FirebaseAddEditGuestSuccess
+//    ) {
+//        val postRef =
+//            myRef.child("User").child(userid).child("Event").child(eventid)
+//                .child("Guest").push()
+//
+//        //---------------------------------------
+//        // Getting the time and date to record in the recently created guest
+//        val timestamp = Time(System.currentTimeMillis())
+//        val guestdatetime = Date(timestamp.time)
+//        val sdf = SimpleDateFormat("MM/dd/yyyy h:mm:ss a")
+//        //---------------------------------------
+//
+//        val guestadd = hashMapOf(
+//            "name" to guest.name,
+//            "rsvp" to guest.rsvp,
+//            "companion" to guest.companion,
+//            "table" to guest.table,
+//            "phone" to guest.phone,
+//            "email" to guest.email,
+//            "createdatetime" to sdf.format(guestdatetime)
+//
+//        )
+//
+//        postRef.setValue(guestadd as Map<String, Any>)
+//            .addOnSuccessListener {
+//                guest.key = postRef.key.toString()
+//                guestaddedflag.onGuestAddedEdited(true, guest)
+//                Log.d(
+//                    TAG,
+//                    "Guest ${guest.name} successfully added on ${sdf.format(guestdatetime)}")
+//            }
+//            .addOnFailureListener {
+//                guestaddedflag.onGuestAddedEdited(false, guest)
+//                Log.e(TAG, "Guest ${guest.name} failed to be added")
+//            }
+//    }
+
     private fun editGuest(
+        userid: String,
+        eventid: String,
         guest: Guest
     ) {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
         val postRef =
-            myRef.child("User").child(userId).child("Event").child(eventId)
+            myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Guest").child(guest.key)
 
         val guestedit = hashMapOf(
@@ -148,25 +178,22 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
     }
 
     private fun deleteGuest(
-        guestId: String,
+        userid: String,
+        eventid: String,
+        guest: Guest,
         guestdeletedflag: FirebaseDeleteGuestSuccess
     ) {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
         val postRef =
-            myRef.child("User").child(userId).child("Event").child(eventId)
-                .child("Guest").child(guestId)
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Guest").child(guest.key)
                 .removeValue()
                 .addOnSuccessListener {
-                    guestdeletedflag.onGuestDeleted(true, guestId)
-                    Log.d(TAG, "Guest $guestId successfully deleted")
+                    guestdeletedflag.onGuestDeleted(true, guest)
+                    Log.d(TAG, "Guest ${guest.name} successfully deleted")
                 }
                 .addOnFailureListener {
-                    guestdeletedflag.onGuestDeleted(false, guestId)
-                    Log.e(TAG, "Guest $guestId failed to be deleted")
+                    guestdeletedflag.onGuestDeleted(false, guest)
+                    Log.e(TAG, "Guest ${guest.name} failed to be deleted")
                 }
     }
 
@@ -194,31 +221,33 @@ class GuestModel : CoRAddEditGuest, CoRDeleteGuest {
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override fun onAddEditGuest(context: Context, user: User, guest: Guest) {
         if (guest.key.isEmpty()) {
-            guest.key = addGuest(guest)
-            nexthandler?.onAddEditGuest(guest)
+            guest.key = addGuest(user.userid!!, user.eventid, guest)
+            nexthandler?.onAddEditGuest(context, user, guest)
         } else {
-            editGuest(guest)
-            nexthandler?.onAddEditGuest(guest)
+            editGuest(user.userid!!, user.eventid, guest)
+            nexthandler?.onAddEditGuest(context, user, guest)
         }
         Log.i("GuestModel", "onAddEditGuest reached")
     }
 
-    override fun onDeleteGuest(guestId: String) {
+    override fun onDeleteGuest(context: Context, user: User, guest: Guest) {
         deleteGuest(
-            guestId,
+            user.userid!!,
+            user.eventid,
+            guest,
             object : FirebaseDeleteGuestSuccess {
-                override fun onGuestDeleted(flag: Boolean, guestId: String) {
+                override fun onGuestDeleted(flag: Boolean, guest: Guest) {
                     if (flag) {
-                        nexthandlerdel?.onDeleteGuest(guestId)
+                        nexthandlerdel?.onDeleteGuest(context, user, guest)
                     }
                 }
             })
     }
 
     interface FirebaseDeleteGuestSuccess {
-        fun onGuestDeleted(flag: Boolean, guestId: String)
+        fun onGuestDeleted(flag: Boolean, guest: Guest)
     }
 
     interface FirebaseSuccessGuestList {

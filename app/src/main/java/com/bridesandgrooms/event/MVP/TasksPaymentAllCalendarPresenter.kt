@@ -18,7 +18,7 @@ class TasksPaymentAllCalendarPresenter(
 ) {
 
     fun getDateTaskArray(date: Date) {
-        val taskDBHelper = TaskDBHelper()
+        val taskDBHelper = TaskDBHelper(context)
         try {
             val taskArray = taskDBHelper.getDateTaskArray(date)
             fragmentTask?.onTaskArray(taskArray)
@@ -29,7 +29,7 @@ class TasksPaymentAllCalendarPresenter(
     }
 
     fun getDatePaymentArray(date: Date) {
-        val paymentDBHelper = PaymentDBHelper()
+        val paymentDBHelper = PaymentDBHelper(context)
         try {
             val paymentArray = paymentDBHelper.getDatePaymentArray(date)
             fragmentPayment?.onPaymentArray(paymentArray)

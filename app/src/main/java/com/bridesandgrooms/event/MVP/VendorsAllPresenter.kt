@@ -26,7 +26,7 @@ class VendorsAllPresenter(
     override fun onVendorList(list: ArrayList<Vendor>) {
         mHandler.post {
             val vendorpaymentlist = ArrayList<VendorPayment>()
-            val paymentDB = PaymentDBHelper()
+            val paymentDB = PaymentDBHelper(context)
             list.forEach { vendor ->
                 val amountlist = paymentDB.getVendorPayments(vendor.key)!!
                 vendorpaymentlist.add(VendorPayment(vendor, amountlist))

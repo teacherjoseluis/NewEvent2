@@ -41,14 +41,13 @@ import kotlin.io.path.isReadable
 private val storage = Firebase.storage
 private val storageRef = storage.reference
 
-private val userid = UserSessionHelper.getUserSession("user_id") as String
-private val eventid = UserSessionHelper.getUserSession("event_id") as String
-
 //Function to retrieve an image from Storage
 //IN: Category of the image needed
 //OUT: Image URL
 fun getImgfromStorage(
-    category: String
+    category: String,
+    userid: String,
+    eventid: String
 ): StorageReference {
     val referenceUrl = "gs://brides-n-grooms.appspot.com/images/$userid/$eventid/$category.PNG"
 
@@ -221,7 +220,7 @@ suspend fun getImgfromPlaces(
 
 //Function to store an image to Storage
 //IN: Category, userId, EventId
-fun saveImgtoStorage(category: String, uri: Uri) {
+fun saveImgtoStorage(category: String, userid: String, eventid: String, uri: Uri) {
     val imageRef = storageRef.child("images/$userid/$eventid/$category.PNG")
     val uploadTask = imageRef.putFile(uri)
 
@@ -295,12 +294,12 @@ fun saveImagetoSD(context: Context, category: String, imageUri: Uri) {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun replaceImage(context: Context, category: String, uri: Uri) {
+fun replaceImage(context: Context, category: String, userid: String, eventid: String, uri: Uri) {
     // Replace Image consists of:
     // 1. Delete Image from SD
     delImgfromSD(category, context)
     // 2. Rewrite Image in Storage
-    saveImgtoStorage(category, uri)
+    saveImgtoStorage(category, userid, eventid, uri)
     saveImagetoSD(context, category, uri)
 }
 

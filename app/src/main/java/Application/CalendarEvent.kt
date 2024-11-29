@@ -19,7 +19,6 @@ import com.bridesandgrooms.event.Functions.CoRDeleteTask
 import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.converttoCalendar
 import com.bridesandgrooms.event.Functions.converttoDate
-import com.bridesandgrooms.event.Model.DatabaseHelper
 import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.GuestDBHelper
 import com.bridesandgrooms.event.Model.Payment
@@ -28,14 +27,13 @@ import com.bridesandgrooms.event.Model.User
 import java.util.*
 
 
-class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment,
+class CalendarEvent(val context: Context) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment,
     CoRDeletePayment, CoRAddEditEvent, CoROnboardUser {
 
     private lateinit var calendaruri: String
     private lateinit var begindate: Calendar
     private lateinit var eventUri: Uri
 
-    private var appContext = context.applicationContext
     var nexthandlere: CoRAddEditEvent? = null
     var nexthandlert: CoRAddEditTask? = null
     var nexthandlertdel: CoRDeleteTask? = null
@@ -71,7 +69,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
                 event.put(Events.DESCRIPTION, "Payment for the ${item.category} category")
             }
         }
-        val calendarId = getCalendarId()
+        val calendarId = getCalendarId(context)
         if (calendarId != null) {
             event.put(Events.CALENDAR_ID, calendarId)
             event.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
@@ -82,7 +80,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
             event.put(Events.STATUS, 1)
             event.put(Events.HAS_ALARM, 1)
             try {
-                appContext.contentResolver.insert(Events.CONTENT_URI, event)
+                context.contentResolver.insert(Events.CONTENT_URI, event)
             } catch (e: Exception) {
                 throw CalendarCreationException(e.toString())
             }
@@ -100,7 +98,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
 
                     event.put(Events.TITLE, item.name)
                     event.put(Events.DESCRIPTION, "Task for the ${item.category} category")
-                    event.put(Events.CALENDAR_ID, getCalendarId())
+                    event.put(Events.CALENDAR_ID, getCalendarId(context))
                     event.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
                     event.put(Events.DTSTART, begindate.timeInMillis + 60 * 60 * 1000)
                     event.put(Events.DTEND, begindate.timeInMillis + 60 * 60 * 1000)
@@ -110,7 +108,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
                     event.put(Events.HAS_ALARM, 1)
 
                     try {
-                        appContext.contentResolver.update(eventUri, event, null, null)
+                        context.contentResolver.update(eventUri, event, null, null)
                     } catch (e: Exception) {
                         throw CalendarEditionException(e.toString())
                     }
@@ -126,7 +124,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
 
                     event.put(Events.TITLE, item.name)
                     event.put(Events.DESCRIPTION, "Payment for the ${item.category} category")
-                    event.put(Events.CALENDAR_ID, getCalendarId())
+                    event.put(Events.CALENDAR_ID, getCalendarId(context))
                     event.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
                     event.put(Events.DTSTART, begindate.timeInMillis + 60 * 60 * 1000)
                     event.put(Events.DTEND, begindate.timeInMillis + 60 * 60 * 1000)
@@ -136,7 +134,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
                     event.put(Events.HAS_ALARM, 1)
 
                     try {
-                        appContext.contentResolver.update(eventUri, event, null, null)
+                        context.contentResolver.update(eventUri, event, null, null)
                     } catch (e: Exception) {
                         throw CalendarEditionException(e.toString())
                     }
@@ -150,7 +148,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
             is Task -> {
                 if (item.eventid != "") {
                     eventUri = ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
-                    appContext.contentResolver.delete(eventUri, null, null)
+                    context.contentResolver.delete(eventUri, null, null)
                 }
             }
 
@@ -158,19 +156,19 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
                 if (item.eventid != "") {
                     eventUri =
                         ContentUris.withAppendedId(Events.CONTENT_URI, item.eventid.toLong())
-                    appContext.contentResolver.delete(eventUri, null, null)
+                    context.contentResolver.delete(eventUri, null, null)
                 }
             }
         }
     }
 
-    private fun getCalendarId(): Long? {
+    private fun getCalendarId(context: Context): Long? {
         val projection = arrayOf(
             CalendarContract.Calendars._ID,
             CalendarContract.Calendars.CALENDAR_DISPLAY_NAME
         )
 
-        var calCursor = appContext.contentResolver.query(
+        var calCursor = context.contentResolver.query(
             CalendarContract.Calendars.CONTENT_URI,
             projection,
             CalendarContract.Calendars.VISIBLE + " = 1 AND " + CalendarContract.Calendars.IS_PRIMARY + "=1",
@@ -179,7 +177,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
         )
 
         if (calCursor != null && calCursor.count <= 0) {
-            calCursor = appContext.contentResolver.query(
+            calCursor = context.contentResolver.query(
                 CalendarContract.Calendars.CONTENT_URI,
                 projection,
                 CalendarContract.Calendars.VISIBLE + " = 1",
@@ -204,7 +202,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
     @SuppressLint("Range")
     private fun getNewEventId(): Long {
         val localuri = Uri.parse(getCalendarUriBase() + "events")
-        val cursor: Cursor? = appContext.contentResolver.query(
+        val cursor: Cursor? = context.contentResolver.query(
             localuri!!,
             arrayOf("MAX(_id) as max_id"),
             null,
@@ -222,7 +220,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
         var calendars = Uri.parse("content://calendar/calendars")
         var managedCursor: Cursor? = null
         try {
-            managedCursor = appContext.contentResolver.query(
+            managedCursor = context.contentResolver.query(
                 calendars!!,
                 null, null, null, null
             )
@@ -234,7 +232,7 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
         } else {
             calendars = Uri.parse("content://com.android.calendar/calendars")
             try {
-                managedCursor = appContext.contentResolver.query(
+                managedCursor = context.contentResolver.query(
                     calendars,
                     null, null, null, null
                 )
@@ -252,51 +250,38 @@ class CalendarEvent private constructor(context: Context) : CoRAddEditTask, CoRD
 
     companion object {
         const val TAG = "CalendarEvent"
-
-        private lateinit var instance: CalendarEvent
-
-        fun initialize(context: Context) {
-            instance = CalendarEvent(context)
-        }
-
-        fun getInstance(): CalendarEvent {
-            if (!::instance.isInitialized) {
-                throw IllegalStateException("CalendarEvent is not initialized. Call initialize() first.")
-            }
-            return instance
-        }
     }
 
-    override fun onAddEditTask(task: Task) {
+    override fun onAddEditTask(context: Context, user: User, task: Task) {
         if (task.key.isEmpty()) {
             addEvent(task)
             task.eventid = getNewEventId().toString()
-            nexthandlert?.onAddEditTask(task)
+            nexthandlert?.onAddEditTask(context, user, task)
         } else {
             editEvent(task)
-            nexthandlert?.onAddEditTask(task)
+            nexthandlert?.onAddEditTask(context, user, task)
         }
     }
 
-    override fun onDeleteTask(taskId: String) {
-        deleteEvent(taskId)
-        nexthandlertdel?.onDeleteTask(taskId)
+    override fun onDeleteTask(context: Context, user: User, task: Task) {
+        deleteEvent(task)
+        nexthandlertdel?.onDeleteTask(context, user, task)
     }
 
-    override fun onAddEditPayment(payment: Payment) {
+    override fun onAddEditPayment(context: Context, user: User, payment: Payment) {
         if (payment.key.isEmpty()) {
             addEvent(payment)
             payment.eventid = getNewEventId().toString()
-            nexthandlerp?.onAddEditPayment(payment)
+            nexthandlerp?.onAddEditPayment(context, user, payment)
         } else {
             editEvent(payment)
-            nexthandlerp?.onAddEditPayment(payment)
+            nexthandlerp?.onAddEditPayment(context, user, payment)
         }
     }
 
-    override fun onDeletePayment(paymentId: String) {
-        deleteEvent(paymentId)
-        nexthandlerpdel?.onDeletePayment(paymentId)
+    override fun onDeletePayment(context: Context, user: User, payment: Payment) {
+        deleteEvent(payment)
+        nexthandlerpdel?.onDeletePayment(context, user, payment)
     }
 
     override suspend fun onAddEditEvent(event: Event) {

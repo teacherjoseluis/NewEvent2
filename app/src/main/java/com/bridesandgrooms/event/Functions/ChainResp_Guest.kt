@@ -5,9 +5,9 @@ import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.User
 
 interface CoRAddEditGuest {
-    fun onAddEditGuest(guest: Guest)
+    fun onAddEditGuest(context: Context, user: User, guest: Guest)
 }
 
 interface CoRDeleteGuest {
-    fun onDeleteGuest(guestId: String)
+    fun onDeleteGuest(context: Context, user: User, guest: Guest)
 }

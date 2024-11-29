@@ -134,8 +134,11 @@ class PaymentPresenter : Cache.PaymentArrayListCacheData {
 
     override fun onEmptyListP() {
 //        val userdbhelper = UserDBHelper(mContext)
+        val user = User().getUser(mContext)
         val payment = PaymentModel()
         payment.getPaymentsList(
+            user.userid!!,
+            user.eventid,
             object : PaymentModel.FirebaseSuccessPaymentList {
                 override fun onPaymentList(arrayList: ArrayList<Payment>) {
                     if (arrayList.isNotEmpty()) {

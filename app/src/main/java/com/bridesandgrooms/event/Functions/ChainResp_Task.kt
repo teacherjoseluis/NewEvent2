@@ -5,9 +5,9 @@ import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.User
 
 interface CoRAddEditTask {
-    fun onAddEditTask(task: Task)
+    fun onAddEditTask(context: Context, user: User, task: Task)
 }
 
 interface CoRDeleteTask {
-    fun onDeleteTask(taskId: String)
+    fun onDeleteTask(context: Context, user: User, task: Task)
 }

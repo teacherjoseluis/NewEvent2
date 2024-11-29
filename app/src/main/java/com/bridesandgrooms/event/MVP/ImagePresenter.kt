@@ -79,9 +79,9 @@ class ImagePresenter : Cache.EventImageCacheData, Cache.PlaceImageCacheData {
     override fun onEmptyEventImage(errorcode: String) {
         mHandler.post {
 //        val userdbhelper = UserDBHelper(mContext)
-            //val user = User().getUser()
+            val user = User().getUser(mContext)
             val storageRef =
-                getImgfromStorage(EVENTIMAGE)
+                getImgfromStorage(EVENTIMAGE, user.userid!!, user.eventid)
             cacheimage.save(EVENTIMAGE, storageRef)
             when (activefragment) {
                 "MA" -> fragmentMA.onEventImage(

@@ -77,7 +77,7 @@ class GuestCreateEdit : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        user = User.getUser()
+        user = User().getUser(context)
         binding = DataBindingUtil.inflate(inflater, R.layout.new_guest, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
@@ -177,7 +177,7 @@ class GuestCreateEdit : Fragment() {
                         AnalyticsManager.getInstance()
                             .trackUserInteraction(SCREEN_NAME, "Delete_Guest")
                         try {
-                            deleteGuest(guestItem.key)
+                            deleteGuest(context, user, guestItem)
                             finish()
                         } catch (e: GuestDeletionException) {
                             AnalyticsManager.getInstance().trackError(
@@ -259,7 +259,7 @@ class GuestCreateEdit : Fragment() {
         }
 
         val guestEvent = Guest()
-        val guestCount = guestEvent.getGuestCount()!!
+        val guestCount = guestEvent.getGuestCount(context)!!
         val newGuestBalance = user.numberguests - (guestCount + 1)
         if (newGuestBalance > 0) {
             showBanner(getString(R.string.banner_withinguestcount), false)
@@ -328,7 +328,7 @@ class GuestCreateEdit : Fragment() {
 
         if (guestItem.key.isEmpty()) {
                 try {
-                    addGuest(guestItem)
+                    addGuest(context, user, guestItem)
                 } catch (e: GuestCreationException) {
                     AnalyticsManager.getInstance().trackError(
                         SCREEN_NAME,
@@ -340,7 +340,7 @@ class GuestCreateEdit : Fragment() {
                 }
         } else {
             try {
-                editGuest(guestItem)
+                editGuest(context, user, guestItem)
             } catch (e: GuestCreationException) {
                 AnalyticsManager.getInstance().trackError(
                     SCREEN_NAME,

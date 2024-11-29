@@ -378,13 +378,6 @@
     <string name="error_invalid_money_input">Ingresa un monto valido</string>
     <string name="event_greeting">Hola, %1$s</string>
     <string name="trending">Tendencia</string>
-    <string name="get_started">Comencemos</string>
-    <string name="app_welcome">Bienvenido(a), %1$s</string>
-    <string name="app_welcome_text_1">Esta es la app en donde puedes organizar tareas, pagos, manejar tu lista de invitados y tener control de cada detalle para que puedas disfrutar este día tan especial.</string>
-    <string name="app_welcome_text_2">Acabas de crear un evento en la app en donde puedes empezar a planear.</string>
-    <string name="app_welcome_text_3">Necesitas inspiración?</string>
-    <string name="app_welcome_text_4">Puedes conocer las tendencias en vestidos, ramos, pasteles, etc.</string>
-    <string name="app_welcome_text_5">También puedes leer nuestro Blog si quieres ver nuestro contenido mas reciente.</string>
 
     <string-array name="role" >
         <item>Novia</item>

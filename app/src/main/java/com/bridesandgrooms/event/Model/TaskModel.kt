@@ -1,11 +1,11 @@
 package com.bridesandgrooms.event.Model
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.Functions.CoRAddEditTask
 import com.bridesandgrooms.event.Functions.CoRDeleteTask
-import com.bridesandgrooms.event.Functions.UserSessionHelper
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,14 +24,10 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
     var nexthandlerdel: CoRDeleteTask? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun getTasks(): ArrayList<Task> {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
-        val postRef = myRef.child("User").child(userId).child("Event").child(eventId)
-            .child("Task").orderByChild("date")
+    suspend fun getTasks(userid: String, eventid: String): ArrayList<Task> {
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task").orderByChild("date")
         val taskList = ArrayList<Task>()
 
         try {
@@ -48,14 +44,14 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
 
 
     fun getAllTasksList(
+        userid: String,
+        eventid: String,
+        //category: String,
+        //status: String,
         dataFetched: FirebaseSuccessTaskList
     ) {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
-        val postRef = myRef.child("User").child(userId).child("Event").child(eventId)
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Task").orderByChild("date")
 
         val tasklist = ArrayList<Task>()
@@ -82,15 +78,13 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
     }
 
     private fun addTask(
+        userid: String,
+        eventid: String,
         task: Task,
         taskaddedflag: FirebaseAddEditTaskSuccess
     ) {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
-        val postRef = myRef.child("User").child(userId).child("Event").child(eventId)
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Task").push()
 
         //---------------------------------------
@@ -128,15 +122,13 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
     }
 
     private fun editTask(
+        userid: String,
+        eventid: String,
         task: Task,
         taskeditedflag: FirebaseAddEditTaskSuccess
     ) {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
-        val postRef = myRef.child("User").child(userId).child(eventId)
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
                 .child("Task").child(task.key)
 
         val taskedit = hashMapOf(
@@ -161,24 +153,22 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
     }
 
     private fun deleteTask(
-        taskId: String,
+        userid: String,
+        eventid: String,
+        task: Task,
         taskdeletedflag: FirebaseDeleteTaskSuccess
     ) {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val eventId =
-            UserSessionHelper.getUserSession("event_id") as String
-
-        val postRef = myRef.child("User").child(userId).child(eventId)
-                .child("Task").child(taskId)
+        val postRef =
+            myRef.child("User").child(userid).child("Event").child(eventid)
+                .child("Task").child(task.key)
                 .removeValue()
                 .addOnSuccessListener {
                     taskdeletedflag.onTaskDeleted(true)
-                    Log.d(TAG, "Task $taskId successfully deleted")
+                    Log.d(TAG, "Task ${task.name} successfully deleted")
                 }
                 .addOnFailureListener {
                     taskdeletedflag.onTaskDeleted(false)
-                    Log.e(TAG, "Task $taskId failed to be deleted")
+                    Log.e(TAG, "Task ${task.name} failed to be deleted")
                 }
     }
 
@@ -206,25 +196,28 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override fun onAddEditTask(task: Task) {
+    override fun onAddEditTask(context: Context, user: User, task: Task) {
 //        val userdbhelper = UserDBHelper(context)
 //        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         if (task.key.isEmpty()) {
             addTask(
+                //userid,
+                user.userid!!,
+                user.eventid,
                 task,
                 object : FirebaseAddEditTaskSuccess {
                     override fun onTaskAddedEdited(flag: Boolean, task: Task) {
                         if (flag) {
-                            nexthandler?.onAddEditTask(task)
+                            nexthandler?.onAddEditTask(context, user, task)
                         }
                     }
                 })
         } else {
             editTask(
-                task, object : FirebaseAddEditTaskSuccess {
+                user.userid!!, user.eventid, task, object : FirebaseAddEditTaskSuccess {
                     override fun onTaskAddedEdited(flag: Boolean, task: Task) {
                         if (flag) {
-                            nexthandler?.onAddEditTask(task)
+                            nexthandler?.onAddEditTask(context, user, task)
                         }
                     }
                 }
@@ -232,17 +225,29 @@ class TaskModel : CoRAddEditTask, CoRDeleteTask {
         }
     }
 
-    override fun onDeleteTask(taskId: String) {
+    override fun onDeleteTask(context: Context, user: User, task: Task) {
+//        val userdbhelper = UserDBHelper(context)
+//        val user = userdbhelper.getUser(userdbhelper.getUserKey())!!
         deleteTask(
-            taskId,
+            user.userid!!,
+            user.eventid,
+            task,
             object : FirebaseDeleteTaskSuccess {
                 override fun onTaskDeleted(flag: Boolean) {
                     if (flag) {
-                        nexthandlerdel?.onDeleteTask(taskId)
+                        nexthandlerdel?.onDeleteTask(context, user, task)
                     }
                 }
             })
     }
+
+//    interface FirebaseSuccessStatsTask {
+//        fun onTasksStats(taskpending: Int, taskcompleted: Int, sumbudget: Float)
+//    }
+
+//    interface FirebaseSuccessTaskBudget {
+//        fun onTasksBudget(sumbudget: Float)
+//    }
 
     interface FirebaseSuccessTaskList {
         fun onTaskList(list: ArrayList<Task>)

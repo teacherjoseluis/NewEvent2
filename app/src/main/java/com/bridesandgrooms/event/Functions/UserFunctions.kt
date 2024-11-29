@@ -11,13 +11,13 @@ import android.content.Context
 import android.util.Log
 import com.bridesandgrooms.event.Model.*
 
-internal suspend fun onBoarding(userItem: User, eventitem: Event) {
+internal suspend fun onBoarding(context: Context, userItem: User, eventitem: Event) {
     try {
-        val calendarevent = CalendarEvent.getInstance()
-        val userdbhelper = UserDBHelper()
+        val calendarevent = CalendarEvent(context)
+        val userdbhelper = UserDBHelper(context)
         val eventmodel = EventModel()
-        val eventdbhelper = EventDBHelper()
-        val usermodel = UserModel()
+        val eventdbhelper = EventDBHelper(context)
+        val usermodel = UserModel(userItem)
 
         val chainofcommand =
             orderChainOnboard(usermodel, userdbhelper, calendarevent, eventmodel, eventdbhelper)
@@ -34,10 +34,10 @@ internal suspend fun onBoarding(userItem: User, eventitem: Event) {
     }
 }
 
-internal suspend fun editUser(useritem: User) {
+internal suspend fun editUser(context: Context, useritem: User) {
     try {
-        val userdbhelper = UserDBHelper()
-        val usermodel = UserModel()
+        val userdbhelper = UserDBHelper(context)
+        val usermodel = UserModel(useritem)
 
         val chainofcommand = orderChainEdit(usermodel, userdbhelper)
         chainofcommand.onAddEditUser(useritem)

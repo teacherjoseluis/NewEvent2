@@ -217,7 +217,7 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
         val rosachillon = BaseColor(225, 58, 133)
         val tableBackground = BaseColor(252, 252, 252)
 
-        val eventDB = EventDBHelper()
+        val eventDB = EventDBHelper(context)
         val event = eventDB.getEvent()!!
 
         val pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -384,7 +384,7 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
     override fun onEPDFTasks(list: ArrayList<Task>) {
         //Need to get event data. Is it coming from the session? A as in active needs to be translated by the function
         //At least the event should be coming and have a function that goes to local data if there is to retrieve the rest of info
-        val taskdb = TaskDBHelper()
+        val taskdb = TaskDBHelper(context)
         // The below function gets the statistics for tasks and budgets associated to each category
         val taskPDFBudgetReport = taskdb.getTaskPDFBudgetReport()!!
         createPdf(taskPDFBudgetReport, list, 15)

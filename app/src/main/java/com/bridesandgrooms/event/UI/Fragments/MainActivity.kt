@@ -121,7 +121,7 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        userSession = User.getUser()
+        userSession = User().getUser(context)
         binding = DataBindingUtil.inflate(inflater, R.layout.eventform_layout, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
@@ -372,7 +372,7 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
     }
 
     private fun saveEvent() {
-        //val user = User().getUser()
+        val user = User().getUser(context)
         val event = Event().apply {
             key = eventkey
             placeid = eventplaceid
@@ -385,9 +385,9 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
             location = binding.eventlocation.text.toString()
         }
         val eventmodel = EventModel()
-        eventmodel.editEvent(event, object : EventModel.FirebaseSaveSuccess {
+        eventmodel.editEvent(user.userid!!, event, object : EventModel.FirebaseSaveSuccess {
             override fun onSaveSuccess(eventid: String) {
-                val eventdb = EventDBHelper()
+                val eventdb = EventDBHelper(context)
                 eventdb.update(event)
 
                 if (uri != null) {
@@ -395,6 +395,8 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
                     replaceImage(
                         context,
                         "eventimage",
+                        user.userid!!,
+                        user.eventid,
                         uri!!
                     )
                 }

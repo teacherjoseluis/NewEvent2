@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-class DatabaseHelper private constructor(context: Context) : SQLiteOpenHelper(
-    context.applicationContext,
+class DatabaseHelper(val context: Context) : SQLiteOpenHelper(
+    context,
     DATABASENAME, null,
     DATABASEVERSION
 ) {
@@ -50,16 +50,15 @@ class DatabaseHelper private constructor(context: Context) : SQLiteOpenHelper(
 
     @ExperimentalCoroutinesApi
     suspend fun updateLocalDB(uid : String) : Boolean {
-
         //val userDB = UserDBHelper(context)
-        val eventDB = EventDBHelper()
-        val taskDB = TaskDBHelper()
-        val paymentDB = PaymentDBHelper()
-        val guestDB = GuestDBHelper()
-        val vendorDB = VendorDBHelper()
+        val eventDB = EventDBHelper(context)
+        val taskDB = TaskDBHelper(context)
+        val paymentDB = PaymentDBHelper(context)
+        val guestDB = GuestDBHelper(context)
+        val vendorDB = VendorDBHelper(context)
         try {
             //userDB.firebaseImport(uid)
-            eventDB.firebaseImport()
+            eventDB.firebaseImport(uid)
             taskDB.firebaseImport(uid)
             paymentDB.firebaseImport(uid)
             guestDB.firebaseImport(uid)
@@ -73,18 +72,5 @@ class DatabaseHelper private constructor(context: Context) : SQLiteOpenHelper(
     companion object {
         private const val DATABASENAME = "BDCACHE"
         private const val DATABASEVERSION = 13
-
-        private lateinit var instance: DatabaseHelper
-
-        fun initialize(context: Context) {
-            instance = DatabaseHelper(context)
-        }
-
-        fun getInstance(): DatabaseHelper {
-            if (!::instance.isInitialized) {
-                throw IllegalStateException("DatabaseHelper is not initialized. Call initialize() first.")
-            }
-            return instance
-        }
     }
 }

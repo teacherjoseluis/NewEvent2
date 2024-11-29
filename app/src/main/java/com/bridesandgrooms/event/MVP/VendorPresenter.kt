@@ -44,8 +44,11 @@ class VendorPresenter : Cache.VendorArrayListCacheData {
 
     override fun onEmptyListV() {
 //        val userdbhelper = UserDBHelper(mContext)
+        val user = User().getUser(mContext)
         val vendor = VendorModel()
         vendor.getAllVendorList(
+            user.userid!!,
+            user.eventid,
             object : VendorModel.FirebaseSuccessVendorList {
                 override fun onVendorList(list: ArrayList<Vendor>) {
                     if (list.isNotEmpty()) {

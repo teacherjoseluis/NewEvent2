@@ -15,7 +15,7 @@ class NoteDBHelper(val context: Context) {
     //var key = ""
 
     fun insert(note: Note) {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val values = ContentValues()
 //        values.put("noteid", note.noteid)
         //removing accents
@@ -31,15 +31,15 @@ class NoteDBHelper(val context: Context) {
             Log.d(TAG, "Note record inserted")
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-//        }
-//        finally {
-//            db.close()
+        }
+        finally {
+            db.close()
         }
     }
 
     @SuppressLint("Range")
     fun getAllNotes(): ArrayList<Note>? {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val list = ArrayList<Note>()
         try {
             val cursor: Cursor =
@@ -65,13 +65,13 @@ class NoteDBHelper(val context: Context) {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-//        } finally {
-//            db.close()
+        } finally {
+            db.close()
         }
     }
 
     fun update(note: Note) {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         val values = ContentValues()
         note.title = Normalizer.normalize(note.title, Normalizer.Form.NFD).replace("\\p{InCombiningDiacriticalMarks}+", "")
         values.put("title", note.title)
@@ -90,27 +90,27 @@ class NoteDBHelper(val context: Context) {
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-//        }
-//        finally {
-//            db.close()
+        }
+        finally {
+            db.close()
         }
         //db.close()
     }
 
-    fun delete(noteId: String) {
-        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
+    fun delete(note: Note) {
+        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
         try {
-            val retVal = db.delete("NOTE", "noteid = '$noteId'", null)
+            val retVal = db.delete("NOTE", "noteid = '${note.noteid}'", null)
             if (retVal >= 1) {
-                Log.d(TAG, "Note $noteId deleted")
+                Log.d(TAG, "Note ${note.noteid} deleted")
             } else {
-                Log.d(TAG, "Note $noteId not deleted")
+                Log.d(TAG, "Note ${note.noteid} not deleted")
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-//        }
-//        finally {
-//            db.close()
+        }
+        finally {
+            db.close()
         }
         //db.close()
     }

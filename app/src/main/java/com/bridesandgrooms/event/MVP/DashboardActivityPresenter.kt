@@ -14,7 +14,7 @@ class DashboardActivityPresenter(
 ) {
 
     fun getTasksFromMonthYear(month: Int, year: Int) {
-        val taskDBHelper = TaskDBHelper()
+        val taskDBHelper = TaskDBHelper(context)
         try {
             val taskCalendarList = taskDBHelper.getTasksFromMonthYear(month, year)
             fragment.onTaskCalendar(taskCalendarList)
@@ -25,7 +25,7 @@ class DashboardActivityPresenter(
     }
 
     fun getTaskFromDate(date: Date) {
-        val taskDBHelper = TaskDBHelper()
+        val taskDBHelper = TaskDBHelper(context)
         try {
             val taskCalendarList = taskDBHelper.getTaskfromDate(date)
             fragment.onTaskCalendar(taskCalendarList, date)
@@ -36,7 +36,7 @@ class DashboardActivityPresenter(
     }
 
     fun getPaymentsFromMonthYear(month: Int, year: Int) {
-        val paymentDBHelper = PaymentDBHelper()
+        val paymentDBHelper = PaymentDBHelper(context)
         try {
             val paymentCalendarList = paymentDBHelper.getPaymentsFromMonthYear(month, year)
             fragment.onPaymentCalendar(paymentCalendarList)
@@ -47,7 +47,7 @@ class DashboardActivityPresenter(
     }
 
     fun getPaymentFromDate(date: Date) {
-        val paymentDBHelper = PaymentDBHelper()
+        val paymentDBHelper = PaymentDBHelper(context)
         try {
             val paymentCalendarList = paymentDBHelper.getPaymentfromDate(date)
             fragment.onPaymentCalendar(paymentCalendarList, date)

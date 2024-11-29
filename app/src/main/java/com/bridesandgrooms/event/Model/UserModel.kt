@@ -18,7 +18,6 @@ import com.bridesandgrooms.event.Functions.CoRDeletePayment
 import com.bridesandgrooms.event.Functions.CoRDeleteTask
 import com.bridesandgrooms.event.Functions.CoRDeleteVendor
 import com.bridesandgrooms.event.Functions.CoROnboardUser
-import com.bridesandgrooms.event.Functions.UserSessionHelper
 import com.bridesandgrooms.event.Functions.converttoString
 import com.bridesandgrooms.event.Functions.currentDateTime
 import kotlinx.coroutines.tasks.await
@@ -34,15 +33,21 @@ import kotlinx.coroutines.*
 import kotlin.Exception
 import kotlin.coroutines.resume
 
-class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment,
-    CoRAddEditGuest,
+
+class UserModel(
+    //This user creates and edits Users into Firebase
+    var user: User?
+) : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
     CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor, CoRAddEditUser, CoROnboardUser {
+
+    private val key = user?.userid
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var myRef = database.reference
     private val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid
     private val userRef = FirebaseDatabase.getInstance().getReference("User/$currentUserUID")
-    private var firebaseUser = User()
+    private val postRef = myRef.child("User").child(this.key!!)
+    private var firebaseUser = User(key)
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     var nexthandleru: CoRAddEditUser? = null
@@ -50,17 +55,13 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
     var nexthandlerdelt: CoRDeleteTask? = null
     private var nexthandlerp: CoRAddEditPayment? = null
     var nexthandlerpdel: CoRDeletePayment? = null
-    private var nexthandlerg: CoRAddEditGuest? = null
+    var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
-    private var nexthandlerv: CoRAddEditVendor? = null
+    var nexthandlerv: CoRAddEditVendor? = null
     var nexthandlerdelv: CoRDeleteVendor? = null
     var nexthandleron: CoROnboardUser? = null
 
     fun getUser(dataFetched: FirebaseSuccessUser) {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val postRef = myRef.child("User").child(userId)
-
         val userListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onDataChange(p0: DataSnapshot) {
@@ -101,7 +102,7 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
 
                         Log.d(
                             TAG,
-                            "Data associated to User ${userId} ($email) has been retrieved from Firebase"
+                            "Data associated to User $key ($email) has been retrieved from Firebase"
                         )
                     }
                 }
@@ -117,65 +118,61 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
 
     @ExperimentalCoroutinesApi
     suspend fun getUser(): User {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
-        val postRef = myRef.child("User").child(userId)
-        val user = User()
-
+        //var user: User? = null
         try {
             Log.d(TAG, "Path where User information is found in Firebase: ${postRef}")
             //user = postRef.awaitsSingle()?.getValue(User::class.java)!!
             //user!!.userid = postRef.key.toString()
             //--------------------------------------------------------------------------------
-            user.eventid =
+            user!!.eventid =
                 postRef.awaitsSingle()?.child("eventid")?.getValue(String::class.java)!!
 
-            user.shortname =
+            user!!.shortname =
                 postRef.awaitsSingle()?.child("shortname")!!.getValue(String::class.java)!!
-            user.email = postRef.awaitsSingle()?.child("email")!!.getValue(String::class.java)!!
-            user.country =
+            user!!.email = postRef.awaitsSingle()?.child("email")!!.getValue(String::class.java)!!
+            user!!.country =
                 postRef.awaitsSingle()?.child("country")!!.getValue(String::class.java)!!
-            user.language =
+            user!!.language =
                 postRef.awaitsSingle()?.child("language")!!.getValue(String::class.java)!!
-            user.createdatetime =
+            user!!.createdatetime =
                 postRef.awaitsSingle()?.child("createdatetime")!!.getValue(String::class.java)!!
-            user.authtype =
+            user!!.authtype =
                 postRef.awaitsSingle()?.child("authtype")!!.getValue(String::class.java)!!
-            user.imageurl =
+            user!!.imageurl =
                 postRef.awaitsSingle()?.child("imageurl")!!.getValue(String::class.java)!!
-            user.role = postRef.awaitsSingle()?.child("role")!!.getValue(String::class.java)!!
-            user.hasevent = if (postRef.awaitsSingle()?.hasChild("Event") == true) {
+            user!!.role = postRef.awaitsSingle()?.child("role")!!.getValue(String::class.java)!!
+            user!!.hasevent = if (postRef.awaitsSingle()?.hasChild("Event") == true) {
                 "Y"
             } else {
                 "N"
             }
-            user.hastask =
+            user!!.hastask =
                 postRef.awaitsSingle()?.child("hastask")!!.getValue(String::class.java)!!
-            user.haspayment =
+            user!!.haspayment =
                 postRef.awaitsSingle()?.child("haspayment")!!.getValue(String::class.java)!!
-            user.hasguest =
+            user!!.hasguest =
                 postRef.awaitsSingle()?.child("hasguest")!!.getValue(String::class.java)!!
-            user.hasvendor =
+            user!!.hasvendor =
                 postRef.awaitsSingle()?.child("hasvendor")!!.getValue(String::class.java)!!
-            user.tasksactive =
+            user!!.tasksactive =
                 postRef.awaitsSingle()?.child("tasksactive")!!.getValue(Int::class.java)!!
-            user.taskscompleted =
+            user!!.taskscompleted =
                 postRef.awaitsSingle()?.child("taskscompleted")!!.getValue(Int::class.java)!!
-            user.payments =
+            user!!.payments =
                 postRef.awaitsSingle()?.child("payments")!!.getValue(Int::class.java)!!
-            user.guests = postRef.awaitsSingle()?.child("guests")!!.getValue(Int::class.java)!!
-            user.vendors = postRef.awaitsSingle()?.child("vendors")!!.getValue(Int::class.java)!!
-            user.eventbudget =
+            user!!.guests = postRef.awaitsSingle()?.child("guests")!!.getValue(Int::class.java)!!
+            user!!.vendors = postRef.awaitsSingle()?.child("vendors")!!.getValue(Int::class.java)!!
+            user!!.eventbudget =
                 postRef.awaitsSingle()?.child("eventbudget")!!.getValue(Int::class.java)!!
                     .toString()
-            user.numberguests =
+            user!!.numberguests =
                 postRef.awaitsSingle()?.child("numberguests")!!.getValue(Int::class.java)!!
-            user.status =
+            user!!.status =
                 postRef.awaitsSingle()?.child("status")!!.getValue(String::class.java)!!
-            user.distanceunit =
+            user!!.distanceunit =
                 postRef.awaitsSingle()?.child("distanceunit")!!.getValue(String::class.java)!!
             //--------------------------------------------------------------------------------
-            Log.d(TAG, "User Key found in Firebase: ${user.userid}")
+            Log.d(TAG, "User Key found in Firebase: ${user!!.userid}")
 
             //val eventmodel = EventModel()
             //user.eventid = eventmodel.getEventKey(user.userid!!)
@@ -183,16 +180,12 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
-        return user
+        return user!!
     }
 
     private fun editUserAddTask(value: Int) {
         coroutineScope.launch {
             //val user = getUser()
-            val userId =
-                UserSessionHelper.getUserSession("user_id") as String
-            val user = UserDBHelper().getUser(userId)!!
-
             try {
                 userRef.child("tasksactive").setValue(user!!.tasksactive + value).await()
             } catch (e: Exception) {
@@ -204,9 +197,7 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
 
     private fun editUserAddPayment(value: Int) {
         coroutineScope.launch {
-            val userId =
-                UserSessionHelper.getUserSession("user_id") as String
-            val user = UserDBHelper().getUser(userId)!!
+            //val user = getUser()
             try {
                 userRef.child("payments").setValue(user!!.payments + value).await()
             } catch (e: Exception) {
@@ -218,11 +209,9 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
 
     private fun editUserAddGuest(value: Int) {
         coroutineScope.launch {
-            val userId =
-                UserSessionHelper.getUserSession("user_id") as String
-            val user = UserDBHelper().getUser(userId)!!
+            //val user = getUser()
             try {
-                userRef.child("guests").setValue(user.guests + value).await()
+                userRef.child("guests").setValue(user!!.guests + value).await()
             } catch (e: Exception) {
                 throw UserEditionException(e.toString())
             }
@@ -232,11 +221,9 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
 
     private fun editUserAddVendor(value: Int) {
         coroutineScope.launch {
-            val userId =
-                UserSessionHelper.getUserSession("user_id") as String
-            val user = UserDBHelper().getUser(userId)!!
+            //val user = getUser()
             try {
-                userRef.child("vendors").setValue(user.vendors + value).await()
+                userRef.child("vendors").setValue(user!!.vendors + value).await()
             } catch (e: Exception) {
                 throw UserEditionException(e.toString())
             }
@@ -321,18 +308,8 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
         }
     }
 
-    suspend fun editUserStatus(status: String) {
-        coroutineScope.launch {
-            try {
-                userRef.child("status").setValue(status).await()
-            } catch (e: Exception) {
-                throw UserEditionException(e.toString())
-            }
-            Log.d(TAG, "Status for the User has been set to $status")
-        }
-    }
-
     private suspend fun addUser(user: User) {
+        val postRef = myRef.child("User").child(this.key!!)
         val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid
 
         val userfb = hashMapOf(
@@ -354,7 +331,7 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
             "taskscompleted" to 0,
             "payments" to 0,
             "guests" to 0,
-            "status" to "0", //Here I can use a User Status ='0' to designate someone who hasn't gone through Welcome. Once the Welcome has been passed, I can switch back to "A"
+            "status" to "A",
             "vendors" to 0,
             "eventbudget" to user.eventbudget,
             "numberguests" to user.numberguests,
@@ -365,11 +342,7 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
             "last_signed_in_at" to ""
         )
         try {
-            val userId =
-                UserSessionHelper.getUserSession("user_id") as String
-            val postRef = myRef.child("User").child(userId)
-
-            if (currentUserUID == user.userid) {
+            if (currentUserUID == this.key) {
                 postRef.setValue(
                     userfb as Map<String, Any>
                 ).await()
@@ -381,6 +354,16 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
         }
 
     }
+    //        { error, _ ->
+//            if (error != null) {
+//                Log.e(TAG, "There was an error saving the User (${error.message})")
+//                //savesuccessflag.onSaveSuccess(false)
+//            } else {
+//                Log.d(TAG, "User was saved successfully")
+//                //savesuccessflag.onSaveSuccess(true)
+//            }
+//        }
+//    }
 
     @ExperimentalCoroutinesApi
     suspend fun DatabaseReference.awaitsSingle(): DataSnapshot? =
@@ -406,47 +389,47 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override fun onAddEditTask(task: Task) {
+    override fun onAddEditTask(context: Context, user: User, task: Task) {
         editUserTaskflag(TaskModel.ACTIVEFLAG)
         editUserAddTask(1)
-        nexthandlert?.onAddEditTask(task)
+        nexthandlert?.onAddEditTask(context, user, task)
     }
 
-    override fun onDeleteTask(taskId: String) {
+    override fun onDeleteTask(context: Context, user: User, task: Task) {
         editUserAddTask(-1)
-        nexthandlerdelt?.onDeleteTask(taskId)
+        nexthandlerdelt?.onDeleteTask(context, user, task)
     }
 
 
-    override fun onAddEditPayment(payment: Payment) {
+    override fun onAddEditPayment(context: Context, user: User, payment: Payment) {
         editUserPaymentflag(PaymentModel.ACTIVEFLAG)
         editUserAddPayment(1)
-        nexthandlerp?.onAddEditPayment(payment)
+        nexthandlerp?.onAddEditPayment(context, user, payment)
     }
 
-    override fun onDeletePayment(paymentId: String) {
+    override fun onDeletePayment(context: Context, user: User, payment: Payment) {
         editUserAddPayment(-1)
-        nexthandlerpdel?.onDeletePayment(paymentId)
+        nexthandlerpdel?.onDeletePayment(context, user, payment)
     }
 
-    override fun onAddEditGuest(guest: Guest) {
+    override fun onAddEditGuest(context: Context, user: User, guest: Guest) {
         editUserGuestflag(GuestModel.ACTIVEFLAG)
         editUserAddGuest(+1)
-        nexthandlerg?.onAddEditGuest(guest)
+        nexthandlerg?.onAddEditGuest(context, user, guest)
     }
 
-    override fun onDeleteGuest(guestId: String) {
-        nexthandlerdelg?.onDeleteGuest(guestId)
+    override fun onDeleteGuest(context: Context, user: User, guest: Guest) {
+        nexthandlerdelg?.onDeleteGuest(context, user, guest)
     }
 
-    override fun onAddEditVendor(vendor: Vendor) {
+    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
         editUserVendorflag(VendorModel.ACTIVEFLAG)
         editUserAddVendor(+1)
-        nexthandlerv?.onAddEditVendor(vendor)
+        nexthandlerv?.onAddEditVendor(context, user, vendor)
     }
 
-    override fun onDeleteVendor(vendorId: String) {
-        nexthandlerdelv?.onDeleteVendor(vendorId)
+    override fun onDeleteVendor(context: Context, user: User, vendor: Vendor) {
+        nexthandlerdelv?.onDeleteVendor(context, user, vendor)
     }
 
     override suspend fun onAddEditUser(user: User) {

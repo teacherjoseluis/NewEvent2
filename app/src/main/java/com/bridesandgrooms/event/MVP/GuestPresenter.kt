@@ -92,9 +92,11 @@ class GuestPresenter : Cache.GuestArrayListCacheData {
 
     override fun onEmptyListG() {
 //        val userdbhelper = UserDBHelper(mContext)
-        //val user = User().getUser()
+        val user = User().getUser(mContext)
         val guest = GuestModel()
         guest.getAllGuestList(
+            user.userid!!,
+            user.eventid,
             object : GuestModel.FirebaseSuccessGuestList {
                 override fun onGuestList(list: ArrayList<Guest>) {
                     if (list.isNotEmpty()) {

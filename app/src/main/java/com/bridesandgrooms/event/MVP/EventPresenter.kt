@@ -44,9 +44,11 @@ class EventPresenter : Cache.EventItemCacheData {
 
     override fun onEventError() {
         //val userdbhelper = UserDBHelper(mContext)
-        //val user = User().getUser()
+        val user = User().getUser(mContext)
         val event = EventModel()
         event.getEventdetail(
+            user.userid!!,
+            user.eventid,
             object : EventModel.FirebaseSuccessListenerEventDetail {
                 override fun onEvent(event: Event) {
                     cacheevent.save(event)

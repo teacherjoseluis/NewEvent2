@@ -6,42 +6,42 @@ import android.content.Context
 import android.util.Log
 import com.bridesandgrooms.event.Model.*
 
-internal fun addVendor(vendoritem: Vendor) {
+internal fun addVendor(context: Context, userItem: User, vendoritem: Vendor) {
     try {
         val vendormodel = VendorModel()
-        val vendordbhelper = VendorDBHelper()
-        val usermodel = UserModel()
+        val vendordbhelper = VendorDBHelper(context)
+        val usermodel = UserModel(userItem)
 
         val chainofcommand = orderChainAddVendor(vendormodel, vendordbhelper, usermodel)
-        chainofcommand.onAddEditVendor(vendoritem)
+        chainofcommand.onAddEditVendor(context, userItem, vendoritem)
     } catch (e: Exception) {
         Log.e("VendorFunctions.kt", e.message.toString())
         throw VendorCreationException("Error during vendor creation: $e")
     }
 }
 
-internal fun deleteVendor(vendorId: String) {
+internal fun deleteVendor(context: Context, userItem: User, vendoritem: Vendor) {
     try {
         val vendormodel = VendorModel()
-        val vendordbhelper = VendorDBHelper()
-        val usermodel = UserModel()
+        val vendordbhelper = VendorDBHelper(context)
+        val usermodel = UserModel(userItem)
 
         val chainofcommand =
             orderChainDel(usermodel, vendordbhelper, vendormodel)
-        chainofcommand.onDeleteVendor(vendorId)
+        chainofcommand.onDeleteVendor(context, userItem, vendoritem)
     } catch (e: Exception) {
         Log.e("VendorFunctions.kt", e.message.toString())
         throw VendorDeletionException("Error during vendor deletion: $e")
     }
 }
 
-internal fun editVendor(vendoritem: Vendor) {
+internal fun editVendor(context: Context, userItem: User, vendoritem: Vendor) {
     try {
         val vendormodel = VendorModel()
-        val vendordbhelper = VendorDBHelper()
+        val vendordbhelper = VendorDBHelper(context)
 
         val chainofcommand = orderChainEdit(vendormodel, vendordbhelper)
-        chainofcommand.onAddEditVendor(vendoritem)
+        chainofcommand.onAddEditVendor(context, userItem, vendoritem)
     } catch (e: Exception) {
         Log.e("VendorFunctions.kt", e.message.toString())
         throw VendorCreationException("Error during vendor edition: $e")
