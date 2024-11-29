@@ -47,9 +47,9 @@ open class Guest(
     /**
      * This function implements a method in GuestDBHelper that gets the total count of Guests invited to the Event
      */
-    fun getGuestCount(context: Context): Int? {
+    fun getGuestCount(): Int? {
         try {
-            val guestDBHelper = GuestDBHelper(context)
+            val guestDBHelper = GuestDBHelper()
             return guestDBHelper.getNumberGuests()!!
         } catch (e: Exception) {
             Log.e(GuestDBHelper.TAG, e.message.toString())

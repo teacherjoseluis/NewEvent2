@@ -72,12 +72,8 @@ class TaskPresenter : Cache.TaskArrayListCacheData {
     }
 
     override fun onEmptyListT() {
-//        val userdbhelper = UserDBHelper(mContext)
-        val user = User().getUser(mContext)
         val task = TaskModel()
         task.getAllTasksList(
-            user.userid!!,
-            user.eventid,
             object : TaskModel.FirebaseSuccessTaskList {
                 override fun onTaskList(arrayList: ArrayList<Task>) {
                     if (arrayList.isNotEmpty()) {

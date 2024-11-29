@@ -57,7 +57,7 @@ class Settings : Fragment(), IOnBackPressed {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        userSession = User().getUser(context)
+        userSession = User.getUser()
         binding = DataBindingUtil.inflate(inflater, R.layout.settings, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
@@ -201,7 +201,7 @@ class Settings : Fragment(), IOnBackPressed {
 
                 lifecycleScope.launch {
                     try {
-                        editUser(context, userSession)
+                        editUser(userSession)
                         finish()
                     } catch (e: UserEditionException) {
                         AnalyticsManager.getInstance().trackError(

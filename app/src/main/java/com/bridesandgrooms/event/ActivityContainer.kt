@@ -17,7 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
-import com.bridesandgrooms.event.Functions.getUserSession
+import com.bridesandgrooms.event.Functions.UserSessionHelper
 import com.bridesandgrooms.event.Functions.isEventDate
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.UI.Fragments.ContactsAll
@@ -69,6 +69,14 @@ class ActivityContainer : AppCompatActivity() {
                 Intent(this, LoginView::class.java)
             startActivityForResult(loginactivity, LOGINACTIVITY)
         } else {
+            //Potentially it's here where I can add the Welcome flow. For those users with status =0
+            val userSession = User.getUser()
+            if (userSession.status == "0") {
+                setContentView(R.layout.welcome_user)
+                val welcomeActivity =
+                    Intent(this, WelcomeActivity::class.java)
+                startActivity(welcomeActivity)
+            }
             createView()
         }
     }
@@ -77,7 +85,7 @@ class ActivityContainer : AppCompatActivity() {
         //Evaluate if given the amount passed since the last login, the user should re-login to the app
         //Last Signed In date
         val lastSignedInAt = try {
-            getUserSession(this@ActivityContainer, "last_signed_in_at") as Long
+            UserSessionHelper.getUserSession("last_signed_in_at") as Long
         } catch (e: Exception) {
             AnalyticsManager.getInstance().trackError(
                 SCREEN_NAME,
@@ -89,7 +97,7 @@ class ActivityContainer : AppCompatActivity() {
         }
         // Email Id???
         val emailid = try {
-            getUserSession(this@ActivityContainer, "event_id") as String
+            UserSessionHelper.getUserSession("event_id") as String
         } catch (e: Exception) {
             AnalyticsManager.getInstance().trackError(
                 SCREEN_NAME,
@@ -126,16 +134,16 @@ class ActivityContainer : AppCompatActivity() {
             sidenavView.getHeaderView(0).findViewById<TextView>(R.id.headershortname)
         headershortname.text = usersession.shortname
 
-        if (isEventDate(this) == 0) {
-            NordanAlertDialog.Builder(this)
-                .setAnimation(Animation.SLIDE)
-                .isCancellable(false)
-                .setTitle(getString(R.string.congratulations))
-                .setMessage(getString(R.string.weddingday))
-                .setIcon(R.drawable.love_animated_gif_2018_8, true)
-                .setPositiveBtnText(getString(R.string.great))
-                .build().show()
-        }
+//        if (isEventDate(this) == 0) {
+//            NordanAlertDialog.Builder(this)
+//                .setAnimation(Animation.SLIDE)
+//                .isCancellable(false)
+//                .setTitle(getString(R.string.congratulations))
+//                .setMessage(getString(R.string.weddingday))
+//                .setIcon(R.drawable.love_animated_gif_2018_8, true)
+//                .setPositiveBtnText(getString(R.string.great))
+//                .build().show()
+//        }
 
         // Populating Android Version and Code
         try {
@@ -314,6 +322,7 @@ class ActivityContainer : AppCompatActivity() {
                     }
                 }
             }
+
             override fun onDrawerStateChanged(newState: Int) {}
         })
 
@@ -491,7 +500,7 @@ class ActivityContainer : AppCompatActivity() {
                 else -> {
                     fragment = DashboardView()
                     fm.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }

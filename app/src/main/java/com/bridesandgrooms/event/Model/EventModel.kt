@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.Functions.CoRAddEditEvent
 import com.bridesandgrooms.event.Functions.CoROnboardUser
+import com.bridesandgrooms.event.Functions.UserSessionHelper
 import com.bridesandgrooms.event.Functions.saveImgtoStorage
 import com.bridesandgrooms.event.MVP.ImagePresenter
 import com.google.firebase.FirebaseException
@@ -28,19 +29,20 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
     var nexthandlere: CoRAddEditEvent? = null
     var nexthandleron: CoROnboardUser? = null
 
+    val userId = UserSessionHelper.getUserSession("user_id") as String
+    private val eventid = UserSessionHelper.getUserSession("event_id") as String
+
     var eventId = ""
     lateinit var event: Event
 
     //Need to convert this one into a suspend function
     private suspend fun addEvent(
-        user: User,
         event: Event,
         uri: Uri?
         //savesuccessflag: FirebaseSaveSuccess
     ): String {
-
         val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid
-        val postRef = myRef.child("User").child(user.userid!!).child("Event").push()
+        val postRef = myRef.child("User").child(userId).child("Event").push()
         val eventmap = hashMapOf(
             "imageurl" to event.imageurl,
             "placeid" to event.placeid,
@@ -55,14 +57,14 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         )
 
         try {
-            if (currentUserUID == user.userid) {
+            if (currentUserUID == userId) {
                 postRef.setValue(
                     eventmap as Map<String, Any>
                 ).await()
                 eventId = postRef.key.toString()
 
                 val userEventIdRef =
-                    myRef.child("User").child(user.userid!!)
+                    myRef.child("User").child(userId)
                 userEventIdRef.child("eventid").setValue(eventId).await()
             } else {
                 throw UserAuthenticationException("User ID does not match with the Auth User in Firebase")
@@ -73,20 +75,17 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
 
         //Save Event image in Storage
         if (uri != null) {
-            saveImgtoStorage(ImagePresenter.EVENTIMAGE, user.userid!!, eventId, uri)
+            saveImgtoStorage(ImagePresenter.EVENTIMAGE, uri)
         }
         return eventId
     }
 
     fun editEvent(
-        userid: String,
         event: Event,
         savesuccessflag: FirebaseSaveSuccess
     ) {
-
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(event.key)
-
+            myRef.child("User").child(userId).child("Event").child(event.key)
         postRef.child("name").setValue(event.name)
         postRef.child("date").setValue(event.date)
         postRef.child("time").setValue(event.time)
@@ -118,14 +117,11 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         }
     }
 
-
     fun getEventdetail(
-        userid: String,
-        eventid: String,
         dataFetched: FirebaseSuccessListenerEventDetail
     ) {
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
+            myRef.child("User").child(userId).child("Event").child(eventid)
 
         val eventListenerActive = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -144,9 +140,9 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
 
 
     @ExperimentalCoroutinesApi
-    suspend fun getEvent(userid: String): Event {
+    suspend fun getEvent(): Event {
         val postRef =
-            myRef.child("User").child(userid).child("Event").limitToFirst(1)
+            myRef.child("User").child(userId).child("Event").limitToFirst(1)
         var eventItem: Event? = null
         try {
             for (snapChild in postRef.awaitsSingle()?.children!!) {
@@ -158,30 +154,6 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         }
         return eventItem!!
     }
-
-//    @ExperimentalCoroutinesApi
-//    suspend fun getEventChildrenflag(
-//        userid: String,
-//        eventid: String
-//    ): Boolean {
-//        var existsflag = false
-//        val postRef =
-//            myRef.child("User").child(userid).child("Event").child(eventid)
-//        try {
-//            existsflag = when {
-//                postRef.awaitsSingle()?.hasChild("Task") == true -> true
-//                postRef.awaitsSingle()?.hasChild("Payment") == true -> true
-//                else -> false
-//            }
-//        } catch (e: Exception) {
-//            Log.d(
-//                TAG,
-//                "Data associated to Event cannot ben retrieved from Firebase"
-//            )
-//            false
-//        }
-//        return existsflag
-//    }
 
     @ExperimentalCoroutinesApi
     suspend fun Query.awaitsSingle(): DataSnapshot? =
@@ -221,7 +193,7 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
     }
 
     override suspend fun onOnboardUser(user: User, event: Event) {
-        event.key = addEvent(user, event, null)
+        event.key = addEvent(event, null)
         nexthandleron?.onOnboardUser(user, event)
     }
 

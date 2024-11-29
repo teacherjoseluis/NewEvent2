@@ -20,8 +20,8 @@ class NotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val currentDate = Date(System.currentTimeMillis())
-        val taskDBHelper = TaskDBHelper(context)
-        val paymentDBHelper = PaymentDBHelper(context)
+        val taskDBHelper = TaskDBHelper()
+        val paymentDBHelper = PaymentDBHelper()
 
         try {
             val taskList = taskDBHelper.getTaskfromDate(currentDate)

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.Functions.CoRAddEditVendor
 import com.bridesandgrooms.event.Functions.CoRDeleteVendor
+import com.bridesandgrooms.event.Functions.UserSessionHelper
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,9 +27,14 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
     var nexthandlerdel: CoRDeleteVendor? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun getVendors(userid: String, eventid: String): java.util.ArrayList<Vendor> {
+    suspend fun getVendors(): java.util.ArrayList<Vendor> {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
+            myRef.child("User").child(userId).child("Event").child(eventId)
                 .child("Vendor").orderByChild("name")
         val vendorList = java.util.ArrayList<Vendor>()
 
@@ -45,12 +51,15 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
     }
 
     fun getAllVendorList(
-        userid: String,
-        eventid: String,
         dataFetched: FirebaseSuccessVendorList
     ) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
+            myRef.child("User").child(userId).child("Event").child(eventId)
                 .child("Vendor").orderByChild("name")
         val vendorList = ArrayList<Vendor>()
 
@@ -75,13 +84,16 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
     }
 
     private fun addVendor(
-        userid: String,
-        eventid: String,
         vendor: Vendor,
         vendoraddedflag: FirebaseAddEditVendorSuccess
     ) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
+            myRef.child("User").child(userId).child("Event").child(eventId)
                 .child("Vendor").push()
 
         //---------------------------------------
@@ -122,13 +134,16 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
     }
 
     private fun editVendor(
-        userid: String,
-        eventid: String,
         vendor: Vendor,
         vendoreditedflag: FirebaseAddEditVendorSuccess
     ) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
+            myRef.child("User").child(userId).child("Event").child(eventId)
                 .child("Vendor").child(vendor.key)
 
         val vendoredit = hashMapOf(
@@ -157,22 +172,25 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
     }
 
     private fun deleteVendor(
-        userid: String,
-        eventid: String,
-        vendor: Vendor,
+        vendorId: String,
         vendordeletedflag: FirebaseDeleteVendorSuccess
     ) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Vendor").child(vendor.key)
+            myRef.child("User").child(userId).child("Event").child(eventId)
+                .child("Vendor").child(vendorId)
                 .removeValue()
                 .addOnSuccessListener {
-                    vendordeletedflag.onVendorDeleted(true, vendor)
-                    Log.d(TAG, "Vendor ${vendor.name} successfully deleted")
+                    vendordeletedflag.onVendorDeleted(true, vendorId)
+                    Log.d(TAG, "Vendor $vendorId successfully deleted")
                 }
                 .addOnFailureListener {
-                    vendordeletedflag.onVendorDeleted(false, vendor)
-                    Log.e(TAG, "Vendor ${vendor.name} failed to be deleted")
+                    vendordeletedflag.onVendorDeleted(false, vendorId)
+                    Log.e(TAG, "Vendor $vendorId failed to be deleted")
                 }
     }
 
@@ -200,25 +218,23 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
+    override fun onAddEditVendor(vendor: Vendor) {
         if (vendor.key.isEmpty()) {
             addVendor(
-                user.userid!!,
-                user.eventid,
                 vendor,
                 object : FirebaseAddEditVendorSuccess {
                     override fun onVendorAddedEdited(flag: Boolean, vendor: Vendor) {
                         if (flag) {
-                            nexthandler?.onAddEditVendor(context, user, vendor)
+                            nexthandler?.onAddEditVendor(vendor)
                         }
                     }
                 })
         } else {
             editVendor(
-                user.userid!!, user.eventid, vendor, object : FirebaseAddEditVendorSuccess {
+                vendor, object : FirebaseAddEditVendorSuccess {
                     override fun onVendorAddedEdited(flag: Boolean, vendor: Vendor) {
                         if (flag) {
-                            nexthandler?.onAddEditVendor(context, user, vendor)
+                            nexthandler?.onAddEditVendor(vendor)
                         }
                     }
                 }
@@ -226,15 +242,13 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
         }
     }
 
-    override fun onDeleteVendor(context: Context, user: User, vendor: Vendor) {
+    override fun onDeleteVendor(vendorId: String) {
         deleteVendor(
-            user.userid!!,
-            user.eventid,
-            vendor,
+            vendorId,
             object : FirebaseDeleteVendorSuccess {
-                override fun onVendorDeleted(flag: Boolean, vendor: Vendor) {
+                override fun onVendorDeleted(flag: Boolean, vendorId: String) {
                     if (flag) {
-                        nexthandlerdel?.onDeleteVendor(context, user, vendor)
+                        nexthandlerdel?.onDeleteVendor(vendorId)
                     }
                 }
             })
@@ -245,7 +259,7 @@ class VendorModel : CoRAddEditVendor, CoRDeleteVendor {
     }
 
     interface FirebaseDeleteVendorSuccess {
-        fun onVendorDeleted(flag: Boolean, vendor: Vendor)
+        fun onVendorDeleted(flag: Boolean, vendorId: String)
     }
 
     interface FirebaseSuccessVendorList {

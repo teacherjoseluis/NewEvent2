@@ -85,7 +85,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     private var tfLight: Typeface? = null
 
     private lateinit var inf: DashboardchartsBinding
-    private lateinit var user: User
+    private var user = User.getUser()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,8 +107,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             azulmasClaro,
             palodeRosa
         )
-
-        user = User().getUser(requireContext())
 
         // Initialize the MobileAds SDK with your AdMob App ID
         showAds = RemoteConfigSingleton.get_showads()
@@ -390,7 +388,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         try {
             daysleft = daystoDate(converttoDate(event.date))
         } catch (e: Exception) {
-            user.softlogout(requireActivity())
+            user.softlogout()
             AnalyticsManager.getInstance().trackError(
                 SCREEN_NAME,
                 e.message.toString(),

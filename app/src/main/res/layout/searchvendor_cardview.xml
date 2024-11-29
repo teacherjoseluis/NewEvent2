@@ -10,7 +10,7 @@
         android:id="@+id/constraintLayout6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/SurfaceContainerLow"
+        android:background="@color/SurfaceContainerLow_cream"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
@@ -66,7 +66,7 @@
 
             <TextView
                 android:id="@+id/vendorAddress"
-                style="@style/Label_Small"
+                style="@style/Label_Medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="C. Juan F. Brittingham 118 col, Santa Fe (Oriente), 64540"

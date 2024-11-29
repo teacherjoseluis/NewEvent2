@@ -1,11 +1,11 @@
 package com.bridesandgrooms.event.Model
 
-import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.bridesandgrooms.event.Functions.CoRAddEditPayment
 import com.bridesandgrooms.event.Functions.CoRDeletePayment
+import com.bridesandgrooms.event.Functions.UserSessionHelper
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,9 +25,14 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
     var nexthandlerpdel: CoRDeletePayment? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun getPayments(userid: String, eventid: String): ArrayList<Payment> {
+    suspend fun getPayments(): ArrayList<Payment> {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
+            myRef.child("User").child(userId).child("Event").child(eventId)
                 .child("Payment").orderByChild("date")
         val paymentList = ArrayList<Payment>()
 
@@ -44,12 +49,15 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
     }
 
     fun getPaymentsList(
-        userid: String,
-        eventid: String,
         dataFetched: FirebaseSuccessPaymentList
     ) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
+            myRef.child("User").child(userId).child("Event").child(eventId)
                 .child("Payment").orderByChild("date")
         val paymentlist = ArrayList<Payment>()
 
@@ -73,19 +81,22 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
                 }
             }
             postRef.addValueEventListener(paymentlListenerActive)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
     }
 
     private fun addPayment(
-        userid: String,
-        eventid: String,
         payment: Payment,
         paymentaddedflag: FirebaseAddEditPaymentSuccess
     ) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
+            myRef.child("User").child(userId).child("Event").child(eventId)
                 .child("Payment").push()
 
         //---------------------------------------
@@ -119,19 +130,22 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
                     paymentaddedflag.onPaymentAddedEdited(false, payment)
                     Log.e(TAG, "Payment ${payment.name} failed to be added")
                 }
-        } catch(e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
     }
 
     private fun editPayment(
-        userid: String,
-        eventid: String,
         payment: Payment,
         paymenteditedflag: FirebaseAddEditPaymentSuccess
     ) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         val postRef =
-            myRef.child("User").child(userid).child("Event").child(eventid)
+            myRef.child("User").child(userId).child("Event").child(eventId)
                 .child("Payment").child(payment.key)
 
         val paymentedit = hashMapOf(
@@ -152,30 +166,33 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
                     paymenteditedflag.onPaymentAddedEdited(false, payment)
                     Log.e(TAG, "Payment ${payment.name} failed to be edited")
                 }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
     }
 
     private fun deletePayment(
-        userid: String,
-        eventid: String,
-        payment: Payment,
+        paymentId: String,
         paymentdeletedflag: FirebaseDeletePaymentSuccess
     ) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+        val eventId =
+            UserSessionHelper.getUserSession("event_id") as String
+
         try {
-            myRef.child("User").child(userid).child("Event").child(eventid)
-                .child("Payment").child(payment.key)
+            myRef.child("User").child(userId).child("Event").child(eventId)
+                .child("Payment").child(paymentId)
                 .removeValue()
                 .addOnSuccessListener {
-                    paymentdeletedflag.onPaymentDeleted(true, payment)
-                    Log.d(TAG, "Payment ${payment.name} successfully deleted")
+                    paymentdeletedflag.onPaymentDeleted(true, paymentId)
+                    Log.d(TAG, "Payment $paymentId successfully deleted")
                 }
                 .addOnFailureListener {
-                    paymentdeletedflag.onPaymentDeleted(false, payment)
-                    Log.e(TAG, "Payment ${payment.name} failed to be deleted")
+                    paymentdeletedflag.onPaymentDeleted(false, paymentId)
+                    Log.e(TAG, "Payment $paymentId failed to be deleted")
                 }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
     }
@@ -204,25 +221,23 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
             this.addListenerForSingleValueEvent(listener)
         }
 
-    override fun onAddEditPayment(context: Context, user: User, payment: Payment) {
+    override fun onAddEditPayment(payment: Payment) {
         if (payment.key.isEmpty()) {
             addPayment(
-                user.userid!!,
-                user.eventid,
                 payment,
                 object : FirebaseAddEditPaymentSuccess {
                     override fun onPaymentAddedEdited(flag: Boolean, payment: Payment) {
                         if (flag) {
-                            nexthandler?.onAddEditPayment(context, user, payment)
+                            nexthandler?.onAddEditPayment(payment)
                         }
                     }
                 })
         } else if (payment.key.isNotEmpty()) {
             editPayment(
-                user.userid!!, user.eventid, payment, object : FirebaseAddEditPaymentSuccess {
+                payment, object : FirebaseAddEditPaymentSuccess {
                     override fun onPaymentAddedEdited(flag: Boolean, payment: Payment) {
                         if (flag) {
-                            nexthandler?.onAddEditPayment(context, user, payment)
+                            nexthandler?.onAddEditPayment(payment)
                         }
                     }
                 }
@@ -230,15 +245,13 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
         }
     }
 
-    override fun onDeletePayment(context: Context, user: User, payment: Payment) {
+    override fun onDeletePayment(paymentId: String) {
         deletePayment(
-            user.userid!!,
-            user.eventid,
-            payment,
+            paymentId,
             object : FirebaseDeletePaymentSuccess {
-                override fun onPaymentDeleted(flag: Boolean, payment: Payment) {
+                override fun onPaymentDeleted(flag: Boolean, paymentId: String) {
                     if (flag) {
-                        nexthandlerpdel?.onDeletePayment(context, user, payment)
+                        nexthandlerpdel?.onDeletePayment(paymentId)
                     }
                 }
             })
@@ -254,7 +267,7 @@ class PaymentModel : CoRAddEditPayment, CoRDeletePayment {
     }
 
     interface FirebaseDeletePaymentSuccess {
-        fun onPaymentDeleted(flag: Boolean, payment: Payment)
+        fun onPaymentDeleted(flag: Boolean, paymentId: String)
     }
 
     companion object {

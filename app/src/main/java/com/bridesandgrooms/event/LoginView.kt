@@ -8,8 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
-import com.bridesandgrooms.event.Functions.getUserSession
-import com.bridesandgrooms.event.Functions.saveUserSession
 import com.bridesandgrooms.event.Model.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -23,6 +21,7 @@ import android.media.MediaPlayer.OnCompletionListener
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
+import com.bridesandgrooms.event.Functions.UserSessionHelper.saveUserSession
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.databinding.LoginVideoBinding
 import com.google.android.material.textfield.TextInputEditText
@@ -132,19 +131,6 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                 val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
                 val signInIntent = mGoogleSignInClient.signInIntent
                 startActivityForResult(signInIntent, RC_SIGN_IN)
-
-//                val eventId = getUserSession(this@LoginView, "event_id").toString()
-//                if (eventId.isEmpty()) {
-//                    onOnboarding(user.userid!!, user.email, "google")
-//                    //delay(1000)
-//                } else {
-//                    lifecycleScope.launch {
-//                        user = UserModel(user).getUser()
-//                        val dbHelper = DatabaseHelper(this@LoginView)
-//                        dbHelper.updateLocalDB(user)
-//                    }
-//                    onLoginSuccess(user.email)
-//                }
             }
         }
         // ********************************* SignUp section *********************************************
@@ -346,18 +332,6 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                     val firebaseUser = authResult.user!!
                     user.userid = firebaseUser.uid
                     user.email = firebaseUser.email.toString()
-
-//                    val eventId = getUserSession(this@LoginView, "event_id").toString()
-//                    if (eventId.isEmpty()) {
-//                        onOnboarding(user.userid!!, user.email, "google")
-//                        //delay(1000)
-//                    } else {
-//                        lifecycleScope.launch {
-//                            user = UserModel(user).getUser()
-//                            val dbHelper = DatabaseHelper(this@LoginView)
-//                            dbHelper.updateLocalDB(user)
-//                        }
-//                    }
                     onLoginSuccess(user.email)
                 } catch (e: ApiException) {
                     Log.e(TAG, "Google sign in failed", e)
@@ -393,7 +367,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
 
     override fun onLoginSuccess(email: String) {
         showBanner(getString(R.string.welcome_message), false)
-        saveUserSession(this@LoginView, email, null, "email")
+        saveUserSession(email, null, "email")
         finish()
         val mainActivity =
             Intent(this, ActivityContainer::class.java)

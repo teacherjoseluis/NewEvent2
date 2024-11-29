@@ -94,7 +94,7 @@ internal fun isEventDate(mContext: Context): Int {
 //                isEventDay = daystoDate(converteddate)
 //            }
 //        })
-    val eventdb = EventDBHelper(mContext)
+    val eventdb = EventDBHelper()
     val event = eventdb.getEvent()
 
     //0 if it's the day of the event

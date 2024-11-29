@@ -59,7 +59,7 @@ class NoteCreateEdit : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        user = User().getUser(context)
+        //user = User().getUser()
         binding = DataBindingUtil.inflate(inflater, R.layout.new_note, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
@@ -122,7 +122,7 @@ class NoteCreateEdit : Fragment() {
                         AnalyticsManager.getInstance()
                             .trackUserInteraction(SCREEN_NAME, "Delete_Note")
                         try {
-                            notedb.delete(noteitem)
+                            notedb.delete(noteitem.noteid)
                             finish()
                         } catch (e: GuestDeletionException) {
                             AnalyticsManager.getInstance().trackError(

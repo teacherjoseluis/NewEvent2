@@ -6,44 +6,44 @@ import android.content.Context
 import android.util.Log
 import com.bridesandgrooms.event.Model.*
 
-internal fun addGuest(context: Context, userItem: User, guestitem: Guest) {
+internal fun addGuest(guestitem: Guest) {
     try {
-        val userdbhelper = UserDBHelper(context)
+        val userdbhelper = UserDBHelper()
         val guestmodel = GuestModel()
-        val guestdbhelper = GuestDBHelper(context)
-        val usermodel = UserModel(userItem)
+        val guestdbhelper = GuestDBHelper()
+        val usermodel = UserModel()
 
         val chainofcommand = orderChainAddGuest(guestmodel, guestdbhelper, userdbhelper, usermodel)
-        chainofcommand.onAddEditGuest(context, userItem, guestitem)
+        chainofcommand.onAddEditGuest(guestitem)
     } catch (e: Exception) {
         Log.e("GuestFunctions.kt", e.message.toString())
         throw GuestCreationException("Error during guest creation: $e")
     }
 }
 
-internal fun deleteGuest(context: Context, userItem: User, guestitem: Guest) {
+internal fun deleteGuest(guestId: String) {
     try {
-        val userdbhelper = UserDBHelper(context)
+        val userdbhelper = UserDBHelper()
         val guestmodel = GuestModel()
-        val guestdbhelper = GuestDBHelper(context)
-        val usermodel = UserModel(userItem)
+        val guestdbhelper = GuestDBHelper()
+        val usermodel = UserModel()
 
         val chainofcommand =
             orderChainDel(usermodel, userdbhelper, guestdbhelper, guestmodel)
-        chainofcommand.onDeleteGuest(context, userItem, guestitem)
+        chainofcommand.onDeleteGuest(guestId)
     } catch (e: Exception) {
         Log.e("GuestFunctions.kt", e.message.toString())
         throw GuestDeletionException("Error during guest deletion: $e")
     }
 }
 
-internal fun editGuest(context: Context, userItem: User, guestitem: Guest) {
+internal fun editGuest(guestitem: Guest) {
     try {
         val guestmodel = GuestModel()
-        val guestdbhelper = GuestDBHelper(context)
+        val guestdbhelper = GuestDBHelper()
 
         val chainofcommand = orderChainEdit(guestmodel, guestdbhelper)
-        chainofcommand.onAddEditGuest(context, userItem, guestitem)
+        chainofcommand.onAddEditGuest(guestitem)
     } catch (e: Exception) {
         Log.e("GuestFunctions.kt", e.message.toString())
         throw GuestCreationException("Error during guest edition: $e")

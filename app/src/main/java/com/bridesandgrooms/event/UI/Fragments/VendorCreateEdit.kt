@@ -46,7 +46,6 @@ class VendorCreateEdit : Fragment() {
 
     private lateinit var vendorItem: Vendor
     private lateinit var binding: NewVendorBinding
-    private lateinit var user: User
     private lateinit var context: Context
 
     private val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
@@ -68,7 +67,7 @@ class VendorCreateEdit : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        user = User().getUser(context)
+
         binding = DataBindingUtil.inflate(inflater, R.layout.new_vendor, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
@@ -163,10 +162,10 @@ class VendorCreateEdit : Fragment() {
                     .setPositiveButton(android.R.string.yes) { _, _ ->
                         AnalyticsManager.getInstance()
                             .trackUserInteraction(SCREEN_NAME, "Delete_Vendor")
-                        val paymentdb = PaymentDBHelper(context)
+                        val paymentdb = PaymentDBHelper()
                         if (paymentdb.hasVendorPayments(vendorItem.key) == 0) {
                             try {
-                                deleteVendor(context, user, vendorItem)
+                                deleteVendor(vendorItem.key)
                                 finish()
                             } catch (e: VendorDeletionException) {
                                 AnalyticsManager.getInstance().trackError(
@@ -292,7 +291,7 @@ class VendorCreateEdit : Fragment() {
 
         if (vendorItem.key.isEmpty()) {
             try {
-                addVendor(context, user, vendorItem)
+                addVendor(vendorItem)
             } catch (e: VendorCreationException) {
                 AnalyticsManager.getInstance().trackError(
                     SCREEN_NAME,
@@ -304,7 +303,7 @@ class VendorCreateEdit : Fragment() {
             }
         } else {
             try {
-                editVendor(context, user, vendorItem)
+                editVendor(vendorItem)
             } catch (e: VendorCreationException) {
                 AnalyticsManager.getInstance().trackError(
                     SCREEN_NAME,

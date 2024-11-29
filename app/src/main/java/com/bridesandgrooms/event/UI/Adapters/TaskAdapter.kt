@@ -159,14 +159,14 @@ class TaskAdapter(
         action: String
     ) {
         AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Complete Task")
-        val user = User().getUser(context)
+        //val user = User().getUser()
         if (action == CHECKACTION) {
             val taskswift = taskList[position]
             taskList.removeAt(position)
             notifyItemRemoved(position)
             taskswift.status = COMPLETETASK
             try {
-                editTask(context, user, taskswift)
+                editTask(taskswift)
             } catch (e: Exception) {
                 Log.e(TAG,e.message.toString())
             }
@@ -185,14 +185,14 @@ class TaskAdapter(
         action: String
     ) {
         AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Delete Task")
-        val user = User().getUser(context)
+        //val user = User().getUser()
         val taskswift = taskList[position]
 
         if (action == DELETEACTION) {
             taskList.removeAt(position)
             notifyItemRemoved(position)
             try {
-            deleteTask(context, user, taskswift)
+            deleteTask(taskswift.key)
             } catch (e: Exception) {
                 Log.e(TAG,e.message.toString())
             }

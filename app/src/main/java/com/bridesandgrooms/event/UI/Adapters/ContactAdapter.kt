@@ -66,10 +66,10 @@ class ContactAdapter(
                 .setMessage(context.getString(R.string.addguest_confirmation))
                 .setPositiveButton(android.R.string.yes) { _, _ ->
                     currentContact?.let { contact ->
-                        val user = User().getUser(context)
+                        //val user = User().getUser()
                         val newGuest = Guest().contacttoGuest(context, contact.key)
                         try {
-                            addGuest(context, user, newGuest)
+                            addGuest(newGuest)
                         } catch (e: GuestCreationException) {
                             AnalyticsManager.getInstance().trackError(
                                 SCREEN_NAME,

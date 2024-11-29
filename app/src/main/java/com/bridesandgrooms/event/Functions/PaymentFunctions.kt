@@ -11,17 +11,17 @@ import android.content.Context
 import android.util.Log
 import com.bridesandgrooms.event.Model.*
 
-internal fun addPayment(context: Context, userItem: User, paymentitem: Payment) {
+internal fun addPayment(paymentitem: Payment) {
     try {
-        val calendarevent = CalendarEvent(context)
-        val userdbhelper = UserDBHelper(context)
+        val calendarevent = CalendarEvent.getInstance()
+        val userdbhelper = UserDBHelper()
         val paymentmodel = PaymentModel()
-        val paymentdbhelper = PaymentDBHelper(context)
-        val usermodel = UserModel(userItem)
+        val paymentdbhelper = PaymentDBHelper()
+        val usermodel = UserModel()
 
         val chainofcommand =
             orderChainAdd(calendarevent, paymentmodel, paymentdbhelper, userdbhelper, usermodel)
-        chainofcommand.onAddEditPayment(context, userItem, paymentitem)
+        chainofcommand.onAddEditPayment(paymentitem)
         //-------------------------------------------------------
     } catch (e: UserEditionException) {
         throw PaymentCreationException("Error while trying to edit the User: $e")
@@ -34,31 +34,31 @@ internal fun addPayment(context: Context, userItem: User, paymentitem: Payment) 
     }
 }
 
-internal fun deletePayment(context: Context, userItem: User, paymentitem: Payment) {
+internal fun deletePayment(paymentId: String) {
     try {
-        val calendarevent = CalendarEvent(context)
-        val userdbhelper = UserDBHelper(context)
-        val usermodel = UserModel(userItem)
+        val calendarevent = CalendarEvent.getInstance()
+        val userdbhelper = UserDBHelper()
+        val usermodel = UserModel()
         val paymentmodel = PaymentModel()
-        val paymentdbhelper = PaymentDBHelper(context)
+        val paymentdbhelper = PaymentDBHelper()
 
         val chainofcommand =
             orderChainDel(calendarevent, userdbhelper, usermodel, paymentdbhelper, paymentmodel)
-        chainofcommand.onDeletePayment(context, userItem, paymentitem)
+        chainofcommand.onDeletePayment(paymentId)
     } catch (e: Exception) {
         Log.e("PaymentFunctions.kt", e.message.toString())
         throw PaymentDeletionException("Error during payment Deletion: $e")
     }
 }
 
-internal fun editPayment(context: Context, userItem: User, paymentitem: Payment) {
+internal fun editPayment(paymentitem: Payment) {
     try {
-        val calendarevent = CalendarEvent(context)
+        val calendarevent = CalendarEvent.getInstance()
         val paymentmodel = PaymentModel()
-        val paymentdbhelper = PaymentDBHelper(context)
+        val paymentdbhelper = PaymentDBHelper()
 
         val chainofcommand = orderChainEdit(calendarevent, paymentmodel, paymentdbhelper)
-        chainofcommand.onAddEditPayment(context, userItem, paymentitem)
+        chainofcommand.onAddEditPayment(paymentitem)
     } catch (e: Exception) {
         Log.e("PaymentFunctions.kt", e.message.toString())
         throw PaymentCreationException("Error during payment Edition: $e")
