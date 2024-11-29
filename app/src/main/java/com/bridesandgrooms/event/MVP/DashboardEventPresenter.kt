@@ -234,7 +234,7 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 //
     fun getActiveCategories() {
         CoroutineScope(Dispatchers.IO).launch {
-            val taskDBHelper = TaskDBHelper(context)
+            val taskDBHelper = TaskDBHelper()
             try {
                 // Perform database operation in the background
                 val categoriesList = taskDBHelper.getActiveCategories()!!
@@ -254,7 +254,7 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
 
     fun getUpcomingTasks() {
         CoroutineScope(Dispatchers.IO).launch {
-            val taskDBHelper = TaskDBHelper(context)
+            val taskDBHelper = TaskDBHelper()
             try {
                 val taskList = taskDBHelper.getUpcomingTasks()
                 withContext(Dispatchers.Main) {

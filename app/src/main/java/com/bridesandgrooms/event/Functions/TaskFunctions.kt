@@ -13,17 +13,17 @@ import android.content.Context
 import android.util.Log
 import com.bridesandgrooms.event.Model.*
 
-internal fun addTask(context: Context, userItem: User, taskItem: Task) {
+internal fun addTask(taskItem: Task) {
     try {
-        val calendarevent = CalendarEvent(context)
-        val userdbhelper = UserDBHelper(context)
+        val calendarevent = CalendarEvent.getInstance()
+        val userdbhelper = UserDBHelper()
         val taskmodel = TaskModel()
-        val taskdbhelper = TaskDBHelper(context)
-        val usermodel = UserModel(userItem)
+        val taskdbhelper = TaskDBHelper()
+        val usermodel = UserModel()
 
         val chainofcommand =
             orderChainAdd(calendarevent, taskmodel, taskdbhelper, userdbhelper, usermodel)
-        chainofcommand.onAddEditTask(context, userItem, taskItem)
+        chainofcommand.onAddEditTask(taskItem)
         //-------------------------------------------------------
     } catch (e: UserEditionException) {
         throw TaskCreationException("Error while trying to edit the User: $e")
@@ -36,31 +36,31 @@ internal fun addTask(context: Context, userItem: User, taskItem: Task) {
     }
 }
 
-internal fun deleteTask(context: Context, userItem: User, taskItem: Task) {
+internal fun deleteTask(taskId: String) {
     try {
-        val calendarevent = CalendarEvent(context)
-        val userdbhelper = UserDBHelper(context)
+        val calendarevent = CalendarEvent.getInstance()
+        val userdbhelper = UserDBHelper()
         val taskmodel = TaskModel()
-        val taskdbhelper = TaskDBHelper(context)
-        val usermodel = UserModel(userItem)
+        val taskdbhelper = TaskDBHelper()
+        val usermodel = UserModel()
 
         val chainofcommand =
             orderChainDel(calendarevent, usermodel, userdbhelper, taskdbhelper, taskmodel)
-        chainofcommand.onDeleteTask(context, userItem, taskItem)
+        chainofcommand.onDeleteTask(taskId)
     } catch (e: Exception) {
         Log.e("TaskFunctions.kt", e.message.toString())
         throw TaskDeletionException("Error during task Deletion: $e")
     }
 }
 
-internal fun editTask(context: Context, userItem: User, taskItem: Task) {
+internal fun editTask(taskItem: Task) {
     try {
-        val calendarevent = CalendarEvent(context)
+        val calendarevent = CalendarEvent.getInstance()
         val taskmodel = TaskModel()
-        val taskdbhelper = TaskDBHelper(context)
+        val taskdbhelper = TaskDBHelper()
 
         val chainofcommand = orderChainEdit(calendarevent, taskmodel, taskdbhelper)
-        chainofcommand.onAddEditTask(context, userItem, taskItem)
+        chainofcommand.onAddEditTask(taskItem)
     } catch (e: Exception) {
         Log.e("TaskFunctions.kt", e.message.toString())
         throw TaskCreationException("Error during task Edition: $e")

@@ -237,10 +237,15 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
             else {
                 inf.paymentcardnodata.visibility = View.VISIBLE
                 inf.floatingNewPayment.setOnClickListener {
-                    AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "New_Payment")
-                    val newpayment = Intent(activity, PaymentCreateEdit::class.java)
-                    newpayment.putExtra("payment_date", date)
-                    startActivity(newpayment)
+                    val fragment = PaymentCreateEdit()
+                    val arguments = Bundle()
+                    arguments.putSerializable("payment_date", date)
+                    arguments.putString("calling_fragment", "DashboardActivity")
+                    fragment.arguments = arguments
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
+                        .addToBackStack(null) // Add this transaction to the back stack, so the user can navigate back to the previous fragment
+                        .commit()
                 }
             }
         }

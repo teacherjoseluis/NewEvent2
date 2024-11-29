@@ -154,6 +154,8 @@
 
         <activity android:name=".LoginView"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".WelcomeActivity"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".LoginEmailView" />
         <activity
             android:theme="@style/AppTheme"

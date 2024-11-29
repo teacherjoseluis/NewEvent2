@@ -2,31 +2,28 @@ package com.bridesandgrooms.event.Model
 
 import Application.EventCreationException
 import Application.FirebaseDataImportException
-import Application.UserCreationException
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.bridesandgrooms.event.Functions.CoRAddEditEvent
 import com.bridesandgrooms.event.Functions.CoROnboardUser
-import com.bridesandgrooms.event.Functions.saveUserSession
+import com.bridesandgrooms.event.Functions.UserSessionHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
+class EventDBHelper: CoRAddEditEvent, CoROnboardUser{
 
     private var nexthandlere: CoRAddEditEvent? = null
     private var nexthandleron: CoROnboardUser? = null
 
-
     @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(uid: String) : Boolean {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+    suspend fun firebaseImport() : Boolean {
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val event: Event
         try {
             val eventModel = EventModel()
-            event = eventModel.getEvent(uid)
+            event = eventModel.getEvent()
             //update(event)
             Log.d(TAG, "Event record deleted ${event.key}")
             db.execSQL("DELETE FROM EVENT")
@@ -34,14 +31,14 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
         } catch (e: Exception){
             Log.e(TAG, e.message.toString())
             throw FirebaseDataImportException("Error importing Event data: $e")
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
         return true
     }
 
     fun insert(event: Event) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val values = ContentValues()
         values.put("eventid", event.key)
         values.put("imageurl", event.imageurl)
@@ -59,21 +56,18 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
             Log.d(TAG, "Event record inserted ${event.key}")
         } catch (e: Exception) {
             throw EventCreationException(e.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
 
         //updating eventid in user
-        val userdbhelper = UserDBHelper(context)
-        val user = User().getUser(context)
-        user.eventid = event.key
-        userdbhelper.update(user)
-//        user.saveUserSession(context)
-        saveUserSession(context, event.key, null, "event_id")
+        val userDBHelper = UserDBHelper()
+        userDBHelper.editUserEvent(event.key)
+        UserSessionHelper.saveUserSession(event.key, null, "event_id")
     }
 
     private fun getEventexists(key: String): Boolean {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         var existsflag = false
         try {
             val cursor: Cursor = db.rawQuery("SELECT * FROM EVENT WHERE eventid = '$key'", null)
@@ -85,14 +79,14 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return false
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     @SuppressLint("Range")
     fun getEvent(): Event? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
 //        val list = ArrayList<Event>()
         var event = Event()
         try {
@@ -122,13 +116,13 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun update(event: Event) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val values = ContentValues()
         values.put("eventid", event.key)
         values.put("imageurl", event.imageurl)
@@ -152,13 +146,13 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
             //db.close()
         } catch (e: Exception) {
             throw EventCreationException(e.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun delete(event: Event) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         try {
             val retVal = db.delete("EVENT", "eventid = '${event.key}'", null)
             if (retVal >= 1) {
@@ -169,9 +163,9 @@ class EventDBHelper(val context: Context) : CoRAddEditEvent, CoROnboardUser{
             //db.close()
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-        }
-        finally {
-            db.close()
+//        }
+//        finally {
+//            db.close()
         }
     }
 

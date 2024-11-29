@@ -13,7 +13,7 @@ import com.bridesandgrooms.event.Functions.CoRDeleteVendor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.collections.ArrayList
 
-class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
+class VendorDBHelper() : CoRAddEditVendor, CoRDeleteVendor{
 
     lateinit var vendor: Vendor
     //var key = ""
@@ -22,14 +22,14 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
 
     @ExperimentalCoroutinesApi
     suspend fun firebaseImport(uid: String) : Boolean {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val vendorList: ArrayList<Vendor>
         val eventModel = EventModel()
         try {
             val eventKey = eventModel.getEventKey(uid)
             val vendorModel = VendorModel()
 
-            vendorList = vendorModel.getVendors(uid, eventKey)
+            vendorList = vendorModel.getVendors()
             db.execSQL("DELETE FROM VENDOR")
 
             for (vendorItem in vendorList){
@@ -38,14 +38,14 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
         } catch (e: Exception){
             Log.e(TAG, e.message.toString())
             throw FirebaseDataImportException("Error importing Vendor data: $e")
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
         return true
     }
 
     fun insert(vendor: Vendor) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val values = ContentValues()
         values.put("vendorid", vendor.key)
         values.put("name", vendor.name)
@@ -71,14 +71,14 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
 
     private fun getVendorexists(key: String): Boolean {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         var existsflag = false
         try {
             val cursor: Cursor = db.rawQuery("SELECT * FROM VENDOR WHERE vendorid = '$key'", null)
@@ -90,14 +90,14 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return false
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     @SuppressLint("Range")
     fun getVendorIdByName(name: String): String? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         var vendorid = ""
         try {
             val cursor: Cursor =
@@ -111,14 +111,14 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     @SuppressLint("Range")
     fun getVendorNameById(id: String): String? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         var name = ""
         val cursor: Cursor =
             db.rawQuery("SELECT name FROM VENDOR WHERE vendorid = '$id' LIMIT 1", null)
@@ -134,7 +134,7 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
 
     @SuppressLint("Range")
     fun getAllVendors(): ArrayList<Vendor>? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val list = ArrayList<Vendor>()
         try {
             val cursor: Cursor = db.rawQuery("SELECT * FROM VENDOR ORDER BY name ASC", null)
@@ -179,13 +179,13 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun update(vendor: Vendor) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val values = ContentValues()
         values.put("vendorid", vendor.key)
         values.put("name", vendor.name)
@@ -209,40 +209,40 @@ class VendorDBHelper(val context: Context) : CoRAddEditVendor, CoRDeleteVendor{
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
         //db.close()
     }
 
-    fun delete(vendor: Vendor) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+    fun delete(vendorId: String) {
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         try {
-            val retVal = db.delete("VENDOR", "vendorid = '${vendor.key}'", null)
+            val retVal = db.delete("VENDOR", "vendorid = '$vendorId'", null)
             if (retVal >= 1) {
-                Log.d(TAG, "Vendor ${vendor.key} deleted")
+                Log.d(TAG, "Vendor $vendorId deleted")
             } else {
-                Log.d(TAG, "Vendor ${vendor.key} not deleted")
+                Log.d(TAG, "Vendor $vendorId deleted")
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
-    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
+    override fun onAddEditVendor(vendor: Vendor) {
         if (!getVendorexists(vendor.key)) {
             insert(vendor)
         } else {
             update(vendor)
         }
-        nexthandler?.onAddEditVendor(context, user, vendor)
+        nexthandler?.onAddEditVendor(vendor)
     }
 
-    override fun onDeleteVendor(context: Context, user: User, vendor: Vendor) {
-        delete(vendor)
-        nexthandlerdel?.onDeleteVendor(context, user, vendor)
+    override fun onDeleteVendor(vendorId: String) {
+        delete(vendorId)
+        nexthandlerdel?.onDeleteVendor(vendorId)
     }
 
     companion object {

@@ -60,7 +60,6 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
     private lateinit var adManager: AdManager
     private lateinit var binding: PaymentEditdetailBinding
 
-    private lateinit var userSession: User
     private lateinit var paymentItem: Payment
     private lateinit var context: Context
 
@@ -85,8 +84,6 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        userSession = User().getUser(context)
-
         binding = DataBindingUtil.inflate(inflater, R.layout.payment_editdetail, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
@@ -215,7 +212,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
                             requestPermissions(permissions, PERMISSION_CODE)
                         } else {
                             try {
-                                deletePayment(context, userSession, paymentItem)
+                                deletePayment(paymentItem.key)
                             } catch (e: PaymentDeletionException) {
                                 displayToastMsg(getString(R.string.errorPaymentDeletion) + e.toString())
                                 AnalyticsManager.getInstance().trackError(
@@ -292,7 +289,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         } else {
             if (paymentItem.key.isEmpty()) {
                 try {
-                    addPayment(context, userSession, paymentItem)
+                    addPayment(paymentItem)
                 } catch (e: PaymentCreationException) {
                     AnalyticsManager.getInstance().trackError(SCREEN_NAME, e.message.toString(),"addPayment()", e.stackTraceToString())
                     displayToastMsg(getString(R.string.errorPaymentCreation) + e.toString())
@@ -300,7 +297,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
                 }
             } else {
                 try {
-                    editPayment(context, userSession, paymentItem)
+                    editPayment(paymentItem)
                 } catch (e: PaymentCreationException){
                     AnalyticsManager.getInstance().trackError(SCREEN_NAME, e.message.toString(),"editPayment()", e.stackTraceToString())
                     displayToastMsg(getString(R.string.errorPaymentCreation) + e.toString())
@@ -411,7 +408,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         binding.vendorAutocomplete.setAdapter(adapter)
         if (paymentItem.vendorid != "") {
             try {
-                val vendordb = VendorDBHelper(context)
+                val vendordb = VendorDBHelper()
                 val vendorname = vendordb.getVendorNameById(paymentItem.vendorid)
                 binding.vendorAutocomplete.setSelection(list.indexOf(vendorname))
             } catch (e: Exception) {

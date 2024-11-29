@@ -57,7 +57,7 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         context = requireContext()
-        user = User().getUser(context)
+        user = User.getUser()
     }
 
     override fun onCreateView(

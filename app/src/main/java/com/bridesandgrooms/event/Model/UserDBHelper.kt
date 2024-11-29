@@ -1,15 +1,11 @@
 package com.bridesandgrooms.event.Model
 
-import Application.FirebaseDataImportException
 import Application.UserCreationException
 import Application.UserEditionException
-import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.bridesandgrooms.event.*
 import com.bridesandgrooms.event.Functions.CoRAddEditGuest
 import com.bridesandgrooms.event.Functions.CoRAddEditPayment
 import com.bridesandgrooms.event.Functions.CoRAddEditTask
@@ -20,26 +16,44 @@ import com.bridesandgrooms.event.Functions.CoRDeletePayment
 import com.bridesandgrooms.event.Functions.CoRDeleteTask
 import com.bridesandgrooms.event.Functions.CoRDeleteVendor
 import com.bridesandgrooms.event.Functions.CoROnboardUser
-import com.bridesandgrooms.event.Functions.getUserSession
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.bridesandgrooms.event.Functions.UserSessionHelper
 
-class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
+class UserDBHelper : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
     CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
     CoRDeleteGuest, CoRAddEditVendor, CoRDeleteVendor, CoROnboardUser {
 
-    var nexthandleru: CoRAddEditUser? = null
+    private var nexthandleru: CoRAddEditUser? = null
+    private var nexthandlerv: CoRAddEditVendor? = null
+    private var nexthandlerdelv: CoRDeleteVendor? = null
+
     var nexthandlert: CoRAddEditTask? = null
     var nexthandlerdelt: CoRDeleteTask? = null
     var nexthandlerp: CoRAddEditPayment? = null
     var nexthandlerpdel: CoRDeletePayment? = null
     var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
-    private var nexthandlerv: CoRAddEditVendor? = null
-    private var nexthandlerdelv: CoRDeleteVendor? = null
     var nexthandleron: CoROnboardUser? = null
 
-    fun insert(user: User?) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+    fun editUserStatus(status: String){
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.status = status
+        update(user)
+    }
+
+    fun editUserEvent(eventId: String){
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.eventid = eventId
+        update(user)
+    }
+
+    private fun insert(user: User?) {
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val values = ContentValues()
         values.put("userid", user!!.userid)
         values.put("eventid", user.eventid)
@@ -70,37 +84,16 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
             Log.d(TAG, "User record inserted")
         } catch (e: Exception) {
             throw UserCreationException(e.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
-//    @ExperimentalCoroutinesApi
-//    suspend fun firebaseImport(uid: String): Boolean {
-//        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
-//        Log.d(TAG, "Starting UserDB record import ${uid}")
-//        //val user: User
-//        try {
-//            val userModel = UserModel(user)
-//            Log.d(TAG, "Start getting User record from FireBase")
-//            val user = userModel.getUser()
-//            Log.d(TAG, "User record obtained from FireBase ${user}")
-//            db.execSQL("DELETE FROM USER")
-//            insert(user)
-//        } catch (e: Exception) {
-//            Log.e(TAG, e.message.toString())
-//            throw FirebaseDataImportException("Error importing User data: $e")
-//        } finally {
-//            db.close()
-//        }
-//        return true
-//    }
-
-    private fun getUserexists(key: String): Boolean {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+    private fun getUserexists(userId: String): Boolean {
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         var existsflag = false
         try {
-            val cursor: Cursor = db.rawQuery("SELECT * FROM USER WHERE userid = '$key'", null)
+            val cursor: Cursor = db.rawQuery("SELECT * FROM USER WHERE userid = '$userId'", null)
             if (cursor.count > 0) {
                 existsflag = true
             }
@@ -109,16 +102,16 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return false
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
-    fun getUser(key: String?): User? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+    fun getUser(userId: String?): User? {
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         var user = User()
         try {
-            val cursor: Cursor = db.rawQuery("SELECT * FROM USER WHERE userid = '$key'", null)
+            val cursor: Cursor = db.rawQuery("SELECT * FROM USER WHERE userid = '$userId'", null)
             if (cursor.count > 0) {
                 cursor.moveToFirst()
                 do {
@@ -183,13 +176,13 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
-    fun update(user: User) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+    private fun update(user: User) {
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val values = ContentValues()
         values.put("userid", user.userid)
         values.put("eventid", user.eventid)
@@ -216,7 +209,6 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         values.put("numberguests", user.numberguests)
         values.put("distanceunit", user.distanceunit)
 
-
         try {
             val retVal = db.update("USER", values, "userid = '${user.userid}'", null)
             if (retVal >= 1) {
@@ -226,10 +218,9 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
             }
         } catch (e: Exception) {
             throw UserEditionException(e.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
-        //db.close()
     }
 
     companion object {
@@ -245,90 +236,105 @@ class UserDBHelper(val context: Context) : CoRAddEditUser, CoRAddEditTask, CoRDe
         nexthandleru?.onAddEditUser(user)
     }
 
-    override fun onAddEditTask(context: Context, user: User, task: Task) {
-        // Updating User information in Session
-//        val userdbhelper = UserDBHelper(context)
-//        val user = getUser(userdbhelper.getUserKey())!!
-        user.tasksactive = user.tasksactive + 1
+    override fun onAddEditTask(task: Task) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.tasksactive += 1
         user.hastask = TaskModel.ACTIVEFLAG
         update(user)
 
         Log.d(TAG, "There are currently ${user.tasksactive} active tasks associated to the User")
         Log.d(TAG, "Flag hastask for the User has been set to ${TaskModel.ACTIVEFLAG}")
 
-        nexthandlert?.onAddEditTask(context, user, task)
+        nexthandlert?.onAddEditTask(task)
     }
 
-    override fun onDeleteTask(context: Context, user: User, task: Task) {
-//        val userdbhelper = UserDBHelper(context)
-//        val user = getUser(userdbhelper.getUserKey())!!
-        user.tasksactive = user.tasksactive - 1
+    override fun onDeleteTask(taskId: String) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.tasksactive -= 1
         if (user.tasksactive == 0) user.hastask = TaskModel.INACTIVEFLAG
         update(user)
 
-        nexthandlerdelt?.onDeleteTask(context, user, task)
+        nexthandlerdelt?.onDeleteTask(taskId)
     }
 
-    override fun onAddEditPayment(context: Context, user: User, payment: Payment) {
-//        val userdbhelper = UserDBHelper(context)
-//        val user = getUser(userdbhelper.getUserKey())!!
-        user.payments = user.payments + 1
+    override fun onAddEditPayment(payment: Payment) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.payments += 1
         user.haspayment = PaymentModel.ACTIVEFLAG
         update(user)
 
         Log.d(TAG, "There are currently ${user.payments} payments associated to the User")
         Log.d(TAG, "Flag haspayment for the User has been set to ${user.haspayment}")
 
-        nexthandlerp?.onAddEditPayment(context, user, payment)
+        nexthandlerp?.onAddEditPayment(payment)
     }
 
-    override fun onDeletePayment(context: Context, user: User, payment: Payment) {
-//        val userdbhelper = UserDBHelper(context)
-//        val user = getUser(userdbhelper.getUserKey())!!
-        user.payments = user.payments - 1
+    override fun onDeletePayment(paymentId: String) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.payments -= 1
         if (user.payments == 0) user.haspayment = PaymentModel.INACTIVEFLAG
         update(user)
 
-        nexthandlerpdel?.onDeletePayment(context, user, payment)
+        nexthandlerpdel?.onDeletePayment(paymentId)
     }
 
-    override fun onAddEditGuest(context: Context, user: User, guest: Guest) {
-//        val userdbhelper = UserDBHelper(context)
-//        val user = getUser(userdbhelper.getUserKey())!!
-        user.guests = user.guests + 1
+    override fun onAddEditGuest(guest: Guest) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.guests += 1
         user.hasguest = GuestModel.ACTIVEFLAG
         update(user)
-        nexthandlerg?.onAddEditGuest(context, user, guest)
+        nexthandlerg?.onAddEditGuest(guest)
         Log.i("UserDBHelper", "onAddEditGuest reached")
     }
 
-    override fun onDeleteGuest(context: Context, user: User, guest: Guest) {
-//        val userdbhelper = UserDBHelper(context)
-//        val user = getUser(userdbhelper.getUserKey())!!
-        user.guests = user.guests - 1
+    override fun onDeleteGuest(guestId: String) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.guests -= 1
         if (user.guests == 0) user.hasguest = GuestModel.INACTIVEFLAG
         update(user)
 
-        nexthandlerdelg?.onDeleteGuest(context, user, guest)
+        nexthandlerdelg?.onDeleteGuest(guestId)
     }
 
-    override fun onAddEditVendor(context: Context, user: User, vendor: Vendor) {
-//        val userdbhelper = UserDBHelper(context)
-//        val user = getUser(userdbhelper.getUserKey())!!
-        user.vendors = user.vendors + 1
+    override fun onAddEditVendor(vendor: Vendor) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.vendors += 1
         user.hasvendor = VendorModel.ACTIVEFLAG
         update(user)
-        nexthandlerv?.onAddEditVendor(context, user, vendor)
+        nexthandlerv?.onAddEditVendor(vendor)
     }
 
-    override fun onDeleteVendor(context: Context, user: User, vendor: Vendor) {
-//        val userdbhelper = UserDBHelper(context)
-//        val user = getUser(userdbhelper.getUserKey())!!
-        user.vendors = user.vendors - 1
+    override fun onDeleteVendor(vendorId: String) {
+        val userId =
+            UserSessionHelper.getUserSession("user_id") as String
+
+        val user = getUser(userId)!!
+        user.vendors -= 1
         if (user.vendors == 0) user.hasvendor = VendorModel.INACTIVEFLAG
         update(user)
 
-        nexthandlerdelv?.onDeleteVendor(context, user, vendor)
+        nexthandlerdelv?.onDeleteVendor(vendorId)
     }
 
     override suspend fun onOnboardUser(user: User, event: Event) {

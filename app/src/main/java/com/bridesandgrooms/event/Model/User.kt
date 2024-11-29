@@ -9,9 +9,7 @@ import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import com.baoyachi.stepview.bean.StepBean
-import com.bridesandgrooms.event.Functions.deleteUserSession
-import com.bridesandgrooms.event.Functions.getUserSession
-import com.bridesandgrooms.event.Functions.saveUserSession
+import com.bridesandgrooms.event.Functions.UserSessionHelper
 import com.bridesandgrooms.event.R
 import com.google.firebase.auth.*
 import com.google.firebase.database.DatabaseReference
@@ -101,7 +99,10 @@ class User(
                         authResult.user!!.sendEmailVerification().await()
                         throw EmailVerificationException("Email account for user ${authResult.user!!} has not been verified")
                     }
-                    val eventId = saveSession(authResult, context)
+                    val eventId = getEventfromFirebase(authResult)
+                    // saving authentication variables in the shared preferences
+                    saveUserSessionValues(authResult, eventId)
+
                     val firebaseUser = authResult.user!!
                     if (eventId.isNullOrEmpty()) {
                         throw EventNotFoundException("Event for user $firebaseUser is NULL or has not been found", firebaseUser)
@@ -121,7 +122,10 @@ class User(
                 //val authResult = loginWithSocialNetwork(mAuth, credential!!)!!
                 try {
                     authResult = mAuth.signInWithCredential(credential!!).await()
-                    val eventId = saveSession(authResult, context)
+                    val eventId = getEventfromFirebase(authResult)
+                    // saving authentication variables in the shared preferences
+                    saveUserSessionValues(authResult, eventId)
+
                     val firebaseUser = authResult.user!!
                     if (eventId.isNullOrEmpty()) {
                         throw EventNotFoundException("Event for user $firebaseUser is NULL or has not been found", firebaseUser)
@@ -139,7 +143,7 @@ class User(
         return@coroutineScope authResult
     }
 
-    private suspend fun saveSession(authResult: AuthResult, context: Context): String? {
+    private suspend fun getEventfromFirebase(authResult: AuthResult): String? {
         //-----------------------------------------------------------------------------------------------------------------
         val eventIdRef = database.child("User").child(authResult.user?.uid!!).child("eventid")
         val eventSnapShot = try {
@@ -169,10 +173,6 @@ class User(
                 // Session ID does not exist and user can login using this device
                 activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
                     .await()
-
-                // saving authentication variables in the shared preferences
-                saveUserSessionValues(authResult, context, eventId)
-
             } else {
                 // extracting the session value from Firebase
                 val currentTimeMillis = System.currentTimeMillis()
@@ -180,62 +180,60 @@ class User(
                 // Session ID does not exist and user can login using this device
                 activeSessionsRef.setValue(authResult.user!!.metadata?.lastSignInTimestamp.toString())
                     .await()
-
-                // saving authentication variables in the shared preferences
-                saveUserSessionValues(authResult, context, eventId)
             }
         }
         return eventId
     }
 
-    private fun saveUserSessionValues(authResult: AuthResult, context: Context, eventId: String) {
-        val currentTimeMillis = System.currentTimeMillis()
-
-        saveUserSession(context, authResult!!.user!!.email.toString(), null, "email")
-        saveUserSession(context, authResult.user!!.uid, null, "user_id")
-        saveUserSession(context, eventId, null, "event_id")
-        saveUserSession(
-            context,
+    private fun saveUserSessionValues(authResult: AuthResult, eventId: String?) {
+        UserSessionHelper.saveUserSession(authResult!!.user!!.email.toString(), null, "email")
+        UserSessionHelper.saveUserSession(authResult.user!!.uid, null, "user_id")
+        UserSessionHelper.saveUserSession(
             authResult.user!!.metadata?.lastSignInTimestamp.toString(), null,
             "session_id"
         )
-        saveUserSession(context, null, currentTimeMillis, "last_signed_in_at")
+        val currentTimeMillis = System.currentTimeMillis()
+        UserSessionHelper.saveUserSession(null, currentTimeMillis, "last_signed_in_at")
+
+        if(!eventId.isNullOrEmpty()){
+            UserSessionHelper.saveUserSession(eventId, null, "event_id")
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun importEventFromFirebase(context: Context, uid: String) {
-        val dbHelper = DatabaseHelper(context)
+        val dbHelper = DatabaseHelper.getInstance()
         dbHelper.updateLocalDB(uid)
     }
 
-    fun getUser(context: Context): User {
-        val userId = try {
-            getUserSession(context, "user_id") as String
-        } catch (e: Exception) {
-            println(e.message)
-            ""
-        }
-        val userDB = UserDBHelper(context)
-        val user = userDB.getUser(userId)
-        return user!!
-    }
+//    fun getUser(): User {
+//        val userId = try {
+//            UserSessionHelper.getUserSession("user_id") as String
+//        } catch (e: Exception) {
+//            println(e.message)
+//            ""
+//        }
+//        val userDB = UserDBHelper()
+//        val user = userDB.getUser(userId)
+//        return user!!
+//    }
 
     fun logout(activity: Activity) {
-        val userId = getUserSession(activity, "user_id").toString()
+        val userId = UserSessionHelper.getUserSession("user_id").toString()
         activeSessionsRef = database.child(userId).child("session")
         activeSessionsRef.setValue(null)
         mAuth.signOut()
-        deleteUserSession(activity)
+        UserSessionHelper.deleteUserSession()
         Toast.makeText(activity, activity.getString(R.string.success_logout), Toast.LENGTH_SHORT)
             .show()
     }
 
-    fun softlogout(activity: Activity) {
-        val userId = getUserSession(activity, "user_id").toString()
+    fun softlogout() {
+        val userId = UserSessionHelper.getUserSession("user_id").toString()
         activeSessionsRef = database.child(userId).child("session")
         activeSessionsRef.setValue(null)
         mAuth.signOut()
-        deleteUserSession(activity)
+        UserSessionHelper.deleteUserSession()
     }
 
     suspend fun signup(UserEmail: String, UserPassword: String): Boolean {
@@ -325,6 +323,13 @@ class User(
         return stepsBeanList
     }
 
+    suspend fun updateUserStatus(status: String, context: Context){
+        val userModel = UserModel()
+        userModel.editUserStatus(status)
+        val userDB = UserDBHelper()
+        userDB.editUserStatus(status)
+    }
+
     interface SignUpActivity {
         fun onSignUpSuccess()
         fun onSignUpError()
@@ -369,6 +374,12 @@ class User(
 
         override fun newArray(size: Int): Array<User?> {
             return arrayOfNulls(size)
+        }
+
+        fun getUser(): User {
+            val userId = UserSessionHelper.getUserSession("user_id") as String
+            val user = UserDBHelper().getUser(userId)
+            return user!!
         }
     }
 }

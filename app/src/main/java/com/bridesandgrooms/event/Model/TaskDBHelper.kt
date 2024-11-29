@@ -14,7 +14,6 @@ import com.bridesandgrooms.event.Model.Category.Companion.getCategory
 import com.bridesandgrooms.event.Functions.CoRAddEditTask
 import com.bridesandgrooms.event.Functions.CoRDeleteTask
 import com.bridesandgrooms.event.Functions.convertToDBString
-import com.bridesandgrooms.event.Functions.converttoString
 import com.bridesandgrooms.event.R
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.text.DateFormat
@@ -27,35 +26,34 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
+class TaskDBHelper() : CoRAddEditTask, CoRDeleteTask {
 
     var nexthandler: CoRAddEditTask? = null
     var nexthandlerdel: CoRDeleteTask? = null
 
     @ExperimentalCoroutinesApi
     suspend fun firebaseImport(uid: String): Boolean {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val taskList: ArrayList<Task>
         val eventModel = EventModel()
         try {
             db.execSQL("DELETE FROM TASK")
-            val eventKey = eventModel.getEventKey(uid)
             val taskModel = TaskModel()
-            taskList = taskModel.getTasks(uid, eventKey)
+            taskList = taskModel.getTasks()
             for (taskItem in taskList) {
                 insert(taskItem)
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             throw FirebaseDataImportException("Error importing Task data: $e")
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
         return true
     }
 
     fun insert(task: Task) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val values = ContentValues()
         values.put("taskid", task.key)
         values.put("name", task.name)
@@ -70,13 +68,13 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             Log.d(TAG, "Task record inserted ${task.name}")
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     private fun getTaskexists(key: String): Boolean {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         var existsflag = false
         try {
             val cursor: Cursor = db.rawQuery("SELECT * FROM TASK WHERE taskid = '$key'", null)
@@ -88,14 +86,14 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return false
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     @SuppressLint("Range")
     fun getTasks(): ArrayList<Task>? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val list = ArrayList<Task>()
         try {
             val cursor: Cursor = db.rawQuery(
@@ -134,13 +132,13 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun getTasksNames(): ArrayList<String>? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val list = ArrayList<String>()
         try {
             val cursor: Cursor = db.rawQuery(
@@ -159,13 +157,13 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun getTaskfromDate(date: Date): ArrayList<String>? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val dateString = convertToDBString(date)
         val nameList = arrayListOf<String>()
         try {
@@ -185,13 +183,13 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun getUpcomingTasks(): ArrayList<String>? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val currentDate = SimpleDateFormat("d/M/yyyy", Locale.getDefault()).format(Date())
         val taskDetailsList = arrayListOf<String>()
         try {
@@ -228,14 +226,14 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     @SuppressLint("Range")
     fun getDateTaskArray(date: Date): ArrayList<Task>? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val dateString = convertToDBString(date)
         val list = ArrayList<Task>()
         try {
@@ -274,13 +272,13 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun getTasksFromMonthYear(month: Int, year: Int): List<Date>? {
-        val db: SQLiteDatabase = DatabaseHelper(context).readableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().readableDatabase
         val calendarDayList = mutableListOf<Date>()
 
         try {
@@ -316,15 +314,15 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching tasks from month and year: ${e.message}")
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
         return calendarDayList
     }
 
     fun getTaskBudget(context: Context): Float? {
         try {
-            val taskDBHelper = TaskDBHelper(context)
+            val taskDBHelper = TaskDBHelper()
             return taskDBHelper.getTasksBudget()!!
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
@@ -333,7 +331,7 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
     }
 
     fun getActiveCategories(): ArrayList<Category>? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val list = ArrayList<Category>()
         try {
             val cursor: Cursor =
@@ -354,13 +352,13 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun getCategoryStats(category: String): TaskStatsToken? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val taskstats = TaskStatsToken()
         var sumbudget = 0.0F
         try {
@@ -409,13 +407,13 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun getTaskPDFBudgetReport(): TaskPDFBudgetReport? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val taskPdfBudget = TaskPDFBudgetReport()
         var sumActiveBudget = 0.0F
         var sumCompletebudget = 0.0F
@@ -463,13 +461,13 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun getTasksBudget(): Float? {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         var sumBudget = 0.0F
         try {
             var cursor: Cursor = db.rawQuery(
@@ -496,13 +494,13 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
             return null
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
     fun update(task: Task) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val values = ContentValues()
         values.put("taskid", task.key)
         values.put("name", task.name)
@@ -523,40 +521,40 @@ class TaskDBHelper(val context: Context) : CoRAddEditTask, CoRDeleteTask {
             //db.close()
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
-    fun delete(task: Task) {
-        val db: SQLiteDatabase = DatabaseHelper(context).writableDatabase
+    fun delete(taskId: String) {
+        val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         try {
-            val retVal = db.delete("TASK", "taskid = '${task.key}'", null)
+            val retVal = db.delete("TASK", "taskid = '$taskId'", null)
             if (retVal >= 1) {
-                Log.d(TAG, "Task ${task.key} deleted")
+                Log.d(TAG, "Task $taskId deleted")
             } else {
-                Log.d(TAG, "Task ${task.key} not deleted")
+                Log.d(TAG, "Task $taskId not deleted")
             }
             //db.close()
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
-        } finally {
-            db.close()
+//        } finally {
+//            db.close()
         }
     }
 
-    override fun onAddEditTask(context: Context, user: User, task: Task) {
+    override fun onAddEditTask(task: Task) {
         if (!getTaskexists(task.key)) {
             insert(task)
         } else {
             update(task)
         }
-        nexthandler?.onAddEditTask(context, user, task)
+        nexthandler?.onAddEditTask(task)
     }
 
-    override fun onDeleteTask(context: Context, user: User, task: Task) {
-        delete(task)
-        nexthandlerdel?.onDeleteTask(context, user, task)
+    override fun onDeleteTask(taskId: String) {
+        delete(taskId)
+        nexthandlerdel?.onDeleteTask(taskId)
     }
 
     companion object {

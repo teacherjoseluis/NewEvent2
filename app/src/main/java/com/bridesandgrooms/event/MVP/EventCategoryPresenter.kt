@@ -13,7 +13,7 @@ class EventCategoryPresenter(
 ) {
 
     fun getActiveCategories() {
-        val taskDBHelper = TaskDBHelper(context)
+        val taskDBHelper = TaskDBHelper()
         try {
             val categoriesList = taskDBHelper.getActiveCategories()!!
             fragment.onCategories(categoriesList)

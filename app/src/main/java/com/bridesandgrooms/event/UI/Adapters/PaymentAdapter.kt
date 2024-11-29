@@ -175,14 +175,14 @@ class PaymentAdapter(
         action: String
     ) {
         AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Delete Payment")
-        val user = User().getUser(context)
+        //val user = User().getUser()
         try {
             val paymentswift = paymentList[position]
             if (action == DELETEACTION) {
                 paymentList.removeAt(position)
                 notifyItemRemoved(position)
                 //coroutineScope.launch {
-                deletePayment(context, user, paymentswift)
+                deletePayment(paymentswift.key)
                 //}
 
                 val snackbar =

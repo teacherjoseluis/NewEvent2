@@ -74,7 +74,7 @@ class SearchVendorAdapter(
                 .setMessage(context.getString(R.string.addvendor_confirmation))
                 .setPositiveButton(android.R.string.yes) { _, _ ->
                     currentVendor?.let { vendor ->
-                        val user = User().getUser(context)
+                        //val user = User().getUser()
                         val newVendor = Vendor().apply {
                             name = vendor.name ?: ""
                             phone = vendor.phoneNumber ?: ""
@@ -83,7 +83,7 @@ class SearchVendorAdapter(
                             location = vendor.address ?: ""
                         }
                         try {
-                            addVendor(context, user, newVendor)
+                            addVendor(newVendor)
                         } catch (e: VendorCreationException) {
                             AnalyticsManager.getInstance().trackError(
                                 SCREEN_NAME,
@@ -105,9 +105,9 @@ class SearchVendorAdapter(
             currentVendor = searchVendor
             vendorImageView.apply {
                 val textColor =
-                    ContextCompat.getColor(context, R.color.OnSecondaryContainer)
+                    ContextCompat.getColor(context, R.color.OnSecondaryContainer_cream)
                 val circleColor =
-                    ContextCompat.getColor(context, R.color.SecondaryContainer)
+                    ContextCompat.getColor(context, R.color.SecondaryContainer_cream)
                 val density = context.resources.displayMetrics.density
                 setImageDrawable(
                     LetterAvatar(

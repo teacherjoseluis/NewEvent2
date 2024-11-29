@@ -10,6 +10,13 @@ import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_reviewbox
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_showads
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_video_login
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.setautocreateTaskPayment
+import com.bridesandgrooms.event.Functions.UserSessionHelper
+import com.bridesandgrooms.event.Model.DatabaseHelper
+import com.bridesandgrooms.event.Model.EventDBHelper
+import com.bridesandgrooms.event.Model.GuestDBHelper
+import com.bridesandgrooms.event.Model.PaymentDBHelper
+import com.bridesandgrooms.event.Model.TaskDBHelper
+import com.bridesandgrooms.event.Model.VendorDBHelper
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.NotificationReceiver
 import com.google.android.gms.ads.MobileAds
@@ -70,7 +77,6 @@ class MyFirebaseApp : Application() {
                     }
                 }
         }
-
         FirebaseMessaging.getInstance().apply {
             token
                 .addOnCompleteListener { task ->
@@ -99,67 +105,10 @@ class MyFirebaseApp : Application() {
         MobileAds.initialize(this)
         Places.initializeWithNewPlacesApiEnabled(this, getString(R.string.google_maps_key))
 
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-
-        // --- Remote configuration ---//
-        //val remoteConfig = FirebaseRemoteConfig.getInstance()
-        //remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults) // Set default values
-
-// Set cache expiration time (optional)
-
-// Set cache expiration time (optional)
-//        val configSettings = FirebaseRemoteConfigSettings.Builder()
-//            .setMinimumFetchIntervalInSeconds(0) // 1 hour
-//            .build()
-//        remoteConfig.setConfigSettingsAsync(configSettings)
-
-// Fetch the remote configurations
-
-// Fetch the remote configurations
-//        remoteConfig.fetchAndActivate()
-//            .addOnCompleteListener { task: Task<Boolean?> ->
-//                if (task.isSuccessful) {
-//                    // Configurations successfully fetched and activated
-//                    // Apply the updated configurations in your app
-//                    //applyRemoteConfigurations()
-//                    val remoteConfig = FirebaseRemoteConfig.getInstance()
-//                    val autocreateTaskPaymentFeature =
-//                        remoteConfig.getBoolean("auto_create_tasks_and_payments")
-//                    val enable_foryoutab = remoteConfig.getBoolean("enable_foryoutab")
-//                    val category_layout = remoteConfig.getString("category_layout")
-//                    val developer_mail = remoteConfig.getBoolean("developer_mail")
-//                    val video_login = remoteConfig.getBoolean("video_login")
-//                    val showads = remoteConfig.getBoolean("showads")
-//                    val reviewbox = remoteConfig.getBoolean("reviewbox")
-//                    //val themeId = remoteConfig.getString("themeOverride")
-//
-//                    // Set the chosen theme to your activity
-//                    set_category_layout(category_layout)
-//                    set_enable_foryoutab(enable_foryoutab)
-//                    setautocreateTaskPayment(autocreateTaskPaymentFeature)
-//                    set_developer_mail(developer_mail)
-//                    set_video_login(video_login)
-//                    set_showads(showads)
-//                    set_reviewbox(reviewbox)
-//                } else {
-//                    // Error fetching configurations, use default values
-//                    // Handle the error case
-//                }
-//            }
-
-//        FirebaseMessaging.getInstance().token
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    val token = task.result
-//                    // Handle the token, e.g., send it to your server or store it locally
-//                    // You can also use the token to send notifications to this device
-//                    // For simplicity, we are just logging the token here
-//                    Log.d(TAG, "FCM Token: $token")
-//                } else {
-//                    Log.e(TAG, "Failed to get FCM token")
-//                }
-//            }
-
+        // Start shared Preferences
+        UserSessionHelper.initialize(this)
+        DatabaseHelper.initialize(this)
+        CalendarEvent.initialize(this)
     }
 
     override fun onTerminate() {

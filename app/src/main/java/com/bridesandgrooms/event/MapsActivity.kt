@@ -31,7 +31,7 @@ class MapsActivity : AppCompatActivity() {
         eventkey = intent.getStringExtra("eventkey").toString()
 
 //        val userdbhelper = UserDBHelper(this)
-        val user = User().getUser(this)
+        val user = User.getUser()
         val country_name = findViewById<TextView>(R.id.country_name)
         country_name.text = user.country
 

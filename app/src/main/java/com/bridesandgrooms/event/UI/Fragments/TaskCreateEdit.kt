@@ -89,7 +89,7 @@ class TaskCreateEdit : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        userSession = User().getUser(context)
+        userSession = User.getUser()
         val eventBudget = userSession.eventbudget
 
         val thisEventBudgetSt = eventBudget.replace("[^\\d.]".toRegex(), "")
@@ -216,7 +216,7 @@ class TaskCreateEdit : Fragment() {
                             requestPermissions(permissions, PERMISSION_CODE)
                         } else {
                             try {
-                                deleteTask(context, userSession, taskItem)
+                                deleteTask(taskItem.key)
                             } catch (e: TaskDeletionException) {
                                 displayToastMsg(getString(R.string.errorTaskDeletion) + e.toString())
                                 AnalyticsManager.getInstance().trackError(
@@ -248,7 +248,7 @@ class TaskCreateEdit : Fragment() {
                 } else {
                     //lifecycleScope.launch {
                     try {
-                        editTask(context, userSession, taskItem)
+                        editTask(taskItem)
                     } catch (e: TaskCreationException) {
                         displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
                         AnalyticsManager.getInstance().trackError(
@@ -298,7 +298,7 @@ class TaskCreateEdit : Fragment() {
             thisTaskBudget = thisTaskBudgetSt.toFloatOrNull() ?: 0.0f
         }
 
-        val taskEvent = TaskDBHelper(context)
+        val taskEvent = TaskDBHelper()
         val taskBudget = taskEvent.getTaskBudget(context)!!
         val newEventBalance =
             thisEventBudget - (taskBudget + thisTaskBudget)
@@ -343,7 +343,7 @@ class TaskCreateEdit : Fragment() {
             if (taskItem.key.isEmpty()) {
                 //lifecycleScope.launch {
                 try {
-                    addTask(context, userSession, taskItem)
+                    addTask(taskItem)
                 } catch (e: TaskCreationException) {
                     AnalyticsManager.getInstance().trackError(
                         SCREEN_NAME,
@@ -356,7 +356,7 @@ class TaskCreateEdit : Fragment() {
                 }
             } else {
                 try {
-                    editTask(context, userSession, taskItem)
+                    editTask(taskItem)
                 } catch (e: TaskCreationException) {
                     AnalyticsManager.getInstance().trackError(
                         SCREEN_NAME,
