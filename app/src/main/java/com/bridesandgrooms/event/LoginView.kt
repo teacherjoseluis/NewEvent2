@@ -87,18 +87,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                             val firebaseUser = authResult.user!!
                             user.userid = firebaseUser.uid
                             user.email = firebaseUser.email.toString()
-
-//                            val eventId = getUserSession(this@LoginView, "event_id").toString()
-//                            if (eventId.isEmpty()) {
-//                                onOnboarding(user.userid!!, user.email, "email")
-//                                //delay(1000)
-//                            } else {
-//                                lifecycleScope.launch {
-//                            user = UserModel(user).getUser()
-//                            val dbHelper = DatabaseHelper(this@LoginView)
-//                            dbHelper.updateLocalDB(user)
                             onLoginSuccess(user.email)
-                            // }
                         } catch (e: EmailVerificationException) {
                             displayErrorMsg(getString(R.string.error_emailverification)/* + e.toString()*/)
                         } catch (e: UserAuthenticationException) {
@@ -112,7 +101,11 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                         } catch (e: FirebaseDataImportException) {
                             displayErrorMsg(getString(R.string.error_firebaseimport)/* + e.toString()*/)
                         } catch (e: EventNotFoundException) {
-                            onOnboarding(e.firebaseUser.uid, e.firebaseUser.email.toString(), "email")
+                            onOnboarding(
+                                e.firebaseUser.uid,
+                                e.firebaseUser.email.toString(),
+                                "email"
+                            )
                         }
                     }
                 }
@@ -262,7 +255,10 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
             binding.editPasswordsignup2.error = validator.errorCode
             isValid = false
         }
-        if (binding.editPasswordsignup2.text != binding.editPasswordsignup1.text) {
+        val password1 = binding.editPasswordsignup1.text?.toString().orEmpty()
+        val password2 = binding.editPasswordsignup2.text?.toString().orEmpty()
+
+        if (password1 != password2) {
             binding.editPasswordsignup2.error = getString(R.string.passwords_dontmatch)
             isValid = false
         }

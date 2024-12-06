@@ -10,18 +10,18 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/welcomeScreen"
-        android:visibility="visible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <VideoView
             android:id="@+id/videowedding"
-            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"
-            android:layout_gravity="center" />
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
 
         <ImageView
             android:layout_width="0dp"
@@ -35,9 +35,9 @@
 
         <Button
             android:id="@+id/signupbuttonstart"
+            style="@style/BG_ActionButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/BG_ActionButton"
             android:layout_marginStart="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginEnd="40dp"
@@ -50,9 +50,9 @@
 
         <Button
             android:id="@+id/loginbuttonstart"
+            style="@style/BG_ActionButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/BG_ActionButton"
             android:layout_marginStart="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginEnd="40dp"
@@ -74,9 +74,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/loginScreen"
-        android:visibility="invisible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
         <ImageView
             android:layout_width="match_parent"
@@ -140,8 +140,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/password"
-                    android:tag="PASSWORD"
                     android:inputType="textPassword"
+                    android:tag="PASSWORD"
                     android:textAppearance="@style/Body_Small"
                     tools:ignore="Autofill" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -259,9 +259,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/signupScreen"
-        android:visibility="invisible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -325,8 +325,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/password"
-                    android:tag="PASSWORD"
                     android:inputType="textPassword"
+                    android:tag="PASSWORD"
                     android:textAppearance="@style/Body_Small"
                     tools:ignore="Autofill" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -352,8 +352,8 @@
                     android:layout_height="match_parent"
                     android:ems="10"
                     android:hint="@string/password"
-                    android:tag="PASSWORD"
                     android:inputType="textPassword"
+                    android:tag="PASSWORD"
                     android:textAppearance="@style/Body_Small"
                     tools:ignore="Autofill" />
             </com.google.android.material.textfield.TextInputLayout>
