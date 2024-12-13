@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "319634884697-d79as8b605fr29so6p24bk6m0q9cg3n2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bridesandgrooms.event",
+            "certificate_hash": "1a1674e1ede0782dfd0ec4ce318db1b78bf5fa1f"
+          }
+        },
+        {
+          "client_id": "319634884697-hd0f6nsv7fpkjsqb0lao0p42cd1gs76j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bridesandgrooms.event",
+            "certificate_hash": "cb600353101d4ba74387e5335f03cbf87040d457"
+          }
+        },
+        {
           "client_id": "319634884697-ihokd8d4om17tsanagl74ife42c5n68f.apps.googleusercontent.com",
           "client_type": 3
         }

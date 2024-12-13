@@ -117,7 +117,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
             // Google Sign In
             binding.signgoogle.setOnClickListener {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken("319634884697-ihokd8d4om17tsanagl74ife42c5n68f.apps.googleusercontent.com")
+                    .requestIdToken(getString(R.string.default_web_client_id))
                     .requestEmail()
                     .build()
 

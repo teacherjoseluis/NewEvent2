@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="admob_banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/9214589741</string>
+    <string name="default_web_client_id" translatable="false">319634884697-ihokd8d4om17tsanagl74ife42c5n68f.apps.googleusercontent.com</string>
+</resources>
