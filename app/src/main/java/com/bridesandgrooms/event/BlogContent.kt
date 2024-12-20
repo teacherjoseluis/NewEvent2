@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bridesandgrooms.event.Model.Note
+import com.bridesandgrooms.event.UI.Adapters.GlideApp
 import com.bridesandgrooms.event.databinding.BlogContentBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.analytics.FirebaseAnalytics

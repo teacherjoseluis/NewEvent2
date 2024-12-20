@@ -25,8 +25,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bridesandgrooms.event.AdManager
+import com.bridesandgrooms.event.Functions.AdManagerSingleton
 import com.bridesandgrooms.event.Functions.Google.PlacesSearchServiceKT
 import com.bridesandgrooms.event.Functions.PermissionUtils
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
 import com.bridesandgrooms.event.Model.User
@@ -34,6 +37,9 @@ import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.SearchVendorAdapter
 import com.bridesandgrooms.event.databinding.SearchVendorsFragmentBinding
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.libraries.places.api.model.Place
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,6 +58,9 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
     private lateinit var rvAdapter: SearchVendorAdapter
     private lateinit var user: User
 
+    private lateinit var adManager: AdManager
+    private var showAds = false
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +74,13 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        showAds = RemoteConfigSingleton.get_showads()
+        if (showAds) {
+            adManager = AdManagerSingleton.getAdManager()
+            adManager.loadRewardedAd(requireActivity())
+        }
+
         binding =
             DataBindingUtil.inflate(inflater, R.layout.search_vendors_fragment, container, false)
         return binding.root
@@ -77,6 +93,9 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
             val permissions = PermissionUtils.requestPermissionsList("location")
             requestPermissions(permissions, PERMISSION_CODE)
         } else {
+            if (showAds) {
+                adManager.showRewardedAd(requireActivity())
+            }
             searchVendors()
         }
     }
@@ -123,6 +142,9 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
                             startActivity(intent)
                         }
                 } else {
+                    if (showAds) {
+                        adManager.showRewardedAd(requireActivity())
+                    }
                     searchVendors()
                 }
             }

@@ -17,10 +17,14 @@ import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
 import com.bridesandgrooms.event.DashboardEvent.Companion.SCREEN_NAME
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.MVP.DashboardActivityPresenter
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Activities.ExportPDF
 import com.bridesandgrooms.event.databinding.DashboardactivityBinding
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.appbar.MaterialToolbar
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -36,13 +40,22 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
     private lateinit var dateFormat: SimpleDateFormat
     private lateinit var taskpaymentDate: Date
     private lateinit var toolbar: MaterialToolbar
+    private lateinit var adView: AdView
 
     private var events = mutableListOf<CalendarDay>()
+    private var showAds = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         dateFormat = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
+
+        showAds = RemoteConfigSingleton.get_showads()
+        if (showAds) {
+            MobileAds.initialize(requireContext()) { initializationStatus ->
+                // You can leave this empty or handle initialization status if needed
+            }
+        }
     }
 
     override fun onCreateView(
@@ -59,6 +72,12 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 
         inf = DataBindingUtil.inflate(inflater, R.layout.dashboardactivity, container, false)
         inf.calendarView.setDate(currentDateTime)
+
+        if (showAds) {
+            adView = inf.adView
+            val adRequest = AdRequest.Builder().build()
+            adView.loadAd(adRequest)
+        }
 
         try {
             dashboardAP = DashboardActivityPresenter(requireContext(), this)

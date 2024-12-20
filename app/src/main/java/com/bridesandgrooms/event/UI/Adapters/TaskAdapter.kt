@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -24,6 +26,8 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.nativead.AdChoicesView
+import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.material.snackbar.Snackbar
@@ -44,7 +48,7 @@ class TaskAdapter(
     private val DEFAULT_VIEW_TYPE = 1
     private val NATIVE_AD_VIEW_TYPE = 2
 
-    private val ADS_INTERVAL = 4
+    private val ADS_INTERVAL = 3
     private val showads = RemoteConfigSingleton.get_showads()
 
     override fun getItemViewType(position: Int): Int {
@@ -109,8 +113,33 @@ class TaskAdapter(
     }
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
-        adView.mediaView?.setMediaContent(nativeAd.mediaContent)
-        adView.mediaView?.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+        // Set Ad Attribution ("Ad")
+        val attributionView = adView.findViewById<TextView>(R.id.ad_attribution)
+        attributionView.visibility = View.VISIBLE
+
+        // Set AdChoices Overlay
+        val adChoicesContainer = adView.findViewById<FrameLayout>(R.id.ad_choices_container)
+        val adChoicesView = AdChoicesView(adView.context)
+        adChoicesContainer.removeAllViews()
+        adChoicesContainer.addView(adChoicesView)
+
+        // Set Media Content
+        val mediaView = adView.findViewById<MediaView>(R.id.media_view)
+        adView.mediaView = mediaView
+        mediaView.setMediaContent(nativeAd.mediaContent)
+
+        // Set Headline
+        val headlineView = adView.findViewById<TextView>(R.id.ad_headline)
+        adView.headlineView = headlineView
+        headlineView.text = nativeAd.headline
+
+        // Set Call to Action
+        val callToActionView = adView.findViewById<Button>(R.id.ad_call_to_action)
+        adView.callToActionView = callToActionView
+        callToActionView.text = nativeAd.callToAction
+        callToActionView.visibility = if (nativeAd.callToAction != null) View.VISIBLE else View.INVISIBLE
+
+        // Register the native ad with the NativeAdView
         adView.setNativeAd(nativeAd)
     }
 

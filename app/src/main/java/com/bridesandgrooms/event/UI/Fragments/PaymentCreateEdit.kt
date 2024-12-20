@@ -57,7 +57,7 @@ import java.text.SimpleDateFormat
 class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
 
     private lateinit var optionsmenu: Menu
-    private lateinit var adManager: AdManager
+//    private lateinit var adManager: AdManager
     private lateinit var binding: PaymentEditdetailBinding
 
     private lateinit var paymentItem: Payment
@@ -180,11 +180,11 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
             Log.e(TAG, e.message.toString())
         }
 
-        val showads = RemoteConfigSingleton.get_showads()
-        if (showads) {
-            adManager = AdManagerSingleton.getAdManager()
-            adManager.loadAndShowRewardedAd(requireActivity())
-        }
+//        val showads = RemoteConfigSingleton.get_showads()
+//        if (showads) {
+//            adManager = AdManagerSingleton.getAdManager()
+//            adManager.loadAndShowRewardedAd(requireActivity())
+//        }
         return binding.root
     }
 
@@ -305,14 +305,14 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
                 }
             }
 
-            val showads = RemoteConfigSingleton.get_showads()
-            if (showads) {
-                if (adManager.mRewardedAd != null) {
-                    adManager.mRewardedAd?.show(requireActivity()) {}
-                } else {
-                    Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
-                }
-            }
+            //val showads = RemoteConfigSingleton.get_showads()
+//            if (showads) {
+//                if (adManager.mRewardedAd != null) {
+//                    adManager.mRewardedAd?.show(requireActivity()) {}
+//                } else {
+//                    Log.d(TaskCreateEdit.TAG, "The rewarded ad wasn't ready yet.")
+//                }
+//            }
             finish()
         }
     }

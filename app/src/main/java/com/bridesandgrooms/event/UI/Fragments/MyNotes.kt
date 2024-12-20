@@ -17,11 +17,15 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.widget.SearchView
 import android.widget.TextView
+import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.clone
 import com.bridesandgrooms.event.Model.Note
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.NoteAdapter
 import com.bridesandgrooms.event.databinding.MyNotesBinding
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.Locale
@@ -34,9 +38,11 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity, NoteFragmentActionListen
     private lateinit var inf: MyNotesBinding
 
     private lateinit var toolbar: MaterialToolbar
+    private lateinit var adView: AdView
 
     private var notesList = ArrayList<Note>()
     private var mContext: Context? = null
+    private var showAds = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -46,6 +52,13 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity, NoteFragmentActionListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        showAds = RemoteConfigSingleton.get_showads()
+        if (showAds) {
+            MobileAds.initialize(requireContext()) { initializationStatus ->
+                // You can leave this empty or handle initialization status if needed
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -89,6 +102,12 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity, NoteFragmentActionListen
         toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.notes)
 
         inf = DataBindingUtil.inflate(inflater, R.layout.my_notes, container, false)
+
+        if (showAds) {
+            adView = inf.adView
+            val adRequest = AdRequest.Builder().build()
+            adView.loadAd(adRequest)
+        }
 
         recyclerViewAllNotes = inf.recyclerViewNotes
         recyclerViewAllNotes.apply {

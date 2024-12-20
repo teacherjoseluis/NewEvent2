@@ -89,20 +89,20 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     private lateinit var inf: DashboardchartsBinding
     private var user = User.getUser()
 
-    private val adSize: AdSize
-        get() {
-            val displayMetrics = resources.displayMetrics
-            val adWidthPixels =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    val windowMetrics: WindowMetrics = requireActivity().windowManager.currentWindowMetrics
-                    windowMetrics.bounds.width()
-                } else {
-                    displayMetrics.widthPixels
-                }
-            val density = displayMetrics.density
-            val adWidth = (adWidthPixels / density).toInt()
-            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(requireActivity(), adWidth)
-        }
+//    private val adSize: AdSize
+//        get() {
+//            val displayMetrics = resources.displayMetrics
+//            val adWidthPixels =
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                    val windowMetrics: WindowMetrics = requireActivity().windowManager.currentWindowMetrics
+//                    windowMetrics.bounds.width()
+//                } else {
+//                    displayMetrics.widthPixels
+//                }
+//            val density = displayMetrics.density
+//            val adWidth = (adWidthPixels / density).toInt()
+//            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(requireActivity(), adWidth)
+//        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

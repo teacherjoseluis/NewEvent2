@@ -180,11 +180,11 @@ class TaskCreateEdit : Fragment() {
                 saveTask()
             }
         }
-        val showads = RemoteConfigSingleton.get_showads()
-        if (showads) {
-            adManager = AdManagerSingleton.getAdManager()
-            adManager.loadAndShowRewardedAd(requireActivity())
-        }
+//        val showads = RemoteConfigSingleton.get_showads()
+//        if (showads) {
+//            adManager = AdManagerSingleton.getAdManager()
+//            adManager.loadAndShowRewardedAd(requireActivity())
+//        }
         return binding.root
     }
 
@@ -389,14 +389,14 @@ class TaskCreateEdit : Fragment() {
                     }
                 }
             }
-            val showads = RemoteConfigSingleton.get_showads()
-            if (showads) {
-                if (adManager.mRewardedAd != null) {
-                    adManager.mRewardedAd?.show(requireActivity()) {}
-                } else {
-                    Log.d(TAG, "The rewarded ad wasn't ready yet.")
-                }
-            }
+//            val showads = RemoteConfigSingleton.get_showads()
+//            if (showads) {
+//                if (adManager.mRewardedAd != null) {
+//                    adManager.mRewardedAd?.show(requireActivity()) {}
+//                } else {
+//                    Log.d(TAG, "The rewarded ad wasn't ready yet.")
+//                }
+//            }
             finish()
         }
     }

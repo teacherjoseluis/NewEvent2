@@ -13,11 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.Firebase.BlogPost
 import com.bridesandgrooms.event.MVP.BlogPresenter
-import com.bridesandgrooms.event.MVP.NotePresenter
-import com.bridesandgrooms.event.Model.Note
-import com.bridesandgrooms.event.UI.Adapters.NoteAdapter
+import com.bridesandgrooms.event.UI.Adapters.Rv_BlogAdapter
 import com.bridesandgrooms.event.UI.Fragments.MyNotes.Companion.TAG
-import com.bridesandgrooms.event.UI.Fragments.NoteCreateEdit
 import com.bridesandgrooms.event.databinding.DashboardblogBinding
 import com.google.android.material.appbar.MaterialToolbar
 

@@ -143,6 +143,15 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:adSize="BANNER"
+                app:adUnitId="@string/admob_banner_ad_unit_id" />
+
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -27,6 +27,7 @@ import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -41,6 +42,8 @@ class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterfac
 
     private var isRotate = false
     private var mContext: Context? = null
+
+    private var showAds = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -80,8 +83,12 @@ class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterfac
                 val rvAdapter = CategoryAdapter(this, list, mContext!!)
                 recyclerViewCategory.adapter = rvAdapter
 
-                val showads = RemoteConfigSingleton.get_showads()
-                if (showads) {
+                showAds = RemoteConfigSingleton.get_showads()
+                if (showAds) {
+                    MobileAds.initialize(requireContext()) { initializationStatus ->
+                        // You can leave this empty or handle initialization status if needed
+                    }
+
                     val adRequest = AdRequest.Builder().build()
                     inf.adView.loadAd(adRequest)
                     // For the Ad in this View, the below is a listener that catches events
