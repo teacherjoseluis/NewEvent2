@@ -90,6 +90,8 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                             onLoginSuccess(user.email)
                         } catch (e: EmailVerificationException) {
                             displayErrorMsg(getString(R.string.error_emailverification)/* + e.toString()*/)
+                        } catch (e: FirebaseAuthInvalidCredentialsException) {
+                            displayErrorMsg(getString(R.string.invalidemailpassword))
                         } catch (e: UserAuthenticationException) {
                             displayErrorMsg(getString(R.string.failed_email_login)/* + e.toString()*/)
                         } catch (e: SessionAccessException) {
