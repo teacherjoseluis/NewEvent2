@@ -32,7 +32,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
 
     private val TIME_DELAY = 2000
     private var back_pressed: Long = 0
-    var user = User()
+    private lateinit var user: User
 
     private lateinit var binding: LoginVideoBinding
     private val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
@@ -80,6 +80,8 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                     val userEmail = binding.editEmaillogin.text.toString()
                     val userPassword = binding.editPasswordlogin.text.toString()
                     lifecycleScope.launch {
+                        user = User()
+
                         try {
                             val authResult =
                                 user.login(this@LoginView, "email", userEmail, userPassword, null)
@@ -313,6 +315,8 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
 
         if (requestCode == RC_SIGN_IN) {
             lifecycleScope.launch {
+                user = User()
+
                 try {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                     val account = task.getResult(ApiException::class.java)

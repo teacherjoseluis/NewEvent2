@@ -43,7 +43,7 @@ class BlogContent : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.blog_content, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
-        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.event)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.post)
 
         blogItem = arguments?.getParcelable("blog") ?: BlogPost()
 

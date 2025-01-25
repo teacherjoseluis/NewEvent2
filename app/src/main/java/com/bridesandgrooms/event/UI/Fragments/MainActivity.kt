@@ -1,6 +1,7 @@
 package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
+import Application.UserRetrievalException
 import TimePickerFragment
 import android.Manifest
 import android.animation.Animator
@@ -40,6 +41,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.baoyachi.stepview.HorizontalStepView
 import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.MapsActivity
@@ -51,6 +53,7 @@ import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.launch
 import java.io.File
 
 class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.EventItem {
@@ -121,7 +124,17 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        userSession = User.getUser()
+
+        lifecycleScope.launch {
+            try {
+                userSession = User.getUser()
+            } catch (e: UserRetrievalException) {
+                displayErrorMsg(getString(R.string.errorretrieveuser))
+            } catch (e: Exception) {
+                displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+            }
+        }
+
         binding = DataBindingUtil.inflate(inflater, R.layout.eventform_layout, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
@@ -508,6 +521,14 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
                 .commit()
         }, 500)
+    }
+
+    private fun displayErrorMsg(message: String) {
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 }
 

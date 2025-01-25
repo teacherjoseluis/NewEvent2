@@ -1,6 +1,7 @@
 package com.bridesandgrooms.event
 
 import Application.AnalyticsManager
+import Application.UserRetrievalException
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -63,6 +64,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     DashboardEventPresenter.PaymentStats, DashboardEventPresenter.GuestStats,
@@ -87,7 +89,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     private var tfLight: Typeface? = null
 
     private lateinit var inf: DashboardchartsBinding
-    private var user = User.getUser()
+    private lateinit var user: User
 
 //    private val adSize: AdSize
 //        get() {
@@ -134,6 +136,14 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         }
     }
 
+    private fun displayErrorMsg(message: String) {
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceType")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -150,42 +160,59 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             adView.loadAd(adRequest)
         }
 
-        if (user.hastask == "Y" || user.haspayment == "Y") {
-            inf.weddingavatarCard.setOnClickListener {
-                AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "Edit_Event")
-
-                val fragment = MainActivity()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                    .replace(R.id.fragment_container, fragment)
-                    .commit()
-            }
-
+        lifecycleScope.launch {
             try {
-                dashboardEP = DashboardEventPresenter(requireContext(), this, inf.root)
-                dashboardEP.getTaskList()
-                dashboardEP.getPaymentList()
-                dashboardEP.getEvent()
-                dashboardEP.getGuestList()
+                user = User.getUserAsync()
 
-                val repository = DashboardRepository(FirebaseDataSourceImpl(requireContext()))
-                dashboardEP.setRepository(repository)
-                dashboardEP.fetchDashboardImages()
+                if (user.hastask == "Y" || user.haspayment == "Y") {
+                    inf.weddingavatarCard.setOnClickListener {
+                        AnalyticsManager.getInstance()
+                            .trackNavigationEvent(SCREEN_NAME, "Edit_Event")
 
-                dashboardEP.getActiveCategories()
-                dashboardEP.getUpcomingTasks()
+                        val fragment = MainActivity()
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+                            .replace(R.id.fragment_container, fragment)
+                            .commit()
+                    }
+
+                    try {
+                        dashboardEP = DashboardEventPresenter(requireContext(), this@DashboardEvent, inf.root)
+                        dashboardEP.getTaskList()
+                        dashboardEP.getPaymentList()
+                        dashboardEP.getEvent()
+                        dashboardEP.getGuestList()
+
+                        val repository =
+                            DashboardRepository(FirebaseDataSourceImpl(requireContext()))
+                        dashboardEP.setRepository(repository)
+                        dashboardEP.fetchDashboardImages()
+
+                        dashboardEP.getActiveCategories()
+                        dashboardEP.getUpcomingTasks()
+                    } catch (e: Exception) {
+                        Log.e(TAG, e.message.toString())
+                    }
+                } else {
+                    Log.i(TAG, "No data was obtained from the Event")
+
+                    val bottomView = activity?.findViewById<BottomNavigationView>(R.id.bottomnav)!!
+                    for (i in 0 until bottomView.menu.size()) {
+                        bottomView.menu.getItem(i).isEnabled = false
+                    }
+                }
+            } catch (e: UserRetrievalException) {
+                displayErrorMsg(getString(R.string.errorretrieveuser))
             } catch (e: Exception) {
-                Log.e(TAG, e.message.toString())
-            }
-        } else {
-            Log.i(TAG, "No data was obtained from the Event")
-
-            val bottomView = activity?.findViewById<BottomNavigationView>(R.id.bottomnav)!!
-            for (i in 0 until bottomView.menu.size()) {
-                bottomView.menu.getItem(i).isEnabled = false
+                displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
             }
         }
         return inf.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.myeventtitle)
     }
 
     override fun onDashboardImages(images: List<DashboardEventPresenter.CategoryThumbnails>) {
@@ -260,7 +287,12 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
             setExtraOffsets(0f, 5f, -8f, 15f) //apparently this is padding
             dragDecelerationFrictionCoef = 0.95f
             setCenterTextTypeface(tfRegular)
-            setCenterTextColor(ContextCompat.getColor(requireContext(), R.color.OnSecondaryContainer_cream))
+            setCenterTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.OnSecondaryContainer_cream
+                )
+            )
             setCenterTextSize(30f)
             isDrawHoleEnabled = true
             setHoleColor(holeColor)
@@ -603,7 +635,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         bundle.putString("category", category)
         fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
-            ?.setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
+            ?.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             ?.replace(
                 R.id.fragment_container,
                 fragment
@@ -639,7 +671,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         bundle.putString("category", category)
         fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
-            ?.setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
+            ?.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             ?.replace(
                 R.id.fragment_container,
                 fragment

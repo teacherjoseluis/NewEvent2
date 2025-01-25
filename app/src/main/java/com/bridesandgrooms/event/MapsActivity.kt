@@ -1,13 +1,16 @@
 package com.bridesandgrooms.event
 
+import Application.UserRetrievalException
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.UserDBHelper
 import com.bridesandgrooms.event.databinding.ActivityMapsBinding
@@ -17,12 +20,14 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import kotlinx.coroutines.launch
 import java.util.*
 
 
 class MapsActivity : AppCompatActivity() {
 
     private var eventkey: String? = null
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +36,16 @@ class MapsActivity : AppCompatActivity() {
         eventkey = intent.getStringExtra("eventkey").toString()
 
 //        val userdbhelper = UserDBHelper(this)
-        val user = User.getUser()
+        lifecycleScope.launch {
+            try {
+                user = User.getUser()
+            } catch (e: UserRetrievalException) {
+                displayErrorMsg(getString(R.string.errorretrieveuser))
+            } catch (e: Exception) {
+                displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+            }
+        }
+
         val country_name = findViewById<TextView>(R.id.country_name)
         country_name.text = user.country
 
@@ -80,6 +94,14 @@ class MapsActivity : AppCompatActivity() {
                 //Toast.makeText(applicationContext, "" + p0.toString(), Toast.LENGTH_LONG).show();
             }
         })
+    }
+
+    private fun displayErrorMsg(message: String) {
+        Toast.makeText(
+            this,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 }
 

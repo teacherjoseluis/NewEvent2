@@ -3,6 +3,7 @@ package com.bridesandgrooms.event.UI.Fragments
 import Application.AnalyticsManager
 import Application.TaskCreationException
 import Application.TaskDeletionException
+import Application.UserRetrievalException
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
@@ -33,6 +34,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.AdManager
 import com.bridesandgrooms.event.Functions.*
 import com.bridesandgrooms.event.Model.Category
@@ -52,6 +54,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -89,7 +92,15 @@ class TaskCreateEdit : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        userSession = User.getUser()
+
+        try {
+            userSession = User.getUser()
+        } catch (e: UserRetrievalException) {
+            displayErrorMsg(getString(R.string.errorretrieveuser))
+        } catch (e: Exception) {
+            displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+        }
+
         val eventBudget = userSession.eventbudget
 
         val thisEventBudgetSt = eventBudget.replace("[^\\d.]".toRegex(), "")
@@ -218,7 +229,7 @@ class TaskCreateEdit : Fragment() {
                             try {
                                 deleteTask(taskItem.key)
                             } catch (e: TaskDeletionException) {
-                                displayToastMsg(getString(R.string.errorTaskDeletion) + e.toString())
+                                displayErrorMsg(getString(R.string.errorTaskDeletion) + e.toString())
                                 AnalyticsManager.getInstance().trackError(
                                     SCREEN_NAME,
                                     e.message.toString(),
@@ -250,7 +261,7 @@ class TaskCreateEdit : Fragment() {
                     try {
                         editTask(taskItem)
                     } catch (e: TaskCreationException) {
-                        displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                        displayErrorMsg(getString(R.string.errorTaskCreation) + e.toString())
                         AnalyticsManager.getInstance().trackError(
                             SCREEN_NAME,
                             e.message.toString(),
@@ -263,6 +274,7 @@ class TaskCreateEdit : Fragment() {
                 }
                 true
             }
+
             else -> {
                 super.onOptionsItemSelected(item)
             }
@@ -351,7 +363,7 @@ class TaskCreateEdit : Fragment() {
                         "addTask()",
                         e.stackTraceToString()
                     )
-                    displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                    displayErrorMsg(getString(R.string.errorTaskCreation) + e.toString())
                     Log.e(TAG, e.message.toString())
                 }
             } else {
@@ -364,7 +376,7 @@ class TaskCreateEdit : Fragment() {
                         "editTask()",
                         e.stackTraceToString()
                     )
-                    displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                    displayErrorMsg(getString(R.string.errorTaskCreation) + e.toString())
                     Log.e(TAG, e.message.toString())
                 }
             }
@@ -486,7 +498,7 @@ class TaskCreateEdit : Fragment() {
         return myCategory
     }
 
-    private fun displayToastMsg(message: String) {
+    private fun displayErrorMsg(message: String) {
         Toast.makeText(
             context,
             message,

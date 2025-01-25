@@ -6,7 +6,7 @@
     <string name="newevent_eventlocationinput_en">Select Event location</string>
     <string name="title_activity_maps">Map</string>
 
-    <string name="privacypolicy" translatable="false">https://brides-grooms.flycricket.io/privacy.html</string>
+    <string name="privacypolicy" translatable="false">https://teacherjoseluis.wixsite.com/bridesandgrooms</string>
     <string name="termsandconditions" translatable="false">https://brides-grooms.flycricket.io/terms.html</string>
 
     <string name="facebook_app_id" translatable="false">420436362323049</string>
@@ -60,6 +60,8 @@
     <string name="payments">Payments</string>
     <string name="payment">Payment</string>
     <string name="tasks">Tasks</string>
+    <string name="blog">Blog</string>
+    <string name="post">Post</string>
     <string name="error_gettingdata">There was an error trying to get Event data</string>
     <string name="success_eventchanges">Event changes saved successfully</string>
     <string name="blogimage">Blog Image</string>
@@ -256,6 +258,7 @@
     <string name="successadduser">User was created successfully</string>
     <string name="erroradduser">There was an error trying to create the user </string>
     <string name="successedituser">User was edited successfully</string>
+    <string name="errorretrieveuser">There was an error trying to retrieve your user </string>
     <string name="erroredituser">There was an error trying to edit the user </string>
     <string name="googlesearch">Search by Google</string>
     <string name="selectvendor">Select Vendor</string>
@@ -395,6 +398,7 @@
     <string name="app_welcome_text_3">Need for inspiration?</string>
     <string name="app_welcome_text_4">You can see what\'s trending on dresses, bouquets, cakes, etc.</string>
     <string name="app_welcome_text_5">Also you can read our Blog if you want to see our fresh content and news.</string>
+    <string name="error_unknown">There is an unknown error. Please reach out to support@bridesandgrooms.us</string>
 
     <string-array name="role" >
         <item>Bride</item>

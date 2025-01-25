@@ -199,11 +199,22 @@ class Rv_BlogAdapter(
                 .start()
         }
 
+        private fun getAdjustedPosition(position: Int): Int {
+            return position - (position / ADS_INTERVAL)
+        }
+
         private fun handleClick() {
             val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                val blog = blogList[position]
-                fragmentActionListener.onBlogFragmentWithData(blog)
+            if (position != RecyclerView.NO_POSITION && getItemViewType(position) == DEFAULT_VIEW_TYPE) {
+                val adjustedPosition = getAdjustedPosition(position)
+                if (adjustedPosition in blogList.indices) {
+                    val blog = blogList[adjustedPosition]
+                    fragmentActionListener.onBlogFragmentWithData(blog)
+                } else {
+                    Log.e("RecyclerView", "Adjusted position out of bounds: $adjustedPosition")
+                }
+            } else {
+                Log.d("RecyclerView", "Clicked on an ad or invalid position")
             }
         }
     }

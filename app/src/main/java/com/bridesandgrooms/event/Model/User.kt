@@ -376,10 +376,16 @@ class User(
             return arrayOfNulls(size)
         }
 
+        @OptIn(ExperimentalCoroutinesApi::class)
+        suspend fun getUserAsync(): User {
+            val userId = UserSessionHelper.getUserSession("user_id") as String
+            return UserDBHelper().getUser(userId)?.takeIf { it.userid?.isNotEmpty() == true }
+                ?: UserModel().getUser()
+        }
+
         fun getUser(): User {
             val userId = UserSessionHelper.getUserSession("user_id") as String
-            val user = UserDBHelper().getUser(userId)
-            return user!!
+            return UserDBHelper().getUser(userId)!!
         }
     }
 }

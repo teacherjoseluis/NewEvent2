@@ -57,3 +57,4 @@ class EventCreationException (message: String) : Exception(message)
 
 class CalendarCreationException (message: String) : Exception(message)
 class CalendarEditionException (message: String) : Exception(message)
+class UserRetrievalException (message: String) : Exception(message)

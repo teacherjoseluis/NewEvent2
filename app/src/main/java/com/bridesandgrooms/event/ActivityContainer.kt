@@ -1,6 +1,7 @@
 package com.bridesandgrooms.event
 
 import Application.AnalyticsManager
+import Application.UserRetrievalException
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -42,6 +43,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.nordan.dialog.Animation
 import com.nordan.dialog.NordanAlertDialog
+import kotlinx.coroutines.launch
 //import kotlinx.android.synthetic.main.header_navview.*
 //import kotlinx.android.synthetic.main.header_navview.view.*
 
@@ -70,12 +72,20 @@ class ActivityContainer : AppCompatActivity() {
             startActivityForResult(loginactivity, LOGINACTIVITY)
         } else {
             //Potentially it's here where I can add the Welcome flow. For those users with status =0
-            val userSession = User.getUser()
-            if (userSession.status == "0") {
-                setContentView(R.layout.welcome_user)
-                val welcomeActivity =
-                    Intent(this, WelcomeActivity::class.java)
-                startActivity(welcomeActivity)
+            lifecycleScope.launch {
+                try {
+                    val userSession = User.getUserAsync()
+                    if (userSession.status == "0") {
+                        setContentView(R.layout.welcome_user)
+                        val welcomeActivity =
+                            Intent(this@ActivityContainer, WelcomeActivity::class.java)
+                        startActivity(welcomeActivity)
+                    }
+                } catch (e: UserRetrievalException) {
+                    displayErrorMsg(getString(R.string.errorretrieveuser))
+                } catch (e: Exception) {
+                    displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+                }
             }
             createView()
         }
@@ -551,6 +561,14 @@ class ActivityContainer : AppCompatActivity() {
                 super.onBackPressed()
             }
         }
+    }
+
+    private fun displayErrorMsg(message: String) {
+        Toast.makeText(
+            this@ActivityContainer,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     companion object {

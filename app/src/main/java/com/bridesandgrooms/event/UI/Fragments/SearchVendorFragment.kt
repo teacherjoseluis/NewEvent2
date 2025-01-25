@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Fragments
 
+import Application.UserRetrievalException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -66,7 +67,22 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         context = requireContext()
-        user = User.getUser()
+
+        try {
+            user = User.getUser()
+        } catch (e: UserRetrievalException) {
+            displayErrorMsg(getString(R.string.errorretrieveuser))
+        } catch (e: Exception) {
+            displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+        }
+    }
+
+    private fun displayErrorMsg(message: String) {
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun onCreateView(

@@ -27,7 +27,6 @@ class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity, BlogFragmentAc
 
     private lateinit var toolbar: MaterialToolbar
 
-    private var blogList = ArrayList<BlogPost>()
     private var mContext: Context? = null
 
     var language = "en"
@@ -47,11 +46,13 @@ class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity, BlogFragmentAc
         savedInstanceState: Bundle?
     ): View {
         toolbar = requireActivity().findViewById(R.id.toolbar)
-        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.notes)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.blog)
 
         // Inflate the layout for this fragment
         inf = DataBindingUtil.inflate(inflater, R.layout.dashboardblog, container, false)
         language = requireArguments().get("language").toString()
+        //It seems to be failing here
+        //TODO - It seems to be failing here
 
         recyclerViewBlog = inf.blogrv
         recyclerViewBlog.apply {
@@ -67,6 +68,11 @@ class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity, BlogFragmentAc
             Log.e(TAG, e.message.toString())
         }
         return inf.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.blog)
     }
 
     override fun onViewBlogSuccess(inflatedView: View, bloglist: ArrayList<BlogPost>) {

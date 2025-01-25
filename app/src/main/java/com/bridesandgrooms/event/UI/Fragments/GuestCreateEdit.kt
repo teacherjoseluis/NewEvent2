@@ -3,6 +3,7 @@ package com.bridesandgrooms.event.UI.Fragments
 import Application.AnalyticsManager
 import Application.GuestCreationException
 import Application.GuestDeletionException
+import Application.UserRetrievalException
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
@@ -28,6 +29,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.addGuest
 import com.bridesandgrooms.event.Functions.deleteGuest
 import com.bridesandgrooms.event.Functions.editGuest
@@ -40,6 +42,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.launch
+
 //import kotlinx.android.synthetic.main.new_guest.*
 //import kotlinx.android.synthetic.main.task_editdetail.*
 
@@ -77,7 +81,16 @@ class GuestCreateEdit : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        user = User.getUser()
+
+        lifecycleScope.launch {
+            try {
+                user = User.getUser()
+            } catch (e: UserRetrievalException) {
+                displayErrorMsg(getString(R.string.errorretrieveuser))
+            } catch (e: Exception) {
+                displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+            }
+        }
         binding = DataBindingUtil.inflate(inflater, R.layout.new_guest, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
@@ -368,6 +381,14 @@ class GuestCreateEdit : Fragment() {
                 binding.bannerCardView.visibility = View.INVISIBLE
             }
         }
+    }
+
+    private fun displayErrorMsg(message: String) {
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     fun finish() {

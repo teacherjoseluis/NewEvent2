@@ -1,7 +1,9 @@
 package com.bridesandgrooms.event.Model
 
+import Application.SessionAccessException
 import Application.UserCreationException
 import Application.UserEditionException
+import Application.UserRetrievalException
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
@@ -174,10 +176,8 @@ class UserDBHelper : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
             cursor.close()
             return user
         } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
-            return null
-//        } finally {
-//            db.close()
+            //return null
+            throw UserRetrievalException(e.toString())
         }
     }
 

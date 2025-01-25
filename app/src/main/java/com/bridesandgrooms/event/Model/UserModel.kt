@@ -117,74 +117,51 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
 
     @ExperimentalCoroutinesApi
     suspend fun getUser(): User {
-        val userId =
-            UserSessionHelper.getUserSession("user_id") as String
+        val userId = UserSessionHelper.getUserSession("user_id") as String
         val postRef = myRef.child("User").child(userId)
         val user = User()
 
         try {
-            Log.d(TAG, "Path where User information is found in Firebase: ${postRef}")
-            //user = postRef.awaitsSingle()?.getValue(User::class.java)!!
-            //user!!.userid = postRef.key.toString()
-            //--------------------------------------------------------------------------------
-            user.eventid =
-                postRef.awaitsSingle()?.child("eventid")?.getValue(String::class.java)!!
+            Log.d(TAG, "Path where User information is found in Firebase: $postRef")
 
-            user.shortname =
-                postRef.awaitsSingle()?.child("shortname")!!.getValue(String::class.java)!!
-            user.email = postRef.awaitsSingle()?.child("email")!!.getValue(String::class.java)!!
-            user.country =
-                postRef.awaitsSingle()?.child("country")!!.getValue(String::class.java)!!
-            user.language =
-                postRef.awaitsSingle()?.child("language")!!.getValue(String::class.java)!!
-            user.createdatetime =
-                postRef.awaitsSingle()?.child("createdatetime")!!.getValue(String::class.java)!!
-            user.authtype =
-                postRef.awaitsSingle()?.child("authtype")!!.getValue(String::class.java)!!
-            user.imageurl =
-                postRef.awaitsSingle()?.child("imageurl")!!.getValue(String::class.java)!!
-            user.role = postRef.awaitsSingle()?.child("role")!!.getValue(String::class.java)!!
-            user.hasevent = if (postRef.awaitsSingle()?.hasChild("Event") == true) {
-                "Y"
-            } else {
-                "N"
+            // Fetch the entire user node in one call
+            val snapshot = postRef.awaitsSingle()
+
+            // Map the data to the User object
+            snapshot?.let {
+                user.userid = userId
+                user.eventid = it.child("eventid").getValue(String::class.java) ?: ""
+                user.shortname = it.child("shortname").getValue(String::class.java) ?: ""
+                user.email = it.child("email").getValue(String::class.java) ?: ""
+                user.country = it.child("country").getValue(String::class.java) ?: ""
+                user.language = it.child("language").getValue(String::class.java) ?: ""
+                user.createdatetime = it.child("createdatetime").getValue(String::class.java) ?: ""
+                user.authtype = it.child("authtype").getValue(String::class.java) ?: ""
+                user.imageurl = it.child("imageurl").getValue(String::class.java) ?: ""
+                user.role = it.child("role").getValue(String::class.java) ?: ""
+                user.hasevent = if (it.hasChild("Event")) "Y" else "N"
+                user.hastask = it.child("hastask").getValue(String::class.java) ?: ""
+                user.haspayment = it.child("haspayment").getValue(String::class.java) ?: ""
+                user.hasguest = it.child("hasguest").getValue(String::class.java) ?: ""
+                user.hasvendor = it.child("hasvendor").getValue(String::class.java) ?: ""
+                user.tasksactive = it.child("tasksactive").getValue(Int::class.java) ?: 0
+                user.taskscompleted = it.child("taskscompleted").getValue(Int::class.java) ?: 0
+                user.payments = it.child("payments").getValue(Int::class.java) ?: 0
+                user.guests = it.child("guests").getValue(Int::class.java) ?: 0
+                user.vendors = it.child("vendors").getValue(Int::class.java) ?: 0
+                user.eventbudget = it.child("eventbudget").getValue(Int::class.java)?.toString() ?: ""
+                user.numberguests = it.child("numberguests").getValue(Int::class.java) ?: 0
+                user.status = it.child("status").getValue(String::class.java) ?: ""
+                user.distanceunit = it.child("distanceunit").getValue(String::class.java) ?: ""
             }
-            user.hastask =
-                postRef.awaitsSingle()?.child("hastask")!!.getValue(String::class.java)!!
-            user.haspayment =
-                postRef.awaitsSingle()?.child("haspayment")!!.getValue(String::class.java)!!
-            user.hasguest =
-                postRef.awaitsSingle()?.child("hasguest")!!.getValue(String::class.java)!!
-            user.hasvendor =
-                postRef.awaitsSingle()?.child("hasvendor")!!.getValue(String::class.java)!!
-            user.tasksactive =
-                postRef.awaitsSingle()?.child("tasksactive")!!.getValue(Int::class.java)!!
-            user.taskscompleted =
-                postRef.awaitsSingle()?.child("taskscompleted")!!.getValue(Int::class.java)!!
-            user.payments =
-                postRef.awaitsSingle()?.child("payments")!!.getValue(Int::class.java)!!
-            user.guests = postRef.awaitsSingle()?.child("guests")!!.getValue(Int::class.java)!!
-            user.vendors = postRef.awaitsSingle()?.child("vendors")!!.getValue(Int::class.java)!!
-            user.eventbudget =
-                postRef.awaitsSingle()?.child("eventbudget")!!.getValue(Int::class.java)!!
-                    .toString()
-            user.numberguests =
-                postRef.awaitsSingle()?.child("numberguests")!!.getValue(Int::class.java)!!
-            user.status =
-                postRef.awaitsSingle()?.child("status")!!.getValue(String::class.java)!!
-            user.distanceunit =
-                postRef.awaitsSingle()?.child("distanceunit")!!.getValue(String::class.java)!!
-            //--------------------------------------------------------------------------------
-            Log.d(TAG, "User Key found in Firebase: ${user.userid}")
 
-            //val eventmodel = EventModel()
-            //user.eventid = eventmodel.getEventKey(user.userid!!)
-            //Log.d(TAG, "Event Key found in Firebase for the User: ${user.eventid}")
+            Log.d(TAG, "User Key found in Firebase: ${user.userid}")
         } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
+            Log.e(TAG, "Error retrieving user: ${e.message}")
         }
         return user
     }
+
 
     private fun editUserAddTask(value: Int) {
         coroutineScope.launch {
