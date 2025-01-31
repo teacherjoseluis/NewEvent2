@@ -281,7 +281,7 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
             // Calculate start and end dates for the given month and year
             val startDate = LocalDate.of(year, month + 1, 1) // month is zero-based, so we add 1
             val endDate = startDate.plusMonths(1).minusDays(1) // end of the month
-            val dateFormat = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.getDefault())
+            val dateFormat = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.getDefault())
 
             val cursor: Cursor = db.rawQuery(
                 "SELECT DISTINCT date FROM PAYMENT " +

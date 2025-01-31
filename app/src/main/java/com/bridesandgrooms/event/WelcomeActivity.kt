@@ -21,31 +21,33 @@ class WelcomeActivity : AppCompatActivity() {
 
         val context = this@WelcomeActivity
 
-        try {
-            userSession = User.getUser()
-        } catch (e: UserRetrievalException) {
-            displayErrorMsg(getString(R.string.errorretrieveuser))
-        } catch (e: Exception) {
-            displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
-        }
+        lifecycleScope.launch {
+            try {
+                userSession = User.getUserAsync()
+            } catch (e: UserRetrievalException) {
+                displayErrorMsg(getString(R.string.errorretrieveuser))
+            } catch (e: Exception) {
+                displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+            }
 
-        binding = DataBindingUtil.setContentView(context, R.layout.welcome_user)
-        showWelcomeScreen1()
+            binding = DataBindingUtil.setContentView(context, R.layout.welcome_user)
+            showWelcomeScreen1()
 
-        binding.welcomeHeader.text =
-            context.getString(R.string.app_welcome, userSession.shortname ?: "")
-        binding.welcomebutton1.setOnClickListener {
-            //AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Note")
-            showWelcomeScreen2()
-            binding.welcomebutton2.setOnClickListener {
-                lifecycleScope.launch {
-                    try {
-                        userSession.updateUserStatus("A", context)
-                    } catch (e: Exception) {
-                        println(e.message)
+            binding.welcomeHeader.text =
+                context.getString(R.string.app_welcome, userSession.shortname ?: "")
+            binding.welcomebutton1.setOnClickListener {
+                //AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Note")
+                showWelcomeScreen2()
+                binding.welcomebutton2.setOnClickListener {
+                    lifecycleScope.launch {
+                        try {
+                            userSession.updateUserStatus("A", context)
+                        } catch (e: Exception) {
+                            println(e.message)
+                        }
                     }
+                    finish()
                 }
-                finish()
             }
         }
     }

@@ -127,7 +127,7 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
 
         lifecycleScope.launch {
             try {
-                userSession = User.getUser()
+                userSession = User.getUserAsync()
             } catch (e: UserRetrievalException) {
                 displayErrorMsg(getString(R.string.errorretrieveuser))
             } catch (e: Exception) {

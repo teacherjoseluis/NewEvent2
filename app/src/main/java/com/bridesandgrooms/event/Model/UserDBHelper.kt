@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.Model
 
+import Application.FirebaseDataImportException
 import Application.SessionAccessException
 import Application.UserCreationException
 import Application.UserEditionException
@@ -19,6 +20,8 @@ import com.bridesandgrooms.event.Functions.CoRDeleteTask
 import com.bridesandgrooms.event.Functions.CoRDeleteVendor
 import com.bridesandgrooms.event.Functions.CoROnboardUser
 import com.bridesandgrooms.event.Functions.UserSessionHelper
+import com.bridesandgrooms.event.Model.EventDBHelper.Companion
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class UserDBHelper : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
     CoRAddEditPayment, CoRDeletePayment, CoRAddEditGuest,
@@ -35,6 +38,17 @@ class UserDBHelper : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
     var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
     var nexthandleron: CoROnboardUser? = null
+
+
+    fun firebaseImport(user: User) : Boolean {
+        try {
+            insert(user)
+        } catch (e: Exception){
+            Log.e(TAG, e.message.toString())
+            throw FirebaseDataImportException("Error importing User data: $e")
+        }
+        return true
+    }
 
     fun editUserStatus(status: String){
         val userId =

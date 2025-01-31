@@ -42,7 +42,7 @@ internal fun convertToFilenameString(date: Date): String {
 
 internal fun convertToDBString(date: Date): String {
     // Define the pattern to match your filename requirement
-    val pattern = "d/M/yyyy"
+    val pattern = "d/MM/yyyy"
     val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
     return simpleDateFormat.format(date)
 }

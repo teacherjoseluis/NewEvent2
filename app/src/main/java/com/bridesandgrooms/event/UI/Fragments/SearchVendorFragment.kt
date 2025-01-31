@@ -68,12 +68,14 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
         setHasOptionsMenu(true)
         context = requireContext()
 
-        try {
-            user = User.getUser()
-        } catch (e: UserRetrievalException) {
-            displayErrorMsg(getString(R.string.errorretrieveuser))
-        } catch (e: Exception) {
-            displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+        lifecycleScope.launch {
+            try {
+                user = User.getUserAsync()
+            } catch (e: UserRetrievalException) {
+                displayErrorMsg(getString(R.string.errorretrieveuser))
+            } catch (e: Exception) {
+                displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+            }
         }
     }
 

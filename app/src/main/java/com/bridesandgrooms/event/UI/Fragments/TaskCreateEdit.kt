@@ -93,18 +93,21 @@ class TaskCreateEdit : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        try {
-            userSession = User.getUser()
-        } catch (e: UserRetrievalException) {
-            displayErrorMsg(getString(R.string.errorretrieveuser))
-        } catch (e: Exception) {
-            displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+        lifecycleScope.launch {
+            try {
+                userSession = User.getUserAsync()
+            } catch (e: UserRetrievalException) {
+                displayErrorMsg(getString(R.string.errorretrieveuser))
+            } catch (e: Exception) {
+                displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+            }
+
+            val eventBudget = userSession.eventbudget
+
+            val thisEventBudgetSt = eventBudget.replace("[^\\d.]".toRegex(), "")
+            thisEventBudget = thisEventBudgetSt.toFloatOrNull() ?: 0.0f
+
         }
-
-        val eventBudget = userSession.eventbudget
-
-        val thisEventBudgetSt = eventBudget.replace("[^\\d.]".toRegex(), "")
-        thisEventBudget = thisEventBudgetSt.toFloatOrNull() ?: 0.0f
 
         binding = DataBindingUtil.inflate(inflater, R.layout.task_editdetail, container, false)
 

@@ -38,7 +38,7 @@ class MapsActivity : AppCompatActivity() {
 //        val userdbhelper = UserDBHelper(this)
         lifecycleScope.launch {
             try {
-                user = User.getUser()
+                user = User.getUserAsync()
             } catch (e: UserRetrievalException) {
                 displayErrorMsg(getString(R.string.errorretrieveuser))
             } catch (e: Exception) {

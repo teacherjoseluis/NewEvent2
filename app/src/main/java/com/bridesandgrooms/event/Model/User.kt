@@ -105,7 +105,10 @@ class User(
 
                     val firebaseUser = authResult.user!!
                     if (eventId.isNullOrEmpty()) {
-                        throw EventNotFoundException("Event for user $firebaseUser is NULL or has not been found", firebaseUser)
+                        throw EventNotFoundException(
+                            "Event for user $firebaseUser is NULL or has not been found",
+                            firebaseUser
+                        )
                     }
                     importEventFromFirebase(context, firebaseUser.uid)
                 } catch (e: com.google.firebase.FirebaseNetworkException) {
@@ -128,7 +131,10 @@ class User(
 
                     val firebaseUser = authResult.user!!
                     if (eventId.isNullOrEmpty()) {
-                        throw EventNotFoundException("Event for user $firebaseUser is NULL or has not been found", firebaseUser)
+                        throw EventNotFoundException(
+                            "Event for user $firebaseUser is NULL or has not been found",
+                            firebaseUser
+                        )
                     }
                     importEventFromFirebase(context, firebaseUser.uid)
                 } catch (e: com.google.firebase.FirebaseNetworkException) {
@@ -195,7 +201,7 @@ class User(
         val currentTimeMillis = System.currentTimeMillis()
         UserSessionHelper.saveUserSession(null, currentTimeMillis, "last_signed_in_at")
 
-        if(!eventId.isNullOrEmpty()){
+        if (!eventId.isNullOrEmpty()) {
             UserSessionHelper.saveUserSession(eventId, null, "event_id")
         }
     }
@@ -323,7 +329,7 @@ class User(
         return stepsBeanList
     }
 
-    suspend fun updateUserStatus(status: String, context: Context){
+    suspend fun updateUserStatus(status: String, context: Context) {
         val userModel = UserModel()
         userModel.editUserStatus(status)
         val userDB = UserDBHelper()
@@ -379,8 +385,10 @@ class User(
         @OptIn(ExperimentalCoroutinesApi::class)
         suspend fun getUserAsync(): User {
             val userId = UserSessionHelper.getUserSession("user_id") as String
-            return UserDBHelper().getUser(userId)?.takeIf { it.userid?.isNotEmpty() == true }
-                ?: UserModel().getUser()
+            val userDBHelper = UserDBHelper()
+            val user = userDBHelper.getUser(userId)?.takeIf { it.userid?.isNotEmpty() == true }
+                ?: UserModel().getUser().also { userDBHelper.firebaseImport(it) }
+            return user
         }
 
         fun getUser(): User {
