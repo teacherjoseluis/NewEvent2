@@ -3,7 +3,6 @@ package com.bridesandgrooms.event.Model
 import Application.FirebaseDataImportException
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
@@ -21,9 +20,9 @@ class GuestDBHelper() : CoRAddEditGuest, CoRDeleteGuest {
     suspend fun firebaseImport(uid: String) : Boolean {
         val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val guestList: ArrayList<Guest>
-        val eventModel = EventModel()
+        //val eventModel = EventModel()
         try {
-            val eventKey = eventModel.getEventKey(uid)
+            //val eventKey = eventModel.getEventKey(uid)
             val guestModel = GuestModel()
 
             guestList = guestModel.getGuests()

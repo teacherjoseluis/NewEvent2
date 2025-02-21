@@ -147,6 +147,8 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                     val userPassword = binding.editPasswordsignup1.text.toString()
 
                     lifecycleScope.launch {
+                        user = User()
+                        
                         try {
                             val signUpResult = user.signup(userEmail, userPassword)
                             if (signUpResult) {

@@ -399,17 +399,8 @@
     <string name="app_welcome_text_4">You can see what\'s trending on dresses, bouquets, cakes, etc.</string>
     <string name="app_welcome_text_5">Also you can read our Blog if you want to see our fresh content and news.</string>
     <string name="error_unknown">There is an unknown error. Please reach out to support@bridesandgrooms.us</string>
-
-    <string-array name="role" >
-        <item>Bride</item>
-        <item>Groom</item>
-    </string-array>
-
-    <string-array name="country" >
-        <item>Mexico</item>
-        <item>Chile</item>
-        <item>Peru</item>
-    </string-array>
+    <string name="language">Choose your language</string>
+    <string name="spinnerlanguage">Language</string>
 
     <string-array name="distance_units" >
         <item>miles</item>

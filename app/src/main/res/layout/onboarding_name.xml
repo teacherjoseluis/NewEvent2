@@ -55,7 +55,50 @@
         android:contentDescription="@string/weddingringslogo" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/nameonboaarding"
+        android:id="@+id/languageonboarding"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline40">
+
+        <TextView
+            android:id="@+id/languagelabel"
+            style="@style/Title_Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/language"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/languagespinner"
+            style="@style/BGSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/spinnerlanguage"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true"
+            app:layout_constraintTop_toBottomOf="@+id/languagelabel">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/language_autocomplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Body_Small"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nameonboarding"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -91,18 +134,18 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/what_s_your_name"
                 android:tag="NAME"
-                android:textAppearance="@style/Body_Small"/>
+                android:textAppearance="@style/Body_Small" />
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        <TextView-->
-<!--            android:id="@+id/rolelabel"-->
-<!--            style="@style/Heading6"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:text="@string/are_you_bride_groom"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/nameinput" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/rolelabel"-->
+        <!--            style="@style/Heading6"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="5dp"-->
+        <!--            android:text="@string/are_you_bride_groom"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/nameinput" />-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/spinner"
@@ -125,32 +168,41 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/spinner2"
-            style="@style/BGSpinner"
+            style="@style/BGTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/whats_your_country"
             app:layout_constraintTop_toBottomOf="@+id/spinner">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/country_autocomplete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/country"
-            android:textAppearance="@style/Body_Small"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <!--            <androidx.appcompat.widget.AppCompatAutoCompleteTextView-->
+            <!--                android:id="@+id/country_autocomplete"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:entries="@array/country"-->
+            <!--                android:textAppearance="@style/Body_Small"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/country_autocomplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:tag="NAME"
+                android:textAppearance="@style/Body_Small" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/eventonboaarding"
+        android:id="@+id/eventonboarding"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline40">
@@ -172,10 +224,10 @@
             android:orientation="horizontal"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:visibility="invisible"
-            app:layout_constraintTop_toBottomOf="@id/eventlabel"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventlabel">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/eventnameinput"
@@ -195,44 +247,44 @@
                     android:textAppearance="@style/Body_Small" />
             </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/eventbudgetinput"
-            style="@style/BGTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eventnameinput">
-
-            <com.blackcat.currencyedittext.CurrencyEditText
-                android:id="@+id/etbudget"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/wedding_budget"
-                android:maxLength="12"
-                android:padding="10dp"
-                android:tag="MONEY"
-                android:textAppearance="@style/Body_Small"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/eventnumberguests"
-            style="@style/BGTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eventbudgetinput">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etnumberguests"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/eventbudgetinput"
+                style="@style/BGTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/number_guests"
-                android:inputType="number"
-                android:tag="NUMBER"
-                android:textAppearance="@style/Body_Small" />
-        </com.google.android.material.textfield.TextInputLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventnameinput">
+
+                <com.blackcat.currencyedittext.CurrencyEditText
+                    android:id="@+id/etbudget"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="@string/wedding_budget"
+                    android:maxLength="12"
+                    android:padding="10dp"
+                    android:tag="MONEY"
+                    android:textAppearance="@style/Body_Small" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/eventnumberguests"
+                style="@style/BGTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventbudgetinput">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etnumberguests"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/number_guests"
+                    android:inputType="number"
+                    android:tag="NUMBER"
+                    android:textAppearance="@style/Body_Small" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -244,9 +296,9 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@id/eventlabel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventlabel">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/eventdateinput"
@@ -261,10 +313,10 @@
                     android:id="@+id/etPlannedDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/what_day_is_your_event"
-                    android:inputType="date"
                     android:clickable="false"
                     android:focusable="false"
+                    android:hint="@string/what_day_is_your_event"
+                    android:inputType="date"
                     android:textAppearance="@style/Body_Small" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -281,35 +333,54 @@
                     android:id="@+id/etPlannedTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/at_what_time"
-                    android:inputType="date"
                     android:clickable="false"
                     android:focusable="false"
-                    android:textAppearance="@style/Body_Small"/>
+                    android:hint="@string/at_what_time"
+                    android:inputType="date"
+                    android:textAppearance="@style/Body_Small" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:clickable="false"-->
+            <!--                android:focusable="false"-->
+            <!--                android:inputType="date"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/eventtimeinput">-->
+
+            <!--                <TextView-->
+            <!--                    style="@style/BG_ActionTextSmall"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:text="@string/where_will_you_celebrate" />-->
+
+            <!--                <androidx.fragment.app.FragmentContainerView-->
+            <!--                    android:id="@+id/etlocation"-->
+            <!--                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content" />-->
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
+
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/eventlocationinput"
+                style="@style/BGTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:inputType="date"
-                android:clickable="false"
-                android:focusable="false"
                 app:layout_constraintTop_toBottomOf="@id/eventtimeinput">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/BG_ActionTextSmall"
-                    android:text="@string/where_will_you_celebrate"/>
-
-                <androidx.fragment.app.FragmentContainerView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etlocation"
-                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:hint="@string/where_will_you_celebrate"
+                    android:textAppearance="@style/Body_Small" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -318,11 +389,24 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
+        android:id="@+id/submitlanguage"
+        style="@style/BG_ActionButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/continuemessage"
+        android:visibility="visible"
+        app:backgroundTint="@color/Primary_cream"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/submituser"
         style="@style/BG_ActionButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/continuemessage"
+        android:visibility="invisible"
         app:backgroundTint="@color/Primary_cream"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -334,6 +418,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/continuemessage"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -344,6 +429,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/submit"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

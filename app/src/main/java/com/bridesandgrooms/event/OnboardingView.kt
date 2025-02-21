@@ -11,7 +11,9 @@ import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import TimePickerFragment
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
@@ -23,26 +25,27 @@ import kotlinx.coroutines.*
 import android.util.Log
 import android.view.View
 
-import android.view.View.OnFocusChangeListener
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Functions.addPayment
 import com.bridesandgrooms.event.Functions.addTask
 import com.bridesandgrooms.event.Model.Payment
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.getautocreateTaskPayment
+import com.bridesandgrooms.event.Functions.getUserCountry
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.UI.Fragments.TaskCreateEdit
 import com.bridesandgrooms.event.databinding.OnboardingNameBinding
-import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
@@ -78,8 +81,8 @@ class OnboardingView : AppCompatActivity() {
             authtype = intent.getStringExtra("authtype").toString()
             status =
                 "0" // Hardcoded value indicating the user is new and needs to go through the Welcome sequence
-            language = this@OnboardingView.resources.configuration.locales.get(0).language
-            country = this@OnboardingView.resources.configuration.locales.get(0).country
+            //language = this@OnboardingView.resources.configuration.locales.get(0).language
+            country = getUserCountry(this@OnboardingView)
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.onboarding_name)
@@ -90,134 +93,178 @@ class OnboardingView : AppCompatActivity() {
             Places.initialize(this@OnboardingView, getString(R.string.google_maps_key), newLocale)
         }
 
-        // Initialize the AutocompleteSupportFragment.
-        val autocompleteFragment =
-            supportFragmentManager.findFragmentById(R.id.etlocation)
-                    as AutocompleteSupportFragment
+        val autocompleteLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val data = result.data
+                    val place = Autocomplete.getPlaceFromIntent(data!!)
 
-        autocompleteFragment.setCountry(userSession.country)
-        autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT)
-        autocompleteFragment.setPlaceFields(
-            listOf(
-                Place.Field.ID,
-                Place.Field.NAME,
-                Place.Field.LAT_LNG,
-                Place.Field.ADDRESS,
-                Place.Field.PHONE_NUMBER,
-                Place.Field.RATING,
-                Place.Field.USER_RATINGS_TOTAL
-            )
+                    binding.etlocation.setText(place.name)
+                    eventplaceid = place.id
+                    eventlatitude = place.latLng!!.latitude
+                    eventlongitude = place.latLng!!.longitude
+                    eventaddress = place.address
+                    eventlocationname = place.name
+                } else if (result.resultCode == AutocompleteActivity.RESULT_ERROR) {
+                    val status = Autocomplete.getStatusFromIntent(result.data!!)
+                    Log.e("Places", "Error: ${status.statusMessage}")
+                }
+            }
+
+        showLanguageOnboarding()
+        // Define the list of supported languages
+        val languageMap = mapOf(
+            "English" to "en",
+            "Español" to "es",
+            "Portugues" to "pt",
+            "Français" to "fr"
         )
+
+        val languages = arrayOf("English", "Español", "Portugues", "Français") // Example languages
+        val languageAdapter =
+            ArrayAdapter(
+                this@OnboardingView,
+                android.R.layout.simple_dropdown_item_1line,
+                languages
+            )
+
+        binding.languageAutocomplete.setAdapter(languageAdapter)
+        // Handle selection
+        binding.languageAutocomplete.setOnItemClickListener { _, _, position, _ ->
+            val selectedLanguage = languages[position] // Get selected language name
+            val languageCode = languageMap[selectedLanguage] ?: "en" // Default to English if not found
+
+            // Save and apply the new language
+            saveLanguagePreference(languageCode)
+            setAppLocale(languageCode)
+
+            // Restart activity to apply changes
+            recreate()
+        }
+
+        // Apply saved language on load
+        val savedLanguage = getSavedLanguage()
+        setAppLocale(savedLanguage)
+
 
         //---------------------------------------
         // Hide Layout for Onboarding Event
-        showNameOnboarding()
-        binding.nameinputedit.onFocusChangeListener = focusChangeListener
-        //--------------------------------------------------------------------
-        val roles = arrayOf("Bride", "Groom") // Example roles
-        val roleAdapter =
-            ArrayAdapter(this@OnboardingView, android.R.layout.simple_dropdown_item_1line, roles)
-        binding.roleAutocomplete.setAdapter(roleAdapter)
-        //--------------------------------------------------------------------
-        val countries = arrayOf("MX", "CL", "PE") // Example countries
-        val countryAdapter = ArrayAdapter(
-            this@OnboardingView,
-            android.R.layout.simple_dropdown_item_1line,
-            countries
-        )
-        binding.countryAutocomplete.setAdapter(countryAdapter)
-        //--------------------------------------------------------------------
+        binding.submitlanguage.setOnClickListener {
+            if (validateLanguageOnboard()) {
+                userSession.language = binding.languageAutocomplete.text.toString()
 
-        binding.submituser.setOnClickListener {
-            val isValid = validateAllInputsNameOnboard()
-            if (isValid) {
-                userSession.shortname = binding.nameinputedit.text.toString()
-                userSession.role = binding.roleAutocomplete.text.toString()
-                userSession.country = binding.countryAutocomplete.text.toString()
+                showNameOnboarding()
+                binding.nameinputedit.onFocusChangeListener = focusChangeListener
 
-                showEventOnboarding()
-                binding.etname.onFocusChangeListener = focusChangeListener
-                binding.etbudget.onFocusChangeListener = focusChangeListener
-                binding.etnumberguests.onFocusChangeListener = focusChangeListener
 
-                binding.submitevent.setOnClickListener {
-                    val isValid = validateAllInputsEventOnboard()
-                    if (isValid) {
-                        userSession.eventbudget = binding.etbudget.text.toString()
-                        userSession.numberguests = binding.etnumberguests.text.toString().toInt()
+                val roles = arrayOf("Bride", "Groom") // Example roles
+                val roleAdapter =
+                    ArrayAdapter(
+                        this@OnboardingView,
+                        android.R.layout.simple_dropdown_item_1line,
+                        roles
+                    )
 
-                        showEventOnboarding2()
-                        binding.etPlannedDate.setOnClickListener {
-                            showDatePickerDialog()
-                        }
+                binding.roleAutocomplete.setAdapter(roleAdapter)
+                binding.countryAutocomplete.setText(userSession.country)
 
-                        binding.etPlannedTime.setOnClickListener {
-                            showTimePickerDialog()
-                        }
+                binding.submituser.setOnClickListener {
+                    if (validateAllInputsNameOnboard()) {
+                        userSession.shortname = binding.nameinputedit.text.toString()
+                        userSession.role = binding.roleAutocomplete.text.toString()
+                        userSession.country = binding.countryAutocomplete.text.toString()
 
-                        autocompleteFragment.setOnPlaceSelectedListener(object :
-                            PlaceSelectionListener {
-                            override fun onPlaceSelected(p0: Place) {
-                                eventplaceid = p0.id
-                                eventlatitude = p0.latLng!!.latitude
-                                eventlongitude = p0.latLng!!.longitude
-                                eventaddress = p0.address
-                                eventlocationname = p0.name
-                            }
+                        showEventOnboarding()
 
-                            override fun onError(p0: Status) {
-                                // Here it's where I Should be implementing the case when the provider has not been found
-                                //Toast.makeText(applicationContext, "" + p0.toString(), Toast.LENGTH_LONG).show();
-                            }
-                        })
+                        binding.etname.onFocusChangeListener = focusChangeListener
+                        binding.etbudget.onFocusChangeListener = focusChangeListener
+                        binding.etnumberguests.onFocusChangeListener = focusChangeListener
 
-                        binding.submitevent2.setOnClickListener {
-                            val event = Event().apply {
-                                placeid = eventplaceid.toString()
-                                latitude = eventlatitude
-                                longitude = eventlongitude
-                                address = eventaddress.toString()
-                                name = binding.etname.text.toString()
-                                date = binding.etPlannedDate.text.toString()
-                                time = binding.etPlannedTime.text.toString()
-                                location = eventlocationname.toString()
-                            }
+                        binding.submitevent.setOnClickListener {
+                            if (validateAllInputsEventOnboard()) {
+                                userSession.eventbudget = binding.etbudget.text.toString()
+                                userSession.numberguests =
+                                    binding.etnumberguests.text.toString().toInt()
 
-                            if (!checkPermissions()) {
-                                alertBox()
-                            } else {
-                                lifecycleScope.launch {
-                                    try {
-                                        onBoarding(userSession, event)
-                                        showBanner(getString(R.string.successadduser), false)
-                                        showBanner(getString(R.string.eventcreated), false)
+                                showEventOnboarding2()
 
-                                        if (autocreateTaskPayment) {
-                                            val taskitem = Task(dummy = true)
-                                            val paymentitem = Payment(dummy = true)
-                                            try {
-                                                addTask(
-                                                    taskitem
-                                                )
-                                                addPayment(
-                                                    paymentitem
-                                                )
-                                            } catch (e: TaskCreationException) {
-                                                displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
-                                            } catch (e: PaymentCreationException) {
-                                                displayToastMsg(getString(R.string.errorPaymentCreation) + e.toString())
-                                            }
-                                        }
-                                    } catch (e: UserOnboardingException) {
-                                        displayToastMsg(getString(R.string.errorUserOnboarding) + e.toString())
-                                    } catch (e: Exception) {
-                                        Log.d(TAG, e.toString())
+                                binding.etPlannedDate.setOnClickListener {
+                                    showDatePickerDialog()
+                                }
+
+                                binding.etPlannedTime.setOnClickListener {
+                                    showTimePickerDialog()
+                                }
+
+                                binding.etlocation.setOnClickListener {
+                                    val fields = listOf(
+                                        Place.Field.ID,
+                                        Place.Field.NAME,
+                                        Place.Field.LAT_LNG,
+                                        Place.Field.ADDRESS
+                                    )
+                                    val intent = Autocomplete.IntentBuilder(
+                                        AutocompleteActivityMode.OVERLAY,
+                                        fields
+                                    )
+                                        .setCountry(userSession.country)
+                                        .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                                        .build(this)
+                                    autocompleteLauncher.launch(intent)
+                                }
+
+                                binding.submitevent2.setOnClickListener {
+                                    val event = Event().apply {
+                                        placeid = eventplaceid.toString()
+                                        latitude = eventlatitude
+                                        longitude = eventlongitude
+                                        address = eventaddress.toString()
+                                        name = binding.etname.text.toString()
+                                        date = binding.etPlannedDate.text.toString()
+                                        time = binding.etPlannedTime.text.toString()
+                                        location = eventlocationname.toString()
                                     }
-                                    finish()
+
+                                    if (!checkPermissions()) {
+                                        alertBox()
+                                    } else {
+                                        lifecycleScope.launch {
+                                            try {
+                                                onBoarding(userSession, event)
+                                                showBanner(
+                                                    getString(R.string.successadduser),
+                                                    false
+                                                )
+                                                showBanner(getString(R.string.eventcreated), false)
+
+                                                if (autocreateTaskPayment) {
+                                                    val taskitem = Task(dummy = true)
+                                                    val paymentitem = Payment(dummy = true)
+                                                    try {
+                                                        addTask(
+                                                            taskitem
+                                                        )
+                                                        addPayment(
+                                                            paymentitem
+                                                        )
+                                                    } catch (e: TaskCreationException) {
+                                                        displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                                                    } catch (e: PaymentCreationException) {
+                                                        displayToastMsg(getString(R.string.errorPaymentCreation) + e.toString())
+                                                    }
+                                                }
+                                            } catch (e: UserOnboardingException) {
+                                                displayToastMsg(getString(R.string.errorUserOnboarding) + e.toString())
+                                            } catch (e: Exception) {
+                                                Log.d(TAG, e.toString())
+                                            }
+                                            finish()
+                                        }
+                                    }
+                                    val resultIntent = Intent()
+                                    setResult(Activity.RESULT_OK, resultIntent)
                                 }
                             }
-                            val resultIntent = Intent()
-                            setResult(Activity.RESULT_OK, resultIntent)
                         }
                     }
                 }
@@ -225,23 +272,57 @@ class OnboardingView : AppCompatActivity() {
         }
     }
 
+    // Save language selection in SharedPreferences
+    private fun saveLanguagePreference(languageCode: String) {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        prefs.edit().putString("app_language", languageCode).apply()
+    }
+
+    // Retrieve saved language
+    private fun getSavedLanguage(): String {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        return prefs.getString("app_language", "en") ?: "en"
+    }
+
+    // Change app language dynamically
+    private fun setAppLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+
+        val config = Configuration()
+        config.setLocale(locale)
+
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
+    }
+
+    private fun showLanguageOnboarding() {
+        binding.languageonboarding.visibility = ConstraintLayout.VISIBLE
+        binding.submitlanguage.visibility = Button.VISIBLE
+        binding.nameonboarding.visibility = ConstraintLayout.INVISIBLE
+        binding.submituser.visibility = Button.INVISIBLE
+        binding.eventonboarding.visibility = ConstraintLayout.INVISIBLE
+    }
+
     private fun showNameOnboarding() {
-        binding.nameonboaarding.visibility = ConstraintLayout.VISIBLE
+        binding.languageonboarding.visibility = ConstraintLayout.INVISIBLE
+        binding.submitlanguage.visibility = Button.INVISIBLE
+
+        binding.nameonboarding.visibility = ConstraintLayout.VISIBLE
         binding.submituser.visibility = Button.VISIBLE
 
-        binding.eventonboaarding.visibility = ConstraintLayout.INVISIBLE
+        binding.eventonboarding.visibility = ConstraintLayout.INVISIBLE
         binding.submitevent.visibility = Button.INVISIBLE
         binding.submitevent2.visibility = Button.INVISIBLE
     }
 
     private fun showEventOnboarding() {
-        binding.nameonboaarding.visibility = ConstraintLayout.INVISIBLE
+        binding.nameonboarding.visibility = ConstraintLayout.INVISIBLE
         binding.submituser.visibility = Button.INVISIBLE
 
-        binding.eventonboaarding.visibility = ConstraintLayout.VISIBLE
-        binding.eventonboaarding.findViewById<ConstraintLayout>(R.id.page1).visibility =
+        binding.eventonboarding.visibility = ConstraintLayout.VISIBLE
+        binding.eventonboarding.findViewById<ConstraintLayout>(R.id.page1).visibility =
             ConstraintLayout.VISIBLE
-        binding.eventonboaarding.findViewById<ConstraintLayout>(R.id.page2).visibility =
+        binding.eventonboarding.findViewById<ConstraintLayout>(R.id.page2).visibility =
             ConstraintLayout.INVISIBLE
 
         binding.submitevent.visibility = Button.VISIBLE
@@ -249,17 +330,30 @@ class OnboardingView : AppCompatActivity() {
     }
 
     private fun showEventOnboarding2() {
-        binding.nameonboaarding.visibility = ConstraintLayout.INVISIBLE
+        binding.nameonboarding.visibility = ConstraintLayout.INVISIBLE
         binding.submituser.visibility = Button.INVISIBLE
 
-        binding.eventonboaarding.visibility = ConstraintLayout.VISIBLE
-        binding.eventonboaarding.findViewById<ConstraintLayout>(R.id.page1).visibility =
+        binding.eventonboarding.visibility = ConstraintLayout.VISIBLE
+        binding.eventonboarding.findViewById<ConstraintLayout>(R.id.page1).visibility =
             ConstraintLayout.INVISIBLE
-        binding.eventonboaarding.findViewById<ConstraintLayout>(R.id.page2).visibility =
+        binding.eventonboarding.findViewById<ConstraintLayout>(R.id.page2).visibility =
             ConstraintLayout.VISIBLE
 
         binding.submitevent.visibility = Button.INVISIBLE
         binding.submitevent2.visibility = Button.VISIBLE
+    }
+
+    private fun validateLanguageOnboard(): Boolean {
+        var isValid = true
+        val validator = InputValidator(this)
+
+        val spinnerValidation =
+            validator.validateSpinner(binding.languageAutocomplete.toString())
+        if (!spinnerValidation) {
+            binding.languageAutocomplete.error = validator.errorCode
+            isValid = false
+        }
+        return isValid
     }
 
     private fun validateAllInputsNameOnboard(): Boolean {

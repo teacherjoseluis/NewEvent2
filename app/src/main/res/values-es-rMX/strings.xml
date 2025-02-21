@@ -290,7 +290,7 @@
     <string name="error_networkconnection">Existe un problema al intentar conectartse a la red. Para poder llevar a cabo esta acción necesitas asegurarte que exista acceso a Internet.</string>
     <string name="emailverification_title">Verificación de correo electrónico</string>
     <string name="emailverification_message">Verifica tu bandeja de entrada y haga clic en el enlace de verificación que te enviamos para completar el proceso. Una vez verificado, podrás volver a iniciar sesión en la aplicación y disfrutar de todas sus funciones.</string>
-    <string name="lackpermissions_message">La aplicación neceista permisos para completar esta acción</string>
+    <string name="lackpermissions_message">La aplicación necesita permisos para completar esta acción</string>
     <string name="edit_guest">Editar Invitado</string>
     <string name="new_task">Nueva Tarea</string>
     <string name="edit_task">Detalle de la Tarea</string>
@@ -389,18 +389,8 @@
     <string name="app_welcome_text_4">Puedes conocer las tendencias en vestidos, ramos, pasteles, etc.</string>
     <string name="app_welcome_text_5">También puedes leer nuestro Blog si quieres ver nuestro contenido mas reciente.</string>
     <string name="error_unknown">Existe un error desconocido. Por favor contáctanos a support@bridesandgrooms.us</string>
-
-
-    <string-array name="role" >
-        <item>Novia</item>
-        <item>Novio</item>
-    </string-array>
-
-    <string-array name="country" >
-        <item>México</item>
-        <item>Chile</item>
-        <item>Peru</item>
-    </string-array>
+    <string name="language">Seleccione su idioma</string>
+    <string name="spinnerlanguage">Idioma</string>
 
     <string-array name="distance_units" >
         <item>millas</item>
