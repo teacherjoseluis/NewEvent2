@@ -62,7 +62,7 @@ class DatabaseHelper private constructor(context: Context) : SQLiteOpenHelper(
             eventDB.firebaseImport()
             taskDB.firebaseImport(uid)
             paymentDB.firebaseImport(uid)
-            guestDB.firebaseImport(uid)
+            guestDB.firebaseImport()
             vendorDB.firebaseImport(uid)
         } catch (e: FirebaseDataImportException){
             println(e.message)

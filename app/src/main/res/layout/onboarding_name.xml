@@ -159,7 +159,6 @@
                 android:id="@+id/role_autocomplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/role"
                 android:textAppearance="@style/Body_Small"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

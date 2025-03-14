@@ -42,6 +42,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.FirebaseFunctionsException
 import kotlinx.coroutines.launch
 
 //import kotlinx.android.synthetic.main.new_guest.*
@@ -69,6 +71,8 @@ class GuestCreateEdit : Fragment() {
             parentLayout?.error = null
         }
     }
+
+    val companionCounts = mutableMapOf("Adult" to 0, "Child" to 0, "Baby" to 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,12 +108,14 @@ class GuestCreateEdit : Fragment() {
             binding.phoneinputedit.setText(guestItem.phone)
             binding.mailinputedit.setText(guestItem.email)
 
-            when (guestItem.companion) {
-                "adult" -> binding.companionsgroup.check(binding.chipadult.id)
-                "child" -> binding.companionsgroup.check(binding.chipchild.id)
-                "baby" -> binding.companionsgroup.check(binding.chipbaby.id)
-                else -> binding.companionsgroup.check(binding.chipnone.id)
-            }
+//            when (guestItem.companion) {
+//                "adult" -> binding.companionsgroup.check(binding.chipadult.id)
+//                "child" -> binding.companionsgroup.check(binding.chipchild.id)
+//                "baby" -> binding.companionsgroup.check(binding.chipbaby.id)
+//                else -> binding.companionsgroup.check(binding.chipnone.id)
+//            }
+            decodeCompanionString(guestItem.companion)
+
             when (guestItem.table) {
                 "family" -> binding.guestgroup.check(binding.chipfamily.id)
                 "extendedfamily" -> binding.guestgroup.check(binding.chipextended.id)
@@ -159,8 +165,87 @@ class GuestCreateEdit : Fragment() {
                 saveguest()
             }
         }
+        setupCounters()
         return binding.root
     }
+
+    private fun setupCounters() {
+        val counters = listOf(
+            Triple(binding.buttonMinusAdult, binding.textCountAdult, binding.buttonPlusAdult),
+            Triple(binding.buttonMinusChild, binding.textCountChild, binding.buttonPlusChild),
+            Triple(binding.buttonMinusBaby, binding.textCountBaby, binding.buttonPlusBaby)
+        )
+
+        counters.forEachIndexed { index, (minusButton, textView, plusButton) ->
+            val category = when (index) {
+                0 -> "Adult"
+                1 -> "Child"
+                2 -> "Baby"
+                else -> ""
+            }
+
+            fun updateText() {
+                textView.text = companionCounts[category].toString()
+            }
+
+            minusButton.setOnClickListener {
+                if (companionCounts[category]!! > 0) {
+                    companionCounts[category] = companionCounts[category]!! - 1
+                    updateText()
+                }
+            }
+
+            plusButton.setOnClickListener {
+                if (companionCounts[category]!! < 5) {
+                    companionCounts[category] = companionCounts[category]!! + 1
+                    updateText()
+                }
+            }
+
+            updateText() // Initialize the text
+        }
+    }
+
+    fun getCompanionString(): String {
+        val companions = mutableListOf<String>()
+
+        if (companionCounts["Adult"]!! > 0) companions.add("${companionCounts["Adult"]} Adult(s)")
+        if (companionCounts["Child"]!! > 0) companions.add("${companionCounts["Child"]} Child(ren)")
+        if (companionCounts["Baby"]!! > 0) companions.add("${companionCounts["Baby"]} Baby(ies)")
+
+        return if (companions.isEmpty()) "None" else companions.joinToString(", ")
+    }
+
+    fun decodeCompanionString(companionString: String) {
+        // Reset all values to 0 before updating
+        companionCounts["Adult"] = 0
+        companionCounts["Child"] = 0
+        companionCounts["Baby"] = 0
+
+        if (companionString == "None") {
+            updateCounterUI()
+            return
+        }
+
+        // Split the string by ", " to get each category
+        val regex = """(\d+) (Adult|Child|Baby)""".toRegex()
+
+        regex.findAll(companionString).forEach { match ->
+            val count = match.groupValues[1].toInt()
+            val category = match.groupValues[2]
+
+            companionCounts[category] = count
+        }
+
+        updateCounterUI() // Apply changes to the UI
+    }
+
+    private fun updateCounterUI() {
+        binding.textCountAdult.text = companionCounts["Adult"].toString()
+        binding.textCountChild.text = companionCounts["Child"].toString()
+        binding.textCountBaby.text = companionCounts["Baby"].toString()
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -289,33 +374,28 @@ class GuestCreateEdit : Fragment() {
         binding.phoneinputedit.isEnabled = false
         binding.mailinputedit.isEnabled = false
         binding.rsvpgroup.isEnabled = false
-        binding.companionsgroup.isEnabled = false
+        //binding.companionsgroup.isEnabled = false
         binding.button.isEnabled = false
 
         var id = binding.rsvpgroup.checkedChipId
         var chipselected = binding.rsvpgroup.findViewById<Chip>(id)
-        var chiptextValue = chipselected.text.toString()
-        val categoryRSVP = when (chiptextValue) {
-            getString(R.string.yes) -> "y"
-            getString(R.string.no) -> "n"
-            getString(R.string.pending) -> "pending"
-            else -> "pending"
-        }
 
-        id = binding.companionsgroup.checkedChipId
-        chipselected = binding.companionsgroup.findViewById(id)
-        chiptextValue = chipselected.text.toString()
-        val categoryCompanions = when (chiptextValue) {
-            getString(R.string.adult) -> "adult"
-            getString(R.string.child) -> "child"
-            getString(R.string.baby) -> "baby"
-            getString(R.string.none) -> "none"
-            else -> "none"
-        }
+        var categoryRSVP = chipselected.tag.toString()
+
+//        id = binding.companionsgroup.checkedChipId
+//        chipselected = binding.companionsgroup.findViewById(id)
+//        chiptextValue = chipselected.text.toString()
+//        val categoryCompanions = when (chiptextValue) {
+//            getString(R.string.adult) -> "adult"
+//            getString(R.string.child) -> "child"
+//            getString(R.string.baby) -> "baby"
+//            getString(R.string.none) -> "none"
+//            else -> "none"
+//        }
 
         id = binding.guestgroup.checkedChipId
         chipselected = binding.guestgroup.findViewById(id)
-        chiptextValue = chipselected.text.toString()
+        val chiptextValue = chipselected.text.toString()
         var categoryGuests = when (chiptextValue) {
             getString(R.string.family) -> "family"
             getString(R.string.extendedfamily) -> "extendedfamily"
@@ -332,7 +412,7 @@ class GuestCreateEdit : Fragment() {
 
         guestItem.apply {
             rsvp = categoryRSVP
-            companion = categoryCompanions
+            companion = getCompanionString()
             table = categoryGuests
             name = binding.nameinputedit.text.toString()
             phone = binding.phoneinputedit.text.toString()
@@ -340,20 +420,30 @@ class GuestCreateEdit : Fragment() {
         }
 
         if (guestItem.key.isEmpty()) {
-                try {
-                    addGuest(guestItem)
-                } catch (e: GuestCreationException) {
-                    AnalyticsManager.getInstance().trackError(
-                        SCREEN_NAME,
-                        e.message.toString(),
-                        "addGuest()",
-                        e.stackTraceToString()
-                    )
-                    Log.e(TAG, e.message.toString())
+            try {
+                addGuest(guestItem)
+                // ✅ Pass `finish()` as a callback to execute only after user action
+                showSendInvitationDialog(
+                    userId = user.userid!!,
+                    eventId = user.eventid,
+                    guestId = guestItem.key,
+                    language = user.language
+                ) {
+                    finish() // ✅ Now `finish()` happens only AFTER the user takes action
                 }
+            } catch (e: GuestCreationException) {
+                AnalyticsManager.getInstance().trackError(
+                    SCREEN_NAME,
+                    e.message.toString(),
+                    "addGuest()",
+                    e.stackTraceToString()
+                )
+                Log.e(TAG, e.message.toString())
+            }
         } else {
             try {
                 editGuest(guestItem)
+                finish()
             } catch (e: GuestCreationException) {
                 AnalyticsManager.getInstance().trackError(
                     SCREEN_NAME,
@@ -364,8 +454,63 @@ class GuestCreateEdit : Fragment() {
                 Log.e(TaskCreateEdit.TAG, e.message.toString())
             }
         }
-        finish()
     }
+
+    private fun showSendInvitationDialog(
+        userId: String,
+        eventId: String,
+        guestId: String,
+        language: String,
+        onDialogClosed: () -> Unit // ✅ Callback function
+    ) {
+        val alertDialog = AlertDialog.Builder(context)
+            .setTitle("Send Invitation")
+            .setMessage("Would you like to send an invitation to this guest?")
+            .setPositiveButton("Send") { _, _ ->
+                sendRSVPInvitation(userId, eventId, guestId, language)
+                onDialogClosed()
+            }
+            .setNegativeButton("Don't Send") { _, _ ->
+                onDialogClosed() // ✅ Ensure `finish()` is called even if the user declines
+            }
+            .setCancelable(false)
+            .create()
+
+        alertDialog.show()
+    }
+
+    private fun sendRSVPInvitation(userId: String, eventId: String, guestId: String, language: String) {
+        val functions = FirebaseFunctions.getInstance()
+
+        val requestData  = hashMapOf(
+            "userId" to userId,
+            "eventId" to eventId,
+            "guestId" to guestId,
+            "language" to language
+        )
+
+        // ✅ Debugging: Print request data before sending
+        Log.d("RSVP", "Sending data to Cloud Function: $requestData ")
+
+        functions
+            .getHttpsCallable("sendRSVPInvitation")
+            .call(requestData)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val response = task.result?.data as? Map<String, Any>
+                    Log.d("RSVP", "Response received: $response")
+                } else {
+                    Log.e("RSVP", "Error sending invitation email", task.exception)
+                    task.exception?.let {
+                        if (it is FirebaseFunctionsException) {
+                            Log.e("RSVP", "Cloud Function Error Code: ${it.code}")
+                            Log.e("RSVP", "Cloud Function Error Details: ${it.details}")
+                        }
+                    }
+                }
+            }
+    }
+
 
     private fun showBanner(message: String, dismiss: Boolean) {
         //binding.taskname.visibility = View.INVISIBLE

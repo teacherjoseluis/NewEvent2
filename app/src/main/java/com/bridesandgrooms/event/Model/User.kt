@@ -110,7 +110,7 @@ class User(
                             firebaseUser
                         )
                     }
-                    importEventFromFirebase(context, firebaseUser.uid)
+                    importEventFromFirebase(firebaseUser.uid)
                 } catch (e: com.google.firebase.FirebaseNetworkException) {
                     throw NetworkConnectivityException(e.toString())
                 } catch (e: UserAuthenticationException) {
@@ -136,7 +136,7 @@ class User(
                             firebaseUser
                         )
                     }
-                    importEventFromFirebase(context, firebaseUser.uid)
+                    importEventFromFirebase(firebaseUser.uid)
                 } catch (e: com.google.firebase.FirebaseNetworkException) {
                     throw NetworkConnectivityException(e.toString())
                 } catch (e: UserAuthenticationException) {
@@ -207,7 +207,7 @@ class User(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private suspend fun importEventFromFirebase(context: Context, uid: String) {
+    private suspend fun importEventFromFirebase(uid: String) {
         val dbHelper = DatabaseHelper.getInstance()
         dbHelper.updateLocalDB(uid)
     }

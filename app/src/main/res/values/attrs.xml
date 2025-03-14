@@ -3,4 +3,7 @@
     <declare-styleable name="CustomTextInput">
         <attr name="fieldType" format="string" />
     </declare-styleable>
+    <declare-styleable name="CustomChip">
+        <attr name="customProperty" format="string" />
+    </declare-styleable>
 </resources>

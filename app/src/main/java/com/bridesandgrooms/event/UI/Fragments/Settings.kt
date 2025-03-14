@@ -102,24 +102,24 @@ class Settings : Fragment(), IOnBackPressed {
                 }
             }
 
-            val countries = arrayOf("MX", "CL", "PE") // Example countries
-            val countryAdapter = ArrayAdapter(
-                context,
-                android.R.layout.simple_dropdown_item_1line,
-                countries
-            )
-            binding.countryAutocomplete.setAdapter(countryAdapter)
+//            val countries = arrayOf("MX", "CL", "PE") // Example countries
+//            val countryAdapter = ArrayAdapter(
+//                context,
+//                android.R.layout.simple_dropdown_item_1line,
+//                countries
+//            )
+//            binding.countryAutocomplete.setAdapter(countryAdapter)
 
-            if (userSession.country.isNotEmpty()) {
-                val matchingCountry =
-                    countries.firstOrNull { it.equals(userSession.country, ignoreCase = true) }
-                if (matchingCountry != null) {
-                    binding.countryAutocomplete.setText(
-                        matchingCountry,
-                        false
-                    ) // Set text without filtering
-                }
-            }
+//            if (userSession.country.isNotEmpty()) {
+//                val matchingCountry =
+//                    countries.firstOrNull { it.equals(userSession.country, ignoreCase = true) }
+//                if (matchingCountry != null) {
+//                    binding.countryAutocomplete.setText(
+//                        matchingCountry,
+//                        false
+//                    ) // Set text without filtering
+//                }
+//            }
 
             val distances = arrayOf("miles", "kilometers") // Example distances
             val distanceAdapter = ArrayAdapter(
@@ -178,12 +178,12 @@ class Settings : Fragment(), IOnBackPressed {
                     isValid = false
                 }
 
-                val spinnerValidation2 =
-                    validator.validateSpinner(binding.countryAutocomplete.toString())
-                if (!spinnerValidation2) {
-                    binding.countryAutocomplete.error = validator.errorCode
-                    isValid = false
-                }
+//                val spinnerValidation2 =
+//                    validator.validateSpinner(binding.countryAutocomplete.toString())
+//                if (!spinnerValidation2) {
+//                    binding.countryAutocomplete.error = validator.errorCode
+//                    isValid = false
+//                }
 
                 val budgetValidation =
                     validator.validate(binding.budgetinput)
@@ -218,7 +218,7 @@ class Settings : Fragment(), IOnBackPressed {
                     userSession.apply {
                         shortname = binding.nameinput.text.toString()
                         role = binding.roleAutocomplete.text.toString()
-                        country = binding.countryAutocomplete.text.toString()
+                        //country = binding.countryAutocomplete.text.toString()
                         eventbudget = binding.budgetinput.text.toString()
                         numberguests = binding.numberguestsinput.text.toString().toIntOrNull() ?: 0
                         distanceunit = binding.distanceAutocomplete.text.toString()

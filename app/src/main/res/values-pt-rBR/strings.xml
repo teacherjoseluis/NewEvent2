@@ -391,6 +391,8 @@
     <string name="error_unknown">Houve um erro desconhecido. Entre em contato com support@bridesandgrooms.us</string>
     <string name="language">Escolha seu idioma</string>
     <string name="spinnerlanguage">Idioma</string>
+    <string name="bride">Noiva</string>
+    <string name="groom">Noivo</string>
 
 
     <string-array name="distance_units">

@@ -20,6 +20,8 @@ import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.UserSessionHelper
 import com.bridesandgrooms.event.Functions.isEventDate
+import com.bridesandgrooms.event.Model.EventModel
+import com.bridesandgrooms.event.Model.GuestDBHelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.UI.Fragments.ContactsAll
 import com.bridesandgrooms.event.UI.Fragments.DashboardActivity
@@ -41,8 +43,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.database.FirebaseDatabase
 import com.nordan.dialog.Animation
 import com.nordan.dialog.NordanAlertDialog
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 //import kotlinx.android.synthetic.main.header_navview.*
 //import kotlinx.android.synthetic.main.header_navview.view.*
@@ -62,6 +66,7 @@ class ActivityContainer : AppCompatActivity() {
     private val LOGINACTIVITY = 123
     private var back_pressed: Long = 0
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
@@ -77,9 +82,36 @@ class ActivityContainer : AppCompatActivity() {
                     val userSession = User.getUserAsync()
                     if (userSession.status == "0") {
                         setContentView(R.layout.welcome_user)
-                        val welcomeActivity =
-                            Intent(this@ActivityContainer, WelcomeActivity::class.java)
+                        val welcomeActivity = Intent(this@ActivityContainer, WelcomeActivity::class.java)
                         startActivity(welcomeActivity)
+                    } else {
+                        val eventModel = EventModel()
+                        val needsRefresh = eventModel.checkNeedsRefresh()
+                        val database = FirebaseDatabase.getInstance()
+                        val eventRef = database.getReference("User")
+                            .child(userSession.userid!!)
+                            .child("Event")
+                            .child(userSession.eventid)
+                            .child("eventNeedsRefresh")
+
+                        // Call createView() immediately to avoid UI delays
+                        createView()
+
+                        if (needsRefresh) {
+                            val guestDB = GuestDBHelper()
+
+                            // Run refresh operations in a separate coroutine (Non-blocking)
+                            lifecycleScope.launch {
+                                try {
+                                    guestDB.firebaseImport() // Runs in the background
+
+                                    // Reset eventNeedsRefresh flag in Firebase after the background refresh
+                                    eventRef.setValue(false)
+                                } catch (e: Exception) {
+                                    displayErrorMsg("Error refreshing guest data: ${e.message}")
+                                }
+                            }
+                        }
                     }
                 } catch (e: UserRetrievalException) {
                     displayErrorMsg(getString(R.string.errorretrieveuser))
@@ -87,7 +119,6 @@ class ActivityContainer : AppCompatActivity() {
                     displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
                 }
             }
-            createView()
         }
     }
 

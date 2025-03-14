@@ -17,7 +17,7 @@ class GuestDBHelper() : CoRAddEditGuest, CoRDeleteGuest {
     var nexthandlerdel: CoRDeleteGuest? = null
 
     @ExperimentalCoroutinesApi
-    suspend fun firebaseImport(uid: String) : Boolean {
+    suspend fun firebaseImport(): Boolean {
         val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         val guestList: ArrayList<Guest>
         //val eventModel = EventModel()

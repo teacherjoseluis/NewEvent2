@@ -178,7 +178,9 @@
                                 android:layout_height="wrap_content"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:text="@string/yes" />
+                                android:text="@string/yes"
+                                android:tag="y"/>
+
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chip2"
@@ -187,7 +189,8 @@
                                 android:layout_height="wrap_content"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:text="@string/no" />
+                                android:text="@string/no"
+                                android:tag="n"/>
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chip3"
@@ -196,7 +199,8 @@
                                 android:layout_height="wrap_content"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:text="@string/pending" />
+                                android:text="@string/pending"
+                                android:tag="pending"/>
                         </com.google.android.material.chip.ChipGroup>
                     </LinearLayout>
 
@@ -212,10 +216,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="20dp"
-                        android:layout_marginRight="20dp"
                         android:orientation="vertical"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -228,42 +230,163 @@
                             android:text="@string/companions"
                             android:textAppearance="@style/Body_Medium" />
 
-                        <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/companionsgroup"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            app:checkedChip="@id/chipnone"
-                            app:singleSelection="true">
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipadult"
-                                style="@style/BG_Chip"
-                                android:layout_width="wrap_content"
+                            <!-- Adult Counter -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/adult" />
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="8dp">
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipchild"
-                                style="@style/BG_Chip"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/child" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/adult"
+                                    android:textAppearance="@style/Body_Medium"
+                                    android:layout_marginEnd="10dp" />
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipbaby"
-                                style="@style/BG_Chip"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/baby" />
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center"
+                                    android:background="@drawable/counter_background"
+                                    android:padding="5dp">
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipnone"
-                                style="@style/BG_Chip"
-                                android:layout_width="wrap_content"
+                                    <ImageButton
+                                        android:id="@+id/buttonMinusAdult"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:background="@null"
+                                        android:src="@drawable/ic_minus"
+                                        android:contentDescription="Decrease" />
+
+                                    <TextView
+                                        android:id="@+id/textCountAdult"
+                                        android:layout_width="40dp"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="0"
+                                        android:textAppearance="@style/Body_Medium" />
+
+                                    <ImageButton
+                                        android:id="@+id/buttonPlusAdult"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:background="@null"
+                                        android:src="@drawable/ic_plus"
+                                        android:contentDescription="Increase" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <!-- Child Counter -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/none" />
-                        </com.google.android.material.chip.ChipGroup>
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/child"
+                                    android:textAppearance="@style/Body_Medium"
+                                    android:layout_marginEnd="10dp" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center"
+                                    android:background="@drawable/counter_background"
+                                    android:padding="5dp">
+
+                                    <ImageButton
+                                        android:id="@+id/buttonMinusChild"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:background="@null"
+                                        android:src="@drawable/ic_minus"
+                                        android:contentDescription="Decrease" />
+
+                                    <TextView
+                                        android:id="@+id/textCountChild"
+                                        android:layout_width="40dp"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="0"
+                                        android:textAppearance="@style/Body_Medium" />
+
+                                    <ImageButton
+                                        android:id="@+id/buttonPlusChild"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:background="@null"
+                                        android:src="@drawable/ic_plus"
+                                        android:contentDescription="Increase" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <!-- Baby Counter -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/baby"
+                                    android:textAppearance="@style/Body_Medium"
+                                    android:layout_marginEnd="10dp" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center"
+                                    android:background="@drawable/counter_background"
+                                    android:padding="5dp">
+
+                                    <ImageButton
+                                        android:id="@+id/buttonMinusBaby"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:background="@null"
+                                        android:src="@drawable/ic_minus"
+                                        android:contentDescription="Decrease" />
+
+                                    <TextView
+                                        android:id="@+id/textCountBaby"
+                                        android:layout_width="40dp"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="0"
+                                        android:textAppearance="@style/Body_Medium" />
+
+                                    <ImageButton
+                                        android:id="@+id/buttonPlusBaby"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:background="@null"
+                                        android:src="@drawable/ic_plus"
+                                        android:contentDescription="Increase" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
                     </LinearLayout>
+
+
+
+
 
                     <View
                         android:layout_width="match_parent"

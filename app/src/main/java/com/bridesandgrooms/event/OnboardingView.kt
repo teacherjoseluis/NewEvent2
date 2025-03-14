@@ -157,7 +157,7 @@ class OnboardingView : AppCompatActivity() {
                 binding.nameinputedit.onFocusChangeListener = focusChangeListener
 
 
-                val roles = arrayOf("Bride", "Groom") // Example roles
+                val roles = arrayOf(getString(R.string.bride), getString(R.string.groom)) // Example roles
                 val roleAdapter =
                     ArrayAdapter(
                         this@OnboardingView,

@@ -401,6 +401,8 @@
     <string name="error_unknown">There is an unknown error. Please reach out to support@bridesandgrooms.us</string>
     <string name="language">Choose your language</string>
     <string name="spinnerlanguage">Language</string>
+    <string name="bride">Bride</string>
+    <string name="groom">Groom</string>
 
     <string-array name="distance_units" >
         <item>miles</item>

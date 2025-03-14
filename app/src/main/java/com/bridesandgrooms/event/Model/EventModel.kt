@@ -155,6 +155,29 @@ class EventModel : CoRAddEditEvent, CoROnboardUser {
         return eventItem!!
     }
 
+    suspend fun checkNeedsRefresh(): Boolean {
+        return try {
+            val eventNeedsRefreshRef = myRef
+                .child("User")
+                .child(userId)
+                .child("Event")
+                .child(eventid)
+                .child("eventNeedsRefresh")
+
+            // Get the data from Firebase at the specific path and wait for the result.
+            val dataSnapshot = eventNeedsRefreshRef.get().await()
+
+            // Get the boolean value directly from the DataSnapshot.
+            // Use getValue(Boolean::class.java) to get the value as a Boolean.
+            // Use ?: false to provide a default value of false if the value is null.
+            dataSnapshot.getValue(Boolean::class.java) ?: false
+        } catch (e: Exception) {
+            // Handle exceptions appropriately (e.g., logging, returning a default value).
+            println("Error checking eventNeedsRefresh for user $userId, event $eventId: ${e.message}")
+            false // Or throw the exception if it should propagate.
+        }
+    }
+
     @ExperimentalCoroutinesApi
     suspend fun Query.awaitsSingle(): DataSnapshot? =
         suspendCancellableCoroutine { continuation ->

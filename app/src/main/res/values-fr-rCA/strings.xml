@@ -2,7 +2,7 @@
     <string name="app_name">Brides &amp; Grooms</string>
     <string name="newevent_eventnameinput_en">Entrez le nom de l\'événement</string>
     <string name="newevent_eventdateinput_en">Sélectionnez la date de l\'événement</string>
-    <string name="newevent_eventtimeinput_en">Sélectionnez l\'heure de l'événement</string>
+    <string name="newevent_eventtimeinput_en">Sélectionnez l\'heure de l\'événement</string>
     <string name="newevent_eventlocationinput_en">Sélectionnez le lieu de l\'événement</string>
     <string name="title_activity_maps">Carte</string>
     <string name="success_email_login">Connexion par courriel réussie</string>
@@ -74,7 +74,7 @@
     <string name="card_title">Titre de la carte</string>
     <string name="contactavatar">Avatar de contact</string>
     <string name="newtaskactionbutton">Nouveau bouton d\'action de tâche</string>
-    <string name="loading_blog_posts_to_show">Chargement des articles de blog...</string>
+    <string name="loading_blog_posts_to_show">Chargement des articles de blog…</string>
     <string name="there_are_no_guests_yet_invited">Aucun invité n\'a encore été invité</string>
     <string name="emptystate">État vide</string>
     <string name="newtaskbutton">Bouton de tâche</string>
@@ -243,7 +243,7 @@
     <string name="error_locationinput">L\'emplacement est requis</string>
     <string name="pickercanceled">Sélection annulée.</string>
     <string name="successaddguest">L\'invité a été ajouté avec succès</string>
-    <string name="erroraddguest">Une erreur est survenue lors de l\'ajout de l'invité</string>
+    <string name="erroraddguest">Une erreur est survenue lors de l\'ajout de l\'invité</string>
     <string name="successdeleteguest">L\'invité a été supprimé avec succès</string>
     <string name="errordeleteguest">Une erreur est survenue lors de la suppression de l\'invité</string>
     <string name="successeditguest">L\'invité a été modifié avec succès</string>
@@ -307,8 +307,8 @@
     <string name="task_completed">Terminée</string>
     <string name="task_notcompleted">À terminer</string>
     <string name="goback">Retour</string>
-    <string name="what_s_your_events_budget">Quel est le budget de votre événement ?</string>
-    <string name="how_many_guests">Combien d\'invités prévoyez-vous d'inviter ?</string>
+    <string name="what_s_your_events_budget">Quel est le budget de votre événement?</string>
+    <string name="how_many_guests">Combien d\'invités prévoyez-vous d\'inviter?</string>
     <string name="number_guests">Invités prévus</string>
     <string name="wedding_details">Détails du mariage</string>
     <string name="error_budgetrequired">Le budget est requis</string>
@@ -390,7 +390,9 @@
     <string name="error_unknown">Une erreur inconnue est survenue. Veuillez contacter support@bridesandgrooms.us</string>
     <string name="language">Choisissez votre langue</string>
     <string name="spinnerlanguage">Langue</string>
-    
+    <string name="bride">Mariée</string>
+    <string name="groom">Marié</string>
+
     <string-array name="distance_units">
         <item>miles</item>
         <item>kilomètres</item>

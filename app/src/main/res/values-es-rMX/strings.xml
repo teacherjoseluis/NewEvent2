@@ -391,6 +391,8 @@
     <string name="error_unknown">Existe un error desconocido. Por favor contáctanos a support@bridesandgrooms.us</string>
     <string name="language">Seleccione su idioma</string>
     <string name="spinnerlanguage">Idioma</string>
+    <string name="bride">Novia</string>
+    <string name="groom">Novia</string>
 
     <string-array name="distance_units" >
         <item>millas</item>
