@@ -42,6 +42,7 @@ import com.bridesandgrooms.event.Functions.editPayment
 import com.bridesandgrooms.event.Functions.validateOldDate
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
+import com.bridesandgrooms.event.UI.Fragments.MyNotes.Companion
 import com.bridesandgrooms.event.databinding.PaymentEditdetailBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
@@ -157,13 +158,14 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         binding.paymentnameinputedit.onFocusChangeListener = focusChangeListener
         binding.paymentdateinputedit.onFocusChangeListener = focusChangeListener
         binding.paymentdateinputedit.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "paymentdateinputedit", "click")
             showDatePickerDialog()
         }
         binding.paymentamountinputedit.onFocusChangeListener = focusChangeListener
 
         binding.savebuttonpayment.setOnClickListener {
             AnalyticsManager.getInstance()
-                .trackUserInteraction(GuestCreateEdit.SCREEN_NAME, "Save_Payment")
+                .trackUserInteraction(GuestCreateEdit.SCREEN_NAME, "Save_Payment", null)
             val isValid = validateAllInputs()
             if (isValid) {
                 savePayment()
@@ -206,7 +208,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
                         android.R.string.yes
                     ) { _, _ ->
                         AnalyticsManager.getInstance()
-                            .trackUserInteraction(SCREEN_NAME, "Delete_Payment")
+                            .trackUserInteraction(SCREEN_NAME, "Delete_Payment", null)
                         if (!PermissionUtils.checkPermissions(context, "calendar")) {
                             val permissions = PermissionUtils.requestPermissionsList("calendar")
                             requestPermissions(permissions, PERMISSION_CODE)
@@ -360,6 +362,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
 
                     val openSettingsButton = binding.permissions.root.findViewById<Button>(R.id.permissionsbutton)
                     openSettingsButton.setOnClickListener {
+                        AnalyticsManager.getInstance().trackSettingsChange(SCREEN_NAME, "permissionwording")
                         // Create an intent to open the app settings for your app
                         val intent = Intent()
                         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS

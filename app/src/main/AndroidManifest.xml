@@ -107,7 +107,7 @@
         <!--        <activity android:name=".NewTask_TaskDetail" />-->
         <activity android:name=".NewTask_PaymentDetail" />
         <activity
-            android:name=".TaskPaymentList"
+            android:name=".UI.Fragments.TaskPaymentList"
             android:theme="@style/AppTheme" />
         <!--        <activity android:name=".Task_EditDetail" />-->
         <activity android:name=".Payment_EditDetail" />
@@ -177,10 +177,10 @@
             android:name=".UI.Activities.ExportPDF"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".BlogContent"
+            android:name=".UI.Fragments.BlogContent"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".FragmentGallery"
+            android:name=".UI.Fragments.FragmentGallery"
             android:theme="@style/AppTheme" />
 
         <meta-data

@@ -47,6 +47,7 @@ import com.bridesandgrooms.event.UI.Adapters.TaskAdapter
 import com.bridesandgrooms.event.databinding.TaskEditdetailBinding
 import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
+import com.bridesandgrooms.event.UI.Fragments.GuestsAll.Companion
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
@@ -182,13 +183,14 @@ class TaskCreateEdit : Fragment() {
         binding.tasknameinputedit.onFocusChangeListener = focusChangeListener
         binding.taskdateinputedit.onFocusChangeListener = focusChangeListener
         binding.taskdateinputedit.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "taskdateinputedit", "click")
             showDatePickerDialog()
         }
         binding.taskbudgetinputedit.onFocusChangeListener = focusChangeListener
 
         binding.savebuttontask.setOnClickListener {
             AnalyticsManager.getInstance()
-                .trackUserInteraction(GuestCreateEdit.SCREEN_NAME, "Save_Task")
+                .trackUserInteraction(GuestCreateEdit.SCREEN_NAME, "Save_Task", null)
             val isValid = validateAllInputs()
             if (isValid) {
                 saveTask()
@@ -224,7 +226,7 @@ class TaskCreateEdit : Fragment() {
                         android.R.string.yes
                     ) { _, _ ->
                         AnalyticsManager.getInstance()
-                            .trackUserInteraction(SCREEN_NAME, "Delete_Task")
+                            .trackUserInteraction(SCREEN_NAME, "Delete_Task", null)
                         if (!PermissionUtils.checkPermissions(context, "calendar")) {
                             val permissions = PermissionUtils.requestPermissionsList("calendar")
                             requestPermissions(permissions, PERMISSION_CODE)
@@ -250,7 +252,7 @@ class TaskCreateEdit : Fragment() {
             }
 
             R.id.complete_task -> {
-                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Complete_Task")
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Complete_Task", null)
                 if (taskItem.status == TaskAdapter.ACTIVETASK) {
                     taskItem.status = TaskAdapter.COMPLETETASK
                 } else if (taskItem.status == TaskAdapter.COMPLETETASK) {
@@ -450,6 +452,7 @@ class TaskCreateEdit : Fragment() {
                     val openSettingsButton =
                         binding.permissions.root.findViewById<Button>(R.id.permissionsbutton)
                     openSettingsButton.setOnClickListener {
+                        AnalyticsManager.getInstance().trackSettingsChange(SCREEN_NAME, "permissionwording")
                         // Create an intent to open the app settings for your app
                         val intent = Intent()
                         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -472,6 +475,7 @@ class TaskCreateEdit : Fragment() {
         if (dismiss) {
             binding.dismissButton.visibility = View.VISIBLE
             binding.dismissButton.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "dismissButton", "click")
                 binding.bannerCardView.visibility = View.INVISIBLE
             }
         }

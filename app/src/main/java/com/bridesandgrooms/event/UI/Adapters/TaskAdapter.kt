@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.Category.Companion.getCategory
@@ -20,7 +19,8 @@ import com.bridesandgrooms.event.Functions.editTask
 import com.bridesandgrooms.event.Model.*
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.TPT_TaskFragmentActionListener
+import com.bridesandgrooms.event.UI.Adapters.SearchVendorAdapter.Companion
+import com.bridesandgrooms.event.UI.Fragments.TPT_TaskFragmentActionListener
 import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
@@ -152,6 +152,7 @@ class TaskAdapter(
 
         init {
             taskCardView.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "taskCardView", "click")
                 handleClick()
             }
         }
@@ -187,7 +188,7 @@ class TaskAdapter(
         recyclerView: RecyclerView,
         action: String
     ) {
-        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Complete Task")
+        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Complete Task", null)
         //val user = User().getUser()
         if (action == CHECKACTION) {
             val taskswift = taskList[position]
@@ -213,7 +214,7 @@ class TaskAdapter(
         recyclerView: RecyclerView,
         action: String
     ) {
-        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Delete Task")
+        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Delete Task", null)
         //val user = User().getUser()
         val taskswift = taskList[position]
 

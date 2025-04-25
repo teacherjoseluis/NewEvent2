@@ -4,8 +4,6 @@ import Application.AnalyticsManager
 import Application.UserRetrievalException
 import TimePickerFragment
 import android.Manifest
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
@@ -43,13 +41,13 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.baoyachi.stepview.HorizontalStepView
-import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.MapsActivity
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.databinding.EventformLayoutBinding
 import com.bridesandgrooms.event.UI.Dialogs.DatePickerFragment
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
+import com.bridesandgrooms.event.UI.Fragments.GuestsAll.Companion
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -212,24 +210,28 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
         binding.eventname.onFocusChangeListener = focusChangeListener
         binding.eventdate.onFocusChangeListener = focusChangeListener
         binding.eventdate.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "eventdate", "click")
             showDatePickerDialog()
         }
 
         binding.eventtime.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "eventtime", "click")
             showTimePickerDialog()
         }
 
         binding.eventlocation.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "eventlocation", "click")
             val locationmap = Intent(context, MapsActivity::class.java)
             locationResultLauncher.launch(locationmap)
         }
 
         binding.editImageActionButton.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "editImageActionButton", "click")
             showImagePickerDialog()
         }
 
         binding.savebutton.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Edit_Event")
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Edit_Event", null)
             val isValid = validateAllInputs()
             if (isValid) {
                 saveEvent()
@@ -322,12 +324,6 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
             uri = resultUri
 
             binding.eventimage.setImageURI(uri)
-//            Glide.with(this@MainActivity)
-//                .load(uri)
-//                .placeholder(R.drawable.avatar2)  // Placeholder while loading
-//                .into(binding.eventimage)
-
-            // Check if the user has triggered the save operation
             saveEvent()
         }
     }

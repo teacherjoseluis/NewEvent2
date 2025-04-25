@@ -122,7 +122,7 @@ class VendorCreateEdit : Fragment() {
         })
 
         binding.button.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Add_Vendor")
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Add_Vendor", null)
             val isValid = validateAllInputs()
             if (isValid) {
                 saveVendor()
@@ -155,13 +155,13 @@ class VendorCreateEdit : Fragment() {
         return when (item.itemId) {
             // Removing the Vendor
             R.id.remove_vendor -> {
-                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Remove_Vendor")
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Remove_Vendor", null)
                 AlertDialog.Builder(context)
                     .setTitle(getString(R.string.title_delete))
                     .setMessage(getString(R.string.delete_confirmation))
                     .setPositiveButton(android.R.string.yes) { _, _ ->
                         AnalyticsManager.getInstance()
-                            .trackUserInteraction(SCREEN_NAME, "Delete_Vendor")
+                            .trackUserInteraction(SCREEN_NAME, "Delete_Vendor", null)
                         val paymentdb = PaymentDBHelper()
                         if (paymentdb.hasVendorPayments(vendorItem.key) == 0) {
                             try {
@@ -197,7 +197,7 @@ class VendorCreateEdit : Fragment() {
             }
 
             R.id.call_vendor -> {
-                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Call_Vendor")
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Call_Vendor", null)
                 val intent = Intent(
                     Intent.ACTION_DIAL,
                     Uri.fromParts("tel", binding.phoneinputedit.text.toString(), null)
@@ -207,7 +207,7 @@ class VendorCreateEdit : Fragment() {
             }
 
             R.id.email_vendor -> {
-                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Email_Vendor")
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Email_Vendor", null)
                 try {
                     val intent = Intent(Intent.ACTION_SENDTO)
                     intent.data = Uri.parse("mailto:") // only email apps should handle this

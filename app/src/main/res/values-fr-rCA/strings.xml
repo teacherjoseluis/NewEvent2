@@ -146,7 +146,7 @@
     <string name="delete_note">Supprimer la note</string>
     <string name="welcome">Bienvenue</string>
     <string name="what_s_your_name">Quel est votre nom ?</string>
-    <string name="are_you_bride_groom">Êtes-vous Bride/Groom ?</string>
+    <string name="are_you_bride_groom">Quel est votre rôle dans le mariage ?</string>
     <string name="create_an_event">Créer un événement</string>
     <string name="what_s_your_event">Quel est votre événement ?</string>
     <string name="what_day_is_your_event">Quel jour est votre événement ?</string>
@@ -392,9 +392,18 @@
     <string name="spinnerlanguage">Langue</string>
     <string name="bride">Mariée</string>
     <string name="groom">Marié</string>
+    <string name="agerange">Quelle est votre tranche d\'âge ?</string>
+    <string name="gender">Quel est votre genre ?</string>
 
     <string-array name="distance_units">
         <item>miles</item>
         <item>kilomètres</item>
+    </string-array>
+
+    <string-array name="gender_options">
+        <item>Masculin</item>
+        <item>Féminin</item>
+        <item>Autre</item>
+        <item>Préfère ne pas le dire</item>
     </string-array>
 </resources>

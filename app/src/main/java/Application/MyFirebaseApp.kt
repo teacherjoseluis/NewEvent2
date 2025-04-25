@@ -1,6 +1,7 @@
 package Application
 
 import android.app.Application
+import android.content.Context
 import android.content.IntentFilter
 import android.util.Log
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_category_layout
@@ -91,7 +92,10 @@ class MyFirebaseApp : Application() {
                     }
                 }
         }
+
+        appContext = applicationContext
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        AnalyticsManager.getInstance().trackDeviceInfo(this)
 
         // Register Broadcast Receiver
         val intent = IntentFilter("android.intent.action.DATE_CHANGED")
@@ -119,6 +123,7 @@ class MyFirebaseApp : Application() {
 
     companion object {
         lateinit var mFirebaseAnalytics: FirebaseAnalytics
+        lateinit var appContext: Context
         //lateinit var mMobileAds: MobileAds
         private const val TAG = "MyFirebaseApp"
     }

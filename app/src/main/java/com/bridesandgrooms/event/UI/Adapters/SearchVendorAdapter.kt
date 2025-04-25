@@ -17,6 +17,7 @@ import com.bridesandgrooms.event.Functions.addVendor
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Adapters.PaymentAdapter.Companion
 import com.bridesandgrooms.event.UI.Fragments.ContactsAllFragmentActionListener
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragmentActionListener
 import com.bridesandgrooms.event.UI.LetterAvatar
@@ -63,6 +64,7 @@ class SearchVendorAdapter(
 
         init {
             customVendorCardView.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "customVendorCardView", "click")
                 handleClick()
             }
         }

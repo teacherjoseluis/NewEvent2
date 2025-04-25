@@ -19,6 +19,7 @@ import android.widget.TextView
 import com.bridesandgrooms.event.UI.Adapters.GuestAdapter
 import com.bridesandgrooms.event.Model.contactGuest
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Fragments.ContactsAll.Companion
 import com.bridesandgrooms.event.databinding.GuestsAllBinding
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.android.material.appbar.MaterialToolbar
@@ -71,6 +72,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
+                AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"EnterQuery")
                 val filteredModelList = ArrayList<contactGuest>()
                 filter(guestList, p0).forEach { guest->filteredModelList.add(contactGuest(guest)) }
                 rvAdapter = GuestAdapter(this@GuestsAll, filteredModelList, mContext!!)
@@ -205,6 +207,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
         newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_noguestsmsg)
         newView.findViewById<TextView>(R.id.emptystate_cta).setText(R.string.emptystate_noguestscta)
         newView.findViewById<FloatingActionButton>(R.id.fab_action).setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "fabAction", "click")
             callGuestCreateFragment()
         }
     }
@@ -224,7 +227,7 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
     }
 
     companion object {
-        const val SCREEN_NAME = "Guest All"
+        const val SCREEN_NAME = "guest_all.xml"
         const val TAG = "GuestsAll"
     }
 

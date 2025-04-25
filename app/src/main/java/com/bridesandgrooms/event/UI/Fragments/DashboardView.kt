@@ -1,7 +1,7 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
+import Application.AnalyticsManager
 import Application.UserRetrievalException
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.DashboardPagerAdapter
+import com.bridesandgrooms.event.UI.Fragments.DashboardActivity.Companion.SCREEN_NAME
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.launch
 
@@ -57,6 +59,7 @@ class DashboardView : Fragment() {
 
                 tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                     override fun onTabSelected(p0: TabLayout.Tab?) {
+                        AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"TabSelected")
                         val enableforyoutab = RemoteConfigSingleton.get_enable_foryoutab()
                         if ((p0!!.position != 0) && !enableforyoutab) {
                             Toast.makeText(

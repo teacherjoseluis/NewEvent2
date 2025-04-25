@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.FieldValidators
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.widget.EditText
 import com.bridesandgrooms.event.R
@@ -36,10 +37,22 @@ class InputValidator(private val context: Context) {
 
     private fun validateName(name: String): Boolean {
         if (name.isBlank()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "name",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_tasknameinput)
             return false
         }
         if (!TextValidate(name).nameFieldValidate()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "name",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_invalidnameinput)
             return false
         }
@@ -48,16 +61,34 @@ class InputValidator(private val context: Context) {
 
     private fun validateNumber(input: String, min: Int? = null, max: Int? = null): Boolean {
         if (input.isBlank()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "number",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_numberguestsrequired)
             return false
         }
         val value = input.toIntOrNull()  // Converts the string to an integer or returns null if it's not a valid integer
         if (value == null) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "number",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_numberguestsrequired)
             return false
         }
         // Check if the integer is within a specified range, if range parameters are provided
         if ((min != null && value < min) || (max != null && value > max)) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "number",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_numberguestsrequired)
             return false
         }
@@ -66,10 +97,22 @@ class InputValidator(private val context: Context) {
 
     private fun validateDate(date: String): Boolean {
         if (date.isBlank()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "date",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_taskdateinput)
             return false
         }
         if (!date.matches(Regex("""\d{4}-\d{2}-\d{2}"""))) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "date",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_invaliddate)
             return false
         }
@@ -79,10 +122,22 @@ class InputValidator(private val context: Context) {
 
     private fun validatePassword(password: String): Boolean {
         if (password.isEmpty()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "password",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.password_requiredformat)
             return false
         }
         if (password.length < 8) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "password",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.password_requiredformat)
             return false
         }
@@ -93,6 +148,12 @@ class InputValidator(private val context: Context) {
         // Create a matcher to check the password
         val matcher = pattern.matcher(password)
         if (!matcher.matches()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "password",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.password_requiredformat)
             return false
         }
@@ -103,10 +164,22 @@ class InputValidator(private val context: Context) {
         // Regex to match US phone numbers with parentheses and hyphens
         val regex = Regex("""^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$""")
         if (phone.isEmpty()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "phone",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_vendorphoneinput)
             return false
         }
         if (!phone.matches(regex)) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "phone",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_vendorphoneinputformat)
             return false
         }
@@ -117,6 +190,12 @@ class InputValidator(private val context: Context) {
         val trimmedEmail = email.trim()  // Remove any leading or trailing whitespace
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(trimmedEmail).matches()) {
             errorCode = context.getString(R.string.resetpwderror_invalidcredentials)
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "email",
+                "validation",
+                null
+            )
             return false
         }
         return true
@@ -124,6 +203,12 @@ class InputValidator(private val context: Context) {
 
     fun validateSpinner(selection: String): Boolean {
         if (selection.isEmpty()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "spinner",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.spinner_error)
             return false
         }
@@ -132,6 +217,12 @@ class InputValidator(private val context: Context) {
 
     private fun validateTextBody(body: String): Boolean {
         if (body.isBlank()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "text body",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_tasknameinput)
             return false
         }
@@ -140,6 +231,12 @@ class InputValidator(private val context: Context) {
 
     private fun validateMoney(amount: String): Boolean {
         if (amount.isBlank()) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "amount",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_invalid_money_input)
             return false
         }
@@ -148,6 +245,12 @@ class InputValidator(private val context: Context) {
         val regex = Regex("""^\d+(\.\d{1,2})?$""")
 
         if (!amount.matches(regex)) {
+            AnalyticsManager.getInstance().trackError(
+                null,
+                "amount",
+                "validation",
+                null
+            )
             errorCode = context.getString(R.string.error_invalid_money_input)
             return false
         }

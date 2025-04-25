@@ -1,5 +1,6 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
+import Application.AnalyticsManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -19,8 +20,9 @@ import com.bridesandgrooms.event.MVP.TableGuestsActivityPresenter
 import Application.MyFirebaseApp
 import android.util.Log
 import com.bridesandgrooms.event.Model.TableGuests
-import com.bridesandgrooms.event.UI.Fragments.ContactsAll
-import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
+import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Fragments.GuestsAll.Companion.SCREEN_NAME
+import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragment.Companion
 import com.bridesandgrooms.event.databinding.TableguestsactivityBinding
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.google.android.gms.ads.AdListener
@@ -84,17 +86,7 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
             }
 
             override fun onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-                // ------- Analytics call ----------------
-                val bundle = Bundle()
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "ADOPENED")
-                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-                MyFirebaseApp.mFirebaseAnalytics.logEvent(
-                    FirebaseAnalytics.Event.SELECT_ITEM,
-                    bundle
-                )
-                //----------------------------------------
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Ad", "click")
             }
 
             override fun onAdClicked() {
@@ -123,12 +115,14 @@ class TableGuestsActivity : Fragment(), TableGuestsActivityPresenter.TableGuestL
         }
 
         inf.fabNewGuestTG.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "fabNewGuestTG", "click")
             val newguest = Intent(context, GuestCreateEdit::class.java)
             newguest.putExtra("userid", "")
             startActivityForResult(newguest, REQUEST_CODE_GUESTS)
         }
 
         inf.fabContactGuestTG.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "fabContactGuestTG", "click")
             val newguest = Intent(context, ContactsAll::class.java)
             newguest.putExtra("guestid", "")
             startActivityForResult(newguest, REQUEST_CODE_CONTACTS)

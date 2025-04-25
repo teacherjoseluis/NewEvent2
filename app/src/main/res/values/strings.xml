@@ -152,7 +152,7 @@
     <string name="delete_note">Delete Note</string>
     <string name="welcome">Welcome</string>
     <string name="what_s_your_name">What\'s your name?</string>
-    <string name="are_you_bride_groom">Are you Bride/Groom?</string>
+    <string name="are_you_bride_groom">What\'s your role in the wedding?</string>
     <string name="create_an_event">Create an Event</string>
     <string name="what_s_your_event">What\'s your event?</string>
     <string name="what_day_is_your_event">What day is your event?</string>
@@ -403,9 +403,27 @@
     <string name="spinnerlanguage">Language</string>
     <string name="bride">Bride</string>
     <string name="groom">Groom</string>
+    <string name="agerange">What\'s your age range?</string>
+    <string name="gender">What\'s your gender?</string>
 
     <string-array name="distance_units" >
         <item>miles</item>
         <item>kilometers</item>
+    </string-array>
+
+    <string-array name="gender_options">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+        <item>Prefer not to say</item>
+    </string-array>
+
+    <string-array name="age_ranges">
+        <item>Under 18</item>
+        <item>18–24</item>
+        <item>25–34</item>
+        <item>35–44</item>
+        <item>45–54</item>
+        <item>55 and above</item>
     </string-array>
 </resources>

@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
 import Application.PaymentCreationException
 import Application.TaskCreationException
 import Application.UserOnboardingException
@@ -29,6 +30,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Functions.addPayment
@@ -36,7 +38,9 @@ import com.bridesandgrooms.event.Functions.addTask
 import com.bridesandgrooms.event.Model.Payment
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.getautocreateTaskPayment
+import com.bridesandgrooms.event.Functions.getEnglishString
 import com.bridesandgrooms.event.Functions.getUserCountry
+import com.bridesandgrooms.event.LoginView.Companion
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
 import com.bridesandgrooms.event.UI.Fragments.TaskCreateEdit
 import com.bridesandgrooms.event.databinding.OnboardingNameBinding
@@ -48,6 +52,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.play.core.internal.e
 import java.util.*
 
 
@@ -64,12 +69,17 @@ class OnboardingView : AppCompatActivity() {
 
     private var userSession: User = User()
     private lateinit var binding: OnboardingNameBinding
+    private lateinit var autocompleteLauncher: ActivityResultLauncher<Intent>
+
+    private var languagePlaces = ""
+    private var countryPlaces= ""
+
     private val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
         if (hasFocus && view is TextInputEditText) {
             val parentLayout = view.parent.parent as? TextInputLayout
             parentLayout?.error = null
         }
-        hideSoftKeyboard()
+        //hideSoftKeyboard()
     }
     private val autocreateTaskPayment = getautocreateTaskPayment()
 
@@ -82,18 +92,21 @@ class OnboardingView : AppCompatActivity() {
             status =
                 "0" // Hardcoded value indicating the user is new and needs to go through the Welcome sequence
             //language = this@OnboardingView.resources.configuration.locales.get(0).language
-            country = getUserCountry(this@OnboardingView)
+            //country = getUserCountry(this@OnboardingView)
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.onboarding_name)
 
         //---------- Places loading -------------
         if (!Places.isInitialized()) {
-            val newLocale = Locale(userSession.language, userSession.country)
+            //val newLocale = Locale(userSession.language, userSession.country)
+            languagePlaces = this@OnboardingView.resources.configuration.locales.get(0).language
+            countryPlaces = getUserCountry(this@OnboardingView)
+            val newLocale = Locale(languagePlaces, countryPlaces)
             Places.initialize(this@OnboardingView, getString(R.string.google_maps_key), newLocale)
         }
 
-        val autocompleteLauncher =
+        autocompleteLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     val data = result.data
@@ -108,6 +121,11 @@ class OnboardingView : AppCompatActivity() {
                 } else if (result.resultCode == AutocompleteActivity.RESULT_ERROR) {
                     val status = Autocomplete.getStatusFromIntent(result.data!!)
                     Log.e("Places", "Error: ${status.statusMessage}")
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        "errorPlaces",
+                        "getPlaces", null
+                    )
                 }
             }
 
@@ -131,6 +149,7 @@ class OnboardingView : AppCompatActivity() {
         binding.languageAutocomplete.setAdapter(languageAdapter)
         // Handle selection
         binding.languageAutocomplete.setOnItemClickListener { _, _, position, _ ->
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME,"LanguageAutoComplete", "click")
             val selectedLanguage = languages[position] // Get selected language name
             val languageCode = languageMap[selectedLanguage] ?: "en" // Default to English if not found
 
@@ -146,16 +165,29 @@ class OnboardingView : AppCompatActivity() {
         val savedLanguage = getSavedLanguage()
         setAppLocale(savedLanguage)
 
+        val countries = getAllCountriesInEnglish()
+        val countryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, countries)
+        binding.countryAutocomplete.setAdapter(countryAdapter)
+
 
         //---------------------------------------
         // Hide Layout for Onboarding Event
         binding.submitlanguage.setOnClickListener {
+            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "nextNameOnboarding")
             if (validateLanguageOnboard()) {
                 userSession.language = binding.languageAutocomplete.text.toString()
+                userSession.country = binding.countryAutocomplete.text.toString()
 
                 showNameOnboarding()
                 binding.nameinputedit.onFocusChangeListener = focusChangeListener
 
+                val genderOptions = this@OnboardingView.resources.getStringArray(R.array.gender_options).toList()
+                val ageRangeOptions = this@OnboardingView.resources.getStringArray(R.array.age_ranges).toList()
+
+                val genderAdapter = ArrayAdapter(this@OnboardingView, android.R.layout.simple_spinner_item, genderOptions)
+                val ageAdapter = ArrayAdapter(this@OnboardingView, android.R.layout.simple_dropdown_item_1line, ageRangeOptions)
+
+                genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
                 val roles = arrayOf(getString(R.string.bride), getString(R.string.groom)) // Example roles
                 val roleAdapter =
@@ -165,14 +197,17 @@ class OnboardingView : AppCompatActivity() {
                         roles
                     )
 
+                binding.genderAutocomplete.setAdapter(genderAdapter)
+                binding.agerangeAutocomplete.setAdapter(ageAdapter)
                 binding.roleAutocomplete.setAdapter(roleAdapter)
-                binding.countryAutocomplete.setText(userSession.country)
 
                 binding.submituser.setOnClickListener {
+                    AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "nextEventOnboarding_1")
                     if (validateAllInputsNameOnboard()) {
                         userSession.shortname = binding.nameinputedit.text.toString()
+                        userSession.gender = binding.genderAutocomplete.text.toString()
+                        userSession.agerange = binding.agerangeAutocomplete.text.toString()
                         userSession.role = binding.roleAutocomplete.text.toString()
-                        userSession.country = binding.countryAutocomplete.text.toString()
 
                         showEventOnboarding()
 
@@ -181,6 +216,7 @@ class OnboardingView : AppCompatActivity() {
                         binding.etnumberguests.onFocusChangeListener = focusChangeListener
 
                         binding.submitevent.setOnClickListener {
+                            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "nextEventOnboarding_2")
                             if (validateAllInputsEventOnboard()) {
                                 userSession.eventbudget = binding.etbudget.text.toString()
                                 userSession.numberguests =
@@ -189,14 +225,17 @@ class OnboardingView : AppCompatActivity() {
                                 showEventOnboarding2()
 
                                 binding.etPlannedDate.setOnClickListener {
+                                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "etPlannedDate", "click")
                                     showDatePickerDialog()
                                 }
 
                                 binding.etPlannedTime.setOnClickListener {
+                                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "etPlannedTime", "click")
                                     showTimePickerDialog()
                                 }
 
                                 binding.etlocation.setOnClickListener {
+                                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "etlocation", "click")
                                     val fields = listOf(
                                         Place.Field.ID,
                                         Place.Field.NAME,
@@ -207,13 +246,19 @@ class OnboardingView : AppCompatActivity() {
                                         AutocompleteActivityMode.OVERLAY,
                                         fields
                                     )
-                                        .setCountry(userSession.country)
+                                        .setCountry(countryPlaces)
                                         .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                                        .build(this)
-                                    autocompleteLauncher.launch(intent)
+                                        .build(this@OnboardingView)
+
+                                    if (!isFinishing) {
+                                        binding.etlocation.post {
+                                            autocompleteLauncher.launch(intent)
+                                        }
+                                    }
                                 }
 
                                 binding.submitevent2.setOnClickListener {
+                                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "submitOnboarding", "click")
                                     val event = Event().apply {
                                         placeid = eventplaceid.toString()
                                         latitude = eventlatitude
@@ -249,14 +294,31 @@ class OnboardingView : AppCompatActivity() {
                                                         )
                                                     } catch (e: TaskCreationException) {
                                                         displayToastMsg(getString(R.string.errorTaskCreation) + e.toString())
+                                                        AnalyticsManager.getInstance().trackError(
+                                                            SCREEN_NAME,
+                                                            "errorTask",
+                                                            "TaskCreation", null
+                                                        )
                                                     } catch (e: PaymentCreationException) {
                                                         displayToastMsg(getString(R.string.errorPaymentCreation) + e.toString())
+                                                        AnalyticsManager.getInstance().trackError(
+                                                            SCREEN_NAME,
+                                                            "errorPayment",
+                                                            "PaymentCreation", null
+                                                        )
                                                     }
                                                 }
+                                                AnalyticsManager.getInstance().setUserProperties(userSession.userid, userSession.role, userSession.numberguests, userSession.eventbudget, userSession.gender, userSession.agerange)
+
                                             } catch (e: UserOnboardingException) {
                                                 displayToastMsg(getString(R.string.errorUserOnboarding) + e.toString())
+                                                AnalyticsManager.getInstance().trackError(
+                                                    SCREEN_NAME,
+                                                    "errorOnboarding",
+                                                    "OnboardingProcess", null
+                                                )
                                             } catch (e: Exception) {
-                                                Log.d(TAG, e.toString())
+                                                Log.e(TAG, e.toString())
                                             }
                                             finish()
                                         }
@@ -291,11 +353,11 @@ class OnboardingView : AppCompatActivity() {
 
         val config = Configuration()
         config.setLocale(locale)
-
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
     }
 
     private fun showLanguageOnboarding() {
+        AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"LanguageOnboarding")
         binding.languageonboarding.visibility = ConstraintLayout.VISIBLE
         binding.submitlanguage.visibility = Button.VISIBLE
         binding.nameonboarding.visibility = ConstraintLayout.INVISIBLE
@@ -304,6 +366,7 @@ class OnboardingView : AppCompatActivity() {
     }
 
     private fun showNameOnboarding() {
+        AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"NameOnboarding")
         binding.languageonboarding.visibility = ConstraintLayout.INVISIBLE
         binding.submitlanguage.visibility = Button.INVISIBLE
 
@@ -316,6 +379,7 @@ class OnboardingView : AppCompatActivity() {
     }
 
     private fun showEventOnboarding() {
+        AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"EventOnboarding_1")
         binding.nameonboarding.visibility = ConstraintLayout.INVISIBLE
         binding.submituser.visibility = Button.INVISIBLE
 
@@ -330,6 +394,7 @@ class OnboardingView : AppCompatActivity() {
     }
 
     private fun showEventOnboarding2() {
+        AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"EventOnboarding_2")
         binding.nameonboarding.visibility = ConstraintLayout.INVISIBLE
         binding.submituser.visibility = Button.INVISIBLE
 
@@ -347,10 +412,17 @@ class OnboardingView : AppCompatActivity() {
         var isValid = true
         val validator = InputValidator(this)
 
-        val spinnerValidation =
+        val spinnerlanguageValidation =
             validator.validateSpinner(binding.languageAutocomplete.toString())
-        if (!spinnerValidation) {
+        if (!spinnerlanguageValidation) {
             binding.languageAutocomplete.error = validator.errorCode
+            isValid = false
+        }
+
+        val spinnercountryValidation =
+            validator.validateSpinner(binding.countryAutocomplete.toString())
+        if (!spinnercountryValidation) {
+            binding.countryAutocomplete.error = validator.errorCode
             isValid = false
         }
         return isValid
@@ -367,17 +439,24 @@ class OnboardingView : AppCompatActivity() {
             isValid = false
         }
 
-        val spinnerValidation =
-            validator.validateSpinner(binding.roleAutocomplete.toString())
-        if (!spinnerValidation) {
-            binding.roleAutocomplete.error = validator.errorCode
+        val genderValidation =
+            validator.validateSpinner(binding.genderAutocomplete.toString())
+        if (!genderValidation) {
+            binding.genderAutocomplete.error = validator.errorCode
             isValid = false
         }
 
-        val spinnerValidation2 =
-            validator.validateSpinner(binding.countryAutocomplete.toString())
-        if (!spinnerValidation2) {
-            binding.countryAutocomplete.error = validator.errorCode
+        val ageValidation =
+            validator.validateSpinner(binding.agerangeAutocomplete.toString())
+        if (!ageValidation) {
+            binding.agerangeAutocomplete.error = validator.errorCode
+            isValid = false
+        }
+
+        val roleValidation =
+            validator.validateSpinner(binding.roleAutocomplete.toString())
+        if (!roleValidation) {
+            binding.roleAutocomplete.error = validator.errorCode
             isValid = false
         }
         return isValid
@@ -419,10 +498,13 @@ class OnboardingView : AppCompatActivity() {
             getString(R.string.accept)
         ) { _, _ ->
             requestPermissions()
+            AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"AcceptPermissionsRequest")
         }
         builder.setNegativeButton(
             "Cancel"
-        ) { p0, _ -> p0!!.dismiss() }
+        ) { p0, _ -> p0!!.dismiss()
+            AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"CancelPermissionsRequest")
+        }
 
         val dialog = builder.create()
         dialog.show()
@@ -475,6 +557,14 @@ class OnboardingView : AppCompatActivity() {
         }
     }
 
+    private fun getAllCountriesInEnglish(): List<String> {
+        val locales = Locale.getISOCountries().map { countryCode ->
+            Locale("", countryCode).getDisplayCountry(Locale.ENGLISH)
+        }
+        return locales.sorted()
+    }
+
+
     private fun displayToastMsg(message: String) {
         Toast.makeText(
             this@OnboardingView,
@@ -494,6 +584,7 @@ class OnboardingView : AppCompatActivity() {
         if (dismiss) {
             binding.dismissButton.visibility = View.VISIBLE
             binding.dismissButton.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "dismissButton", "click")
                 binding.bannerCardView.visibility = View.INVISIBLE
             }
         }
@@ -515,5 +606,6 @@ class OnboardingView : AppCompatActivity() {
 
     companion object {
         private const val TAG = "OnboardingView"
+        private const val SCREEN_NAME = "onboarding_name.xml"
     }
 }

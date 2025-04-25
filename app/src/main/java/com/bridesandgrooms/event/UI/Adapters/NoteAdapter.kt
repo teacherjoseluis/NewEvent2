@@ -1,6 +1,7 @@
 package com.bridesandgrooms.event.UI.Adapters
 
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.Note
 import com.bridesandgrooms.event.UI.Fragments.NoteFragmentActionListener
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Activities.ExportPDF.Companion.SCREEN_NAME
 
 class NoteAdapter(
     private val fragmentActionListener: NoteFragmentActionListener,
@@ -39,6 +41,7 @@ class NoteAdapter(
 
         init {
             customNoteCardView.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "customNoteCardView", "click")
                 handleClick()
             }
         }

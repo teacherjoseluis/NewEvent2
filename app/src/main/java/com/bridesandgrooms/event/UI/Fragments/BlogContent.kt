@@ -1,10 +1,9 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
+import Application.AnalyticsManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Functions.Firebase.BlogPost
 import com.bridesandgrooms.event.Functions.convertToBlogStringDate
@@ -15,7 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.bridesandgrooms.event.Model.Note
+import com.bridesandgrooms.event.LoginView
+import com.bridesandgrooms.event.LoginView.Companion
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.GlideApp
 import com.bridesandgrooms.event.databinding.BlogContentBinding
 import com.google.android.material.appbar.MaterialToolbar
@@ -62,6 +63,7 @@ class BlogContent : Fragment() {
         binding.blogSummary.text = blogItem.summary
 
         binding.visitPage.setOnClickListener {
+            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"visitPage")
             val uris = Uri.parse(blogItem.url)
             val intents = Intent(Intent.ACTION_VIEW, uris)
             val b = Bundle()
@@ -71,12 +73,7 @@ class BlogContent : Fragment() {
         }
 
         binding.shareLink.setOnClickListener {
-            // ------- Analytics call ----------------
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "SHARENOTE")
-            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-            MyFirebaseApp.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
-            //----------------------------------------
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "shareLink", "click")
 
             val intent = Intent(Intent.ACTION_SEND)
             val shareBody =
@@ -87,5 +84,9 @@ class BlogContent : Fragment() {
             startActivity(Intent.createChooser(intent, getString(R.string.shareusing)))
         }
         return binding.root
+    }
+
+    companion object {
+        private const val SCREEN_NAME = "blog_content.xml"
     }
 }

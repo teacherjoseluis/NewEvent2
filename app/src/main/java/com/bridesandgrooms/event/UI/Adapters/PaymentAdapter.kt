@@ -10,17 +10,17 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.deletePayment
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Payment
-import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.UserModel
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.TPP_PaymentFragmentActionListener
+import com.bridesandgrooms.event.UI.Activities.ExportPDF
+import com.bridesandgrooms.event.UI.Activities.ExportPDF.Companion
+import com.bridesandgrooms.event.UI.Fragments.TPP_PaymentFragmentActionListener
 import com.bridesandgrooms.event.UI.ItemTouchAdapterAction
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
@@ -159,6 +159,7 @@ class PaymentAdapter(
 
         init {
             paymentCardView.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "paymentCardView", "click")
                 handleClick()
             }
         }
@@ -204,7 +205,7 @@ class PaymentAdapter(
         recyclerView: RecyclerView,
         action: String
     ) {
-        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Delete Payment")
+        AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Delete Payment", null)
         //val user = User().getUser()
         try {
             val paymentswift = paymentList[position]

@@ -17,6 +17,7 @@ import com.bridesandgrooms.event.MVP.VendorsAllPresenter
 import com.bridesandgrooms.event.Model.*
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.VendorAdapter
+import com.bridesandgrooms.event.UI.Fragments.TaskCreateEdit.Companion
 import com.bridesandgrooms.event.UI.ViewAnimation
 import com.bridesandgrooms.event.databinding.VendorsAllBinding
 import com.google.android.material.appbar.MaterialToolbar
@@ -189,6 +190,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
         newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_novendorsmsg)
         newView.findViewById<TextView>(R.id.emptystate_cta).setText(R.string.emptystate_novendorscta)
         newView.findViewById<FloatingActionButton>(R.id.fab_action).setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(TaskCreateEdit.SCREEN_NAME, "fab_action", "click")
             callVendorCreateFragment()
         }
     }

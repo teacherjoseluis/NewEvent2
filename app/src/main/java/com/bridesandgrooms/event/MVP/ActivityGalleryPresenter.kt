@@ -3,7 +3,7 @@ package com.bridesandgrooms.event.MVP
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import com.bridesandgrooms.event.FragmentGallery
+import com.bridesandgrooms.event.UI.Fragments.FragmentGallery
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardImageResult
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardRepository
 import kotlinx.coroutines.CoroutineScope

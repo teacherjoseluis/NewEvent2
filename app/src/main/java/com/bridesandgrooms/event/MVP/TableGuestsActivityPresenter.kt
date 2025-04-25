@@ -5,7 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.TableGuests
-import com.bridesandgrooms.event.TableGuestsActivity
+import com.bridesandgrooms.event.UI.Fragments.TableGuestsActivity
 
 class TableGuestsActivityPresenter(
     val context: Context,

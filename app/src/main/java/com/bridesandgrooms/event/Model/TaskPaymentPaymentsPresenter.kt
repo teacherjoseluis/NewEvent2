@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import com.bridesandgrooms.event.MVP.PaymentPresenter
-import com.bridesandgrooms.event.TaskPaymentPayments
+import com.bridesandgrooms.event.UI.Fragments.TaskPaymentPayments
 import kotlin.collections.ArrayList
 
 class TaskPaymentPaymentsPresenter(

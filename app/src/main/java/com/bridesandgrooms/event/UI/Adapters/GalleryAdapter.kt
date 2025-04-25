@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Adapters
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -13,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Activities.ExportPDF.Companion.SCREEN_NAME
 
 class GalleryAdapter(private val context: Context, private val dataList: List<Triple<Bitmap, String, String>>) :
     RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
@@ -28,6 +30,7 @@ class GalleryAdapter(private val context: Context, private val dataList: List<Tr
         holder.bind(bitmap, photographer, url)
 
         holder.itemView.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "itemView", "click")
             val uri = Uri.parse(url)
             val intent = Intent(Intent.ACTION_VIEW, uri).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

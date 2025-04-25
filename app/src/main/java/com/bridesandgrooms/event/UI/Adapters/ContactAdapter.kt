@@ -14,6 +14,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.addGuest
+import com.bridesandgrooms.event.LoginView
+import com.bridesandgrooms.event.LoginView.Companion
 import com.bridesandgrooms.event.Model.Contact
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.User
@@ -55,6 +57,7 @@ class ContactAdapter(
 
         init {
             customContactCardView.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "customContactCardView", "click")
                 handleClick()
             }
         }

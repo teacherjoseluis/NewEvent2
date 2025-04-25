@@ -77,7 +77,7 @@ class NoteCreateEdit : Fragment() {
         binding.notebody.onFocusChangeListener = focusChangeListener
 
         binding.button.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Note")
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Note", null)
             val isValid = validateAllInputs()
             if (isValid) {
                 savenote()
@@ -98,7 +98,7 @@ class NoteCreateEdit : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.share_note -> {
-                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Share Note")
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Share Note", null)
                 val intent = Intent(Intent.ACTION_SEND)
                 val shareBody =
                     getString(R.string.title) + ": " + binding.notetitle.text.toString() + getString(
@@ -112,7 +112,7 @@ class NoteCreateEdit : Fragment() {
             }
 
             R.id.delete_note -> {
-                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Delete_Guest")
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Delete_Guest", null)
                 AlertDialog.Builder(context)
                     .setTitle(getString(R.string.delete_message))
                     .setMessage(getString(R.string.delete_entry))
@@ -120,7 +120,7 @@ class NoteCreateEdit : Fragment() {
                         android.R.string.yes
                     ) { dialog, which ->
                         AnalyticsManager.getInstance()
-                            .trackUserInteraction(SCREEN_NAME, "Delete_Note")
+                            .trackUserInteraction(SCREEN_NAME, "Delete_Note", null)
                         try {
                             notedb.delete(noteitem.noteid)
                             finish()

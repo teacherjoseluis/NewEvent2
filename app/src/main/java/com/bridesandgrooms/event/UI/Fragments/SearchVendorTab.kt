@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Fragments
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -50,12 +51,17 @@ class SearchVendorTab : Fragment() {
         tablayout.addOnTabSelectedListener(
             object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(p0: TabLayout.Tab?) {
+                    AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"TabSelected")
                     viewPager.currentItem = p0!!.position
                 }
                 override fun onTabUnselected(p0: TabLayout.Tab?) {}
                 override fun onTabReselected(p0: TabLayout.Tab?) {}
             })
         return rootView
+    }
+
+    companion object {
+        const val SCREEN_NAME = "search_vendors_tabs.xml"
     }
 }
 

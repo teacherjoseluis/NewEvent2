@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Adapters
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,9 +15,10 @@ import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bridesandgrooms.event.Functions.Firebase.BlogPost
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.bridesandgrooms.event.BlogFragmentActionListener
+import com.bridesandgrooms.event.UI.Fragments.BlogFragmentActionListener
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Adapters.PaymentAdapter.Companion.SCREEN_NAME
 import com.google.firebase.storage.FirebaseStorage
 import com.firebase.ui.storage.images.FirebaseImageLoader
 
@@ -162,6 +164,7 @@ class Rv_BlogAdapter(
 
         init {
             blogCard.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "blogCard", "click")
                 handleClick()
             }
         }

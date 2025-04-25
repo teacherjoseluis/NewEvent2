@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Adapters
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.bridesandgrooms.event.Functions.getlocale
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.Category.Companion.getCategory
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Activities.ExportPDF.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.UI.Fragments.CategoryFragmentActionListener
 import com.google.android.material.card.MaterialCardView
 
@@ -50,6 +52,7 @@ class CategoryAdapter(
 
         init {
             categoryCardView.setOnClickListener{
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "categoryCardView", "click")
                 handleClick()
             }
         }

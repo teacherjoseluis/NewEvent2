@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.Firebase.BlogPost
 import com.bridesandgrooms.event.MVP.BlogPresenter
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.Rv_BlogAdapter
 import com.bridesandgrooms.event.UI.Fragments.MyNotes.Companion.TAG
 import com.bridesandgrooms.event.databinding.DashboardblogBinding
@@ -29,7 +30,7 @@ class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity, BlogFragmentAc
 
     private var mContext: Context? = null
 
-    var language = "en"
+    //var language = "en"
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -50,7 +51,7 @@ class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity, BlogFragmentAc
 
         // Inflate the layout for this fragment
         inf = DataBindingUtil.inflate(inflater, R.layout.dashboardblog, container, false)
-        language = requireArguments().get("language").toString()
+        //language = requireArguments().get("language").toString()
         //It seems to be failing here
         //TODO - It seems to be failing here
 
@@ -63,7 +64,7 @@ class DashboardBlog : Fragment(), BlogPresenter.ViewBlogActivity, BlogFragmentAc
         }
 
         try {
-            presenterBlog = BlogPresenter(mContext!!, this, inf.root, language)
+            presenterBlog = BlogPresenter(mContext!!, this, inf.root)
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }

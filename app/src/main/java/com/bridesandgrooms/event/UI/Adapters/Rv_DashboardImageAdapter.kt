@@ -1,5 +1,6 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Adapters
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Functions.getlocale
 import com.bridesandgrooms.event.MVP.DashboardEventPresenter
+import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Adapters.PaymentAdapter.Companion.SCREEN_NAME
+import com.bridesandgrooms.event.UI.Fragments.GalleryFragmentActionListener
 import com.google.android.material.card.MaterialCardView
 
 class rvDashboardImageAdapter(
@@ -42,6 +46,7 @@ class rvDashboardImageAdapter(
 
         init {
             categoryCardView.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "categoryCardView", "click")
                 handleClick()
             }
         }

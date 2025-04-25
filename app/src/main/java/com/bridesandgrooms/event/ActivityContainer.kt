@@ -19,12 +19,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.UserSessionHelper
-import com.bridesandgrooms.event.Functions.isEventDate
 import com.bridesandgrooms.event.Model.EventModel
 import com.bridesandgrooms.event.Model.GuestDBHelper
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.UI.Fragments.ContactsAll
 import com.bridesandgrooms.event.UI.Fragments.DashboardActivity
+import com.bridesandgrooms.event.UI.Fragments.DashboardView
 import com.bridesandgrooms.event.UI.Fragments.EventCategories
 import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll
@@ -36,6 +36,8 @@ import com.bridesandgrooms.event.UI.Fragments.SearchVendorFragment
 import com.bridesandgrooms.event.UI.Fragments.SearchVendorTab
 import com.bridesandgrooms.event.UI.Fragments.Settings
 import com.bridesandgrooms.event.UI.Fragments.TaskCreateEdit
+import com.bridesandgrooms.event.UI.Fragments.TaskPaymentPayments
+import com.bridesandgrooms.event.UI.Fragments.TaskPaymentTasks
 import com.bridesandgrooms.event.UI.Fragments.TasksAllCalendar
 import com.bridesandgrooms.event.UI.Fragments.VendorCreateEdit
 import com.bridesandgrooms.event.UI.Fragments.VendorsAll
@@ -44,8 +46,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.FirebaseDatabase
-import com.nordan.dialog.Animation
-import com.nordan.dialog.NordanAlertDialog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 //import kotlinx.android.synthetic.main.header_navview.*
@@ -66,10 +66,16 @@ class ActivityContainer : AppCompatActivity() {
     private val LOGINACTIVITY = 123
     private var back_pressed: Long = 0
 
+    //lateinit private var mp: MixpanelAPI
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
+
+        val trackAutomaticEvents = false;
+        // Replace with your Project Token
+        //mp = MixpanelAPI.getInstance(this, "b7f46757e0da5b27a7ad6cc07d3eafb9", trackAutomaticEvents);
 
         if (loginValidation()) {
             val loginactivity =
@@ -84,6 +90,7 @@ class ActivityContainer : AppCompatActivity() {
                         setContentView(R.layout.welcome_user)
                         val welcomeActivity = Intent(this@ActivityContainer, WelcomeActivity::class.java)
                         startActivity(welcomeActivity)
+                        //finish()
                     } else {
                         val eventModel = EventModel()
                         val needsRefresh = eventModel.checkNeedsRefresh()
@@ -175,17 +182,6 @@ class ActivityContainer : AppCompatActivity() {
             sidenavView.getHeaderView(0).findViewById<TextView>(R.id.headershortname)
         headershortname.text = usersession.shortname
 
-//        if (isEventDate(this) == 0) {
-//            NordanAlertDialog.Builder(this)
-//                .setAnimation(Animation.SLIDE)
-//                .isCancellable(false)
-//                .setTitle(getString(R.string.congratulations))
-//                .setMessage(getString(R.string.weddingday))
-//                .setIcon(R.drawable.love_animated_gif_2018_8, true)
-//                .setPositiveBtnText(getString(R.string.great))
-//                .build().show()
-//        }
-
         // Populating Android Version and Code
         try {
             val packageInfo = this.packageManager.getPackageInfo(this.packageName, 0)
@@ -216,42 +212,42 @@ class ActivityContainer : AppCompatActivity() {
             when (p0.itemId) {
                 R.id.event_fragment -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Home")
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Home", null)
                     clickNavItem = R.id.event_fragment
                     newfragment = DashboardView()
                 }
 
                 R.id.task_fragment -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Task")
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Task", null)
                     clickNavItem = R.id.task_fragment
                     newfragment = DashboardActivity()
                 }
 
                 R.id.notes_fragment -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Notes")
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Notes", null)
                     clickNavItem = R.id.notes_fragment
                     newfragment = MyNotes()
                 }
 
                 R.id.settings_fragment -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Settings")
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Settings", null)
                     clickNavItem = R.id.settings_fragment
                     newfragment = Settings()
                 }
 
                 R.id.contact_fragment -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Contact")
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_Contact", null)
                     clickNavItem = R.id.contact_fragment
                     sendEmail(this)
                 }
 
                 R.id.account_logoff -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_LogOff")
+                        .trackUserInteraction(SCREEN_NAME, "SideNavigationBar_LogOff", null)
                     logoffapp()
                 }
             }
@@ -266,7 +262,7 @@ class ActivityContainer : AppCompatActivity() {
             when (p0.itemId) {
                 R.id.home -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Home")
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Home", null)
                     val newfragment = DashboardView()
                     fm.beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
@@ -276,7 +272,7 @@ class ActivityContainer : AppCompatActivity() {
 
                 R.id.events -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_EventCategories")
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_EventCategories", null)
                     val newfragment = EventCategories()
                     fm.beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
@@ -286,7 +282,7 @@ class ActivityContainer : AppCompatActivity() {
 
                 R.id.tasks -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Tasks")
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Tasks", null)
                     val newfragment = DashboardActivity()
                     fm.beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
@@ -296,7 +292,7 @@ class ActivityContainer : AppCompatActivity() {
 
                 R.id.guests -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Guests")
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Guests", null)
                     val newfragment = GuestsAll()
                     fm.beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
@@ -306,7 +302,7 @@ class ActivityContainer : AppCompatActivity() {
 
                 R.id.vendor -> {
                     AnalyticsManager.getInstance()
-                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Vendors")
+                        .trackUserInteraction(SCREEN_NAME, "BottomNavigation_Vendors", null)
                     val newfragment = VendorsAll()
                     fm.beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)

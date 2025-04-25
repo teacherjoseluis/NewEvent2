@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import Application.AnalyticsManager
 import Application.UserRetrievalException
@@ -19,8 +19,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowMetrics
-import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -48,23 +46,21 @@ import com.bridesandgrooms.event.Model.DashboardImage.FirebaseDataSourceImpl
 import com.bridesandgrooms.event.Model.Event
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.Model.User
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.CategoryAdapter
-import com.bridesandgrooms.event.UI.Fragments.CategoryFragmentActionListener
-import com.bridesandgrooms.event.UI.Fragments.MainActivity
 import com.bridesandgrooms.event.databinding.DashboardchartsBinding
+import com.bridesandgrooms.event.UI.Adapters.rvDashboardImageAdapter
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
     DashboardEventPresenter.PaymentStats, DashboardEventPresenter.GuestStats,
@@ -167,7 +163,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
                 if (user.hastask == "Y" || user.haspayment == "Y") {
                     inf.weddingavatarCard.setOnClickListener {
                         AnalyticsManager.getInstance()
-                            .trackNavigationEvent(SCREEN_NAME, "Edit_Event")
+                            .trackUserInteraction(SCREEN_NAME, "EditEvent", "click")
 
                         val fragment = MainActivity()
                         requireActivity().supportFragmentManager.beginTransaction()
@@ -466,21 +462,6 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
         imagePresenter.getEventImage()
         imagePresenter.getPlaceImage()
 
-//        inf.weddinglocation2.root.setOnClickListener {
-//            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Visit_GoogleMaps")
-//
-//            val gmmIntentUri =
-//                Uri.parse("geo:${event.latitude},${event.longitude}?z=10&q=${event.location}")
-//            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-//            mapIntent.setPackage("com.google.android.apps.maps")
-//            mapIntent.resolveActivity(context.packageManager)?.let {
-//                startActivity(mapIntent)
-//            }
-//            val loadingscreen = requireActivity().findViewById<ConstraintLayout>(R.id.loadingscreen)
-//            val drawerlayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerlayout)
-//            loadingscreen.visibility = ConstraintLayout.GONE
-//            drawerlayout.visibility = ConstraintLayout.VISIBLE
-//        }
     }
 
     override fun onEventError(inf: View, errorcode: String) {

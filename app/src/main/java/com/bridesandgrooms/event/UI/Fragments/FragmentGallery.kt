@@ -1,4 +1,4 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
 import com.bridesandgrooms.event.UI.Adapters.GalleryAdapter
 import android.content.Context
@@ -13,19 +13,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.bridesandgrooms.event.AdManager
 import com.bridesandgrooms.event.Functions.AdManagerSingleton
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.MVP.ActivityGalleryPresenter
 import com.bridesandgrooms.event.Model.DashboardImage.DashboardRepository
 import com.bridesandgrooms.event.Model.DashboardImage.FirebaseDataSourceImpl
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.databinding.ActivityGalleryBinding
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.appbar.MaterialToolbar
 
 class FragmentGallery : Fragment(), ActivityGalleryPresenter.ActiveGalleryImages {
@@ -108,51 +104,4 @@ class FragmentGallery : Fragment(), ActivityGalleryPresenter.ActiveGalleryImages
     override fun onActiveGalleryImagesError(errcode: String) {
         TODO("Not yet implemented")
     }
-
-//    private fun loadInterstitialAd() {
-//        val adRequest = AdRequest.Builder().build()
-//        InterstitialAd.load(
-//            mContext!!,
-//            getString(R.string.admob_interstitial_ad_unit_id), // Replace with your AdMob ad unit ID
-//            adRequest,
-//            object : InterstitialAdLoadCallback() {
-//                override fun onAdLoaded(ad: InterstitialAd) {
-//                    interstitialAd = ad
-//                    Log.d(TAG, "Ad was loaded.")
-//
-//                    interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-//                        override fun onAdDismissedFullScreenContent() {
-//                            Log.d(TAG, "Ad dismissed.")
-//                            interstitialAd = null
-//                            loadInterstitialAd() // Load a new ad
-//                        }
-//
-//                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-//                            Log.d(TAG, "Ad failed to show: ${adError.message}")
-//                            interstitialAd = null
-//                        }
-//
-//                        override fun onAdShowedFullScreenContent() {
-//                            Log.d(TAG, "Ad is being shown.")
-//                            interstitialAd = null
-//                        }
-//                    }
-//                }
-//
-//                override fun onAdFailedToLoad(adError: LoadAdError) {
-//                    Log.d(TAG, "Ad failed to load: ${adError.message}")
-//                    interstitialAd = null
-//                }
-//            }
-//        )
-//    }
-//
-//    private fun showInterstitialAd() {
-//        if (interstitialAd != null) {
-//            interstitialAd?.show(requireActivity())
-//        } else {
-//            Log.d(TAG, "The interstitial ad wasn't ready yet.")
-//            loadInterstitialAd()
-//        }
-//    }
 }

@@ -18,6 +18,7 @@ internal fun getBlog(
 ) {
     val postRef = when (language) {
         "en" -> myRef.child("blogPost").child("en-US")
+        "es" -> myRef.child("blogPostEs").child("en-US")
         else -> {
             myRef.child("blogPost").child(language)
         } //it needs to fail here, I don't know how Spanish will look like

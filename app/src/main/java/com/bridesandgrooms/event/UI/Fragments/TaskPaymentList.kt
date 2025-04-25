@@ -1,5 +1,6 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
+import Application.AnalyticsManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.TaskModel
+import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.TaskPayment_PagerAdapter
 import com.google.android.material.tabs.TabLayout
 import java.util.*
@@ -39,6 +41,7 @@ class TaskPaymentList : Fragment() {
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tablayout))
         tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(p0: TabLayout.Tab?) {
+                AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"TabSelected")
                 viewPager.currentItem = p0!!.position
             }
 
@@ -64,5 +67,9 @@ class TaskPaymentList : Fragment() {
 
     fun onBackPressed() {
         findNavController().popBackStack()
+    }
+
+    companion object {
+        const val SCREEN_NAME = "taskpayment_list.xml"
     }
 }

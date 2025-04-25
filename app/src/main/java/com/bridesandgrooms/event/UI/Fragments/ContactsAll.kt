@@ -23,8 +23,11 @@ import com.bridesandgrooms.event.MVP.ContactsAllPresenter
 import com.bridesandgrooms.event.Model.Contact
 import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.Permission
+import com.bridesandgrooms.event.OnboardingView
+import com.bridesandgrooms.event.OnboardingView.Companion
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.ContactAdapter
+import com.bridesandgrooms.event.UI.Adapters.TaskAdapter
 import com.bridesandgrooms.event.databinding.ContactsAllBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
@@ -74,6 +77,7 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
+                AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"EnterQuery")
                 val filteredModelList = filter(contactList, p0)
                 val rvAdapter = ContactAdapter(this@ContactsAll, filteredModelList as ArrayList<Contact>, context!!)
                 recyclerViewContacts.adapter = rvAdapter
@@ -151,55 +155,6 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
             inf.withdata.visibility = ConstraintLayout.VISIBLE
             val emptystateLayout = inf.noContactsLayout
             emptystateLayout.visibility = ConstraintLayout.GONE
-
-//            rvAdapter.mOnItemClickListener = object : OnItemClickListener {
-//                @SuppressLint("SetTextI18n")
-//                override fun onItemClick(index: Int, countselected: ArrayList<Int>) {
-//                    AnalyticsManager.getInstance()
-//                        .trackUserInteraction(SCREEN_NAME, "Add_Guest")
-//                    if (countselected.size != 0) {
-//                        apptitle.text = "${countselected.size} selected"
-//                        activitymenu.findItem(R.id.add_guest).apply {
-//                            isEnabled = true
-//                            setOnMenuItemClickListener {
-//                                when (it.itemId) {
-//                                    R.id.add_guest -> {
-//                                        apptitle.text = getString(R.string.title_contacts)
-//                                        for (ind in countselected) {
-//                                            val guest =
-//                                                Guest().contacttoGuest(
-//                                                    mContext!!,
-//                                                    contactList[ind].key
-//                                                )
-//                                            guestList.add(guest)
-//                                            //lifecycleScope.launch {
-//                                            try {
-//                                                addGuest(mContext!!, userSession, guest)
-//                                            } catch (e: GuestCreationException) {
-//                                                AnalyticsManager.getInstance()
-//                                                    .trackError(
-//                                                        SCREEN_NAME,
-//                                                        e.message.toString(),
-//                                                        "addGuest()",
-//                                                        e.stackTraceToString()
-//                                                    )
-//                                                Log.e(TAG, e.message.toString())
-//                                            }
-//                                            //}
-//                                        }
-//                                        rvAdapter.onClearSelected()
-//                                    }
-//                                }
-//                                true
-//                            }
-//                        }
-//                    } else {
-//                        //Disable the menu as nothing is selected
-//                        apptitle.text = getString(R.string.title_contacts)
-//                        activitymenu.findItem(R.id.add_guest).isEnabled = false
-//                    }
-//                }
-//            }
         } else {
             emptyStateFragment()
         }
@@ -252,6 +207,7 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
                     val openSettingsButton =
                         inf.permissions.root.findViewById<Button>(R.id.permissionsbutton)
                     openSettingsButton.setOnClickListener {
+                        AnalyticsManager.getInstance().trackSettingsChange(SCREEN_NAME, "permissionwording")
                         // Create an intent to open the app settings for your app
                         val intent = Intent()
                         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS

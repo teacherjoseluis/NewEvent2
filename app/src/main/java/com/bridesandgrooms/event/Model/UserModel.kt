@@ -98,6 +98,8 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
                         eventbudget = p0.child("eventbudget").getValue(String::class.java)!!
                         numberguests = p0.child("numberguests").getValue(Int::class.java)!!
                         distanceunit = p0.child("distanceunit").getValue(String::class.java)!!
+                        gender = p0.child("gender").getValue(String::class.java)!!
+                        agerange = p0.child("agerange").getValue(String::class.java)!!
 
                         Log.d(
                             TAG,
@@ -153,6 +155,8 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
                 user.numberguests = it.child("numberguests").getValue(Int::class.java) ?: 0
                 user.status = it.child("status").getValue(String::class.java) ?: ""
                 user.distanceunit = it.child("distanceunit").getValue(String::class.java) ?: ""
+                user.gender = it.child("gender").getValue(String::class.java) ?: ""
+                user.agerange = it.child("agerange").getValue(String::class.java) ?: ""
             }
 
             Log.d(TAG, "User Key found in Firebase: ${user.userid}")
@@ -336,6 +340,8 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
             "eventbudget" to user.eventbudget,
             "numberguests" to user.numberguests,
             "distanceunit" to user.distanceunit,
+            "gender" to user.gender,
+            "agerange" to user.agerange,
             // The below fields are of exclusive use of Firebase to police the authentication
             // and number of active sessions
             "session" to "",

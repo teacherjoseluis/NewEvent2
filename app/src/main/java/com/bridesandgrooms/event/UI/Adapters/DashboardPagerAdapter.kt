@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.bridesandgrooms.event.DashboardBlog
-import com.bridesandgrooms.event.DashboardEvent
+import com.bridesandgrooms.event.UI.Fragments.DashboardBlog
+import com.bridesandgrooms.event.UI.Fragments.DashboardEvent
 
 class DashboardPagerAdapter(
     private val userid: String,

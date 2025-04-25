@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Fragments
 
+import Application.AnalyticsManager
 import Application.UserRetrievalException
 import android.content.Context
 import android.content.Intent
@@ -37,6 +38,7 @@ import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.Model.Vendor
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.SearchVendorAdapter
+import com.bridesandgrooms.event.UI.Fragments.PaymentCreateEdit.Companion
 import com.bridesandgrooms.event.databinding.SearchVendorsFragmentBinding
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -151,6 +153,7 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
                         permissionWording
                     binding.noPermissionsLayout.findViewById<Button>(R.id.permissionsbutton)
                         .setOnClickListener {
+                            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "permissionsbutton", "click")
                             // Create an intent to open the app settings for your app
                             val intent = Intent()
                             intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS

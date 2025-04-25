@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Adapters
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.Category.Companion.getCategory
 import com.bridesandgrooms.event.Model.Task
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Adapters.TaskAdapter.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.UI.Fragments.GuestFragmentActionListener
 import com.bridesandgrooms.event.UI.Fragments.TaskFragmentActionListener
 
@@ -51,6 +53,7 @@ class TaskCalendarAdapter(
 
         init {
             taskCardView.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "taskCardView", "click")
                 handleClick()
             }
         }

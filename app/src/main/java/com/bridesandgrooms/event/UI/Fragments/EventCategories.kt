@@ -16,9 +16,10 @@ import Application.MyFirebaseApp
 import android.content.Context
 import android.util.Log
 import android.widget.TextView
+import com.bridesandgrooms.event.LoginView
+import com.bridesandgrooms.event.LoginView.Companion
 import com.bridesandgrooms.event.MVP.EventCategoryPresenter
 import com.bridesandgrooms.event.R
-import com.bridesandgrooms.event.TaskPaymentList
 import com.bridesandgrooms.event.UI.Adapters.CategoryAdapter
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.UI.Fragments.GuestsAll.Companion.TAG
@@ -103,20 +104,7 @@ class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterfac
                         }
 
                         override fun onAdOpened() {
-                            // Code to be executed when an ad opens an overlay that covers the screen.
-                            // The Analytics catches whenever the user opens an Ad
-                            // ------- Analytics call ----------------
-                            val bundle = Bundle()
-                            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "ADOPENED")
-                            bundle.putString(
-                                FirebaseAnalytics.Param.SCREEN_NAME,
-                                javaClass.simpleName
-                            )
-                            MyFirebaseApp.mFirebaseAnalytics.logEvent(
-                                FirebaseAnalytics.Event.SELECT_ITEM,
-                                bundle
-                            )
-                            //----------------------------------------
+                            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Ad", "click")
                         }
 
                         override fun onAdClicked() {
@@ -198,6 +186,7 @@ class EventCategories : Fragment(), EventCategoryPresenter.EventCategoryInterfac
         newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_notasksmsg)
         newView.findViewById<TextView>(R.id.emptystate_cta).setText(R.string.emptystate_notasksscta)
         newView.findViewById<FloatingActionButton>(R.id.fab_action).setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "fabAction", "click")
             callTaskCreateFragment()
         }
     }

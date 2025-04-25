@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Fragments
 
+import Application.AnalyticsManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,8 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.bridesandgrooms.event.OnboardingView
+import com.bridesandgrooms.event.OnboardingView.Companion
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.databinding.EmptyStateFragmentBinding
 
@@ -23,15 +26,7 @@ class EmptyStateFragment : Fragment() {
     private var actionClass: Class<*>? = null
 
     companion object {
-        fun newInstance(message: String, cta: String, actionClass: Class<out Fragment>): EmptyStateFragment {
-            val fragment = EmptyStateFragment()
-            val args = Bundle()
-            args.putString("message", message)
-            args.putString("cta", cta)
-            args.putSerializable("actionClass", actionClass)
-            fragment.arguments = args
-            return fragment
-        }
+        private const val SCREEN_NAME = "empty_state_fragment.xml"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,9 +48,11 @@ class EmptyStateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"EmptyState")
         binding.emptystateMessage.text = message
         binding.emptystateCta.text = cta
         binding.fabAction.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "fabAction", "click")
             try {
                 val fragment = actionClass?.newInstance()
                 parentFragmentManager.beginTransaction()

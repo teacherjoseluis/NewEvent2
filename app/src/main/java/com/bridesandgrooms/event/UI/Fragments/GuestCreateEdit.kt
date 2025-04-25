@@ -37,6 +37,7 @@ import com.bridesandgrooms.event.Model.Guest
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
+import com.bridesandgrooms.event.UI.Fragments.GuestsAll.Companion
 import com.bridesandgrooms.event.databinding.NewGuestBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
@@ -159,7 +160,7 @@ class GuestCreateEdit : Fragment() {
         }
 
         binding.button.setOnClickListener {
-            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Guest")
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Guest", null)
             val isValid = validateAllInputs()
             if (isValid) {
                 saveguest()
@@ -265,7 +266,7 @@ class GuestCreateEdit : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.remove_guest -> {
-                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Remove_Guest")
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Remove_Guest", null)
                 AlertDialog.Builder(context)
                     .setTitle(getString(R.string.delete_message))
                     .setMessage(getString(R.string.delete_entry))
@@ -273,7 +274,7 @@ class GuestCreateEdit : Fragment() {
                         android.R.string.yes
                     ) { dialog, which ->
                         AnalyticsManager.getInstance()
-                            .trackUserInteraction(SCREEN_NAME, "Delete_Guest")
+                            .trackUserInteraction(SCREEN_NAME, "Delete_Guest", null)
                         try {
                             deleteGuest(guestItem.key)
                             finish()
@@ -297,7 +298,7 @@ class GuestCreateEdit : Fragment() {
 
             R.id.call_guest -> {
                 AnalyticsManager.getInstance()
-                    .trackUserInteraction(VendorCreateEdit.SCREEN_NAME, "Call_Vendor")
+                    .trackUserInteraction(SCREEN_NAME, "Call_Vendor", null)
                 val intent = Intent(
                     Intent.ACTION_DIAL,
                     Uri.fromParts("tel", binding.phoneinputedit.text.toString(), null)
@@ -308,7 +309,7 @@ class GuestCreateEdit : Fragment() {
 
             R.id.email_guest -> {
                 AnalyticsManager.getInstance()
-                    .trackUserInteraction(VendorCreateEdit.SCREEN_NAME, "Email_Vendor")
+                    .trackUserInteraction(SCREEN_NAME, "Email_Vendor", null)
                 try {
                     val intent = Intent(Intent.ACTION_SENDTO)
                     intent.data = Uri.parse("mailto:") // only email apps should handle this
@@ -523,6 +524,7 @@ class GuestCreateEdit : Fragment() {
         if (dismiss) {
             binding.dismissButton.visibility = View.VISIBLE
             binding.dismissButton.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "dismiss", "click")
                 binding.bannerCardView.visibility = View.INVISIBLE
             }
         }

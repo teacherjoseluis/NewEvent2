@@ -16,9 +16,10 @@ import androidx.fragment.app.Fragment
 import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
-import com.bridesandgrooms.event.DashboardEvent.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.MVP.DashboardActivityPresenter
+import com.bridesandgrooms.event.OnboardingView
+import com.bridesandgrooms.event.OnboardingView.Companion
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Activities.ExportPDF
 import com.bridesandgrooms.event.databinding.DashboardactivityBinding
@@ -93,6 +94,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 
         inf.calendarView.setOnPreviousPageChangeListener(object : OnCalendarPageChangeListener {
             override fun onChange() {
+                AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"ChangeCalendarPage")
                 month -= 1
                 dashboardAP.getTasksFromMonthYear(month, year)
                 dashboardAP.getPaymentsFromMonthYear(month, year)
@@ -101,6 +103,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 
         inf.calendarView.setOnForwardPageChangeListener(object : OnCalendarPageChangeListener {
             override fun onChange() {
+                AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"ChangeCalendarPage")
                 month += 1
                 dashboardAP.getTasksFromMonthYear(month, year)
                 dashboardAP.getPaymentsFromMonthYear(month, year)
@@ -109,12 +112,14 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
 
         inf.calendarView.setOnCalendarDayClickListener(object : OnCalendarDayClickListener {
             override fun onClick(calendarDay: CalendarDay) {
+                AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"CalendarClick")
                 taskpaymentDate = calendarDay.calendar.time
                 getTasksPaymentsfromDate(taskpaymentDate)
             }
         })
 
         inf.taskItemCalendar.root.setOnClickListener {
+            AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"TaskItemCalendar")
             val fragment = TasksAllCalendar()
             val bundle = Bundle()
             bundle.putLong("taskDate", taskpaymentDate.time)  // Store Date as milliseconds
@@ -125,6 +130,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
         }
 
         inf.paymentItemCalendar.root.setOnClickListener {
+            AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"PaymentItemCalendar")
             val fragment = PaymentsAllCalendar()
             val bundle = Bundle()
             bundle.putLong("paymentDate", taskpaymentDate.time)  // Store Date as milliseconds
@@ -203,6 +209,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
             else {
                 inf.taskcardnodata.visibility = View.VISIBLE
                 inf.floatingNewTask.setOnClickListener {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "floatingNewTask", "click")
                     val fragment = TaskCreateEdit()
                     val arguments = Bundle()
                     arguments.putSerializable("task_date", date)
@@ -256,6 +263,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
             else {
                 inf.paymentcardnodata.visibility = View.VISIBLE
                 inf.floatingNewPayment.setOnClickListener {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "floatingNewPayment", "click")
                     val fragment = PaymentCreateEdit()
                     val arguments = Bundle()
                     arguments.putSerializable("payment_date", date)
@@ -274,6 +282,7 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
     }
 
     companion object {
+        const val SCREEN_NAME = "dashboardactivity.xml"
         const val TAG = "DashboardActivity"
     }
 }

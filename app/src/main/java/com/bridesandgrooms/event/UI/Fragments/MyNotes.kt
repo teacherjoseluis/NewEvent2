@@ -22,6 +22,7 @@ import com.bridesandgrooms.event.Functions.clone
 import com.bridesandgrooms.event.Model.Note
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.Adapters.NoteAdapter
+import com.bridesandgrooms.event.UI.Fragments.MainActivity.Companion
 import com.bridesandgrooms.event.databinding.MyNotesBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -184,6 +185,7 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity, NoteFragmentActionListen
         newView.findViewById<TextView>(R.id.emptystate_message).setText(R.string.emptystate_nonotesmsg)
         newView.findViewById<TextView>(R.id.emptystate_cta).setText(R.string.emptystate_nonotescta)
         newView.findViewById<FloatingActionButton>(R.id.fab_action).setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "fab_action", "click")
             callNoteCreateFragment()
         }
     }

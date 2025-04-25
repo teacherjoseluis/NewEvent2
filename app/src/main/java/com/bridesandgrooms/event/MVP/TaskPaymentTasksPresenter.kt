@@ -3,9 +3,8 @@ package com.bridesandgrooms.event.MVP
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import com.bridesandgrooms.event.Model.Task
-import com.bridesandgrooms.event.TaskPaymentTasks
+import com.bridesandgrooms.event.UI.Fragments.TaskPaymentTasks
 
 class TaskPaymentTasksPresenter(
     val context: Context,

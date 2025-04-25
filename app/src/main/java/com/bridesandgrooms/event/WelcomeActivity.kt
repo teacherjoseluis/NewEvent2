@@ -1,16 +1,22 @@
 package com.bridesandgrooms.event
 
+import Application.AnalyticsManager
 import Application.UserRetrievalException
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
+import com.bridesandgrooms.event.LoginView.Companion
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.databinding.WelcomeUserBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WelcomeActivity : AppCompatActivity() {
     private lateinit var binding: WelcomeUserBinding
@@ -26,8 +32,10 @@ class WelcomeActivity : AppCompatActivity() {
                 userSession = User.getUserAsync()
             } catch (e: UserRetrievalException) {
                 displayErrorMsg(getString(R.string.errorretrieveuser))
+                return@launch
             } catch (e: Exception) {
                 displayErrorMsg(getString(R.string.error_unknown) + " - " + e.toString())
+                return@launch
             }
 
             binding = DataBindingUtil.setContentView(context, R.layout.welcome_user)
@@ -36,17 +44,25 @@ class WelcomeActivity : AppCompatActivity() {
             binding.welcomeHeader.text =
                 context.getString(R.string.app_welcome, userSession.shortname ?: "")
             binding.welcomebutton1.setOnClickListener {
-                //AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "Save_Note")
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "welcomebutton1", "click")
                 showWelcomeScreen2()
                 binding.welcomebutton2.setOnClickListener {
-                    lifecycleScope.launch {
+                    AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "welcomebutton2", "click")
+                    lifecycleScope.launch(Dispatchers.IO) {
                         try {
                             userSession.updateUserStatus("A", context)
                         } catch (e: Exception) {
                             println(e.message)
+                            Log.e("UserUpdate", "Error updating status", e)
+                        }
+                        withContext(Dispatchers.Main) {
+                            val intent = Intent(this@WelcomeActivity, ActivityContainer::class.java)
+                            // Optional: clear previous tasks to prevent stacking
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                            finish()
                         }
                     }
-                    finish()
                 }
             }
         }

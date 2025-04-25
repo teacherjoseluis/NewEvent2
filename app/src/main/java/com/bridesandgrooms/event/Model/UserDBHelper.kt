@@ -95,6 +95,8 @@ class UserDBHelper : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
         values.put("eventbudget", user.eventbudget)
         values.put("numberguests", user.numberguests)
         values.put("distanceunit", user.distanceunit)
+        values.put("gender", user.gender)
+        values.put("agerange", user.agerange)
         try {
             db.insert("USER", null, values)
             Log.d(TAG, "User record inserted")
@@ -157,6 +159,8 @@ class UserDBHelper : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
                     val eventbudget = cursor.getString(cursor.getColumnIndexOrThrow("eventbudget"))
                     val numberguests = cursor.getInt(cursor.getColumnIndexOrThrow("numberguests"))
                     val distanceunit = cursor.getString(cursor.getColumnIndexOrThrow("distanceunit"))
+                    val gender = cursor.getString(cursor.getColumnIndexOrThrow("gender"))
+                    val agerange = cursor.getString(cursor.getColumnIndexOrThrow("agerange"))
                     user =
                         User(
                             userid,
@@ -182,7 +186,9 @@ class UserDBHelper : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
                             vendors,
                             eventbudget,
                             numberguests,
-                            distanceunit
+                            distanceunit,
+                            gender,
+                            agerange
                         )
                     Log.d(TAG, "User $userid record obtained from local DB")
                 } while (cursor.moveToNext())
@@ -222,6 +228,8 @@ class UserDBHelper : CoRAddEditUser, CoRAddEditTask, CoRDeleteTask,
         values.put("eventbudget", user.eventbudget)
         values.put("numberguests", user.numberguests)
         values.put("distanceunit", user.distanceunit)
+        values.put("gender", user.gender)
+        values.put("agerange", user.agerange)
 
         try {
             val retVal = db.update("USER", values, "userid = '${user.userid}'", null)

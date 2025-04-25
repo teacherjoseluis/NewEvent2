@@ -13,7 +13,7 @@
     <string name="already_have_an_account_login">Ya tienes cuenta? Conéctate</string>
     <string name="amount">Monto: </string>
     <string name="error_taskbudgetinput">Monto es requerido!</string>
-    <string name="are_you_bride_groom">Eres Novio/Novia?</string>
+    <string name="are_you_bride_groom">¿Cuál es tu papel en la boda?</string>
     <string name="delete_confirmation">Estás seguro(a) de borrar?</string>
     <string name="delete_entry">Estás seguro(a) de borrar esto?</string>
     <string name="at_what_time">A qué hora?</string>
@@ -191,13 +191,13 @@
     <string name="welcome">Bienvenido(a)</string>
     <string name="onboarding_message">Bienvenido(a), necesitamos crear tu cuenta</string>
     <string name="welcome_message">Bienvenido(a) de regreso!</string>
-    <string name="what_s_your_event">Cuál es tu evento?</string>
+    <string name="what_s_your_event">¿Cuál es tu evento?</string>
     <string name="error_shortnameinput">Cuál es tu nombre?</string>
-    <string name="what_s_your_name">Cuál es tu nombre?</string>
-    <string name="what_day_is_your_event">Cuál es el día de tu evento?</string>
-    <string name="error_eventdateinput">Cuál es la fecha de tu evento?</string>
-    <string name="error_eventnameinput">Cómo llamamos a tu evento?</string>
-    <string name="where_will_you_celebrate">Dónde te celebrarás?</string>
+    <string name="what_s_your_name">¿Cuál es tu nombre?</string>
+    <string name="what_day_is_your_event">¿Cuál es el día de tu evento?</string>
+    <string name="error_eventdateinput">¿Cuál es la fecha de tu evento?</string>
+    <string name="error_eventnameinput">¿Cómo llamamos a tu evento?</string>
+    <string name="where_will_you_celebrate">¿Dónde te celebrarás?</string>
     <string name="yes">si</string>
     <string name="success_account_verification">Tu cuenta fue verificada exitósamente</string>
     <string name="notverified_email_login">Tu correo electrónico no ha sido verificado</string>
@@ -308,7 +308,7 @@
     <string name="task_completed">Completada</string>
     <string name="task_notcompleted">Por Completar</string>
     <string name="goback">Regresar</string>
-    <string name="what_s_your_events_budget">Cuál es el presupuesto de tu evento?</string>
+    <string name="what_s_your_events_budget">¿Cuál es el presupuesto de tu evento?</string>
     <string name="how_many_guests">Cuántos invitados has planeado invitar?</string>
     <string name="number_guests">Invitados planeados</string>
     <string name="wedding_details">Detalles de la Boda</string>
@@ -393,10 +393,19 @@
     <string name="spinnerlanguage">Idioma</string>
     <string name="bride">Novia</string>
     <string name="groom">Novia</string>
+    <string name="agerange">¿Cuál es tu rango de edad?</string>
+    <string name="gender">¿Cuál es tu género?</string>
 
     <string-array name="distance_units" >
         <item>millas</item>
         <item>kilometros</item>
+    </string-array>
+
+    <string-array name="gender_options">
+        <item>Masculino</item>
+        <item>Femenino</item>
+        <item>Otro/Otros</item>
+        <item>Prefiero no decirlo</item>
     </string-array>
 
 </resources>

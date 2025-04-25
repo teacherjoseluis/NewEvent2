@@ -45,7 +45,9 @@ class User(
     var vendors: Int = 0,
     var eventbudget: String = "",
     var numberguests: Int = 0,
-    var distanceunit: String = ""
+    var distanceunit: String = "",
+    var gender: String = "",
+    var agerange: String = ""
 ) : Parcelable {
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -77,6 +79,8 @@ class User(
         parcel.readInt(),
         parcel.readString().toString(),
         parcel.readInt(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
         parcel.readString().toString()
     )
 
@@ -366,6 +370,8 @@ class User(
         parcel.writeString(eventbudget)
         parcel.writeInt(numberguests)
         parcel.writeString(distanceunit)
+        parcel.writeString(gender)
+        parcel.writeString(agerange)
     }
 
     override fun describeContents(): Int {

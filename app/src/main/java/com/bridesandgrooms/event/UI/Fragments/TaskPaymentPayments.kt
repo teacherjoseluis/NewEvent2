@@ -1,5 +1,6 @@
-package com.bridesandgrooms.event
+package com.bridesandgrooms.event.UI.Fragments
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -15,10 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.Payment
 import com.bridesandgrooms.event.Model.TaskPaymentPaymentsPresenter
-import com.bridesandgrooms.event.TaskPaymentTasks.Companion.TAG
+import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Fragments.TaskPaymentTasks.Companion.TAG
 import com.bridesandgrooms.event.UI.Adapters.ItemSwipeListenerPayment
 import com.bridesandgrooms.event.UI.Adapters.PaymentAdapter
-import com.bridesandgrooms.event.UI.Fragments.PaymentCreateEdit
+import com.bridesandgrooms.event.UI.Fragments.SearchVendorTab.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.databinding.TaskpaymentPaymentsBinding
 import com.bridesandgrooms.event.UI.SwipeControllerTasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -111,6 +113,7 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments,
     }
 
     override fun onItemSwiped(paymentList: MutableList<Payment>) {
+        AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"ItemSwiped")
         if (paymentList.isEmpty()) {
             emptyStateFragment()
         } else {
@@ -145,7 +148,7 @@ class TaskPaymentPayments : Fragment(), TaskPaymentPaymentsPresenter.TPPayments,
         bundle.putString("calling_fragment", "EmptyState")
         fragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
-            ?.setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
+            ?.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             ?.replace(
                 R.id.fragment_container,
                 fragment

@@ -23,8 +23,9 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import com.bridesandgrooms.event.DashboardEvent
 import com.bridesandgrooms.event.IOnBackPressed
+import com.bridesandgrooms.event.LoginView
+import com.bridesandgrooms.event.LoginView.Companion
 import com.bridesandgrooms.event.Model.User
 import com.bridesandgrooms.event.R
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
@@ -211,7 +212,7 @@ class Settings : Fragment(), IOnBackPressed {
             binding.settingsbutton.setOnClickListener()
             {
                 AnalyticsManager.getInstance()
-                    .trackUserInteraction(MainActivity.SCREEN_NAME, "Save_Settings")
+                    .trackUserInteraction(SCREEN_NAME, "Save_Settings", null)
                 val isValid = validateAllInputs()
                 if (isValid) {
 
@@ -243,14 +244,7 @@ class Settings : Fragment(), IOnBackPressed {
         }
 
         binding.privacypolicy.setOnClickListener {
-            // ------- Analytics call ----------------
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "PRIVACYPOLICY")
-            MyFirebaseApp.mFirebaseAnalytics.logEvent(
-                FirebaseAnalytics.Event.SELECT_ITEM,
-                bundle
-            )
-            //----------------------------------------
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "privacypolicy", "click")
             val uris = Uri.parse(getString(R.string.privacypolicy))
             val intents = Intent(Intent.ACTION_VIEW, uris)
             val b = Bundle()
@@ -260,13 +254,7 @@ class Settings : Fragment(), IOnBackPressed {
         }
 
         binding.termsandconditions.setOnClickListener {
-            // ------- Analytics call ----------------
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TERMS&CONDITIONS")
-            MyFirebaseApp.mFirebaseAnalytics.logEvent(
-                FirebaseAnalytics.Event.SELECT_ITEM,
-                bundle
-            )
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "terms&conditions", "click")
             //----------------------------------------
             val uris = Uri.parse(getString(R.string.termsandconditions))
             val intents = Intent(Intent.ACTION_VIEW, uris)

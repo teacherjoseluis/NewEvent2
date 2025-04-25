@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import com.bridesandgrooms.event.DashboardEvent
+import com.bridesandgrooms.event.UI.Fragments.DashboardEvent
 import com.bridesandgrooms.event.MVP.PaymentPresenter.Companion.ERRCODEPAYMENTS
 import com.bridesandgrooms.event.MVP.TaskPresenter.Companion.ERRCODETASKS
 import com.bridesandgrooms.event.Model.Category
@@ -24,7 +24,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Date
 
 class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent, val view: View) :
     TaskPresenter.TaskList, PaymentPresenter.PaymentList, GuestPresenter.GuestList,

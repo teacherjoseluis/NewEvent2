@@ -1,223 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/Surface_cream">
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/bannerCardView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/material_margin"
-        android:visibility="invisible"
-        app:cardBackgroundColor="@color/Surface_cream"
-        app:cardCornerRadius="@dimen/material_card_corner_radius"
-        app:cardElevation="2dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/material_padding">
-
-            <TextView
-                android:id="@+id/bannerText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Hola"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-            <Button
-                android:id="@+id/dismissButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dismiss"
-                android:visibility="gone" />
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline40"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/welcomelogo_small"
-        android:contentDescription="@string/weddingringslogo" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/languageonboarding"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline40">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/Surface_cream"
+        android:descendantFocusability="afterDescendants"
+        android:focusableInTouchMode="true">
 
-        <TextView
-            android:id="@+id/languagelabel"
-            style="@style/Title_Large"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bannerCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/material_margin"
+            android:visibility="invisible"
+            app:cardBackgroundColor="@color/Surface_cream"
+            app:cardCornerRadius="@dimen/material_card_corner_radius"
+            app:cardElevation="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/material_padding">
+
+                <TextView
+                    android:id="@+id/bannerText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hola"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                <Button
+                    android:id="@+id/dismissButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dismiss"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/language"
+            android:layout_height="200dp"
+            android:contentDescription="@string/weddingringslogo"
+            app:layout_constraintBottom_toTopOf="@+id/guideline40"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/languagespinner"
-            style="@style/BGSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spinnerlanguage"
-            app:hintAnimationEnabled="true"
-            app:hintEnabled="true"
-            app:layout_constraintTop_toBottomOf="@+id/languagelabel">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/language_autocomplete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/Body_Small"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/nameonboarding"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline40">
-
-        <TextView
-            android:id="@+id/welcomelabel"
-            style="@style/Title_Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nameinput"
-            style="@style/BGTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/welcomelabel">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nameinputedit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/what_s_your_name"
-                android:tag="NAME"
-                android:textAppearance="@style/Body_Small" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/rolelabel"-->
-        <!--            style="@style/Heading6"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginTop="5dp"-->
-        <!--            android:text="@string/are_you_bride_groom"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/nameinput" />-->
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/spinner"
-            style="@style/BGSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/are_you_bride_groom"
-            app:layout_constraintTop_toBottomOf="@+id/nameinput">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/role_autocomplete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/Body_Small"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/spinner2"
-            style="@style/BGTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/whats_your_country"
-            app:layout_constraintTop_toBottomOf="@+id/spinner">
-
-            <!--            <androidx.appcompat.widget.AppCompatAutoCompleteTextView-->
-            <!--                android:id="@+id/country_autocomplete"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:entries="@array/country"-->
-            <!--                android:textAppearance="@style/Body_Small"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/country_autocomplete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:tag="NAME"
-                android:textAppearance="@style/Body_Small" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/eventonboarding"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline40">
-
-        <TextView
-            android:id="@+id/eventlabel"
-            style="@style/Title_Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_an_event"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/welcomelogo_small" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/page1"
+            android:id="@+id/languageonboarding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -226,225 +71,427 @@
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/eventlabel">
+            app:layout_constraintTop_toBottomOf="@+id/guideline40">
+
+            <TextView
+                android:id="@+id/languagelabel"
+                style="@style/Title_Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventnameinput"
+                android:id="@+id/languagespinner"
+                style="@style/BGSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/spinnerlanguage"
+                app:hintAnimationEnabled="true"
+                app:hintEnabled="true"
+                app:layout_constraintTop_toBottomOf="@+id/languagelabel">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/language_autocomplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Body_Small"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/countryspinner"
+                style="@style/BGSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/whats_your_country"
+                app:layout_constraintTop_toBottomOf="@+id/languagespinner">
+
+                <!--            <androidx.appcompat.widget.AppCompatAutoCompleteTextView-->
+                <!--                android:id="@+id/country_autocomplete"-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:entries="@array/country"-->
+                <!--                android:textAppearance="@style/Body_Small"-->
+                <!--                app:layout_constraintStart_toStartOf="parent"-->
+                <!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/country_autocomplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Body_Small"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/nameonboarding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guideline40">
+
+            <TextView
+                android:id="@+id/welcomelabel"
+                style="@style/Title_Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameinput"
                 style="@style/BGTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/welcomelabel">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etname"
+                    android:id="@+id/nameinputedit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/what_s_your_event"
+                    android:hint="@string/what_s_your_name"
                     android:tag="NAME"
                     android:textAppearance="@style/Body_Small" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!--        <TextView-->
+            <!--            android:id="@+id/rolelabel"-->
+            <!--            style="@style/Heading6"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout_marginTop="5dp"-->
+            <!--            android:text="@string/are_you_bride_groom"-->
+            <!--            app:layout_constraintStart_toStartOf="parent"-->
+            <!--            app:layout_constraintTop_toBottomOf="@+id/nameinput" />-->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventbudgetinput"
-                style="@style/BGTextInputLayout"
+                android:id="@+id/genderspinner"
+                style="@style/BGSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/eventnameinput">
+                android:hint="@string/gender"
+                app:layout_constraintTop_toBottomOf="@+id/nameinput">
 
-                <com.blackcat.currencyedittext.CurrencyEditText
-                    android:id="@+id/etbudget"
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/gender_autocomplete"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="@string/wedding_budget"
-                    android:maxLength="12"
-                    android:padding="10dp"
-                    android:tag="MONEY"
-                    android:textAppearance="@style/Body_Small" />
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Body_Small"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventnumberguests"
-                style="@style/BGTextInputLayout"
+                android:id="@+id/agerangespinner"
+                style="@style/BGSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/eventbudgetinput">
+                android:hint="@string/agerange"
+                app:layout_constraintTop_toBottomOf="@+id/genderspinner">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etnumberguests"
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/agerange_autocomplete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/number_guests"
-                    android:inputType="number"
-                    android:tag="NUMBER"
-                    android:textAppearance="@style/Body_Small" />
+                    android:textAppearance="@style/Body_Small"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/rolespinner"
+                style="@style/BGSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/are_you_bride_groom"
+                app:layout_constraintTop_toBottomOf="@+id/agerangespinner">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/role_autocomplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Body_Small"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/page2"
+            android:id="@+id/eventonboarding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/eventlabel">
+            app:layout_constraintTop_toBottomOf="@+id/guideline40">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventdateinput"
-                style="@style/BGTextInputLayout"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/eventlabel"
+                style="@style/Title_Large"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/create_an_event"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPlannedDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:hint="@string/what_day_is_your_event"
-                    android:inputType="date"
-                    android:textAppearance="@style/Body_Small" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventtimeinput"
-                style="@style/BGTextInputLayout"
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/page1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/eventdateinput">
+                app:layout_constraintTop_toBottomOf="@id/eventlabel">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPlannedTime"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/eventnameinput"
+                    style="@style/BGTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:hint="@string/at_what_time"
-                    android:inputType="date"
-                    android:textAppearance="@style/Body_Small" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            <!--            <com.google.android.material.textfield.TextInputLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="10dp"-->
-            <!--                android:clickable="false"-->
-            <!--                android:focusable="false"-->
-            <!--                android:inputType="date"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@id/eventtimeinput">-->
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/what_s_your_event"
+                        android:tag="NAME"
+                        android:textAppearance="@style/Body_Small" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <!--                <TextView-->
-            <!--                    style="@style/BG_ActionTextSmall"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:text="@string/where_will_you_celebrate" />-->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/eventbudgetinput"
+                    style="@style/BGTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/eventnameinput">
 
-            <!--                <androidx.fragment.app.FragmentContainerView-->
-            <!--                    android:id="@+id/etlocation"-->
-            <!--                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content" />-->
-            <!--            </com.google.android.material.textfield.TextInputLayout>-->
+                    <com.blackcat.currencyedittext.CurrencyEditText
+                        android:id="@+id/etbudget"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="@string/wedding_budget"
+                        android:maxLength="12"
+                        android:padding="10dp"
+                        android:tag="MONEY"
+                        android:textAppearance="@style/Body_Small" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/eventlocationinput"
-                style="@style/BGTextInputLayout"
-                android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/eventnumberguests"
+                    style="@style/BGTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/eventbudgetinput">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etnumberguests"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/number_guests"
+                        android:inputType="number"
+                        android:tag="NUMBER"
+                        android:textAppearance="@style/Body_Small" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/page2"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/eventtimeinput">
+                app:layout_constraintTop_toBottomOf="@id/eventlabel">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etlocation"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/eventdateinput"
+                    style="@style/BGTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:hint="@string/where_will_you_celebrate"
-                    android:textAppearance="@style/Body_Small" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPlannedDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:hint="@string/what_day_is_your_event"
+                        android:inputType="date"
+                        android:textAppearance="@style/Body_Small" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/eventtimeinput"
+                    style="@style/BGTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/eventdateinput">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPlannedTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:hint="@string/at_what_time"
+                        android:inputType="date"
+                        android:textAppearance="@style/Body_Small" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--            <com.google.android.material.textfield.TextInputLayout-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:layout_marginTop="10dp"-->
+                <!--                android:clickable="false"-->
+                <!--                android:focusable="false"-->
+                <!--                android:inputType="date"-->
+                <!--                app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                app:layout_constraintStart_toStartOf="parent"-->
+                <!--                app:layout_constraintTop_toBottomOf="@id/eventtimeinput">-->
+
+                <!--                <TextView-->
+                <!--                    style="@style/BG_ActionTextSmall"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="@string/where_will_you_celebrate" />-->
+
+                <!--                <androidx.fragment.app.FragmentContainerView-->
+                <!--                    android:id="@+id/etlocation"-->
+                <!--                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content" />-->
+                <!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/eventlocationinput"
+                    style="@style/BGTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/eventtimeinput">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etlocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:hint="@string/where_will_you_celebrate"
+                        android:textAppearance="@style/Body_Small" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <Button
+            android:id="@+id/submitlanguage"
+            style="@style/BG_ActionButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/continuemessage"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+        <Button
+            android:id="@+id/submituser"
+            style="@style/BG_ActionButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/continuemessage"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+        <Button
+            android:id="@+id/submitevent"
+            style="@style/BG_ActionButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/continuemessage"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+        <Button
+            android:id="@+id/submitevent2"
+            style="@style/BG_ActionButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.3" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/submitlanguage"
-        style="@style/BG_ActionButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/continuemessage"
-        android:visibility="visible"
-        app:backgroundTint="@color/Primary_cream"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/submituser"
-        style="@style/BG_ActionButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/continuemessage"
-        android:visibility="invisible"
-        app:backgroundTint="@color/Primary_cream"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/submitevent"
-        style="@style/BG_ActionButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/continuemessage"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/submitevent2"
-        style="@style/BG_ActionButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/submit"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline40"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

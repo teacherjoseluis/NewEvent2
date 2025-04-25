@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Adapters
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bridesandgrooms.event.Model.contactGuest
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Activities.ExportPDF.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.UI.Fragments.GuestFragmentActionListener
 import com.bridesandgrooms.event.UI.LetterAvatar
 
@@ -44,10 +46,12 @@ class GuestAdapter(
 
         init {
             customGuestCardView.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "customGuestCardView", "click")
                 handleClick()
             }
 
             customGuestCardView.setOnLongClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "customGuestCardView_Long", "click")
                 toggleState()
                 true
             }

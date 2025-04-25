@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Activities
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -197,6 +198,7 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
         binding = DataBindingUtil.setContentView(this, R.layout.exportpdf)
         binding.action1.paint.isUnderlineText = true
         binding.action1.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "action1", "click")
             finish()
         }
         context = applicationContext
@@ -395,6 +397,7 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
     }
 
     companion object {
+        const val SCREEN_NAME="exportpdf.xml"
         const val TAG = "ExportPDF"
     }
 }

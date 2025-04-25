@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Adapters
 
+import Application.AnalyticsManager
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.bridesandgrooms.event.Model.Category
 import com.bridesandgrooms.event.Model.PaymentDBHelper
 import com.bridesandgrooms.event.Model.VendorPayment
 import com.bridesandgrooms.event.R
+import com.bridesandgrooms.event.UI.Adapters.TaskAdapter.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.UI.LetterAvatar
 
 class VendorAdapter(
@@ -49,6 +51,7 @@ class VendorAdapter(
 
         init {
             customVendorCardView.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "customVendorCardView", "click")
                 handleClick()
             }
 

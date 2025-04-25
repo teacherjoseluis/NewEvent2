@@ -22,7 +22,11 @@ import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton
 import com.bridesandgrooms.event.Functions.UserSessionHelper.saveUserSession
+import com.bridesandgrooms.event.Functions.getEnglishString
+import com.bridesandgrooms.event.UI.Adapters.ContactAdapter
+import com.bridesandgrooms.event.UI.Adapters.ContactAdapter.Companion
 import com.bridesandgrooms.event.UI.FieldValidators.InputValidator
+import com.bridesandgrooms.event.UI.Fragments.GuestCreateEdit.Companion.SCREEN_NAME
 import com.bridesandgrooms.event.databinding.LoginVideoBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -66,7 +70,87 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
             showWelcomeScreen()
         }
 
+        // ********************************* SignUp section *********************************************
+        binding.signupbuttonstart.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "signupbuttonstart", "click")
+            //Maybe this is a good moment to implement an animation for the transition
+            //Signup layout becomes visible
+            showSignUpScreen()
+            binding.editEmailsignup.onFocusChangeListener = focusChangeListener
+            binding.editPasswordsignup1.onFocusChangeListener = focusChangeListener
+            binding.editPasswordsignup2.onFocusChangeListener = focusChangeListener
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+
+            binding.signupbutton.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "signupbutton", "click")
+                val isValid = validateAllInputsSignUp()
+                if (isValid) {
+                    val userEmail = binding.editEmailsignup.text.toString()
+                    val userPassword = binding.editPasswordsignup1.text.toString()
+
+                    lifecycleScope.launch {
+                        user = User()
+                        
+                        try {
+                            val signUpResult = user.signup(userEmail, userPassword)
+                            if (signUpResult) {
+                                withContext(Dispatchers.Main) {
+                                    showBanner(getString(R.string.email_signup_success), false)
+                                }
+                            }
+                        } catch (e: FirebaseAuthUserCollisionException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.error_emailaccountexists),
+                                "signup",
+                                e.stackTraceToString()
+                            )
+                            displayErrorMsg(getString(R.string.error_emailaccountexists) + e.toString())
+                        } catch (e: FirebaseAuthWeakPasswordException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.weakpassword),
+                                "signup",
+                                e.stackTraceToString()
+                            )
+                            displayErrorMsg(getString(R.string.weakpassword) + e.toString())
+                        } catch (e: FirebaseAuthInvalidCredentialsException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.invalidemailpassword),
+                                "signup",
+                                e.stackTraceToString()
+                            )
+                            displayErrorMsg(getString(R.string.invalidemailpassword) + e.toString())
+                        } catch (e: FirebaseAuthEmailException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.errorsendingverification),
+                                "signup",
+                                e.stackTraceToString()
+                            )
+                            displayErrorMsg(getString(R.string.errorsendingverification) + e.toString())
+                        } catch (e: Exception) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.error_emailsignup),
+                                "signup",
+                                e.stackTraceToString()
+                            )
+                            displayErrorMsg(getString(R.string.error_emailsignup) + e.toString())
+                        }
+                    }
+                    logoffApp()
+                }
+            }
+            binding.loginlink.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "loginlink", "click")
+                showLoginScreen()
+            }
+        }
+
         binding.loginbuttonstart.setOnClickListener {
+            AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "loginbuttonstart", "click")
             //Maybe this is a good moment to implement an animation for the transition
             //Login layout becomes visible
             showLoginScreen()
@@ -75,6 +159,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
 
             // ********************************* Login section *********************************************
             binding.loginbutton.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "loginbutton", "click")
                 val isValid = validateAllInputsLogin()
                 if (isValid) {
                     val userEmail = binding.editEmaillogin.text.toString()
@@ -89,22 +174,66 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                             val firebaseUser = authResult.user!!
                             user.userid = firebaseUser.uid
                             user.email = firebaseUser.email.toString()
+                            AnalyticsManager.getInstance().setUserProperties(userId = firebaseUser.uid, user.role, user.numberguests, user.eventbudget, user.gender, user.agerange)
                             onLoginSuccess(user.email)
                         } catch (e: EmailVerificationException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.error_emailverification),
+                                "login",
+                                e.stackTraceToString()
+                            )
                             displayErrorMsg(getString(R.string.error_emailverification)/* + e.toString()*/)
                         } catch (e: FirebaseAuthInvalidCredentialsException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.invalidemailpassword),
+                                "login",
+                                e.stackTraceToString()
+                            )
                             displayErrorMsg(getString(R.string.invalidemailpassword))
                         } catch (e: UserAuthenticationException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.failed_email_login),
+                                "login",
+                                e.stackTraceToString()
+                            )
                             displayErrorMsg(getString(R.string.failed_email_login)/* + e.toString()*/)
                         } catch (e: SessionAccessException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.error_usersession),
+                                "login",
+                                e.stackTraceToString()
+                            )
                             displayErrorMsg(getString(R.string.error_usersession)/* + e.toString()*/)
                         } catch (e: ExistingSessionException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.error_usersession),
+                                "login",
+                                e.stackTraceToString()
+                            )
                             displayErrorMsg(getString(R.string.error_usersession)/* + e.toString()*/)
                         } catch (e: NetworkConnectivityException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.error_networkconnectivity),
+                                "login",
+                                e.stackTraceToString()
+                            )
                             displayErrorMsg(getString(R.string.error_networkconnectivity)/* + e.toString()*/)
                         } catch (e: FirebaseDataImportException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.error_firebaseimport),
+                                "login",
+                                e.stackTraceToString()
+                            )
                             displayErrorMsg(getString(R.string.error_firebaseimport)/* + e.toString()*/)
                         } catch (e: EventNotFoundException) {
+                            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"Onboarding")
                             onOnboarding(
                                 e.firebaseUser.uid,
                                 e.firebaseUser.email.toString(),
@@ -115,11 +244,55 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                 }
             }
 
-            binding.signuplink.setOnClickListener {
-                showSignUpScreen()
+            binding.forgotemaillink.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "forgotemaillink", "click")
+                val isValid = validateAllInputsForgotEmail()
+                if (isValid) {
+                    val userEmail = binding.editEmaillogin.text.toString()
+                    val user = User()
+                    lifecycleScope.launch {
+                        try {
+                            user.sendPasswordReset(userEmail)
+                        } catch (e: FirebaseAuthInvalidUserException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.resetpwderror_authinvaliduser),
+                                "forgot password",
+                                e.stackTraceToString()
+                            )
+                            displayErrorMsg(getString(R.string.resetpwderror_authinvaliduser) + e.toString())
+                        } catch (e: FirebaseAuthInvalidCredentialsException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.resetpwderror_invalidcredentials),
+                                "forgot password",
+                                e.stackTraceToString()
+                            )
+                            displayErrorMsg(getString(R.string.resetpwderror_invalidcredentials) + e.toString())
+                        } catch (e: FirebaseAuthEmailException) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.resetpwderror_authmailexception),
+                                "forgot password",
+                                e.stackTraceToString()
+                            )
+                            displayErrorMsg(getString(R.string.resetpwderror_authmailexception) + e.toString())
+                        } catch (e: Exception) {
+                            AnalyticsManager.getInstance().trackError(
+                                SCREEN_NAME,
+                                getEnglishString(this@LoginView, R.string.resetpwderror_authmailexception),
+                                "forgot password",
+                                e.stackTraceToString()
+                            )
+                            displayErrorMsg(getString(R.string.resetpwderror_authmailexception) + e.toString())
+                        }
+                    }
+                }
             }
+
             // Google Sign In
             binding.signgoogle.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "signgoogle", "click")
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(getString(R.string.default_web_client_id))
                     .requestEmail()
@@ -129,78 +302,12 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                 val signInIntent = mGoogleSignInClient.signInIntent
                 startActivityForResult(signInIntent, RC_SIGN_IN)
             }
-        }
-        // ********************************* SignUp section *********************************************
-        binding.signupbuttonstart.setOnClickListener {
-            //Maybe this is a good moment to implement an animation for the transition
-            //Signup layout becomes visible
-            showSignUpScreen()
-            binding.editEmailsignup.onFocusChangeListener = focusChangeListener
-            binding.editPasswordsignup1.onFocusChangeListener = focusChangeListener
-            binding.editPasswordsignup2.onFocusChangeListener = focusChangeListener
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 
-            binding.signupbutton.setOnClickListener {
-                val isValid = validateAllInputsSignUp()
-                if (isValid) {
-                    val userEmail = binding.editEmailsignup.text.toString()
-                    val userPassword = binding.editPasswordsignup1.text.toString()
-
-                    lifecycleScope.launch {
-                        user = User()
-                        
-                        try {
-                            val signUpResult = user.signup(userEmail, userPassword)
-                            if (signUpResult) {
-                                withContext(Dispatchers.Main) {
-                                    showBanner(getString(R.string.email_signup_success), false)
-//                                    Toast.makeText(
-//                                        this@LoginView,
-//                                        getString(R.string.success_account_verification),
-//                                        Toast.LENGTH_SHORT
-//                                    ).show()
-                                }
-                            }
-                        } catch (e: FirebaseAuthUserCollisionException) {
-                            displayErrorMsg(getString(R.string.error_emailaccountexists) + e.toString())
-                        } catch (e: FirebaseAuthWeakPasswordException) {
-                            displayErrorMsg(getString(R.string.weakpassword) + e.toString())
-                        } catch (e: FirebaseAuthInvalidCredentialsException) {
-                            displayErrorMsg(getString(R.string.invalidemailpassword) + e.toString())
-                        } catch (e: FirebaseAuthEmailException) {
-                            displayErrorMsg(getString(R.string.errorsendingverification) + e.toString())
-                        } catch (e: Exception) {
-                            displayErrorMsg(getString(R.string.error_emailsignup) + e.toString())
-                        }
-                    }
-                    logoffApp()
-                }
+            binding.signuplink.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "signuplink", "click")
+                showSignUpScreen()
             }
 
-            binding.loginlink.setOnClickListener {
-                showLoginScreen()
-            }
-        }
-
-        binding.forgotemaillink.setOnClickListener {
-            val isValid = validateAllInputsForgotEmail()
-            if (isValid) {
-                val userEmail = binding.editEmaillogin.text.toString()
-                val user = User()
-                lifecycleScope.launch {
-                    try {
-                        user.sendPasswordReset(userEmail)
-                    } catch (e: FirebaseAuthInvalidUserException) {
-                        displayErrorMsg(getString(R.string.resetpwderror_authinvaliduser) + e.toString())
-                    } catch (e: FirebaseAuthInvalidCredentialsException) {
-                        displayErrorMsg(getString(R.string.resetpwderror_invalidcredentials) + e.toString())
-                    } catch (e: FirebaseAuthEmailException) {
-                        displayErrorMsg(getString(R.string.resetpwderror_authmailexception) + e.toString())
-                    } catch (e: Exception) {
-                        displayErrorMsg(getString(R.string.resetpwderror_authmailexception) + e.toString())
-                    }
-                }
-            }
         }
     }
 
@@ -298,6 +405,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
         if (dismiss) {
             binding.dismissButton.visibility = View.VISIBLE
             binding.dismissButton.setOnClickListener {
+                AnalyticsManager.getInstance().trackUserInteraction(SCREEN_NAME, "dismissButton", "click")
                 binding.bannerCardView.visibility = View.INVISIBLE
             }
         }
@@ -336,18 +444,44 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
                     val firebaseUser = authResult.user!!
                     user.userid = firebaseUser.uid
                     user.email = firebaseUser.email.toString()
+                    AnalyticsManager.getInstance().setUserProperties(userId = firebaseUser.uid, user.role, user.numberguests, user.eventbudget, user.gender, user.agerange)
                     onLoginSuccess(user.email)
                 } catch (e: ApiException) {
                     Log.e(TAG, "Google sign in failed", e)
                 } catch (e: SessionAccessException) {
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        getEnglishString(this@LoginView, R.string.error_usersession),
+                        "login",
+                        e.stackTraceToString()
+                    )
                     displayErrorMsg(getString(R.string.error_usersession)/* + e.toString()*/)
                 } catch (e: ExistingSessionException) {
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        getEnglishString(this@LoginView, R.string.error_usersession),
+                        "login",
+                        e.stackTraceToString()
+                    )
                     displayErrorMsg(getString(R.string.error_usersession)/* + e.toString()*/)
                 } catch (e: NetworkConnectivityException) {
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        getEnglishString(this@LoginView, R.string.error_networkconnectivity),
+                        "login",
+                        e.stackTraceToString()
+                    )
                     displayErrorMsg(getString(R.string.error_networkconnectivity)/* + e.toString()*/)
                 } catch (e: FirebaseDataImportException) {
+                    AnalyticsManager.getInstance().trackError(
+                        SCREEN_NAME,
+                        getEnglishString(this@LoginView, R.string.error_firebaseimport),
+                        "login",
+                        e.stackTraceToString()
+                    )
                     displayErrorMsg(getString(R.string.error_firebaseimport)/* + e.toString()*/)
                 } catch (e: EventNotFoundException) {
+                    AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"Onboarding")
                     onOnboarding(e.firebaseUser.uid, e.firebaseUser.email.toString(), "google")
                 }
             }
@@ -363,6 +497,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
         builder.setPositiveButton(
             getString(R.string.accept)
         ) { _, _ ->
+            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"Logoff")
             finish()
         }
         val dialog = builder.create()
@@ -406,6 +541,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
 
     override fun onBackPressed() {
         if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"ExitApp")
             super.onBackPressed()
             finish()
         } else {
@@ -419,6 +555,7 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
 
     companion object {
         private const val TAG = "LoginView"
+        private const val SCREEN_NAME = "login_video.xml"
         private const val RC_SIGN_IN = 9001
     }
 }
