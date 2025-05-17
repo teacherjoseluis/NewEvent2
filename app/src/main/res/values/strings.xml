@@ -60,6 +60,7 @@
     <string name="payments">Payments</string>
     <string name="payment">Payment</string>
     <string name="tasks">Tasks</string>
+    <string name="tasks_payments">Tasks &amp; Payments</string>
     <string name="blog">Blog</string>
     <string name="post">Post</string>
     <string name="error_gettingdata">There was an error trying to get Event data</string>
@@ -406,17 +407,15 @@
     <string name="agerange">What\'s your age range?</string>
     <string name="gender">What\'s your gender?</string>
 
-    <string-array name="distance_units" >
+    <string-array name="distance_units">
         <item>miles</item>
         <item>kilometers</item>
     </string-array>
 
-    <string-array name="gender_options">
-        <item>Male</item>
-        <item>Female</item>
-        <item>Other</item>
-        <item>Prefer not to say</item>
-    </string-array>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_unspecified">Rather not say</string>
+    <string name="permission_denied_message">Permission Denied</string>
 
     <string-array name="age_ranges">
         <item>Under 18</item>

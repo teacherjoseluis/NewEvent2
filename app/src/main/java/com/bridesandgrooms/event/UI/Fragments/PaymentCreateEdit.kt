@@ -97,6 +97,8 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
             val chip = Chip(context)
             chip.text = when (language) {
                 "en" -> category.en_name
+                "pt" -> category.pt_name
+                "fr" -> category.fr_name
                 else -> category.es_name
             }
             chip.apply {
@@ -131,7 +133,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
 
         paymentItem = arguments?.getParcelable("payment") ?: Payment()
 
-        if (paymentItem .key.isNotEmpty()) {
+        if (paymentItem.key.isNotEmpty()) {
             toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.edit_guest)
             binding.paymentnameinputedit.setText(paymentItem.name)
             binding.paymentdateinputedit.setText(paymentItem.date)
@@ -139,7 +141,16 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
 
             val selectedChipId = binding.groupeditpayment.children
                 .filterIsInstance<Chip>()
-                .find { it.text == if (language == "en") list.find { category -> category.code == paymentItem.category }?.en_name else list.find { category -> category.code == paymentItem.category }?.es_name }
+                .find {
+                    val category = list.find { category -> category.code == paymentItem.category }
+                    val chipLabel = when (language) {
+                        "es" -> category?.es_name
+                        "fr" -> category?.fr_name
+                        "pt" -> category?.pt_name
+                        else -> category?.en_name
+                    }
+                    it.text == chipLabel
+                }
                 ?.id
 
             selectedChipId?.let {
@@ -285,6 +296,25 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         paymentItem.amount = binding.paymentamountinputedit.text.toString()
         paymentItem.category =  getCategory()
 
+        val selectedVendor = binding.vendorAutocomplete.text.toString()
+        if (selectedVendor.isNotBlank() && selectedVendor != getString(R.string.selectvendor)) {
+            try {
+                val vendordb = VendorDBHelper()
+                val vendorid = vendordb.getVendorIdByName(selectedVendor)
+                if (vendorid?.isNotEmpty() == true) {
+                    paymentItem.vendorid = vendorid
+                }
+            } catch (e: Exception) {
+                AnalyticsManager.getInstance().trackError(
+                    SCREEN_NAME,
+                    e.message.toString(),
+                    "getVendorIdByName",
+                    e.stackTraceToString()
+                )
+                Log.e(TAG, e.message.toString())
+            }
+        }
+
         if (!PermissionUtils.checkPermissions(requireActivity(), "calendar")) {
             val permissions = PermissionUtils.requestPermissionsList("calendar")
             requestPermissions(permissions, PERMISSION_CODE)
@@ -356,6 +386,8 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
                     val language = this.resources.configuration.locales.get(0).language
                     val permissionwording = when (language) {
                         "en" -> calendarpermissions.permission_wording_en
+                        "pt" -> calendarpermissions.permission_wording_pt
+                        "fr" -> calendarpermissions.permission_wording_fr
                         else -> calendarpermissions.permission_wording_es
                     }
                     binding.permissions.root.findViewById<TextView>(R.id.permissionwording).text = permissionwording
@@ -390,6 +422,16 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
             when (language) {
                 "en" -> {
                     if (categoryName == category.en_name) {
+                        myCategory = category.code
+                    }
+                }
+                "pt" -> {
+                    if (categoryName == category.pt_name) {
+                        myCategory = category.code
+                    }
+                }
+                "fr" -> {
+                    if (categoryName == category.fr_name) {
                         myCategory = category.code
                     }
                 }

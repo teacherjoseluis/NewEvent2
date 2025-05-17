@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.bridesandgrooms.event.R
@@ -30,6 +32,7 @@ object PermissionUtils {
                 ))
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun checkPermissions(context: Context, permissionType: String): Boolean {
         return when (permissionType) {
             "calendar" -> {
@@ -48,6 +51,9 @@ object PermissionUtils {
                 checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                         checkSelfPermission(context, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED
             }
+            "notification" -> {
+                checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+            }
             else -> {
                 // Handle other permission types here if needed
                 false
@@ -55,6 +61,7 @@ object PermissionUtils {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun requestPermissions(activity: Activity) {
         val permissions =
             arrayOf(
@@ -63,12 +70,14 @@ object PermissionUtils {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.INTERNET
+                Manifest.permission.INTERNET,
+                Manifest.permission.POST_NOTIFICATIONS
             )
         //show popup to request runtime permission
         ActivityCompat.requestPermissions(activity, permissions, TaskCreateEdit.PERMISSION_CODE)
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun requestPermissionsList(permissionType: String) : Array<String>  {
         val permissions = when (permissionType) {
             "calendar" -> arrayOf(
@@ -86,6 +95,9 @@ object PermissionUtils {
             "location" -> arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.INTERNET
+            )
+            "notification" -> arrayOf(
+                Manifest.permission.POST_NOTIFICATIONS
             )
             else -> arrayOf() // Return an empty array if an unsupported permission type is provided
         }

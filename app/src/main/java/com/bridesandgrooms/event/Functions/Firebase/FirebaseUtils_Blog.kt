@@ -44,22 +44,6 @@ internal fun getBlog(
         override fun onCancelled(error: DatabaseError) {
             println("loadPost:onCancelled ${error.toException()}")
         }
-
-//        suspend fun getImageValue(mediaRef: DatabaseReference, imagePath: String): String {
-//            return suspendCancellableCoroutine { continuation ->
-//                val query = mediaRef.child(imagePath)
-//                query.addListenerForSingleValueEvent(object : ValueEventListener {
-//                    override fun onDataChange(snapshot: DataSnapshot) {
-//                        val imageValue = snapshot.child("file").value as String
-//                        continuation.resume(imageValue)
-//                    }
-//
-//                    override fun onCancelled(error: DatabaseError) {
-//                        continuation.resumeWithException(error.toException())
-//                    }
-//                })
-//            }
-//        }
     }
     postRef.addValueEventListener(blogListenerActive)
 }

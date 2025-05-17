@@ -402,10 +402,10 @@
         <item>kilometers</item>
     </string-array>
 
-    <string-array name="gender_options">
-        <item>Masculino</item>
-        <item>Feminino</item>
-        <item>Outro/Outros</item>
-        <item>Prefiro não dizer</item>
-    </string-array>
+    <string name="gender_male">Masculino</string>
+    <string name="gender_female">Feminino</string>
+    <string name="gender_unspecified">Prefiro não dizer</string>
+
+    <string name="tasks_payments">Tarefas &amp; Pagamentos</string>
+    <string name="permission_denied_message">Permission Denied</string>
 </resources>

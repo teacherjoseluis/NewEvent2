@@ -282,13 +282,8 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
 
-        //Request permissions
-        if (checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) ==
-            PackageManager.PERMISSION_DENIED
-        ) {
-            //permission denied
-            val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-            //show popup to request runtime permission
+        if (!PermissionUtils.checkPermissions(context, "storage")) {
+            val permissions = PermissionUtils.requestPermissionsList("storage")
             requestPermissions(permissions, PERMISSION_CODE)
         } else {
             //permission already granted

@@ -392,20 +392,21 @@
     <string name="language">Seleccione su idioma</string>
     <string name="spinnerlanguage">Idioma</string>
     <string name="bride">Novia</string>
-    <string name="groom">Novia</string>
+    <string name="groom">Novio</string>
     <string name="agerange">¿Cuál es tu rango de edad?</string>
     <string name="gender">¿Cuál es tu género?</string>
 
-    <string-array name="distance_units" >
+    <string-array name="distance_units">
         <item>millas</item>
         <item>kilometros</item>
     </string-array>
 
-    <string-array name="gender_options">
-        <item>Masculino</item>
-        <item>Femenino</item>
-        <item>Otro/Otros</item>
-        <item>Prefiero no decirlo</item>
-    </string-array>
+    <string name="gender_male">Masculino</string>
+    <string name="gender_female">Femenino</string>
+    <string name="gender_unspecified">Prefiero no decirlo</string>
+
+
+    <string name="tasks_payments">Tareas &amp; Pagos</string>
+    <string name="permission_denied_message">Permission Denied</string>
 
 </resources>

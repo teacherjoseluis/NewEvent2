@@ -35,6 +35,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.Locale
 
 class Settings : Fragment(), IOnBackPressed {
 
@@ -80,28 +82,34 @@ class Settings : Fragment(), IOnBackPressed {
             }
 
             if (userSession.eventbudget.isNotEmpty()) {
-                binding.budgetinput.setText(userSession.eventbudget)
+                val budgetValue = userSession.eventbudget.toDoubleOrNull() ?: 0.0
+                val formattedBudget = NumberFormat.getCurrencyInstance(Locale.getDefault()).format(budgetValue)
+                binding.budgetinput.setText(formattedBudget)
+
             }
 
             if (userSession.numberguests.toString().isNotEmpty()) {
                 binding.numberguestsinput.setText(userSession.numberguests.toString())
             }
 
-            val roles = arrayOf("Bride", "Groom") // Example roles
-            val roleAdapter =
-                ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, roles)
+            val roleCanonicalMap = mapOf(
+                "bride" to context.getString(R.string.bride),
+                "groom" to context.getString(R.string.groom)
+            )
+            val roleDisplayMap = roleCanonicalMap.entries.associate { (k, v) -> v to k }
+
+            val roles = roleCanonicalMap.values.toList()
+
+            val roleAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, roles)
             binding.roleAutocomplete.setAdapter(roleAdapter)
 
             if (userSession.role.isNotEmpty()) {
-                val matchingRole =
-                    roles.firstOrNull { it.equals(userSession.role, ignoreCase = true) }
-                if (matchingRole != null) {
-                    binding.roleAutocomplete.setText(
-                        matchingRole,
-                        false
-                    ) // Set text without filtering
+                val localizedRole = roleCanonicalMap[userSession.role.lowercase()]
+                if (localizedRole != null) {
+                    binding.roleAutocomplete.setText(localizedRole, false)
                 }
             }
+
 
 //            val countries = arrayOf("MX", "CL", "PE") // Example countries
 //            val countryAdapter = ArrayAdapter(
@@ -141,21 +149,10 @@ class Settings : Fragment(), IOnBackPressed {
                 }
             }
 
-            binding.roleAutocomplete.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                        userSession.role = when (p2) {
-                            0 -> "Bride"
-                            1 -> "Groom"
-                            else -> "Bride"
-                        }
-                    }
-
-                    override fun onNothingSelected(p0: AdapterView<*>?) {
-                        TODO("Not yet implemented")
-                    }
-                }
-
+            binding.roleAutocomplete.setOnItemClickListener { _, _, position, _ ->
+                val selectedDisplay = roleAdapter.getItem(position) ?: return@setOnItemClickListener
+                userSession.role = roleDisplayMap[selectedDisplay] ?: "bride"
+            }
 
             binding.nameinput.onFocusChangeListener = focusChangeListener
             binding.budgetinput.onFocusChangeListener = focusChangeListener
@@ -218,9 +215,17 @@ class Settings : Fragment(), IOnBackPressed {
 
                     userSession.apply {
                         shortname = binding.nameinput.text.toString()
-                        role = binding.roleAutocomplete.text.toString()
+                        val selectedRoleDisplay = binding.roleAutocomplete.text.toString()
+                        role = roleDisplayMap[selectedRoleDisplay] ?: "bride"
                         //country = binding.countryAutocomplete.text.toString()
-                        eventbudget = binding.budgetinput.text.toString()
+                        //eventbudget = binding.budgetinput.text.toString()
+                        val rawFormatted = binding.budgetinput.text.toString()
+                        val cleaned = rawFormatted.replace(Regex("[^\\d.,]"), "")
+                        val normalized = cleaned.replace(".", "").replace(",", ".") // for EU-style input
+
+                        val parsedValue = normalized.toDoubleOrNull() ?: 0.0
+                        eventbudget = String.format(Locale.US, "%.2f", parsedValue)
+
                         numberguests = binding.numberguestsinput.text.toString().toIntOrNull() ?: 0
                         distanceunit = binding.distanceAutocomplete.text.toString()
                     }

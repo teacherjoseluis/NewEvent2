@@ -400,10 +400,10 @@
         <item>kilomètres</item>
     </string-array>
 
-    <string-array name="gender_options">
-        <item>Masculin</item>
-        <item>Féminin</item>
-        <item>Autre</item>
-        <item>Préfère ne pas le dire</item>
-    </string-array>
+    <string name="gender_male">Masculin</string>
+    <string name="gender_female">Féminin</string>
+    <string name="gender_unspecified">Préfère ne pas le dire</string>
+
+    <string name="tasks_payments">Tâches &amp; Paiements</string>
+    <string name="permission_denied_message">Permission Denied</string>
 </resources>

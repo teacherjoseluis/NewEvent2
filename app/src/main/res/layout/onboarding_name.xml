@@ -15,6 +15,16 @@
         android:descendantFocusability="afterDescendants"
         android:focusableInTouchMode="true">
 
+        <include
+            android:id="@+id/permissions"
+            layout="@layout/permission_settings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/bannerCardView"
             android:layout_width="match_parent"
@@ -52,6 +62,7 @@
         </androidx.cardview.widget.CardView>
 
         <ImageView
+            android:id="@+id/BG_Logo"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:contentDescription="@string/weddingringslogo"
