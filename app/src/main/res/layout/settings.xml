@@ -183,9 +183,10 @@
                     <com.blackcat.currencyedittext.CurrencyEditText
                         android:id="@+id/budgetinput"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:minHeight="56dp"
+                        android:layout_height="wrap_content"
                         android:hint="@string/wedding_budget"
-                        android:maxLength="10"
+                        android:maxLength="15"
                         android:padding="10dp"
                         android:tag="MONEY"
                         android:textAppearance="@style/Body_Small" />

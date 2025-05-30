@@ -376,7 +376,7 @@
     <string name="searchvendor_addedmsg">Você adicionou %1$s à sua lista de fornecedores</string>
     <string name="date_text">Data: %1$s</string>
     <string name="budget_text">Orçamento: %1$s</string>
-    <string name="payment_text">Pago: %1$s</string>
+    <string name="payment_text">Nome do Pagamento</string>
     <string name="status_text">Status: %1$s</string>
     <string name="error_invalid_money_input">Insira um valor válido</string>
     <string name="event_greeting">Olá, %1$s</string>

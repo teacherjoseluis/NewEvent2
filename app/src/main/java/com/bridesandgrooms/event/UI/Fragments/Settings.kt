@@ -82,10 +82,16 @@ class Settings : Fragment(), IOnBackPressed {
             }
 
             if (userSession.eventbudget.isNotEmpty()) {
-                val budgetValue = userSession.eventbudget.toDoubleOrNull() ?: 0.0
-                val formattedBudget = NumberFormat.getCurrencyInstance(Locale.getDefault()).format(budgetValue)
-                binding.budgetinput.setText(formattedBudget)
+                try {
+                    val budgetValue = userSession.eventbudget.toDoubleOrNull() ?: 0.0
 
+                    val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
+                    val formattedBudget = numberFormat.format(budgetValue)
+
+                    binding.budgetinput.setText(formattedBudget)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error formatting budget: ${e.message}")
+                }
             }
 
             if (userSession.numberguests.toString().isNotEmpty()) {

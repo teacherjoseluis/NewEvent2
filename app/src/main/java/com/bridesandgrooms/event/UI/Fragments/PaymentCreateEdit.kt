@@ -47,6 +47,7 @@ import com.bridesandgrooms.event.databinding.PaymentEditdetailBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 
 /*
@@ -134,10 +135,14 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         paymentItem = arguments?.getParcelable("payment") ?: Payment()
 
         if (paymentItem.key.isNotEmpty()) {
-            toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.edit_guest)
+            toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.edit_payment)
             binding.paymentnameinputedit.setText(paymentItem.name)
             binding.paymentdateinputedit.setText(paymentItem.date)
-            binding.paymentamountinputedit.setText(paymentItem.amount)
+            //binding.paymentamountinputedit.setText(paymentItem.amount)
+
+            val budgetValue = paymentItem.amount.toDoubleOrNull() ?: 0.0
+            val formattedBudget = NumberFormat.getCurrencyInstance(Locale.getDefault()).format(budgetValue)
+            binding.paymentamountinputedit.setText(formattedBudget)
 
             val selectedChipId = binding.groupeditpayment.children
                 .filterIsInstance<Chip>()
@@ -293,7 +298,13 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
     private fun savePayment() {
         paymentItem.name = binding.paymentnameinputedit.text.toString()
         paymentItem.date = binding.paymentdateinputedit.text.toString()
-        paymentItem.amount = binding.paymentamountinputedit.text.toString()
+        //paymentItem.amount = binding.paymentamountinputedit.text.toString()
+        val rawFormatted = binding.paymentamountinputedit.text.toString()
+        val cleaned = rawFormatted.replace(Regex("[^\\d.,]"), "")
+        val normalized = cleaned.replace(".", "").replace(",", ".") // for EU-style input
+        val parsedValue = normalized.toDoubleOrNull() ?: 0.0
+        paymentItem.amount = String.format(Locale.US, "%.2f", parsedValue)
+
         paymentItem.category =  getCategory()
 
         val selectedVendor = binding.vendorAutocomplete.text.toString()
@@ -451,18 +462,28 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         val adapter =
             ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, list)
         binding.vendorAutocomplete.setAdapter(adapter)
-        if (paymentItem.vendorid != "") {
+        if (paymentItem.vendorid.isNotEmpty()) {
             try {
                 val vendordb = VendorDBHelper()
                 val vendorname = vendordb.getVendorNameById(paymentItem.vendorid)
-                binding.vendorAutocomplete.setSelection(list.indexOf(vendorname))
+                if (vendorname != null && list.contains(vendorname)) {
+                    binding.vendorAutocomplete.setText(vendorname, false) // ← this is the correct method
+                    binding.vendorAutocomplete.isEnabled = false // 🔒 Disable to prevent edits
+                } else {
+                    // Fallback in case vendor no longer exists
+                    binding.vendorAutocomplete.setText(getString(R.string.selectvendor), false)
+                    binding.vendorAutocomplete.isEnabled = true
+                }
             } catch (e: Exception) {
                 displayToastMsg(getString(R.string.error_getting_vendors) + e.toString())
                 AnalyticsManager.getInstance().trackError(SCREEN_NAME,e.message.toString(),"getVendorNameById",e.stackTraceToString())
                 Log.e(TAG, e.message.toString())
+                binding.vendorAutocomplete.setText(getString(R.string.selectvendor), false)
+                binding.vendorAutocomplete.isEnabled = true
             }
         } else {
-            binding.vendorAutocomplete.setSelection(0)
+            binding.vendorAutocomplete.setText(getString(R.string.selectvendor), false)
+            binding.vendorAutocomplete.isEnabled = true
         }
     }
 

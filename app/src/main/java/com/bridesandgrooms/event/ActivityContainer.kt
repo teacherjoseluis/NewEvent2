@@ -464,7 +464,7 @@ class ActivityContainer : AppCompatActivity() {
                     if (!callingFragment.isNullOrEmpty()) {
                         val bundle = Bundle()
                         fragment = when (callingFragment) {
-                            "EventCategories" -> EventCategories()
+                            "EventCategories" -> DashboardActivity()
                             "EmptyState" -> EventCategories()
                             "TasksAllCalendar" -> DashboardActivity()
                             "DashboardActivity" -> DashboardActivity()
@@ -482,7 +482,7 @@ class ActivityContainer : AppCompatActivity() {
                                 TaskPaymentTasks()
                             }
 
-                            else -> EventCategories()
+                            else -> DashboardActivity()
                         }
                         fragment.arguments = bundle
                         supportFragmentManager.beginTransaction()
@@ -498,7 +498,7 @@ class ActivityContainer : AppCompatActivity() {
                     if (!callingFragment.isNullOrEmpty()) {
                         val bundle = Bundle()
                         fragment = when (callingFragment) {
-                            "EventCategories" -> EventCategories()
+                            "EventCategories" -> DashboardActivity()
                             "EmptyState" -> EventCategories()
                             "TasksAllCalendar" -> DashboardActivity()
                             "DashboardActivity" -> DashboardActivity()
@@ -516,7 +516,7 @@ class ActivityContainer : AppCompatActivity() {
                                 TaskPaymentPayments()
                             }
 
-                            else -> EventCategories()
+                            else -> DashboardActivity()
                         }
                         fragment.arguments = bundle
                         supportFragmentManager.beginTransaction()

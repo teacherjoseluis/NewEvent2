@@ -196,7 +196,7 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
     }
 
     fun callVendorCreateFragment(){
-        val fragment = VendorCreateEdit()
+        val fragment = SearchVendorTab()
         val bundle = Bundle()
         bundle.putString("calling_fragment", "EmptyState")
         fragment.arguments = bundle

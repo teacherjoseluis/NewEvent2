@@ -12,6 +12,7 @@ import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_showads
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_video_login
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.setautocreateTaskPayment
 import com.bridesandgrooms.event.Functions.UserSessionHelper
+import com.bridesandgrooms.event.Functions.getUserCountry
 import com.bridesandgrooms.event.Model.DatabaseHelper
 import com.bridesandgrooms.event.Model.EventDBHelper
 import com.bridesandgrooms.event.Model.GuestDBHelper
@@ -30,6 +31,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.firebase.messaging.FirebaseMessaging
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import java.util.Locale
 
 class MyFirebaseApp : Application() {
 
@@ -107,7 +109,16 @@ class MyFirebaseApp : Application() {
         FirebaseApp.initializeApp(this)
         //mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         MobileAds.initialize(this)
-        Places.initializeWithNewPlacesApiEnabled(this, getString(R.string.google_maps_key))
+
+        // Detect proper locale based on user’s environment
+        val language = resources.configuration.locales[0].language
+        val country = getUserCountry(this)
+        val locale = Locale(language, country)
+
+        // Initialize Places with localized context
+        if (!Places.isInitialized()) {
+            Places.initialize(this, getString(R.string.google_maps_key), locale)
+        }
 
         // Start shared Preferences
         UserSessionHelper.initialize(this)

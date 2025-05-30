@@ -381,7 +381,11 @@ class GuestCreateEdit : Fragment() {
         var id = binding.rsvpgroup.checkedChipId
         var chipselected = binding.rsvpgroup.findViewById<Chip>(id)
 
-        var categoryRSVP = chipselected.tag.toString()
+        val categoryRSVP = chipselected?.tag?.toString() ?: run {
+            // Handle fallback here
+            //displayToastMsg(getString(R.string.select_rsvp_error))
+            return
+        }
 
 //        id = binding.companionsgroup.checkedChipId
 //        chipselected = binding.companionsgroup.findViewById(id)
@@ -424,13 +428,15 @@ class GuestCreateEdit : Fragment() {
             try {
                 addGuest(guestItem)
                 // ✅ Pass `finish()` as a callback to execute only after user action
-                showSendInvitationDialog(
-                    userId = user.userid!!,
-                    eventId = user.eventid,
-                    guestId = guestItem.key,
-                    language = user.language
-                ) {
-                    finish() // ✅ Now `finish()` happens only AFTER the user takes action
+                if (guestItem.key.isNotEmpty()) {
+                    showSendInvitationDialog(
+                        userId = user.userid!!,
+                        eventId = user.eventid,
+                        guestId = guestItem.key,
+                        language = user.language
+                    ) {
+                        finish()
+                    }
                 }
             } catch (e: GuestCreationException) {
                 AnalyticsManager.getInstance().trackError(

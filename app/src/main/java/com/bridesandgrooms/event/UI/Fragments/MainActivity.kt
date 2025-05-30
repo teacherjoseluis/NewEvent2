@@ -11,9 +11,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -36,6 +38,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
@@ -278,17 +281,16 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
     }
 
     private fun showImagePickerDialog() {
-        //Intent to pick image
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-
-        if (!PermissionUtils.checkPermissions(context, "storage")) {
-            val permissions = PermissionUtils.requestPermissionsList("storage")
-            requestPermissions(permissions, PERMISSION_CODE)
+        // On Android 13+ use Photo Picker if available
+        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Intent(MediaStore.ACTION_PICK_IMAGES)
         } else {
-            //permission already granted
-            openImagePicker()
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+                type = "image/*"
+            }
         }
+        // Launch the image picker — no permission check needed
+        startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
     private fun openImagePicker() {
@@ -313,15 +315,31 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                IMAGE_PICK_CODE -> {
+                    val sourceUri = data?.data ?: return
 
-            val resultUri = UCrop.getOutput(data!!)
-            uri = resultUri
+                    // Define destination URI for cropped image
+                    val destinationUri = Uri.fromFile(File(requireContext().cacheDir, "cropped_${System.currentTimeMillis()}.jpg"))
 
-            binding.eventimage.setImageURI(uri)
-            saveEvent()
+                    // Launch uCrop
+                    UCrop.of(sourceUri, destinationUri)
+                        .withAspectRatio(1f, 1f)
+                        .withMaxResultSize(1024, 1024)
+                        .start(requireContext(), this)
+                }
+
+                UCrop.REQUEST_CROP -> {
+                    val resultUri = UCrop.getOutput(data!!) ?: return
+                    uri = resultUri
+                    binding.eventimage.setImageURI(uri)
+                    saveEvent()
+                }
+            }
         }
     }
+
 
 
     private fun displayCroppedImage(uri: Uri) {

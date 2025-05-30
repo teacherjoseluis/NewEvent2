@@ -187,6 +187,10 @@ class OnboardingView : AppCompatActivity() {
 
     private fun showLanguageOnboarding() {
         AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "LanguageOnboarding")
+        val params = binding.guideline.layoutParams as ConstraintLayout.LayoutParams
+        params.guidePercent = 0.5f // Set to 50% from the top
+        binding.guideline.layoutParams = params
+
         binding.languageonboarding.visibility = ConstraintLayout.VISIBLE
         binding.submitlanguage.visibility = Button.VISIBLE
         binding.nameonboarding.visibility = ConstraintLayout.INVISIBLE
@@ -212,8 +216,13 @@ class OnboardingView : AppCompatActivity() {
             saveLanguagePreference(languageCode)
             setAppLocale(languageCode)
 
-            // Restart activity to apply changes
-            recreate()
+            // 🛑 Temporarily disable to avoid UI event replay
+            binding.languageAutocomplete.isEnabled = false
+
+            // ✅ Restart activity shortly after disabling the dropdown
+            binding.languageAutocomplete.postDelayed({
+                recreate()
+            }, 150)
         }
 
         // Apply saved language on load
@@ -260,6 +269,10 @@ class OnboardingView : AppCompatActivity() {
 
     private fun showNameOnboarding() {
         AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "NameOnboarding")
+        val params = binding.guideline.layoutParams as ConstraintLayout.LayoutParams
+        params.guidePercent = 0.7f // Set to 50% from the top
+        binding.guideline.layoutParams = params
+
         binding.languageonboarding.visibility = ConstraintLayout.INVISIBLE
         binding.submitlanguage.visibility = Button.INVISIBLE
         binding.nameonboarding.visibility = ConstraintLayout.VISIBLE
@@ -328,6 +341,9 @@ class OnboardingView : AppCompatActivity() {
 
     private fun showEventOnboarding() {
         AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME, "EventOnboarding_1")
+        val params = binding.guideline.layoutParams as ConstraintLayout.LayoutParams
+        params.guidePercent = 0.6f // Set to 50% from the top
+
         binding.nameonboarding.visibility = ConstraintLayout.INVISIBLE
         binding.submituser.visibility = Button.INVISIBLE
         binding.eventonboarding.visibility = ConstraintLayout.VISIBLE

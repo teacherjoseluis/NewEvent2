@@ -56,6 +56,7 @@ import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -157,10 +158,13 @@ class TaskCreateEdit : Fragment() {
         taskItem = arguments?.getParcelable("task") ?: Task()
 
         if (taskItem.key.isNotEmpty()) {
-            toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.edit_guest)
+            toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.edit_task)
             binding.tasknameinputedit.setText(taskItem.name)
             binding.taskdateinputedit.setText(taskItem.date)
-            binding.taskbudgetinputedit.setText(taskItem.budget)
+
+            val budgetValue = taskItem.budget.toDoubleOrNull() ?: 0.0
+            val formattedBudget = NumberFormat.getCurrencyInstance(Locale.getDefault()).format(budgetValue)
+            binding.taskbudgetinputedit.setText(formattedBudget)
 
             val selectedChipId = binding.groupedittask.children
                 .filterIsInstance<Chip>()
@@ -350,7 +354,15 @@ class TaskCreateEdit : Fragment() {
     private fun saveTask() {
         taskItem.name = binding.tasknameinputedit.text.toString()
         taskItem.date = binding.taskdateinputedit.text.toString()
-        taskItem.budget = binding.taskbudgetinputedit.text.toString()
+
+
+        //taskItem.budget = binding.taskbudgetinputedit.text.toString()
+        val rawFormatted = binding.taskbudgetinputedit.text.toString()
+        val cleaned = rawFormatted.replace(Regex("[^\\d.,]"), "")
+        val normalized = cleaned.replace(".", "").replace(",", ".") // for EU-style input
+        val parsedValue = normalized.toDoubleOrNull() ?: 0.0
+        taskItem.budget = String.format(Locale.US, "%.2f", parsedValue)
+
         taskItem.category = getCategory()
 
         if (!PermissionUtils.checkPermissions(requireActivity(), "calendar")) {
