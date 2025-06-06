@@ -80,10 +80,10 @@
                 android:id="@+id/line"
                 android:layout_width="match_parent"
                 android:layout_height=".5dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="5dp"
                 android:background="@color/OnSurface"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vendorPhone" />
+                app:layout_constraintTop_toBottomOf="@+id/vendorPhone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/PaymentsRecyclerView"
@@ -102,7 +102,7 @@
                 style="@style/Label_Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="5dp"
                 android:text="Amount paid: $100.00"
                 android:textColor="@color/OnSurfaceVar"
                 app:layout_constraintStart_toStartOf="parent"

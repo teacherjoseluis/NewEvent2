@@ -100,7 +100,12 @@ class VendorAdapter(
                     view.findViewById<TextView>(R.id.vendorAddress).visibility =
                         ConstraintLayout.GONE
                 }
-                view.findViewById<TextView>(R.id.vendorPhone).text = vendorPayment.vendor.phone
+                if (vendorPayment.vendor.phone.isNotEmpty()) {
+                    view.findViewById<TextView>(R.id.vendorPhone).text = vendorPayment.vendor.phone
+                } else {
+                    view.findViewById<TextView>(R.id.vendorPhone).visibility =
+                        ConstraintLayout.GONE
+                }
                 val amountMsg =
                     "${context.getString(R.string.paid)}: ${sumStrings(vendorPayment.amountlist)}"
                 view.findViewById<TextView>(R.id.amountpaid).text = amountMsg
