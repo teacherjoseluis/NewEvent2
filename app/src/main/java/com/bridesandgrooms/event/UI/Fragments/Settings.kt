@@ -84,10 +84,7 @@ class Settings : Fragment(), IOnBackPressed {
             if (userSession.eventbudget.isNotEmpty()) {
                 try {
                     val budgetValue = userSession.eventbudget.toDoubleOrNull() ?: 0.0
-
-                    val numberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
-                    val formattedBudget = numberFormat.format(budgetValue)
-
+                    val formattedBudget = NumberFormat.getCurrencyInstance(Locale.getDefault()).format(budgetValue)
                     binding.budgetinput.setText(formattedBudget)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error formatting budget: ${e.message}")
@@ -226,10 +223,9 @@ class Settings : Fragment(), IOnBackPressed {
                         //country = binding.countryAutocomplete.text.toString()
                         //eventbudget = binding.budgetinput.text.toString()
                         val rawFormatted = binding.budgetinput.text.toString()
-                        val cleaned = rawFormatted.replace(Regex("[^\\d.,]"), "")
-                        val normalized = cleaned.replace(".", "").replace(",", ".") // for EU-style input
+                        val cleaned = rawFormatted.replace("[^\\d.]".toRegex(), "") // "140000.00"
+                        val parsedValue = cleaned.toDoubleOrNull() ?: 0.0
 
-                        val parsedValue = normalized.toDoubleOrNull() ?: 0.0
                         eventbudget = String.format(Locale.US, "%.2f", parsedValue)
 
                         numberguests = binding.numberguestsinput.text.toString().toIntOrNull() ?: 0

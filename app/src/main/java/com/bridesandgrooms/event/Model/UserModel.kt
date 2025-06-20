@@ -52,7 +52,7 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
     var nexthandlerpdel: CoRDeletePayment? = null
     private var nexthandlerg: CoRAddEditGuest? = null
     var nexthandlerdelg: CoRDeleteGuest? = null
-    private var nexthandlerv: CoRAddEditVendor? = null
+    var nexthandlerv: CoRAddEditVendor? = null
     var nexthandlerdelv: CoRDeleteVendor? = null
     var nexthandleron: CoROnboardUser? = null
 
@@ -313,6 +313,17 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
         }
     }
 
+    suspend fun editEventBudget(user: User) {
+        coroutineScope.launch {
+            try {
+                userRef.child("eventbudget").setValue(user.eventbudget).await()
+            } catch (e: Exception) {
+                throw UserEditionException(e.toString())
+            }
+            Log.d(TAG, "Budget for the Event has been set to ${user.eventbudget}")
+        }
+    }
+
     private suspend fun addUser(user: User) {
         val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -436,6 +447,7 @@ class UserModel : CoRAddEditTask, CoRDeleteTask, CoRAddEditPayment, CoRDeletePay
         editUserShortName(user)
         editUserRole(user)
         editDistanceUnit(user)
+        editEventBudget(user)
         nexthandleru?.onAddEditUser(user)
         Log.i("UserModel", "onAddEditGuest reached")
     }

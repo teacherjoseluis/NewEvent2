@@ -34,7 +34,7 @@ open class Task(
         name = if (dummy) "Sample Task" else "",
         date = if (dummy) "31/12/2023" else "",
         category = if (dummy) "ceremony" else "",
-        budget = if (dummy) "$100.00" else ""
+        budget = if (dummy) "100.00" else ""
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

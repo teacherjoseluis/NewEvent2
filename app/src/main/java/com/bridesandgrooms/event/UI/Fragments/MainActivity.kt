@@ -139,7 +139,7 @@ class MainActivity : Fragment(), ImagePresenter.EventImage, EventPresenter.Event
         binding = DataBindingUtil.inflate(inflater, R.layout.eventform_layout, container, false)
 
         val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar)
-        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.event)
+        toolbar.findViewById<TextView>(R.id.appbartitle)?.text = getString(R.string.myeventtitle)
 
         try {
             presenterevent = EventPresenter(context, this)

@@ -32,7 +32,7 @@ open class Payment(
             name = "Sample Payment"
             date = "31/12/2023"
             category = "ceremony"
-            amount = "$100.00"
+            amount = "100.00"
         }
     }
 

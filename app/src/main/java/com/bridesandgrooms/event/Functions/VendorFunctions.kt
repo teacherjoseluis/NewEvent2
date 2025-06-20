@@ -11,8 +11,9 @@ internal fun addVendor(vendoritem: Vendor) {
         val vendormodel = VendorModel()
         val vendordbhelper = VendorDBHelper()
         val usermodel = UserModel()
+        val userdbhelper = UserDBHelper()
 
-        val chainofcommand = orderChainAddVendor(vendormodel, vendordbhelper, usermodel)
+        val chainofcommand = orderChainAddVendor(vendormodel, vendordbhelper, usermodel, userdbhelper)
         chainofcommand.onAddEditVendor(vendoritem)
     } catch (e: Exception) {
         Log.e("VendorFunctions.kt", e.message.toString())
@@ -25,9 +26,10 @@ internal fun deleteVendor(vendorId: String) {
         val vendormodel = VendorModel()
         val vendordbhelper = VendorDBHelper()
         val usermodel = UserModel()
+        val userdbhelper = UserDBHelper()
 
         val chainofcommand =
-            orderChainDel(usermodel, vendordbhelper, vendormodel)
+            orderChainDel(usermodel, vendordbhelper, vendormodel, userdbhelper)
         chainofcommand.onDeleteVendor(vendorId)
     } catch (e: Exception) {
         Log.e("VendorFunctions.kt", e.message.toString())
@@ -51,20 +53,24 @@ internal fun editVendor(vendoritem: Vendor) {
 private fun orderChainAddVendor(
     vendorModel: VendorModel,
     vendorDBHelper: VendorDBHelper,
-    userModel: UserModel
+    userModel: UserModel,
+    userdbhelper: UserDBHelper
 ): CoRAddEditVendor {
     vendorModel.nexthandler = vendorDBHelper
     vendorDBHelper.nexthandler = userModel
+    userModel.nexthandlerv = userdbhelper
     return vendorModel
 }
 
 private fun orderChainDel(
     userModel: UserModel,
     vendorDBHelper: VendorDBHelper,
-    vendorModel: VendorModel
+    vendorModel: VendorModel,
+    userdbhelper: UserDBHelper
 ): CoRDeleteVendor {
     userModel.nexthandlerdelv = vendorDBHelper
     vendorDBHelper.nexthandlerdel = vendorModel
+    vendorModel.nexthandlerdel = userdbhelper
     return userModel
 }
 
