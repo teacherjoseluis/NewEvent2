@@ -58,7 +58,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/payment_text"
-                            android:maxLength="20"
+                            android:maxLength="50"
                             android:tag="NAME"
                             android:textAppearance="@style/Body_Small" />
 

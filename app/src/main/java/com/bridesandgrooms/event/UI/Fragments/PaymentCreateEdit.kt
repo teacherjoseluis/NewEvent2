@@ -286,8 +286,10 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         val newFragment =
             DatePickerFragment.newInstance((DatePickerDialog.OnDateSetListener { _, p1, p2, p3 ->
                 if (validateOldDate(p1, p2 + 1, p3)) {
-                    val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                    binding.paymentdateinputedit.setText(selectedDate)
+                    val calendar = Calendar.getInstance()
+                    calendar.set(p1, p2, p3)
+                    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    binding.paymentdateinputedit.setText(formatter.format(calendar.time))
                 } else {
                     binding.paymentdateinputedit.error = getString(R.string.error_invaliddate)
                 }

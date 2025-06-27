@@ -342,8 +342,10 @@ class TaskCreateEdit : Fragment() {
         val newFragment =
             DatePickerFragment.newInstance((DatePickerDialog.OnDateSetListener { _, p1, p2, p3 ->
                 if (validateOldDate(p1, p2 + 1, p3)) {
-                    val selectedDate = p3.toString() + "/" + (p2 + 1) + "/" + p1
-                    binding.taskdateinputedit.setText(selectedDate)
+                    val calendar = Calendar.getInstance()
+                    calendar.set(p1, p2, p3)
+                    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    binding.taskdateinputedit.setText(formatter.format(calendar.time))
                 } else {
                     binding.taskdateinputedit.error = getString(R.string.error_invaliddate)
                 }
