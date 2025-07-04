@@ -22,7 +22,6 @@ import java.util.Locale
 
 class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
 
-    lateinit var payment: Payment
     var nexthandler: CoRAddEditPayment? = null
     var nexthandlerpdel: CoRDeletePayment? = null
 
@@ -405,14 +404,14 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
         }
     }
 
-    fun delete(payment: Payment) {
+    fun delete(paymentId: String) {
         val db: SQLiteDatabase = DatabaseHelper.getInstance().writableDatabase
         try {
-            val retVal = db.delete("PAYMENT", "paymentid = '${payment.key}'", null)
+            val retVal = db.delete("PAYMENT", "paymentid = '$paymentId'", null)
             if (retVal >= 1) {
-                Log.d(TAG, "Payment ${payment.key} deleted")
+                Log.d(TAG, "Payment $paymentId deleted")
             } else {
-                Log.d(TAG, "Payment ${payment.key} not deleted")
+                Log.d(TAG, "Payment $paymentId not deleted")
             }
             //db.close()
         } catch (e: Exception) {
@@ -432,7 +431,7 @@ class PaymentDBHelper : CoRAddEditPayment, CoRDeletePayment {
     }
 
     override fun onDeletePayment(paymentId: String) {
-        delete(payment)
+        delete(paymentId)
         nexthandlerpdel?.onDeletePayment(paymentId)
     }
 

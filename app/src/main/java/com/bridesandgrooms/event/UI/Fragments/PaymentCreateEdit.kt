@@ -231,6 +231,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
                         } else {
                             try {
                                 deletePayment(paymentItem.key)
+                                requireActivity().onBackPressedDispatcher.onBackPressed()
                             } catch (e: PaymentDeletionException) {
                                 displayToastMsg(getString(R.string.errorPaymentDeletion) + e.toString())
                                 AnalyticsManager.getInstance().trackError(
@@ -303,7 +304,12 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         //paymentItem.amount = binding.paymentamountinputedit.text.toString()
         val rawFormatted = binding.paymentamountinputedit.text.toString()
         val cleaned = rawFormatted.replace(Regex("[^\\d.,]"), "")
-        val normalized = cleaned.replace(".", "").replace(",", ".") // for EU-style input
+
+        val normalized = when {
+            cleaned.contains(",") && !cleaned.contains(".") -> cleaned.replace(",", ".") // likely EU
+            else -> cleaned // US format or already normalized
+        }
+
         val parsedValue = normalized.toDoubleOrNull() ?: 0.0
         paymentItem.amount = String.format(Locale.US, "%.2f", parsedValue)
 
