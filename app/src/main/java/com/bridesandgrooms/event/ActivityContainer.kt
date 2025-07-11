@@ -379,8 +379,7 @@ class ActivityContainer : AppCompatActivity() {
         } else {
             var fragment =
                 fm.findFragmentById(R.id.fragment_container)
-            val currentFragment =
-                fragment?.parentFragmentManager?.fragments?.get(1)
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             when (currentFragment) {
                 is DashboardView -> {
                     if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {

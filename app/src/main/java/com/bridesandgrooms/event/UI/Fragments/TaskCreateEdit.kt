@@ -237,6 +237,7 @@ class TaskCreateEdit : Fragment() {
                         } else {
                             try {
                                 deleteTask(taskItem.key)
+                                requireActivity().onBackPressedDispatcher.onBackPressed()
                             } catch (e: TaskDeletionException) {
                                 displayErrorMsg(getString(R.string.errorTaskDeletion) + e.toString())
                                 AnalyticsManager.getInstance().trackError(
@@ -269,6 +270,7 @@ class TaskCreateEdit : Fragment() {
                     //lifecycleScope.launch {
                     try {
                         editTask(taskItem)
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
                     } catch (e: TaskCreationException) {
                         displayErrorMsg(getString(R.string.errorTaskCreation) + e.toString())
                         AnalyticsManager.getInstance().trackError(
