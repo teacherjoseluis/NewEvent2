@@ -168,19 +168,41 @@ class DashboardEventPresenter(val context: Context, val fragment: DashboardEvent
     }
 
     override fun onPaymentList(list: ArrayList<Payment>) {
-        mHandler.post {
+//        mHandler.post {
+//            var countpayment = 0 // Number of Payments made
+//            var sumpayment = 0.0f // Amount of Payments
+//
+//            val re = Regex("[^A-Za-z0-9 ]")
+//            for (payment in list) {
+//
+//                val paidamount = re.replace(payment.amount, "").dropLast(2)
+//                sumpayment += paidamount.toFloat()
+//                countpayment += 1
+//            }
+//            fragment.onPaymentsStats(countpayment, sumpayment, paymentsumbudget)
+//        }
+        Thread {
             var countpayment = 0 // Number of Payments made
             var sumpayment = 0.0f // Amount of Payments
-
             val re = Regex("[^A-Za-z0-9 ]")
-            for (payment in list) {
 
+            for (payment in list) {
                 val paidamount = re.replace(payment.amount, "").dropLast(2)
                 sumpayment += paidamount.toFloat()
                 countpayment += 1
             }
-            fragment.onPaymentsStats(countpayment, sumpayment, paymentsumbudget)
-        }
+
+            // Wait up to 500ms for paymentsumbudget to be populated
+            var waitTime = 0L
+            while (paymentsumbudget == 0.0F && waitTime < 500L) {
+                Thread.sleep(50)
+                waitTime += 50
+            }
+
+            mHandler.post {
+                fragment.onPaymentsStats(countpayment, sumpayment, paymentsumbudget)
+            }
+        }.start()
     }
 
     override fun onPaymentListError(errcode: String) {

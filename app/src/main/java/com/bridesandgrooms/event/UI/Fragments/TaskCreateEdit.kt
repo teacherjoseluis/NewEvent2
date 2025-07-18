@@ -360,11 +360,9 @@ class TaskCreateEdit : Fragment() {
         taskItem.date = binding.taskdateinputedit.text.toString()
 
 
-        //taskItem.budget = binding.taskbudgetinputedit.text.toString()
         val rawFormatted = binding.taskbudgetinputedit.text.toString()
-        val cleaned = rawFormatted.replace(Regex("[^\\d.,]"), "")
-        val normalized = cleaned.replace(".", "").replace(",", ".") // for EU-style input
-        val parsedValue = normalized.toDoubleOrNull() ?: 0.0
+        val cleaned = rawFormatted.replace(Regex("[^\\d.]"), "") // keep the decimal point
+        val parsedValue = cleaned.toDoubleOrNull() ?: 0.0
         taskItem.budget = String.format(Locale.US, "%.2f", parsedValue)
 
         taskItem.category = getCategory()
