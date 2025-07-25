@@ -195,6 +195,18 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
             if (list.isNotEmpty()) {
                 inf.taskItemCalendar.root.visibility = View.VISIBLE
                 val numberOfTasks = minOf(list.size, 3)
+
+                for (i in 1..3) {
+                    val taskName = "taskname$i"
+                    val taskViewField =
+                        inf.taskItemCalendar::class.java.getDeclaredField(taskName).apply {
+                            isAccessible = true
+                        }
+                    val taskView = taskViewField.get(inf.taskItemCalendar) as TextView
+                    taskView.visibility = View.GONE
+                    taskView.text = ""
+                }
+
                 for (i in 1..numberOfTasks) {
                     val taskName = "taskname$i"
                     val taskViewField =
@@ -249,6 +261,18 @@ class DashboardActivity : Fragment(), DashboardActivityPresenter.TaskCalendarInt
             if (list.isNotEmpty()) {
                 inf.paymentItemCalendar.root.visibility = View.VISIBLE
                 val numberOfPayments = minOf(list.size, 3)
+
+                for (i in 1..3) {
+                    val paymentName = "taskname$i"  // Assuming you reused `taskname` IDs even for payments
+                    val paymentViewField =
+                        inf.paymentItemCalendar::class.java.getDeclaredField(paymentName).apply {
+                            isAccessible = true
+                        }
+                    val paymentView = paymentViewField.get(inf.paymentItemCalendar) as TextView
+                    paymentView.visibility = View.GONE
+                    paymentView.text = ""
+                }
+
                 for (i in 1..numberOfPayments) {
                     val paymentName = "taskname$i"
                     val paymentViewField =

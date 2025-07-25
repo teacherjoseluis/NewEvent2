@@ -36,17 +36,17 @@
 
             <include
                 android:id="@+id/task_item_calendar"
-                android:visibility="gone"
-                layout="@layout/task_calendar_item_layout"/>
+                layout="@layout/task_calendar_item_layout"
+                android:visibility="gone" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/taskcardnodata"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:paddingLeft="10dp"
+                android:paddingTop="5dp"
                 android:paddingRight="10dp"
-                android:paddingTop="5dp">
+                android:visibility="invisible">
 
                 <com.google.android.material.card.MaterialCardView
                     style="@style/BG_Card"
