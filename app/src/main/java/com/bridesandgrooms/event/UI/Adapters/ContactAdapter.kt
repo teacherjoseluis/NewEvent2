@@ -111,6 +111,12 @@ class ContactAdapter(
         }
     }
 
+    fun updateData(newItems: List<Contact>) {
+        contactlist.clear()
+        contactlist.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
     companion object {
         const val TAG = "ContactAdapter"
         const val SCREEN_NAME = "Contact Adapter"

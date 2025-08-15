@@ -1,11 +1,14 @@
 package com.bridesandgrooms.event.UI.Activities
 
 import Application.AnalyticsManager
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -216,18 +219,41 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
         list: ArrayList<Task>,
         pageNum: Int
     ) {
-        val rosachillon = BaseColor(225, 58, 133)
+        //val rosachillon = BaseColor(225, 58, 133)
+        val primaryCream = BaseColor(124, 150, 127)
         val tableBackground = BaseColor(252, 252, 252)
 
         val eventDB = EventDBHelper()
         val event = eventDB.getEvent()!!
 
-        val pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            .toString()
-        val file = File(pdfPath, "TaskReport_${convertToFilenameString(currentDateTime)}.pdf")
-        binding.path.text = "${pdfPath}TaskReport_${convertToFilenameString(currentDateTime)}.pdf"
+//        val pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+//            .toString()
+//        val file = File(pdfPath, "TaskReport_${convertToFilenameString(currentDateTime)}.pdf")
+//        binding.path.text = "${pdfPath}TaskReport_${convertToFilenameString(currentDateTime)}.pdf"
+//
+//        val outputStream = FileOutputStream(file)
 
-        val outputStream = FileOutputStream(file)
+        val fileName = "TaskReport_${convertToFilenameString(currentDateTime)}.pdf"
+        binding.path.text = fileName
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+            put(MediaStore.Downloads.MIME_TYPE, "application/pdf")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.Downloads.IS_PENDING, 1)
+            }
+        }
+
+        val resolver = context.contentResolver
+        val collection =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            } else {
+                MediaStore.Files.getContentUri("external")
+            }
+
+        val itemUri = resolver.insert(collection, contentValues)!!
+        val outputStream = resolver.openOutputStream(itemUri)!!
 
         val document = Document()
         PdfWriter.getInstance(document, outputStream)
@@ -241,7 +267,7 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
         val logoCell = PdfPCell()
         logoCell.borderColor = BaseColor.WHITE
 
-        val logoDrawable = getDrawable(R.drawable.launch_screen)!!
+        val logoDrawable = getDrawable(R.drawable.welcomelogo_small)!!
         val bitmap = Bitmap.createBitmap(
             logoDrawable.intrinsicWidth,
             logoDrawable.intrinsicHeight,
@@ -267,7 +293,7 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
         pinkFont.setFamily(HELVETICA)
 
         pinkFont.size = 12f
-        pinkFont.color = rosachillon
+        pinkFont.color = primaryCream
         //----------------------------------
         val title1Header = PdfPCell()
         title1Header.borderColor = BaseColor.WHITE
@@ -311,7 +337,7 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
         tableBody.setTotalWidth(floatArrayOf(100f, 100f, 100f, 100f, 100f))
         tableBody.isLockedWidth = true
         tableBody.defaultCell.horizontalAlignment = Element.ALIGN_CENTER;
-        tableBody.defaultCell.backgroundColor = rosachillon
+        tableBody.defaultCell.backgroundColor = primaryCream
         tableBody.addCell(Paragraph(context.getString(R.string.name), whiteFont))
         tableBody.addCell(Phrase(context.getString(R.string.category), whiteFont))
         tableBody.addCell(Phrase(context.getString(R.string.deadline), whiteFont))
@@ -342,7 +368,7 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
                 tableBody.setTotalWidth(floatArrayOf(100f, 100f, 100f, 100f, 100f))
                 tableBody.isLockedWidth = true
                 tableBody.defaultCell.horizontalAlignment = Element.ALIGN_CENTER;
-                tableBody.defaultCell.backgroundColor = rosachillon
+                tableBody.defaultCell.backgroundColor = primaryCream
                 tableBody.addCell(Paragraph(context.getString(R.string.name), whiteFont))
                 tableBody.addCell(Phrase(context.getString(R.string.category), whiteFont))
                 tableBody.addCell(Phrase(context.getString(R.string.deadline), whiteFont))
@@ -381,6 +407,12 @@ class ExportPDF : AppCompatActivity(), ExportPDFPresenter.EPDFTasks {
 
         document.add(tableFooter)
         document.close()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            contentValues.clear()
+            contentValues.put(MediaStore.Downloads.IS_PENDING, 0)
+            resolver.update(itemUri, contentValues, null, null)
+        }
     }
 
     override fun onEPDFTasks(list: ArrayList<Task>) {

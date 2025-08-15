@@ -207,7 +207,7 @@
     </style>
     <!-- Title -->
     <style name="Title_Large">
-        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontFamily">@font/robotobold</item>
         <item name="android:fontWeight">400</item>
         <item name="android:textSize">22sp</item>
         <item name="android:lineHeight">28sp</item>
@@ -215,19 +215,19 @@
     </style>
 
     <style name="Title_Medium">
-        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontFamily">@font/robotobold</item>
         <item name="android:fontWeight">500</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineHeight">24sp</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:letterSpacing">00</item>
     </style>
 
     <style name="Title_Small">
-        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontFamily">@font/robotobold</item>
         <item name="android:fontWeight">500</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineHeight">20sp</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:letterSpacing">0</item>
     </style>
     <!-- Body -->
     <style name="Body_Large">
@@ -241,73 +241,73 @@
     <style name="Body_Medium">
         <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:fontWeight">400</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:lineHeight">20sp</item>
-        <item name="android:letterSpacing">0.25</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:letterSpacing">0</item>
     </style>
 
     <style name="Body_Small">
         <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:fontWeight">400</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:lineHeight">16sp</item>
-        <item name="android:letterSpacing">0.4</item>
+        <item name="android:letterSpacing">0</item>
     </style>
     <!-- Label -->
     <style name="Label_Large">
-        <item name="android:fontFamily">@font/robotolight</item>
+        <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:fontWeight">500</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:lineHeight">20sp</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:letterSpacing">0</item>
     </style>
 
     <style name="Label_Medium">
-        <item name="android:fontFamily">@font/robotolight</item>
+        <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:fontWeight">500</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:lineHeight">16sp</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:letterSpacing">0</item>
     </style>
 
     <style name="Label_Small">
         <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:fontWeight">500</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:lineHeight">16sp</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:letterSpacing">0</item>
     </style>
 
     <style name="Label_XSmall">
         <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:fontWeight">500</item>
-        <item name="android:textSize">9sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:lineHeight">10sp</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:letterSpacing">0</item>
     </style>
     <!--					   -->
     <style name="CardView_Body" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:textColor">@color/lead</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CardView_Body2" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:textColor">@color/lead</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CardView_BodyBold" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:textColor">@color/OnPrimary_cream</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CardView_BodyBold2" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontFamily">@font/robotoregular</item>
         <item name="android:textColor">@color/lead</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="BGTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
@@ -317,8 +317,10 @@
         <item name="boxStrokeColor">@color/Outline_cream</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">2dp</item>
-        <item name="boxCornerRadiusTopStart">2dp</item>
-        <item name="boxCornerRadiusBottomEnd">2dp</item>
+        <item name="boxCornerRadiusTopStart">4dp</item>
+        <item name="boxCornerRadiusBottomEnd">4dp</item>
+        <item name="boxCornerRadiusBottomStart">4dp</item>
+        <item name="boxCornerRadiusTopEnd">4dp</item>
         <item name="boxStrokeErrorColor">@color/Error_cream</item>
         <item name="errorTextColor">@color/Error_cream</item>
         <item name="errorTextAppearance">@style/Label_Small</item>
@@ -341,8 +343,10 @@
         <item name="boxStrokeColor">@color/Outline_cream</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">2dp</item>
-        <item name="boxCornerRadiusTopStart">2dp</item>
-        <item name="boxCornerRadiusBottomEnd">2dp</item>
+        <item name="boxCornerRadiusTopStart">4dp</item>
+        <item name="boxCornerRadiusBottomEnd">4dp</item>
+        <item name="boxCornerRadiusBottomStart">4dp</item>
+        <item name="boxCornerRadiusTopEnd">4dp</item>
         <item name="boxStrokeErrorColor">@color/Error</item>
         <item name="errorTextColor">@color/Error</item>
         <item name="endIconDrawable">@drawable/keyboard_arrow_down_24px</item>
@@ -371,11 +375,11 @@
 
     <style name="BG_ActionTextSmall">
         <item name="textAllCaps">false</item>
-        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:fontFamily">@font/robotomedium</item>
         <item name="android:fontWeight">800</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineHeight">24sp</item>
-        <item name="android:letterSpacing">0.1</item>
+        <item name="android:letterSpacing">0</item>
         <item name="android:textColor">@color/PrimaryContainer_cream</item>
     </style>
 

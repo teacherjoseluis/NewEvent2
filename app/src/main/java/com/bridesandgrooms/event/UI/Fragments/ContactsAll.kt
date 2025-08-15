@@ -74,14 +74,13 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
         }
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return true
-            }
+            override fun onQueryTextSubmit(p0: String?) = true
 
             override fun onQueryTextChange(p0: String?): Boolean {
                 AnalyticsManager.getInstance().trackContentInteraction(SCREEN_NAME,"EnterQuery")
                 val filteredModelList = filter(contactList, p0)
-                val rvAdapter = ContactAdapter(this@ContactsAll, filteredModelList as ArrayList<Contact>, context!!)
+                //rvAdapter = ContactAdapter(this@ContactsAll, filteredModelList as ArrayList<Contact>, context!!)
+                rvAdapter.updateData(filteredModelList)
                 recyclerViewContacts.adapter = rvAdapter
                 return true
             }
@@ -101,10 +100,11 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
 
         recyclerViewContacts = inf.recyclerViewContacts
         recyclerViewContacts.apply {
-            layoutManager = LinearLayoutManager(inf.root.context).apply {
-                stackFromEnd = true
-                reverseLayout = true
-            }
+//            layoutManager = LinearLayoutManager(inf.root.context).apply {
+//                stackFromEnd = true
+//                reverseLayout = true
+//            }
+            layoutManager = LinearLayoutManager(inf.root.context)
         }
         if (!PermissionUtils.checkPermissions(mContext!!, "contact")) {
             val permissions = PermissionUtils.requestPermissionsList("contact")
@@ -127,15 +127,18 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
     }
 
     private fun filter(models: ArrayList<Contact>, query: String?): List<Contact> {
-        val lowerCaseQuery = query!!.toLowerCase(Locale.ROOT)
-        val filteredModelList: ArrayList<Contact> = ArrayList()
-        for (model in models) {
-            val text: String = model.name.toLowerCase(Locale.ROOT)
-            if (text.contains(lowerCaseQuery)) {
-                filteredModelList.add(model)
-            }
-        }
-        return filteredModelList
+//        val lowerCaseQuery = query!!.toLowerCase(Locale.ROOT)
+//        val filteredModelList: ArrayList<Contact> = ArrayList()
+//        for (model in models) {
+//            val text: String = model.name.toLowerCase(Locale.ROOT)
+//            if (text.contains(lowerCaseQuery)) {
+//                filteredModelList.add(model)
+//            }
+//        }
+//        return filteredModelList
+        val q = (query ?: "").trim().lowercase(Locale.ROOT)
+        if (q.isEmpty()) return models
+        return models.filter { it.name.lowercase(Locale.ROOT).contains(q) }
     }
 
     /**
@@ -242,6 +245,7 @@ class ContactsAll : Fragment(), ContactsAllPresenter.GAContacts, ContactsAllFrag
         fragment.arguments = bundle
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment) // R.id.fragment_container is the ID of the container where the fragment will be placed
+            .addToBackStack(null)
             .commit()
     }
 

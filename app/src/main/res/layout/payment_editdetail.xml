@@ -160,7 +160,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight=".28"
-                        android:background="@drawable/spinner_format"
                         android:orientation="horizontal">
 
                         <com.google.android.material.textfield.TextInputLayout
