@@ -467,19 +467,19 @@ class ActivityContainer : AppCompatActivity() {
                             "EmptyState" -> EventCategories()
                             "TasksAllCalendar" -> DashboardActivity()
                             "DashboardActivity" -> DashboardActivity()
-                            "TaskPaymentTasks" -> {
-                                val category =
-                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
-                                        "category"
-                                    )
-                                val status =
-                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
-                                        "status"
-                                    )
-                                bundle.putString("category", category)
-                                bundle.putString("status", status)
-                                TaskPaymentTasks()
-                            }
+//                            "TaskPaymentTasks" -> {
+//                                val category =
+//                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+//                                        "category"
+//                                    )
+//                                val status =
+//                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+//                                        "status"
+//                                    )
+//                                bundle.putString("category", category)
+//                                bundle.putString("status", status)
+//                                TaskPaymentTasks()
+//                            }
 
                             else -> DashboardActivity()
                         }
@@ -501,19 +501,19 @@ class ActivityContainer : AppCompatActivity() {
                             "EmptyState" -> EventCategories()
                             "TasksAllCalendar" -> DashboardActivity()
                             "DashboardActivity" -> DashboardActivity()
-                            "TaskPaymentPayments" -> {
-                                val category =
-                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
-                                        "category"
-                                    )
-                                val status =
-                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
-                                        "status"
-                                    )
-                                bundle.putString("category", category)
-                                bundle.putString("status", status)
-                                TaskPaymentPayments()
-                            }
+//                            "TaskPaymentPayments" -> {
+//                                val category =
+//                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+//                                        "category"
+//                                    )
+//                                val status =
+//                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+//                                        "status"
+//                                    )
+//                                bundle.putString("category", category)
+//                                bundle.putString("status", status)
+//                                TaskPaymentPayments()
+//                            }
 
                             else -> DashboardActivity()
                         }
