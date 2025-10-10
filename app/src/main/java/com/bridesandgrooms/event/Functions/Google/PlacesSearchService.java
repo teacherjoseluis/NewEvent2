@@ -40,7 +40,7 @@ public class PlacesSearchService {
 
         RectangularBounds bounds = RectangularBounds.newInstance(southwest, northeast);
 
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.RATING, Place.Field.ADDRESS);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.DISPLAY_NAME, Place.Field.LOCATION, Place.Field.RATING, Place.Field.SHORT_FORMATTED_ADDRESS);
 
         SearchByTextRequest request = SearchByTextRequest.builder(query, placeFields)
                 .setMaxResultCount(maxResults)

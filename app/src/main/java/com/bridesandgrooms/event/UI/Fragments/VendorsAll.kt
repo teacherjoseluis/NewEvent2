@@ -131,10 +131,10 @@ class VendorsAll : Fragment(), VendorsAllPresenter.VAVendors, FragmentActionList
 
 
     private fun filter(models: ArrayList<VendorPayment>, query: String?): List<VendorPayment> {
-        val lowerCaseQuery = query!!.toLowerCase(Locale.ROOT)
+        val lowerCaseQuery = query!!.lowercase(Locale.ROOT)
         val filteredModelList: ArrayList<VendorPayment> = ArrayList()
         for (model in models) {
-            val text: String = model.vendor.name.toLowerCase(Locale.ROOT)
+            val text: String = model.vendor.name.lowercase(Locale.ROOT)
             if (text.contains(lowerCaseQuery)) {
                 filteredModelList.add(model)
             }

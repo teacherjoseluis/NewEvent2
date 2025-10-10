@@ -14,35 +14,71 @@
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/country_label"
-            style="@style/BodySmallItallic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:text="@string/results_country"
-            map:layout_constraintStart_toStartOf="parent"
-            map:layout_constraintTop_toTopOf="parent" />
+<!--        <TextView-->
+<!--            android:id="@+id/country_label"-->
+<!--            style="@style/BodySmallItallic"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:text="@string/results_country"-->
+<!--            map:layout_constraintStart_toStartOf="parent"-->
+<!--            map:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/country_name"-->
+<!--            style="@style/BodySmallItallic"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_toEndOf="@+id/country_label"-->
+<!--            android:text="United States"-->
+<!--            map:layout_constraintStart_toEndOf="@+id/country_label"-->
+<!--            map:layout_constraintTop_toTopOf="parent" />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/country_name"
-            style="@style/BodySmallItallic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/country_label"
-            android:text="United States"
-            map:layout_constraintStart_toEndOf="@+id/country_label"
-            map:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:text="Country"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
 
-
-    <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/autocomplete_fragment"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        <EditText
+            android:id="@+id/input_search"
+            android:hint="Search for a place..."
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
+            android:inputType="text" />
+
+        <ListView
+            android:id="@+id/list_suggestions"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:dividerHeight="1dp" />
+
+    </LinearLayout>
+
+
+
+    <!--    <androidx.fragment.app.FragmentContainerView-->
+<!--            android:id="@+id/autocomplete_fragment"-->
+<!--            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
+
 
     <!--
         <fragment

@@ -78,11 +78,11 @@ class SearchVendorAdapter(
                     currentVendor?.let { vendor ->
                         //val user = User().getUser()
                         val newVendor = Vendor().apply {
-                            name = vendor.name ?: ""
-                            phone = vendor.phoneNumber ?: ""
+                            name = vendor.displayName ?: ""
+                            phone = vendor.nationalPhoneNumber ?: ""
                             category = this@SearchVendorAdapter.category
                             placeid = vendor.id ?: ""
-                            location = vendor.address ?: ""
+                            location = vendor.shortFormattedAddress ?: ""
                         }
                         try {
                             addVendor(newVendor)
@@ -115,7 +115,7 @@ class SearchVendorAdapter(
                     LetterAvatar(
                         textColor,
                         circleColor,
-                        searchVendor.name.substring(0, 2),
+                        searchVendor.displayName.substring(0, 2),
                         10,
                         density
                     )
@@ -123,10 +123,10 @@ class SearchVendorAdapter(
             }
 
             // Set common fields
-            view.findViewById<TextView>(R.id.vendorName).text = searchVendor.name
+            view.findViewById<TextView>(R.id.vendorName).text = searchVendor.displayName
             view.findViewById<TextView>(R.id.vendorCategory).text = category
-            view.findViewById<TextView>(R.id.vendorAddress).text = searchVendor.address
-            view.findViewById<TextView>(R.id.vendorPhone).text = searchVendor.phoneNumber
+            view.findViewById<TextView>(R.id.vendorAddress).text = searchVendor.shortFormattedAddress
+            view.findViewById<TextView>(R.id.vendorPhone).text = searchVendor.nationalPhoneNumber
             view.findViewById<TextView>(R.id.vendorDistance).text = distance
         }
     }

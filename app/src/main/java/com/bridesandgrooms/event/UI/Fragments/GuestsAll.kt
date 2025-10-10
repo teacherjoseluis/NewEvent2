@@ -144,10 +144,10 @@ class GuestsAll : Fragment(), GuestsAllPresenter.GAGuests, GuestFragmentActionLi
     }
 
     private fun filter(models: ArrayList<Guest>, query: String?): List<Guest> {
-        val lowerCaseQuery = query!!.toLowerCase(Locale.ROOT)
+        val lowerCaseQuery = query!!.lowercase(Locale.ROOT)
         val filteredModelList: ArrayList<Guest> = ArrayList()
         for (model in models) {
-            val text: String = model.name.toLowerCase(Locale.ROOT)
+            val text: String = model.name.lowercase(Locale.ROOT)
             if (text.contains(lowerCaseQuery)) {
                 filteredModelList.add(model)
             }

@@ -50,7 +50,7 @@ import com.bridesandgrooms.event.UI.Fragments.TaskCreateEdit
 import com.bridesandgrooms.event.databinding.OnboardingNameBinding
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.api.model.PlaceTypes
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
@@ -115,12 +115,12 @@ class OnboardingView : AppCompatActivity() {
                     val data = result.data
                     val place = Autocomplete.getPlaceFromIntent(data!!)
 
-                    binding.etlocation.setText(place.name)
+                    binding.etlocation.setText(place.displayName)
                     eventplaceid = place.id
-                    eventlatitude = place.latLng!!.latitude
-                    eventlongitude = place.latLng!!.longitude
-                    eventaddress = place.address
-                    eventlocationname = place.name
+                    eventlatitude = place.location!!.latitude
+                    eventlongitude = place.location!!.longitude
+                    eventaddress = place.shortFormattedAddress
+                    eventlocationname = place.displayName
                 } else if (result.resultCode == AutocompleteActivity.RESULT_ERROR) {
                     val status = Autocomplete.getStatusFromIntent(result.data!!)
                     Log.e("Places", "Error: ${status.statusMessage}")
@@ -418,16 +418,16 @@ class OnboardingView : AppCompatActivity() {
                 )
             val fields = listOf(
                 Place.Field.ID,
-                Place.Field.NAME,
-                Place.Field.LAT_LNG,
-                Place.Field.ADDRESS
+                Place.Field.DISPLAY_NAME,
+                Place.Field.LOCATION,
+                Place.Field.SHORT_FORMATTED_ADDRESS
             )
             val intent = Autocomplete.IntentBuilder(
                 AutocompleteActivityMode.OVERLAY,
                 fields
             )
-                .setCountry(countryPlaces)
-                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setCountries(countryPlaces as List<String?>)
+                .setTypesFilter(PlaceTypes.ESTABLISHMENT as List<String?>)
                 .build(this@OnboardingView)
 
             if (!isFinishing) {

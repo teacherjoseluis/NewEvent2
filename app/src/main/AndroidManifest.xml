@@ -86,12 +86,12 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity
-            android:name=".UI.Fragments.MainActivity"
-            android:label="Brides $ Grooms"
-            android:theme="@style/AppTheme">
-            <!--Default Intent Filter-->
-        </activity>
+<!--        <activity-->
+<!--            android:name=".UI.Fragments.MainActivity"-->
+<!--            android:label="Brides $ Grooms"-->
+<!--            android:theme="@style/AppTheme">-->
+<!--            &lt;!&ndash;Default Intent Filter&ndash;&gt;-->
+<!--        </activity>-->
         <!--        <activity-->
         <!--            android:name=".Login"-->
         <!--            android:noHistory="true">-->
@@ -106,9 +106,9 @@
         <!--        <activity android:name=".NewTask" />-->
         <!--        <activity android:name=".NewTask_TaskDetail" />-->
         <activity android:name=".NewTask_PaymentDetail" />
-        <activity
-            android:name=".UI.Fragments.TaskPaymentList"
-            android:theme="@style/AppTheme" />
+<!--        <activity-->
+<!--            android:name=".UI.Fragments.TaskPaymentList"-->
+<!--            android:theme="@style/AppTheme" />-->
         <!--        <activity android:name=".Task_EditDetail" />-->
         <activity android:name=".Payment_EditDetail" />
         <!--        <activity android:name=".Event_EditDetail" />-->
@@ -116,9 +116,9 @@
 <!--        <activity-->
 <!--            android:name=".GuestCreateEdit"-->
 <!--            android:theme="@style/AppTheme" />-->
-        <activity
-            android:name=".UI.Fragments.VendorCreateEdit"
-            android:theme="@style/AppTheme" />
+<!--        <activity-->
+<!--            android:name=".UI.Fragments.VendorCreateEdit"-->
+<!--            android:theme="@style/AppTheme" />-->
         <!--        <activity android:name=".Guest_EditDetail" />-->
         <!--        <activity android:name=".NewVendor" />-->
         <!--        <activity android:name=".Vendor_EditDetail" />-->
@@ -126,9 +126,9 @@
         <activity
             android:name=".UI.Fragments.MyNotes"
             tools:ignore="Instantiatable" />
-        <activity
-            android:name=".UI.Fragments.NoteCreateEdit"
-            android:theme="@style/AppTheme" />
+<!--        <activity-->
+<!--            android:name=".UI.Fragments.NoteCreateEdit"-->
+<!--            android:theme="@style/AppTheme" />-->
         <activity
             android:name=".UI.Fragments.Settings"
             android:windowSoftInputMode="adjustResize"
@@ -162,26 +162,26 @@
             android:theme="@style/AppTheme"
             android:name=".OnboardingView"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".UI.Fragments.TaskCreateEdit"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".UI.Fragments.PaymentCreateEdit"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".UI.Fragments.ContactsAll"
-            android:theme="@style/AppTheme" />
+<!--        <activity-->
+<!--            android:name=".UI.Fragments.TaskCreateEdit"-->
+<!--            android:theme="@style/AppTheme"-->
+<!--            android:windowSoftInputMode="adjustResize" />-->
+<!--        <activity-->
+<!--            android:name=".UI.Fragments.PaymentCreateEdit"-->
+<!--            android:theme="@style/AppTheme"-->
+<!--            android:windowSoftInputMode="adjustResize" />-->
+<!--        <activity-->
+<!--            android:name=".UI.Fragments.ContactsAll"-->
+<!--            android:theme="@style/AppTheme" />-->
         <activity
             android:name=".UI.Activities.ExportPDF"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".UI.Fragments.BlogContent"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".UI.Fragments.FragmentGallery"
-            android:theme="@style/AppTheme" />
+<!--        <activity-->
+<!--            android:name=".UI.Fragments.BlogContent"-->
+<!--            android:theme="@style/AppTheme" />-->
+<!--        <activity-->
+<!--            android:name=".UI.Fragments.FragmentGallery"-->
+<!--            android:theme="@style/AppTheme" />-->
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

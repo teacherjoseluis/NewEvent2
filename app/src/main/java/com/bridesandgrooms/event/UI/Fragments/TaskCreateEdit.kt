@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -29,6 +30,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -52,9 +54,9 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.android.play.core.review.ReviewInfo
-import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.ReviewManagerFactory
+//import com.google.android.play.core.review.ReviewInfo
+//import com.google.android.play.core.review.ReviewManager
+//import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -89,6 +91,7 @@ class TaskCreateEdit : Fragment() {
         context = requireContext()
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -220,6 +223,7 @@ class TaskCreateEdit : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_task -> {
@@ -355,6 +359,7 @@ class TaskCreateEdit : Fragment() {
         newFragment.show(parentFragmentManager, "datePicker")
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun saveTask() {
         taskItem.name = binding.tasknameinputedit.text.toString()
         taskItem.date = binding.taskdateinputedit.text.toString()
@@ -403,23 +408,23 @@ class TaskCreateEdit : Fragment() {
             //------------------------------------------------
             // Request User's feedback
             val reviewbox = RemoteConfigSingleton.get_reviewbox()
-            if (reviewbox) {
-                val reviewManager: ReviewManager = ReviewManagerFactory.create(requireActivity())
-
-                val requestReviewTask: com.google.android.play.core.tasks.Task<ReviewInfo> =
-                    reviewManager.requestReviewFlow()
-                requestReviewTask.addOnCompleteListener { request ->
-                    if (request.isSuccessful) {
-                        // Request succeeded and a ReviewInfo instance was received
-                        val reviewInfo: ReviewInfo = request.result
-                        val launchReviewTask: com.google.android.play.core.tasks.Task<*> =
-                            reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
-                        launchReviewTask.addOnCompleteListener {
-                            // The review has finished, continue your app flow.
-                        }
-                    }
-                }
-            }
+//            if (reviewbox) {
+//                val reviewManager: ReviewManager = ReviewManagerFactory.create(requireActivity())
+//
+//                val requestReviewTask: com.google.android.play.core.tasks.Task<ReviewInfo> =
+//                    reviewManager.requestReviewFlow()
+//                requestReviewTask.addOnCompleteListener { request ->
+//                    if (request.isSuccessful) {
+//                        // Request succeeded and a ReviewInfo instance was received
+//                        val reviewInfo: ReviewInfo = request.result
+//                        val launchReviewTask: com.google.android.play.core.tasks.Task<*> =
+//                            reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
+//                        launchReviewTask.addOnCompleteListener {
+//                            // The review has finished, continue your app flow.
+//                        }
+//                    }
+//                }
+//            }
 //            val showads = RemoteConfigSingleton.get_showads()
 //            if (showads) {
 //                if (adManager.mRewardedAd != null) {

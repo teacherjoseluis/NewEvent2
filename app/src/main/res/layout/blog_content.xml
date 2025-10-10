@@ -96,6 +96,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/blogSection">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/blogSummary"
                 style="@style/Body_Medium"
@@ -104,6 +108,18 @@
                 android:text="Blog Summary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/visitPage"
+                    style="@style/Label_Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:paddingBottom="0dp"
+                    android:text="@string/readmore_blog"
+                    app:layout_constraintStart_toEndOf="@+id/blogSummary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
@@ -116,27 +132,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                android:id="@+id/visitPage"
-                style="@style/Label_Large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="0dp"
-                android:text="@string/readmore_blog"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <TextView-->
+<!--                android:id="@+id/visitPage2"-->
+<!--                style="@style/Label_Large"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:paddingBottom="0dp"-->
+<!--                android:text="@string/readmore_blog"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
             <ImageView
                 android:id="@+id/shareLink"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginTop="10dp"
                 android:contentDescription="@string/blogimage"
                 android:src="@drawable/share"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/visitPage" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

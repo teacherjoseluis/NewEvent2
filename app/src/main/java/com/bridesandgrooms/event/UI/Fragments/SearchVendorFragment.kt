@@ -233,8 +233,8 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
             }
 
             val placesWithDistances = places.map { place ->
-                val placeLat = place.latLng?.latitude // Assuming these methods exist
-                val placeLng = place.latLng?.longitude
+                val placeLat = place.location?.latitude // Assuming these methods exist
+                val placeLng = place.location?.longitude
                 val distance = "${
                     calculateDistance(
                         location.latitude,

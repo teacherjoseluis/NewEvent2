@@ -137,11 +137,11 @@ class MyNotes : Fragment(), NotePresenter.NoteActivity, NoteFragmentActionListen
     }
 
     private fun filter(models: ArrayList<Note>, query: String?): List<Note> {
-        val lowerCaseQuery = query!!.toLowerCase(Locale.ROOT)
+        val lowerCaseQuery = query!!.lowercase(Locale.ROOT)
         val filteredModelList: ArrayList<Note> = ArrayList()
         for (model in models) {
-            val textTitle: String = model.title.toLowerCase(Locale.ROOT)
-            val textBody: String = model.body.toLowerCase(Locale.ROOT)
+            val textTitle: String = model.title.lowercase(Locale.ROOT)
+            val textBody: String = model.body.lowercase(Locale.ROOT)
             if (textTitle.contains(lowerCaseQuery)||textBody.contains(lowerCaseQuery)) {
                 filteredModelList.add(model)
             }

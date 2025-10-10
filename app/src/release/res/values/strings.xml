@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="admob_banner_ad_unit_id" translatable="false">ca-app-pub-2710265419603943/5724473817</string>
+    <string name="admob_native_ad_unit_id" translatable="false">ca-app-pub-2710265419603943/2516638347</string>
+    <string name="admob_interstitial_ad_unit_id" translatable="false">ca-app-pub-2710265419603943/4046354192</string>
+    <string name="admob_reward_ad_unit_id" translatable="false">ca-app-pub-2710265419603943/7504459342</string>
+    <string name="default_web_client_id" translatable="false">319634884697-ihokd8d4om17tsanagl74ife42c5n68f.apps.googleusercontent.com</string>
+</resources>

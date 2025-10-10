@@ -28,6 +28,7 @@ class CategoryAdapter(
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): CategoryViewHolder {
         val category_layout = RemoteConfigSingleton.get_category_layout()
         view = if (category_layout.equals("card")) {
+            //LayoutInflater.from(p0.context).inflate(R.layout.category_item_layout, p0, false)
             LayoutInflater.from(p0.context).inflate(R.layout.category_item_layout, p0, false)
         } else {
             LayoutInflater.from(p0.context)

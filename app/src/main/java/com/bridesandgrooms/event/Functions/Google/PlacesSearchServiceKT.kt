@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import com.bridesandgrooms.event.Functions.PermissionUtils
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -17,7 +19,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.RectangularBounds
-import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.api.model.PlaceTypes
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FetchPlaceResponse
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
@@ -84,6 +86,7 @@ class PlacesSearchServiceKT(private val context: Context) {
 //                Log.d(TAG, "Failed to get location: ${e.message}")
 //            }
 //    }
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun fetchPlaces(query: String, callback: PlacesSearchCallback) {
         if (!PermissionUtils.checkPermissions(context, "location")) {
             val permissions = PermissionUtils.requestPermissionsList("location")
