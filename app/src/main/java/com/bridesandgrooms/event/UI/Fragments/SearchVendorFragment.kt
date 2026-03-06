@@ -106,6 +106,7 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -123,6 +124,7 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
     /**
      * This handles the permissions result and displays an information asking the user to grant location permissions in case the app is not able to make the search because of that reason
      */
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -193,6 +195,7 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
      * @param query Search criteria
      * @return A list of pairs consisting of the Place object and the current user Location
      */
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private suspend fun fetchPlaces(query: String): Pair<List<Place>, Location> {
         return suspendCoroutine { continuation ->
             val placesSearchService = PlacesSearchServiceKT(requireContext())
@@ -271,6 +274,7 @@ class SearchVendorFragment : Fragment(), SearchVendorFragmentActionListener {
     /**
      * This function gets the query from SearchVendorTab and in an asynchronous function calls fetchplaces()
      */
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun searchVendors() {
         val query = requireArguments().getString("query")!!
         val category = requireArguments().getString("category")!!

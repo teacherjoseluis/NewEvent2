@@ -539,19 +539,21 @@ class LoginView : AppCompatActivity(), ViewLoginActivity, User.SignUpActivity {
         showWelcomeScreen()
     }
 
-    override fun onBackPressed() {
-        if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
-            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"ExitApp")
-            super.onBackPressed()
-            finish()
-        } else {
-            Toast.makeText(
-                baseContext, getString(R.string.pressexit),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        back_pressed = System.currentTimeMillis()
-    }
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//        if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+//            AnalyticsManager.getInstance().trackNavigationEvent(SCREEN_NAME,"ExitApp")
+//            //super.onBackPressed()
+//            onBackPressedDispatcher.onBackPressed()
+//            finish()
+//        } else {
+//            Toast.makeText(
+//                baseContext, getString(R.string.pressexit),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        }
+//        back_pressed = System.currentTimeMillis()
+//    }
 
     companion object {
         private const val TAG = "LoginView"

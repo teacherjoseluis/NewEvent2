@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.IntentFilter
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_category_layout
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_developer_mail
 import com.bridesandgrooms.event.Functions.RemoteConfigSingleton.set_enable_foryoutab
@@ -124,6 +125,8 @@ class MyFirebaseApp : Application() {
         UserSessionHelper.initialize(this)
         DatabaseHelper.initialize(this)
         CalendarEvent.initialize(this)
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     override fun onTerminate() {

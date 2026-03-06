@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -66,12 +67,21 @@ class ActivityContainer : AppCompatActivity() {
     private val LOGINACTIVITY = 123
     private var back_pressed: Long = 0
 
+    private lateinit var backCallback: OnBackPressedCallback
+
     //lateinit private var mp: MixpanelAPI
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
+
+        backCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                handleBackPressedCompat(this)
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, backCallback)
 
         val trackAutomaticEvents = false;
         // Replace with your Project Token
@@ -127,6 +137,8 @@ class ActivityContainer : AppCompatActivity() {
                 }
             }
         }
+
+
     }
 
     private fun loginValidation(): Boolean {
@@ -333,21 +345,21 @@ class ActivityContainer : AppCompatActivity() {
                     R.id.event_fragment -> {
                         fm.beginTransaction()
                             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
-                            .replace(R.id.fragment_container, newfragment!!)
+                            .replace(R.id.fragment_container, newfragment)
                             .commit()
                     }
 
                     R.id.task_fragment -> {
                         fm.beginTransaction()
                             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
-                            .replace(R.id.fragment_container, newfragment!!)
+                            .replace(R.id.fragment_container, newfragment)
                             .commit()
                     }
 
                     R.id.notes_fragment -> {
                         fm.beginTransaction()
                             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
-                            .replace(R.id.fragment_container, newfragment!!)
+                            .replace(R.id.fragment_container, newfragment)
                             .commit()
                     }
 
@@ -373,173 +385,313 @@ class ActivityContainer : AppCompatActivity() {
     }
 
     // This catches the back option in Android, if the sidebar is displayed, then it gets closed
-    override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+//    override fun onBackPressed() {
+//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            drawerLayout.closeDrawer(GravityCompat.START)
+//        } else {
+//            var fragment =
+//                fm.findFragmentById(R.id.fragment_container)
+//            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+//            when (currentFragment) {
+//                is DashboardView -> {
+//                    if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+//                        super.onBackPressed()
+//                    } else {
+//                        Toast.makeText(
+//                            baseContext, getString(R.string.pressexit),
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                    back_pressed = System.currentTimeMillis()
+//                }
+//
+//                is VendorCreateEdit -> {
+//                    fragment = VendorsAll()
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//
+//                is ContactsAll -> {
+//                    fragment = GuestsAll()
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//
+//                is GuestCreateEdit -> {
+//                    fragment = GuestsAll()
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//
+//                is SearchVendorTab -> {
+//                    fragment = VendorsAll()
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//
+//                is SearchVendorFragment -> {
+//                    fragment = VendorsAll()
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//
+//                is NoteCreateEdit -> {
+//                    fragment = MyNotes()
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//
+//                is TasksAllCalendar -> {
+//                    fragment = DashboardActivity()
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//
+//                is PaymentsAllCalendar -> {
+//                    fragment = DashboardActivity()
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//
+//                is TaskCreateEdit -> {
+//                    val callingFragment =
+//                        fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString("calling_fragment")
+//                    if (!callingFragment.isNullOrEmpty()) {
+//                        val bundle = Bundle()
+//                        fragment = when (callingFragment) {
+//                            "EventCategories" -> DashboardActivity()
+//                            "EmptyState" -> EventCategories()
+//                            "TasksAllCalendar" -> DashboardActivity()
+//                            "DashboardActivity" -> DashboardActivity()
+////                            "TaskPaymentTasks" -> {
+////                                val category =
+////                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+////                                        "category"
+////                                    )
+////                                val status =
+////                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+////                                        "status"
+////                                    )
+////                                bundle.putString("category", category)
+////                                bundle.putString("status", status)
+////                                TaskPaymentTasks()
+////                            }
+//
+//                            else -> DashboardActivity()
+//                        }
+//                        fragment.arguments = bundle
+//                        supportFragmentManager.beginTransaction()
+//                            .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                            .replace(R.id.fragment_container, fragment)
+//                            .commit()
+//                    }
+//                }
+//
+//                is PaymentCreateEdit -> {
+//                    val callingFragment =
+//                        fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString("calling_fragment")
+//                    if (!callingFragment.isNullOrEmpty()) {
+//                        val bundle = Bundle()
+//                        fragment = when (callingFragment) {
+//                            "EventCategories" -> DashboardActivity()
+//                            "EmptyState" -> EventCategories()
+//                            "TasksAllCalendar" -> DashboardActivity()
+//                            "DashboardActivity" -> DashboardActivity()
+////                            "TaskPaymentPayments" -> {
+////                                val category =
+////                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+////                                        "category"
+////                                    )
+////                                val status =
+////                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
+////                                        "status"
+////                                    )
+////                                bundle.putString("category", category)
+////                                bundle.putString("status", status)
+////                                TaskPaymentPayments()
+////                            }
+//
+//                            else -> DashboardActivity()
+//                        }
+//                        fragment.arguments = bundle
+//                        supportFragmentManager.beginTransaction()
+//                            .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                            .replace(R.id.fragment_container, fragment)
+//                            .commit()
+//                    }
+//                }
+//
+//                is TaskPaymentTasks -> {
+//                    fragment = EventCategories()
+//                    supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//
+//                else -> {
+//                    fragment = DashboardView()
+//                    fm.beginTransaction()
+//                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+//                        .replace(R.id.fragment_container, fragment)
+//                        .commit()
+//                }
+//            }
+//        }
+//    }
+
+    private fun handleBackPressedCompat(callback: OnBackPressedCallback) {
+
+        val current = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (current is IOnBackPressed && current.onBackPressed()) return
+
+        // drawerLayout is initialized only after createView()
+        if (::drawerLayout.isInitialized && drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            var fragment =
-                fm.findFragmentById(R.id.fragment_container)
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-            when (currentFragment) {
-                is DashboardView -> {
+            return
+        }
+
+        var fragment = fm.findFragmentById(R.id.fragment_container)
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+
+        when (currentFragment) {
+
+            is DashboardView -> {
+                if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+                    // old: super.onBackPressed()
+//                    callback.isEnabled = false
+//                    onBackPressedDispatcher.onBackPressed()
+//                    callback.isEnabled = true
                     if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
-                        super.onBackPressed()
+                        finish() // <-- simplest and safest "exit app" behavior here
                     } else {
-                        Toast.makeText(
-                            baseContext, getString(R.string.pressexit),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(baseContext, getString(R.string.pressexit), Toast.LENGTH_SHORT).show()
                     }
                     back_pressed = System.currentTimeMillis()
+                } else {
+                    Toast.makeText(baseContext, getString(R.string.pressexit), Toast.LENGTH_SHORT).show()
                 }
+                back_pressed = System.currentTimeMillis()
+            }
 
-                is VendorCreateEdit -> {
-                    fragment = VendorsAll()
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragment_container, fragment)
-                        .commit()
-                }
+            is VendorCreateEdit -> {
+                fragment = VendorsAll()
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+            }
 
-                is ContactsAll -> {
-                    fragment = GuestsAll()
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragment_container, fragment)
-                        .commit()
-                }
+            is ContactsAll, is GuestCreateEdit -> {
+                fragment = GuestsAll()
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+            }
 
-                is GuestCreateEdit -> {
-                    fragment = GuestsAll()
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragment_container, fragment)
-                        .commit()
-                }
+            is SearchVendorTab, is SearchVendorFragment -> {
+                fragment = VendorsAll()
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+            }
 
-                is SearchVendorTab -> {
-                    fragment = VendorsAll()
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragment_container, fragment)
-                        .commit()
-                }
+            is NoteCreateEdit -> {
+                fragment = MyNotes()
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+            }
 
-                is SearchVendorFragment -> {
-                    fragment = VendorsAll()
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragment_container, fragment)
-                        .commit()
-                }
+            is TasksAllCalendar, is PaymentsAllCalendar -> {
+                fragment = DashboardActivity()
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+            }
 
-                is NoteCreateEdit -> {
-                    fragment = MyNotes()
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragment_container, fragment)
-                        .commit()
-                }
+            is TaskCreateEdit -> {
+                val callingFragment =
+                    currentFragment.parentFragmentManager.fragments.getOrNull(1)?.arguments?.getString("calling_fragment")
 
-                is TasksAllCalendar -> {
-                    fragment = DashboardActivity()
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragment_container, fragment)
-                        .commit()
-                }
+                if (!callingFragment.isNullOrEmpty()) {
+                    val bundle = Bundle()
 
-                is PaymentsAllCalendar -> {
-                    fragment = DashboardActivity()
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragment_container, fragment)
-                        .commit()
-                }
-
-                is TaskCreateEdit -> {
-                    val callingFragment =
-                        fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString("calling_fragment")
-                    if (!callingFragment.isNullOrEmpty()) {
-                        val bundle = Bundle()
-                        fragment = when (callingFragment) {
-                            "EventCategories" -> DashboardActivity()
-                            "EmptyState" -> EventCategories()
-                            "TasksAllCalendar" -> DashboardActivity()
-                            "DashboardActivity" -> DashboardActivity()
-//                            "TaskPaymentTasks" -> {
-//                                val category =
-//                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
-//                                        "category"
-//                                    )
-//                                val status =
-//                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
-//                                        "status"
-//                                    )
-//                                bundle.putString("category", category)
-//                                bundle.putString("status", status)
-//                                TaskPaymentTasks()
-//                            }
-
-                            else -> DashboardActivity()
-                        }
-                        fragment.arguments = bundle
-                        supportFragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                            .replace(R.id.fragment_container, fragment)
-                            .commit()
+                    fragment = when (callingFragment) {
+                        "EventCategories" -> DashboardActivity()
+                        "EmptyState" -> EventCategories()
+                        "TasksAllCalendar" -> DashboardActivity()
+                        "DashboardActivity" -> DashboardActivity()
+                        else -> DashboardActivity()
                     }
-                }
 
-                is PaymentCreateEdit -> {
-                    val callingFragment =
-                        fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString("calling_fragment")
-                    if (!callingFragment.isNullOrEmpty()) {
-                        val bundle = Bundle()
-                        fragment = when (callingFragment) {
-                            "EventCategories" -> DashboardActivity()
-                            "EmptyState" -> EventCategories()
-                            "TasksAllCalendar" -> DashboardActivity()
-                            "DashboardActivity" -> DashboardActivity()
-//                            "TaskPaymentPayments" -> {
-//                                val category =
-//                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
-//                                        "category"
-//                                    )
-//                                val status =
-//                                    fragment?.parentFragmentManager?.fragments?.get(1)?.arguments?.getString(
-//                                        "status"
-//                                    )
-//                                bundle.putString("category", category)
-//                                bundle.putString("status", status)
-//                                TaskPaymentPayments()
-//                            }
+                    fragment.arguments = bundle
 
-                            else -> DashboardActivity()
-                        }
-                        fragment.arguments = bundle
-                        supportFragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
-                            .replace(R.id.fragment_container, fragment)
-                            .commit()
-                    }
-                }
-
-                is TaskPaymentTasks -> {
-                    fragment = EventCategories()
                     supportFragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
+            }
 
-                else -> {
-                    fragment = DashboardView()
-                    fm.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+            is PaymentCreateEdit -> {
+                val callingFragment =
+                    currentFragment.parentFragmentManager.fragments.getOrNull(1)?.arguments?.getString("calling_fragment")
+
+                if (!callingFragment.isNullOrEmpty()) {
+                    val bundle = Bundle()
+
+                    fragment = when (callingFragment) {
+                        "EventCategories" -> DashboardActivity()
+                        "EmptyState" -> EventCategories()
+                        "TasksAllCalendar" -> DashboardActivity()
+                        "DashboardActivity" -> DashboardActivity()
+                        else -> DashboardActivity()
+                    }
+
+                    fragment.arguments = bundle
+
+                    supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
                         .replace(R.id.fragment_container, fragment)
                         .commit()
                 }
+            }
+
+            is TaskPaymentTasks -> {
+                fragment = EventCategories()
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+            }
+
+            else -> {
+                fragment = DashboardView()
+                fm.beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
             }
         }
     }
@@ -584,7 +736,8 @@ class ActivityContainer : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 //
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                super.onBackPressed()
+                //super.onBackPressed()
+                onBackPressedDispatcher.onBackPressed()
             }
         }
     }

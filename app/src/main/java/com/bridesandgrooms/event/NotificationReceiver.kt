@@ -22,23 +22,22 @@ import java.util.Date
 
 class NotificationReceiver : BroadcastReceiver() {
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onReceive(context: Context, intent: Intent) {
         val currentDate = Date(System.currentTimeMillis())
         val taskDBHelper = TaskDBHelper()
         val paymentDBHelper = PaymentDBHelper()
 
         try {
-            val taskList = taskDBHelper.getTaskfromDate(currentDate)
-            val paymentList = paymentDBHelper.getPaymentfromDate(currentDate)
+            val taskList = taskDBHelper.getTaskfromDate(currentDate) ?: arrayListOf()
+            val paymentList = paymentDBHelper.getPaymentfromDate(currentDate) ?: arrayListOf()
 
-            if (!taskList.isNullOrEmpty() || !paymentList.isNullOrEmpty()){
-                buildNotification(context, taskList!!, paymentList!!)
+            if (taskList.isNotEmpty() || paymentList.isNotEmpty()) {
+                buildNotification(context, taskList, paymentList)
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
-//        val taskList = arrayOf("task1", "task2", "task3")
-//        val paymentList = arrayOf("payment1", "payment2", "payment3")
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -47,73 +46,88 @@ class NotificationReceiver : BroadcastReceiver() {
         taskList: ArrayList<String>,
         paymentList: ArrayList<String>
     ) {
-        // Create the notification
+        // Create the notification channel (safe to call repeatedly)
         createNotificationChannel(context)
 
-        val intent = Intent(context, ActivityContainer::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val openAppIntent = Intent(context, ActivityContainer::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
 
-        val pendingIntent =
-            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        // ✅ Compatible PendingIntent flags for all supported APIs
+        val pendingIntentFlags =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            openAppIntent,
+            pendingIntentFlags
+        )
 
         // Task Section
-        val taskBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-        if (!taskList.isNullOrEmpty()) {
-            val inboxStyleTask = NotificationCompat.InboxStyle()
-            taskList.forEach {
-                inboxStyleTask.addLine(it)
-            }
+        val taskBuilder = NotificationCompat.Builder(context, CHANNEL_ID).apply {
+            setSmallIcon(R.drawable.weddingicon)
+            priority = NotificationCompat.PRIORITY_HIGH
+            setAutoCancel(true)
+            setContentIntent(pendingIntent)
+            setGroup(TASK_REMINDER)
+            setGroupSummary(true)
+        }
 
-            with(taskBuilder) {
-                setContentTitle(context.getString(R.string.task_reminder))
-                setContentText(context.getString(R.string.you_have_tasks, taskList.size.toString()))
-                setSmallIcon(R.drawable.weddingicon)
-                priority = NotificationCompat.PRIORITY_HIGH
-                setAutoCancel(true)
-                setContentIntent(pendingIntent)
-                setGroup(TASK_REMINDER)
-                setGroupSummary(true)
-                setStyle(inboxStyleTask)
+        if (taskList.isNotEmpty()) {
+            val inboxStyleTask = NotificationCompat.InboxStyle().also { style ->
+                taskList.forEach { style.addLine(it) }
             }
+            taskBuilder
+                .setContentTitle(context.getString(R.string.task_reminder))
+                .setContentText(context.getString(R.string.you_have_tasks, taskList.size.toString()))
+                .setStyle(inboxStyleTask)
         }
 
         // Payment Section
-        val paymentBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-        if (!paymentList.isNullOrEmpty()) {
-            val inboxStylePayment = NotificationCompat.InboxStyle()
-            paymentList.forEach {
-                inboxStylePayment.addLine(it)
-            }
-            with(paymentBuilder) {
-                setContentTitle(context.getString(R.string.payment_reminder))
-                setContentText(context.getString(R.string.you_have_payments, paymentList.size.toString()))
-                setSmallIcon(R.drawable.weddingicon)
-                priority = NotificationCompat.PRIORITY_HIGH
-                setAutoCancel(true)
-                setContentIntent(pendingIntent)
-                setGroup(PAYMENT_REMINDER)
-                setGroupSummary(true)
-                setStyle(inboxStylePayment)
-            }
+        val paymentBuilder = NotificationCompat.Builder(context, CHANNEL_ID).apply {
+            setSmallIcon(R.drawable.weddingicon)
+            priority = NotificationCompat.PRIORITY_HIGH
+            setAutoCancel(true)
+            setContentIntent(pendingIntent)
+            setGroup(PAYMENT_REMINDER)
+            setGroupSummary(true)
         }
 
-        if (!PermissionUtils.checkPermissions(context, "notification")) {
-            if (context is Activity && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                val permissions = PermissionUtils.requestPermissionsList("notification")
-                ActivityCompat.requestPermissions(context, permissions, NOTIFICATION_PERMISSION_CODE)
+        if (paymentList.isNotEmpty()) {
+            val inboxStylePayment = NotificationCompat.InboxStyle().also { style ->
+                paymentList.forEach { style.addLine(it) }
             }
-            return
+            paymentBuilder
+                .setContentTitle(context.getString(R.string.payment_reminder))
+                .setContentText(context.getString(R.string.you_have_payments, paymentList.size.toString()))
+                .setStyle(inboxStylePayment)
+        }
+
+        // ✅ API 33+ requires POST_NOTIFICATIONS permission at runtime
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!PermissionUtils.checkPermissions(context, "notification")) {
+                // Can't request permission from a BroadcastReceiver safely.
+                // Just skip the notification; request permission from an Activity in your app UX.
+                Log.w(TAG, "POST_NOTIFICATIONS not granted; skipping notification.")
+                return
+            }
         }
 
         try {
             val notificationManager = NotificationManagerCompat.from(context)
-            // Use notificationManager here as needed
-            with(notificationManager) {
-                notify(TASKREMINDER_NOTIFICATION_ID, taskBuilder.build())
-                notify(PAYMENTREMINDER_NOTIFICATION_ID, paymentBuilder.build())
+            if (taskList.isNotEmpty()) {
+                notificationManager.notify(TASKREMINDER_NOTIFICATION_ID, taskBuilder.build())
+            }
+            if (paymentList.isNotEmpty()) {
+                notificationManager.notify(PAYMENTREMINDER_NOTIFICATION_ID, paymentBuilder.build())
             }
         } catch (e: SecurityException) {
-            Log.e("Notification", "Security exception when accessing NotificationManager: ${e.message}")
+            Log.e(TAG, "Security exception when posting notification: ${e.message}")
         }
     }
 

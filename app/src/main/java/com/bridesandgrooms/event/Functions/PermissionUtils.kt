@@ -40,8 +40,13 @@ object PermissionUtils {
                         checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
             }
             "storage" -> {
-                checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                        checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) ==
+                            PackageManager.PERMISSION_GRANTED
+                } else {
+                    checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_GRANTED
+                }
             }
             "contact" -> {
                 checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
@@ -52,7 +57,15 @@ object PermissionUtils {
                         checkSelfPermission(context, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED
             }
             "notification" -> {
-                checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    checkSelfPermission(
+                        context,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED
+                } else {
+                    // On API < 33, notification permission is granted at install time
+                    true
+                }
             }
             else -> {
                 // Handle other permission types here if needed

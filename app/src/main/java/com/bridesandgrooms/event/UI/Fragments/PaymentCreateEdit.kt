@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -29,6 +30,7 @@ import com.google.android.material.chip.Chip
 //import kotlinx.android.synthetic.main.payment_editdetail.*
 import java.util.*
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -81,6 +83,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         context = requireContext()
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -214,6 +217,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_payment -> {
@@ -298,6 +302,7 @@ class PaymentCreateEdit : Fragment(), VendorPaymentPresenter.VAVendors {
         newFragment.show(parentFragmentManager, "datePicker")
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun savePayment() {
         paymentItem.name = binding.paymentnameinputedit.text.toString()
         paymentItem.date = binding.paymentdateinputedit.text.toString()

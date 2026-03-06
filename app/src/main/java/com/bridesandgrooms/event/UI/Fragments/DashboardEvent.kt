@@ -512,10 +512,10 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onEmptyPlaceImageSD() {
-        if (!PermissionUtils.checkPermissions(requireActivity().applicationContext, "storage")) {
-            val permissions = PermissionUtils.requestPermissionsList("storage")
-            requestPermissions(permissions, PERMISSION_CODE)
-        } else {
+//        if (!PermissionUtils.checkPermissions(requireActivity().applicationContext, "storage")) {
+//            val permissions = PermissionUtils.requestPermissionsList("storage")
+//            requestPermissions(permissions, PERMISSION_CODE)
+//        } else {
             //permission already granted
             lifecycleScope.launch {
                 val bitmap = getImgfromPlaces(
@@ -534,7 +534,7 @@ class DashboardEvent : Fragment(), DashboardEventPresenter.TaskStats,
 //                    inf.weddinglocation2.placesimage.setImageResource(R.drawable.avatar2)
                 }
             }
-        }
+ //       }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

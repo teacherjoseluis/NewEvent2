@@ -110,7 +110,7 @@
 <!--            android:name=".UI.Fragments.TaskPaymentList"-->
 <!--            android:theme="@style/AppTheme" />-->
         <!--        <activity android:name=".Task_EditDetail" />-->
-        <activity android:name=".Payment_EditDetail" />
+<!--        <activity android:name=".Payment_EditDetail" />-->
         <!--        <activity android:name=".Event_EditDetail" />-->
         <!--        <activity android:name=".MyContacts" />-->
 <!--        <activity-->
@@ -157,7 +157,7 @@
             android:theme="@style/AppTheme"/>
         <activity android:name=".WelcomeActivity"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".LoginEmailView" />
+<!--        <activity android:name=".LoginEmailView" />-->
         <activity
             android:theme="@style/AppTheme"
             android:name=".OnboardingView"

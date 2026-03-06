@@ -117,7 +117,8 @@
                     android:layout_marginStart="10dp"
                     android:paddingBottom="0dp"
                     android:text="@string/readmore_blog"
-                    app:layout_constraintStart_toEndOf="@+id/blogSummary" />
+                    app:layout_constraintStart_toEndOf="@+id/blogSummary"
+                    tools:ignore="MissingConstraints" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -753,19 +753,19 @@ class OnboardingView : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
-            userSession.logout(this)
-            super.onBackPressed()
-            finish()
-        } else {
-            Toast.makeText(
-                baseContext, getString(R.string.pressexit),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        back_pressed = System.currentTimeMillis()
-    }
+//    override fun onBackPressed() {
+//        if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
+//            userSession.logout(this)
+//            super.onBackPressed()
+//            finish()
+//        } else {
+//            Toast.makeText(
+//                baseContext, getString(R.string.pressexit),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        }
+//        back_pressed = System.currentTimeMillis()
+//    }
 
     companion object {
         private const val TAG = "OnboardingView"

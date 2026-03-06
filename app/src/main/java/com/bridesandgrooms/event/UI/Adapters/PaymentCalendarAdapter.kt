@@ -1,5 +1,6 @@
 package com.bridesandgrooms.event.UI.Adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,7 @@ class PaymentCalendarAdapter(
         private val paymentDateTextView: TextView = itemView.findViewById(R.id.taskDate)
         private val paymentAmountTextView: TextView = itemView.findViewById(R.id.taskBudget)
 
+        @SuppressLint("StringFormatInvalid")
         fun bind(payment: Payment) {
             val resourceId = context.resources.getIdentifier(
                 getCategory(payment.category).drawable, "drawable",
@@ -53,7 +55,12 @@ class PaymentCalendarAdapter(
             paymentNameTextView.text = payment.name
             paymentCategoryTextView.text = payment.category
             paymentDateTextView.text = context.getString(R.string.date_text, payment.date ?: "")
-            paymentAmountTextView.text = context.getString(R.string.payment_text, payment.amount ?: "")
+            val formattedAmount = payment.amount?.let {
+                "$$it"
+            } ?: "$0"
+
+            paymentAmountTextView.text =
+                context.getString(R.string.payment_text, formattedAmount)
         }
     }
 }
